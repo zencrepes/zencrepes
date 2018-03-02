@@ -1,0 +1,29 @@
+query {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  viewer {
+    repositories(first: 100, affiliations: [OWNER, COLLABORATOR, ORGANIZATION_MEMBER]) {
+      edges {
+        node {
+          name
+          owner {
+            login
+          }
+          issues(first: 100, states:[OPEN]) {
+            edges{
+              node {
+                title
+                state
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

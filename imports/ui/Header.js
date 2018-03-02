@@ -1,0 +1,35 @@
+import React, { Component } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
+
+import { gh_issues } from '../data_fetch/LoadIssues.js'
+import { gh_repositories } from '../data_fetch/LoadRepos.js'
+import { gh_organizations } from '../data_fetch/LoadOrgs.js'
+
+import {LoadOrgs} from '../data_fetch/LoadOrgs.js'
+
+class Header extends Component {
+    reloadData() {
+        console.log("Empty all data and reload");
+        gh_issues.remove({});
+        gh_repositories.remove({});
+        gh_organizations.remove({});
+        window.store_autoupdate = true;
+        LoadOrgs(window.client);
+    }
+    render() {
+        return (
+            <div className="App-header">
+                <button onClick={this.reloadData.bind(this)}>(re)Load data</button>
+                Total number of issues {this.props.issues_count}, repositories: {this.props.repositories_count}, organizations: {this.props.organizations_count}
+            </div>
+        );
+    }
+}
+
+export default withTracker(() => {
+    return {
+        issues_count: gh_issues.find({}).count(),
+        repositories_count: gh_repositories.find({}).count(),
+        organizations_count: gh_organizations.find({}).count(),
+    };
+})(Header);
