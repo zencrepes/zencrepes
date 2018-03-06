@@ -1,0 +1,16 @@
+# Installation
+> `npm install --save @types/jss`
+
+# Summary
+This package contains type definitions for jss (https://github.com/cssinjs/jss#readme).
+
+# Details
+Files were exported from https://www.github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jss
+
+Additional Details
+ * Last updated: Sat, 03 Mar 2018 23:16:13 GMT
+ * Dependencies: none
+ * Global values: none
+
+# Credits
+These definitions were written by Brenton Simpson <https://github.com/appsforartists>, Oleg Slobodskoi <https://github.com/kof>.

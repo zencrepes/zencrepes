@@ -5,6 +5,8 @@ import { gh_issues } from '../data_fetch/LoadIssues.js'
 import { gh_repositories } from '../data_fetch/LoadRepos.js'
 import { gh_organizations } from '../data_fetch/LoadOrgs.js'
 
+import Button from 'material-ui/Button';
+
 import {LoadOrgs} from '../data_fetch/LoadOrgs.js'
 
 class Header extends Component {
@@ -19,7 +21,9 @@ class Header extends Component {
     render() {
         return (
             <div className="App-header">
-                <button onClick={this.reloadData.bind(this)}>(re)Load data</button>
+                <Button variant="raised" color="primary" onClick={this.reloadData.bind(this)} >
+                    (re)Load data
+                </Button>
                 Total number of issues {this.props.issues_count}, repositories: {this.props.repositories_count}, organizations: {this.props.organizations_count}
             </div>
         );

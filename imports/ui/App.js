@@ -1,27 +1,36 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import { withTracker } from 'meteor/react-meteor-data';
 
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+//import Header from './Header';
+//import Table from './Table';
+import Layout from './Layout';
+import Reboot from 'material-ui/Reboot';
+import Drawer from './drawer/Drawer';
 
-import Header from './Header';
-import Table from './Table';
+
+/*
+export default class App extends Component {
+    render() {
+        return (
+            <div className="container">
+                <Reboot />
+
+                <Header />
+                <Table />
+            </div>
+        );
+    }
+}
+*/
 
 export default class App extends Component {
     render() {
         return (
             <div className="container">
-                <Header />
-                <table>
-                    <tbody>
-                    <tr>
-                        <td width="100">Some facets</td>
-                        <td width="100%"><Table /></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <Reboot />
+                <Drawer />
+                <Layout />
             </div>
         );
     }

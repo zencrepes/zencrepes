@@ -13,6 +13,8 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { setContext } from 'apollo-link-context';
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import { local_gh_issues } from '../imports/data_fetch/LoadIssues.js'
 import { local_gh_repositories } from '../imports/data_fetch/LoadRepos.js'
 import { local_gh_organizations } from '../imports/data_fetch/LoadOrgs.js'
@@ -44,6 +46,7 @@ if (Meteor.isClient){
 }
 
 Meteor.startup(() => {
+    injectTapEventPlugin();
     Meteor.setTimeout(function() {
         local_gh_issues.refresh()
         local_gh_repositories.refresh()
