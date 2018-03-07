@@ -7,16 +7,14 @@ import { gh_organizations } from '../../data_fetch/LoadOrgs.js'
 
 import Button from 'material-ui/Button';
 
-import CountIssues from '../../data/CountIssues';
+import DailyStats from '../../data/DailyStats';
 
 
 import {LoadOrgs} from '../../data_fetch/LoadOrgs.js'
 
 export default class CalculateButton extends Component {
     computeData() {
-        console.log("Click Compute Button");
-        CountIssues()
-
+        DailyStats()
     }
     render() {
         return (
