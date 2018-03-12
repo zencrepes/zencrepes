@@ -10,7 +10,7 @@ import {LoadRepos} from './LoadRepos.js'
 
 /* Assume that for any new organizations, we want to get its repos */
 gh_organizations.after.insert(function(userId, doc) {
-    console.log('LoadOrgs: Added Org: ' + doc.login);
+    //console.log('LoadOrgs: Added Org: ' + doc.login);
     if (doc.repo_count > 0 && window.store_autoupdate === true) {
         LoadRepos(window.client, doc.login);
     }

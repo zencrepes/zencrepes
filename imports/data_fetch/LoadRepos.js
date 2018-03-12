@@ -9,7 +9,7 @@ import calculateQueryIncrement from './utils/calculateQueryIncrement.js';
 import {LoadIssues} from './LoadIssues.js'
 
 gh_repositories.after.insert(function(userId, doc) {
-    console.log('LoadRepos: Added Repo: ' + doc.name);
+    //console.log('LoadRepos: Added Repo: ' + doc.name);
     if (doc.issues_count > 0 && window.store_autoupdate === true) {
         LoadIssues(window.client, doc.org_login, doc.name);
     }

@@ -6,6 +6,7 @@ import Grid from 'material-ui/Grid';
 
 import Header from './Header';
 import Table from './Table';
+import StatsPerDay from './charts/StatsPerDay';
 
 import Menu from './menu/Menu.js';
 
@@ -29,6 +30,9 @@ function FullWidthGrid(props) {
                 <Grid item xs={12}>
                     <Header />
                     <Menu />
+                </Grid>
+                <Grid item xs={12}>
+                    <StatsPerDay />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Paper className={classes.paper}>Stats 1</Paper>

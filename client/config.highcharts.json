@@ -1,0 +1,8 @@
+{
+  "version": "6.0.7",		 	// Choose version of Highcharts/Highstock/Highmaps.
+  "base": "highstock.js",	// Choose base, can be "highcharts.js", "highstock.js" or "highmaps.js"
+  "adapter": "default",		// Choose adapter, e.g. "jquery" or "standalone-framework.js".
+  "modules": [				// Choose modules to be installed altogether with main library.
+    "themes/dark-unica.js"
+  ]
+}

@@ -8,7 +8,7 @@ import { gh_organizations } from '../../data_fetch/LoadOrgs.js'
 import Button from 'material-ui/Button';
 
 import DailyStats from '../../data/DailyStats';
-
+import StatsPerDay from '../charts/StatsPerDay';
 
 import {LoadOrgs} from '../../data_fetch/LoadOrgs.js'
 
