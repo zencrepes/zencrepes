@@ -9,6 +9,11 @@ import Reboot from 'material-ui/Reboot';
 import Drawer from './drawer/Drawer';
 
 
+import dailyIssuesCountStore from "../store/index";
+import { addDailyIssueCount } from "../actions/index";
+window.dailyIssuesCountStore = dailyIssuesCountStore;
+window.addDailyIssueCount = addDailyIssueCount;
+
 /*
 export default class App extends Component {
     render() {

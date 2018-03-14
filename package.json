@@ -24,8 +24,11 @@
     "react-flexbox-grid": "^2.0.0",
     "react-jsx-highstock": "^2.2.1",
     "react-meteor-data": "^0.2.11",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-table": "^6.7.6",
-    "react-tap-event-plugin": "^3.0.2"
+    "react-tap-event-plugin": "^3.0.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   }
 }

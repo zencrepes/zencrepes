@@ -28,7 +28,7 @@ const buildArrayInterval = (startDate, endDate) => {
 const DailyStats = () => {
 
     // Start by clearing the cache
-    stats_issues_per_day.remove({});
+//    stats_issues_per_day.remove({});
 
     // Define first and last date
     let firstDay = formatDate(gh_issues.findOne({}, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
@@ -48,6 +48,16 @@ const DailyStats = () => {
         }
     });
 
+    console.log(array_issues_per_day);
+    Object.keys(array_issues_per_day).forEach(function(key) {
+        console.log(key, array_issues_per_day[key]);
+        window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount(array_issues_per_day[key]));
+    });
+
+//    window.dailyIssuesCountStore
+
+//    stats_issues_per_day.insert({issues_per_day: array_issues_per_day})
+//    console.log(array_issues_per_day)
 
 }
 

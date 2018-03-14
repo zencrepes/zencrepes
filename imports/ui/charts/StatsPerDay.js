@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { array_issues_per_day } from '../../data/DailyStats.js'
+import { stats_issues_per_day } from '../../data/DailyStats.js'
 
 import Highcharts from 'highcharts/highstock';
 import {
@@ -45,16 +46,32 @@ class StatsPerDay extends Component {
         const now = Date.now();
         this.state = {
             data1: createRandomData(now, 1e7, 500),
-            data2: props.array_issues_per_day
+            data2: props.array_issues_per_day,
         };
     }
+
+    componentWillUnmount() {
+        this.state.subscription.tasks.stop();
+    }
+
+    getChartData() {
+        console.log('test');
+        console.log(this.state.data2);
+        console.log(this.state);
+        console.log(stats_issues_per_day);
+        return stats_issues_per_day.find({}).fetch();
+        Meteor.setTimeout(function() {
+            console.log(stats_issues_per_day.find({}).fetch());
+        }, 3000);
+    }
+
     render() {
         const { data1, data2 } = this.state;
 
         return (
             <div className="app">
                 <HighchartsStockChart>
-                    <Chart zoomType="x" />
+                    <Chart zoomType="x" event="getChartData"/>
 
                     <Title>Tickets Open & Closed per day</Title>
 
@@ -80,7 +97,7 @@ class StatsPerDay extends Component {
 
                     <YAxis id="social" opposite>
                         <YAxis.Title>Social Buzz</YAxis.Title>
-                        <SplineSeries id="twitter" name="Twitter mentions" data={data2} />
+                        <SplineSeries id="twitter" name="Twitter mentions" data={this.getChartData()} />
                     </YAxis>
 
                     <Navigator>
@@ -95,9 +112,6 @@ class StatsPerDay extends Component {
 }
 
 export default withHighcharts(withTracker(() => {
-    Meteor.setTimeout(function() {
-        console.log(array_issues_per_day);
-    }, 10000);
     return {
         array_issues_per_day: array_issues_per_day,
     };
