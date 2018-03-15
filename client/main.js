@@ -3,6 +3,9 @@ import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
 import { Accounts } from 'meteor/accounts-base';
 
+import { Provider } from "react-redux";
+import store from "../imports/store/index";
+
 import App from '../imports/ui/App.js';
 
 import gql from 'graphql-tag';
@@ -55,8 +58,10 @@ Meteor.startup(() => {
         if (Meteor.user() !== undefined) {
             render(
                 < ApolloProvider client = {client} >
-                    < App / >
-                < / ApolloProvider >,
+                    <Provider store={store}>
+                        < App />
+                    </Provider>
+                </ ApolloProvider >,
                 document.getElementById('render-target')
             );
         }

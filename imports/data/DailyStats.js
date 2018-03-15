@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { gh_issues } from '../data_fetch/LoadIssues.js'
 import {gh_organizations} from "../data_fetch/LoadOrgs";
+import { connect } from "react-redux";
+import {withHighcharts} from "react-jsx-highstock";
+import Highcharts from "highcharts/highstock";
+
 
 export const stats_issues_per_day = new Mongo.Collection('stats_issues_per_day', {connection: null});
 export let array_issues_per_day = [];
@@ -34,31 +38,42 @@ const DailyStats = () => {
     let firstDay = formatDate(gh_issues.findOne({}, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
     let lastDay = formatDate(gh_issues.findOne({}, { sort: { createdAt: -1 }, reactive: false, transform: null }).updatedAt);
 
-    //Small trick to avoid timezone issues, start the dates array one day earlier.
+    //Small trick to avoid timezone issues, start the dates array one day earlier and end one day later
     firstDay.setDate(firstDay.getDate() - 1);
+    lastDay.setDate(lastDay.getDate() + 1);
     console.log("First Day: " + firstDay.toDateString() + " - Last Day: " + lastDay.toDateString());
 
     // Trying to see if this is faster
     array_issues_per_day = buildArrayInterval(firstDay, lastDay);
     console.log("Number of days in the interval: " + Object.keys(array_issues_per_day).length);
     gh_issues.find({}).forEach((issue) => {
+        //console.log(issue);
         array_issues_per_day[issue.createdAt.slice(0, 10)]['createdCount']++;
         if (issue.closedAt !== null) {
             array_issues_per_day[issue.closedAt.slice(0, 10)]['closedCount']++;
         }
     });
 
-    console.log(array_issues_per_day);
+    // Processing is complete, fill redux store with data
     Object.keys(array_issues_per_day).forEach(function(key) {
-        console.log(key, array_issues_per_day[key]);
-        window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount(array_issues_per_day[key]));
+        window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount([
+            new Date(array_issues_per_day[key].date).getTime(),
+            array_issues_per_day[key]['createdCount']
+        ]));
+        window.dailyIssuesCountStore.dispatch(window.addClosedIssuesDay([
+            new Date(array_issues_per_day[key].date).getTime(),
+            array_issues_per_day[key]['closedCount']
+        ]));
     });
-
-//    window.dailyIssuesCountStore
-
-//    stats_issues_per_day.insert({issues_per_day: array_issues_per_day})
-//    console.log(array_issues_per_day)
 
 }
 
+
+
+/*
+const List = connect(mapStateToProps)(ConnectedList);
+export default List;
+export default connect(mapStateToProps)(withHighcharts(StatsPerDay, Highcharts));
+*/
 export default DailyStats;
+//export default connect(mapStateToProps)(DailyStats);

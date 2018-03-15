@@ -1,6 +1,7 @@
 //https://www.npmjs.com/package/react-jsx-highcharts
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import { connect } from "react-redux";
 
 import { array_issues_per_day } from '../../data/DailyStats.js'
 import { stats_issues_per_day } from '../../data/DailyStats.js'
@@ -15,27 +16,9 @@ import {render} from "react-dom";
 import {local_gh_repositories} from "../../data_fetch/LoadRepos";
 import {local_gh_organizations} from "../../data_fetch/LoadOrgs";
 
-export const createDataPoint = (time = Date.now(), magnitude = 1000, offset = 0) => {
-    return [
-        time + offset * magnitude,
-        Math.round((Math.random() * 100) * 2) / 2
-    ];
-};
 
-export const createRandomData = (time, magnitude, points = 100) => {
-    const data = [];
-    let i = (points * -1) + 1;
-    for (i; i <= 0; i++) {
-        data.push(createDataPoint(time, magnitude, i));
-    }
-    return data;
-};
-
-export const addDataPoint = (data, toAdd) => {
-    if (!toAdd) toAdd = createDataPoint();
-    const newData = data.slice(0); // Clone
-    newData.push(toAdd);
-    return newData;
+const mapStateToProps = state => {
+    return { dailyIssuesCount: state.dailyIssuesCount, closedIssuesDays: state.closedIssuesDays };
 };
 
 class StatsPerDay extends Component {
@@ -45,8 +28,8 @@ class StatsPerDay extends Component {
 
         const now = Date.now();
         this.state = {
-            data1: createRandomData(now, 1e7, 500),
-            data2: props.array_issues_per_day,
+            data1: [],
+            data2: [],
         };
     }
 
@@ -54,15 +37,11 @@ class StatsPerDay extends Component {
         this.state.subscription.tasks.stop();
     }
 
-    getChartData() {
-        console.log('test');
-        console.log(this.state.data2);
-        console.log(this.state);
-        console.log(stats_issues_per_day);
-        return stats_issues_per_day.find({}).fetch();
-        Meteor.setTimeout(function() {
-            console.log(stats_issues_per_day.find({}).fetch());
-        }, 3000);
+    getCreatedTicketsByDay() {
+        return this.props.dailyIssuesCount;
+    }
+    getClosedTicketsByDay() {
+        return this.props.closedIssuesDays;
     }
 
     render() {
@@ -74,6 +53,8 @@ class StatsPerDay extends Component {
                     <Chart zoomType="x" event="getChartData"/>
 
                     <Title>Tickets Open & Closed per day</Title>
+
+                    <Legend />
 
                     <RangeSelector>
                         <RangeSelector.Button count={1} type="month">1m</RangeSelector.Button>
@@ -91,18 +72,18 @@ class StatsPerDay extends Component {
                     </XAxis>
 
                     <YAxis id="price">
-                        <YAxis.Title>Price</YAxis.Title>
-                        <SplineSeries id="profit" name="Profit" data={data1} />
+                        <YAxis.Title>Tickets</YAxis.Title>
+                        <SplineSeries id="closed" name="Closed" data={this.getClosedTicketsByDay()} />
                     </YAxis>
 
                     <YAxis id="social" opposite>
-                        <YAxis.Title>Social Buzz</YAxis.Title>
-                        <SplineSeries id="twitter" name="Twitter mentions" data={this.getChartData()} />
+                        <YAxis.Title>Tickets</YAxis.Title>
+                        <SplineSeries id="created" name="Created" data={this.getCreatedTicketsByDay()} />
                     </YAxis>
 
                     <Navigator>
-                        <Navigator.Series seriesId="profit" />
-                        <Navigator.Series seriesId="twitter" />
+                        <Navigator.Series seriesId="closed" />
+                        <Navigator.Series seriesId="created" />
                     </Navigator>
                 </HighchartsStockChart>
 
@@ -111,11 +92,14 @@ class StatsPerDay extends Component {
     }
 }
 
+/*
 export default withHighcharts(withTracker(() => {
     return {
         array_issues_per_day: array_issues_per_day,
     };
 })(StatsPerDay), Highcharts);
+*/
+export default connect(mapStateToProps)(withHighcharts(StatsPerDay, Highcharts));
 
 
 /*

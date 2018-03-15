@@ -1,6 +1,6 @@
 import { createStore } from "redux";
 import rootReducer from "../reducers/index";
 
-const dailyIssuesCountStore = createStore(rootReducer);
+const store = createStore(rootReducer);
 
-export default dailyIssuesCountStore;
+export default store;
