@@ -27,6 +27,16 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
                 login
                 url
               }
+              milestone {
+                id
+                createdAt
+                closedAt
+                number
+                url
+                title
+                state
+                dueOn
+              }
               assignees(first: 1) {
                 totalCount
                 edges {
