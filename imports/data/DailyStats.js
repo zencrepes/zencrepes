@@ -7,6 +7,8 @@ import Highcharts from "highcharts/highstock";
 
 
 export const stats_issues_per_day = new Mongo.Collection('stats_issues_per_day', {connection: null});
+export const gh_milestones = new Mongo.Collection('gh_milestones', {connection: null});
+
 export let array_issues_per_day = [];
 
 const formatDate = (dateString) => {

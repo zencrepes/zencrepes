@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import GET_GH_ISSUES from '../graphql/getIssues.graphql';
 export const gh_issues = new Mongo.Collection('gh_issues', {connection: null});
 export const local_gh_issues = new PersistentMinimongo2(gh_issues, 'git-pmview');
+export const gh_milestones = new Mongo.Collection('gh_milestones', {connection: null});
+export const local_gh_milestones = new PersistentMinimongo2(gh_milestones, 'git-pmview');
 
 import calculateQueryIncrement from './utils/calculateQueryIncrement.js';
 
@@ -18,11 +20,21 @@ const loadIssues = (data) => {
             repo: data.data.viewer.organization.repository.name,
             repo_id: data.data.viewer.organization.repository.id,
             state: currentIssue.node.state,
+            milestone: currentIssue.node.milestone,
             assignees: currentIssue.node.assignees,
             createdAt: currentIssue.node.createdAt,
             updatedAt: currentIssue.node.updatedAt,
             closedAt: currentIssue.node.closedAt,
         });
+        if (currentIssue.node.milestone !== null) {
+            gh_milestones.update({
+                id: currentIssue.node.milestone.id
+            }, {
+                $set: currentIssue.node.milestone
+            }, {
+                upsert: true
+            })
+        }
         console.log('LoadIsues: Added: ' + data.data.viewer.organization.login + " / " + data.data.viewer.organization.repository.name + " / " + currentIssue.node.title);
         lastCursor = currentIssue.cursor
     }
