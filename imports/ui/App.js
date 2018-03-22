@@ -10,7 +10,16 @@ import Drawer from './drawer/Drawer';
 
 import dailyIssuesCountStore from "../store/index";
 import weeklyIssuesCountStore from "../store/index";
-import { addDailyIssueCount, addClosedIssuesDay, addWeeklyClosedIssueCount, addWeeklyOpenedIssueCount } from "../actions/index";
+import dailyVelocityStore from "../store/index";
+import weeklyVelocityStore from "../store/index";
+import { addDailyIssueCount,
+    addClosedIssuesDay,
+    addWeeklyClosedIssueCount,
+    addWeeklyOpenedIssueCount,
+    addDayVelocityClosed,
+    addDayVelocityCreated,
+    addWeekVelocityClosed,
+    addWeekVelocityCreated } from "../actions/index";
 
 window.dailyIssuesCountStore = dailyIssuesCountStore;
 window.addDailyIssueCount = addDailyIssueCount;
@@ -19,6 +28,14 @@ window.addClosedIssuesDay = addClosedIssuesDay;
 window.weeklyIssuesCountStore = weeklyIssuesCountStore;
 window.addWeeklyOpenedIssueCount = addWeeklyOpenedIssueCount;
 window.addWeeklyClosedIssueCount = addWeeklyClosedIssueCount;
+
+window.dailyVelocityStore = dailyVelocityStore;
+window.addDayVelocityClosed = addDayVelocityClosed;
+window.addDayVelocityCreated = addDayVelocityCreated;
+
+window.weeklyVelocityStore = weeklyVelocityStore;
+window.addWeekVelocityClosed = addWeekVelocityClosed;
+window.addWeekVelocityCreated = addWeekVelocityCreated;
 
 /*
 export default class App extends Component {

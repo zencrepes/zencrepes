@@ -9,7 +9,7 @@ import { stats_issues_per_day } from '../../data/DailyStats.js'
 import Highcharts from 'highcharts/highstock';
 import {
     HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
-    AreaSplineSeries, SplineSeries, Navigator, RangeSelector, Tooltip
+    AreaSplineSeries, SplineSeries, Series, Navigator, RangeSelector, Tooltip
 } from 'react-jsx-highstock';
 import {local_gh_issues} from "../../data_fetch/LoadIssues";
 import {render} from "react-dom";
@@ -47,6 +47,11 @@ class StatsPerDay extends Component {
     render() {
         const { data1, data2 } = this.state;
 
+        const marker = {
+            enabled: true,
+            radius: 2
+        }
+
         return (
             <div className="app">
                 <HighchartsStockChart>
@@ -73,7 +78,7 @@ class StatsPerDay extends Component {
 
                     <YAxis id="price">
                         <YAxis.Title>Tickets</YAxis.Title>
-                        <SplineSeries id="closed" name="Closed" data={this.getClosedTicketsByDay()} />
+                        <Series id="closed" name="Closed per Day" lineWidth="0" marker={marker} data={this.getClosedTicketsByDay()} />
                     </YAxis>
 
                     <YAxis id="social" opposite>

@@ -11,6 +11,7 @@ export const gh_milestones = new Mongo.Collection('gh_milestones', {connection: 
 
 export let array_issues_per_day = [];
 export let array_completion_per_week = [];
+export let array_28d_avg = [];
 
 const formatDate = (dateString) => {
     day = new Date(dateString);
@@ -31,14 +32,27 @@ const buildArrayInterval = (startDate, endDate) => {
     var currentDate = startDate;
     while(currentDate < endDate) {
         currentDate.setDate(currentDate.getDate() + 1);
-        array_issues_per_day[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0}
+        array_issues_per_day[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
 
         var currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
         if(typeof array_completion_per_week[currentWeekYear] === 'undefined') {
-            array_completion_per_week[currentWeekYear] = {weekStart: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0}
+            array_completion_per_week[currentWeekYear] = {weekStart: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
         }
     }
     return array_issues_per_day;
+}
+
+const calculateAverageVelocity = (array, indexValue) => {
+    return array
+        .map(values => values[indexValue])
+        .reduce((accumulator, currentValue, currentIndex, array) => {
+            if (currentIndex === array.length-1) {
+                return accumulator/array.length;
+            } else {
+                return accumulator
+            }
+        });
+
 }
 
 //Very basic non-optimized initial implementation
@@ -60,7 +74,6 @@ const DailyStats = () => {
     array_issues_per_day = buildArrayInterval(firstDay, lastDay);
     console.log("Number of days in the interval: " + Object.keys(array_issues_per_day).length);
     gh_issues.find({}).forEach((issue) => {
-
         // Populate daily stats array
         array_issues_per_day[issue.createdAt.slice(0, 10)]['createdCount']++;
         if (issue.closedAt !== null) {
@@ -79,29 +92,63 @@ const DailyStats = () => {
         }
     });
 
-    // Processing is complete, fill redux store with daily data
-    Object.keys(array_issues_per_day).forEach(function(key) {
-        window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount([
-            new Date(array_issues_per_day[key].date).getTime(),
-            array_issues_per_day[key]['createdCount']
-        ]));
-        window.dailyIssuesCountStore.dispatch(window.addClosedIssuesDay([
-            new Date(array_issues_per_day[key].date).getTime(),
-            array_issues_per_day[key]['closedCount']
-        ]));
+
+    let ticketsPerDay = Object.values(array_issues_per_day);
+    ticketsPerDay.map(function(value, idx) {
+        if (idx <=28) {startIdx = 0;}
+        else {startIdx = idx - 28;}
+        if (idx !== 0) {
+            let currentWindowIssues = ticketsPerDay.slice(startIdx, idx);
+            ticketsPerDay[idx]['velocityCreatedCount'] = calculateAverageVelocity(currentWindowIssues, "createdCount");
+            ticketsPerDay[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
+            ticketsPerDay[idx]['velocityCreatedPoints'] = calculateAverageVelocity(currentWindowIssues, "createdPoints");
+            ticketsPerDay[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
+        }
     });
 
-    // Processing is complete, fill redux store with weekly data
-    Object.keys(array_completion_per_week).forEach(function(key) {
-        window.weeklyIssuesCountStore.dispatch(window.addWeeklyOpenedIssueCount([
-            new Date(array_completion_per_week[key].weekStart).getTime(),
-            array_completion_per_week[key]['createdCount']
-        ]));
-        window.weeklyIssuesCountStore.dispatch(window.addWeeklyClosedIssueCount([
-            new Date(array_completion_per_week[key].weekStart).getTime(),
-            array_completion_per_week[key]['closedCount']
-        ]));
+    let ticketsPerWeek = Object.values(array_completion_per_week);
+    ticketsPerWeek.map(function(value, idx) {
+        if (idx <=4) {startIdx = 0;}
+        else {startIdx = idx - 4;}
+        if (idx !== 0) {
+            let currentWindowIssues = ticketsPerWeek.slice(startIdx, idx);
+            ticketsPerWeek[idx]['velocityCreatedCount'] = calculateAverageVelocity(currentWindowIssues, "createdCount");
+            ticketsPerWeek[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
+            ticketsPerWeek[idx]['velocityCreatedPoints'] = calculateAverageVelocity(currentWindowIssues, "createdPoints");
+            ticketsPerWeek[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
+        }
     });
+
+    ticketsPerDay.map(function(value, idx) {
+        window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount(
+            [new Date(value.date).getTime(), value.createdCount]
+        ));
+        window.dailyIssuesCountStore.dispatch(window.addClosedIssuesDay(
+            [new Date(value.date).getTime(), value.closedCount]
+        ));
+        window.dailyVelocityStore.dispatch(window.addDayVelocityCreated(
+            [new Date(value.date).getTime(), value.velocityCreatedCount]
+        ));
+        window.dailyVelocityStore.dispatch(window.addDayVelocityClosed(
+            [new Date(value.date).getTime(), value.velocityClosedCount]
+        ));
+    });
+
+    ticketsPerWeek.map(function(value, idx) {
+        window.weeklyIssuesCountStore.dispatch(window.addWeeklyOpenedIssueCount(
+            [new Date(value.weekStart).getTime(), value.createdCount]
+        ));
+        window.weeklyIssuesCountStore.dispatch(window.addWeeklyClosedIssueCount(
+            [new Date(value.weekStart).getTime(), value.closedCount]
+        ));
+        window.weeklyVelocityStore.dispatch(window.addWeekVelocityCreated(
+            [new Date(value.date).getTime(), value.velocityCreatedCount]
+        ));
+        window.weeklyVelocityStore.dispatch(window.addWeekVelocityClosed(
+            [new Date(value.date).getTime(), value.velocityClosedCount]
+        ));
+    });
+
 }
 
 /*
