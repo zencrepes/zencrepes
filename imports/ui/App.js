@@ -9,11 +9,16 @@ import Reboot from 'material-ui/Reboot';
 import Drawer from './drawer/Drawer';
 
 import dailyIssuesCountStore from "../store/index";
-import { addDailyIssueCount, addClosedIssuesDay } from "../actions/index";
+import weeklyIssuesCountStore from "../store/index";
+import { addDailyIssueCount, addClosedIssuesDay, addWeeklyClosedIssueCount, addWeeklyOpenedIssueCount } from "../actions/index";
 
 window.dailyIssuesCountStore = dailyIssuesCountStore;
 window.addDailyIssueCount = addDailyIssueCount;
 window.addClosedIssuesDay = addClosedIssuesDay;
+
+window.weeklyIssuesCountStore = weeklyIssuesCountStore;
+window.addWeeklyOpenedIssueCount = addWeeklyOpenedIssueCount;
+window.addWeeklyClosedIssueCount = addWeeklyClosedIssueCount;
 
 /*
 export default class App extends Component {

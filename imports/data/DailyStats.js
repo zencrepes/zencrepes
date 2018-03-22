@@ -10,6 +10,7 @@ export const stats_issues_per_day = new Mongo.Collection('stats_issues_per_day',
 export const gh_milestones = new Mongo.Collection('gh_milestones', {connection: null});
 
 export let array_issues_per_day = [];
+export let array_completion_per_week = [];
 
 const formatDate = (dateString) => {
     day = new Date(dateString);
@@ -19,13 +20,23 @@ const formatDate = (dateString) => {
     return day
 }
 
+const getWeekYear = (dateObj) => {
+    var jan4th = new Date(dateObj.getFullYear(),0,4);
+    return Math.ceil((((dateObj - jan4th) / 86400000) + jan4th.getDay()+1)/7);
+}
+
 // Build a collection of days between 2 dates
 const buildArrayInterval = (startDate, endDate) => {
     //let array_issues_per_day = [];
     var currentDate = startDate;
     while(currentDate < endDate) {
         currentDate.setDate(currentDate.getDate() + 1);
-        array_issues_per_day[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0}
+        array_issues_per_day[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0}
+
+        var currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
+        if(typeof array_completion_per_week[currentWeekYear] === 'undefined') {
+            array_completion_per_week[currentWeekYear] = {weekStart: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0}
+        }
     }
     return array_issues_per_day;
 }
@@ -49,14 +60,26 @@ const DailyStats = () => {
     array_issues_per_day = buildArrayInterval(firstDay, lastDay);
     console.log("Number of days in the interval: " + Object.keys(array_issues_per_day).length);
     gh_issues.find({}).forEach((issue) => {
-        //console.log(issue);
+
+        // Populate daily stats array
         array_issues_per_day[issue.createdAt.slice(0, 10)]['createdCount']++;
         if (issue.closedAt !== null) {
             array_issues_per_day[issue.closedAt.slice(0, 10)]['closedCount']++;
         }
+
+        // Populate weekly stats array
+        createdDate = formatDate(formatDate(issue.createdAt));
+        createdWeek = createdDate.getFullYear()*100 + getWeekYear(createdDate);
+        array_completion_per_week[createdWeek]['createdCount']++;
+
+        if (issue.closedAt !== null) {
+            closedDate = formatDate(formatDate(issue.closedAt));
+            closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
+            array_completion_per_week[createdWeek]['closedCount']++;
+        }
     });
 
-    // Processing is complete, fill redux store with data
+    // Processing is complete, fill redux store with daily data
     Object.keys(array_issues_per_day).forEach(function(key) {
         window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount([
             new Date(array_issues_per_day[key].date).getTime(),
@@ -68,9 +91,18 @@ const DailyStats = () => {
         ]));
     });
 
+    // Processing is complete, fill redux store with weekly data
+    Object.keys(array_completion_per_week).forEach(function(key) {
+        window.weeklyIssuesCountStore.dispatch(window.addWeeklyOpenedIssueCount([
+            new Date(array_completion_per_week[key].weekStart).getTime(),
+            array_completion_per_week[key]['createdCount']
+        ]));
+        window.weeklyIssuesCountStore.dispatch(window.addWeeklyClosedIssueCount([
+            new Date(array_completion_per_week[key].weekStart).getTime(),
+            array_completion_per_week[key]['closedCount']
+        ]));
+    });
 }
-
-
 
 /*
 const List = connect(mapStateToProps)(ConnectedList);
