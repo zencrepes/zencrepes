@@ -19,8 +19,8 @@ import {local_gh_organizations} from "../../data_fetch/LoadOrgs";
 
 const mapStateToProps = state => {
     return {
-        dailyIssuesCount: state.dailyIssuesCount,
-        closedIssuesDays: state.closedIssuesDays,
+        dayCreated: state.dayCreated,
+        dayClosed: state.dayClosed,
         dayVelocityCreated: state.dayVelocityCreated,
         dayVelocityClosed: state.dayVelocityClosed,};
 };
@@ -50,10 +50,10 @@ class StatsPerDay extends Component {
     }
 
     getCreatedTicketsByDay() {
-        return this.props.dailyIssuesCount;
+        return this.props.dayCreated;
     }
     getClosedTicketsByDay() {
-        return this.props.closedIssuesDays;
+        return this.props.dayClosed;
     }
 
     render() {
@@ -90,8 +90,8 @@ class StatsPerDay extends Component {
 
                     <YAxis id="tickets">
                         <YAxis.Title>Tickets Count</YAxis.Title>
-                        <Series id="created" name="Created" lineWidth="0" color="#43A047" marker={marker} data={this.getCreatedTicketsByDay()} />
-                        <SplineSeries id="created-velocity" name="Created (Velocity)" color="#43A047" data={this.getVelocityCreated()} />
+                        <Series id="created" name="Created" lineWidth="0" color="#F44336" marker={marker} data={this.getCreatedTicketsByDay()} />
+                        <SplineSeries id="created-velocity" name="Created (Velocity)" color="#F44336" data={this.getVelocityCreated()} />
                         <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getClosedTicketsByDay()} />
                         <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getVelocityClosed()} />
                     </YAxis>

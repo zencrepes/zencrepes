@@ -11,24 +11,24 @@ import Drawer from './drawer/Drawer';
 import dailyTicketsStore from "../store/index";
 import weeklyTicketsStore from "../store/index";
 
-import { addDailyIssueCount,
-    addClosedIssuesDay,
-    addWeeklyClosedIssueCount,
-    addWeeklyOpenedIssueCount,
+import { addDayCreated,
+    addDayClosed,
+    addWeekClosed,
+    addWeekCreated,
     addDayVelocityClosed,
     addDayVelocityCreated,
     addWeekVelocityClosed,
     addWeekVelocityCreated } from "../actions/index";
 
 window.dailyTicketsStore = dailyTicketsStore;
-window.addDailyIssueCount = addDailyIssueCount;
-window.addClosedIssuesDay = addClosedIssuesDay;
+window.addDayCreated = addDayCreated;
+window.addDayClosed = addDayClosed;
 window.addDayVelocityClosed = addDayVelocityClosed;
 window.addDayVelocityCreated = addDayVelocityCreated;
 
 window.weeklyTicketsStore = weeklyTicketsStore;
-window.addWeeklyOpenedIssueCount = addWeeklyOpenedIssueCount;
-window.addWeeklyClosedIssueCount = addWeeklyClosedIssueCount;
+window.addWeekCreated = addWeekCreated;
+window.addWeekClosed = addWeekClosed;
 window.addWeekVelocityClosed = addWeekVelocityClosed;
 window.addWeekVelocityCreated = addWeekVelocityCreated;
 

@@ -11,8 +11,8 @@ import {
 
 const mapStateToProps = state => {
     return {
-        weeklyOpenedIssueCount: state.weeklyOpenedIssueCount,
-        weeklyClosedIssueCount: state.weeklyClosedIssueCount,
+        weekCreated: state.weekCreated,
+        weekClosed: state.weekClosed,
         weekVelocityCreated: state.weekVelocityCreated,
         weekVelocityClosed: state.weekVelocityClosed,
     };
@@ -43,10 +43,10 @@ class StatsPerWeek extends Component {
     }
 
     getCreatedTicketsByWeek() {
-        return this.props.weeklyOpenedIssueCount;
+        return this.props.weekCreated;
     }
     getClosedTicketsByWeek() {
-        return this.props.weeklyClosedIssueCount;
+        return this.props.weekClosed;
     }
 
     render() {
@@ -66,7 +66,7 @@ class StatsPerWeek extends Component {
 
                     <Legend />
 
-                    <RangeSelector>
+                    <RangeSelector allButtonsEnabled="true" selected="3">
                         <RangeSelector.Button count={1} type="month">1m</RangeSelector.Button>
                         <RangeSelector.Button count={3} type="month">3m</RangeSelector.Button>
                         <RangeSelector.Button count={6} type="month">6m</RangeSelector.Button>
@@ -83,9 +83,9 @@ class StatsPerWeek extends Component {
 
                     <YAxis id="tickets">
                         <YAxis.Title>Tickets Count</YAxis.Title>
-                        <Series id="created" name="Created" lineWidth="0" color="#43A047" marker={marker} data={this.getCreatedTicketsByWeek()} />
-                        <SplineSeries id="created-velocity" name="Created (Velocity)" color="#43A047" data={this.getVelocityCreated()} />
-                        <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getCreatedTicketsByWeek()} />
+                        <Series id="created" name="Created" lineWidth="0" color="#F44336" marker={marker} data={this.getCreatedTicketsByWeek()} />
+                        <SplineSeries id="created-velocity" name="Created (Velocity)" color="#F44336" data={this.getVelocityCreated()} />
+                        <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getClosedTicketsByWeek()} />
                         <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getVelocityClosed()} />
                     </YAxis>
 

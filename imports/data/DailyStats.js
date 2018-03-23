@@ -125,10 +125,10 @@ const DailyStats = () => {
     });
 
     ticketsPerDay.map(function(value, idx) {
-        window.dailyTicketsStore.dispatch(window.addDailyIssueCount(
+        window.dailyTicketsStore.dispatch(window.addDayCreated(
             [new Date(value.date).getTime(), value.createdCount]
         ));
-        window.dailyTicketsStore.dispatch(window.addClosedIssuesDay(
+        window.dailyTicketsStore.dispatch(window.addDayClosed(
             [new Date(value.date).getTime(), value.closedCount]
         ));
         window.dailyTicketsStore.dispatch(window.addDayVelocityCreated(
@@ -140,17 +140,17 @@ const DailyStats = () => {
     });
 
     ticketsPerWeek.map(function(value, idx) {
-        window.weeklyTicketsStore.dispatch(window.addWeeklyOpenedIssueCount(
+        window.weeklyTicketsStore.dispatch(window.addWeekCreated(
             [new Date(value.weekStart).getTime(), value.createdCount]
         ));
-        window.weeklyTicketsStore.dispatch(window.addWeeklyClosedIssueCount(
+        window.weeklyTicketsStore.dispatch(window.addWeekClosed(
             [new Date(value.weekStart).getTime(), value.closedCount]
         ));
         window.weeklyTicketsStore.dispatch(window.addWeekVelocityCreated(
-            [new Date(value.date).getTime(), value.velocityCreatedCount]
+            [new Date(value.weekStart).getTime(), value.velocityCreatedCount]
         ));
         window.weeklyTicketsStore.dispatch(window.addWeekVelocityClosed(
-            [new Date(value.date).getTime(), value.velocityClosedCount]
+            [new Date(value.weekStart).getTime(), value.velocityClosedCount]
         ));
     });
 
