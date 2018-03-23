@@ -8,12 +8,13 @@ import { gh_organizations } from '../../data_fetch/LoadOrgs.js'
 import Button from 'material-ui/Button';
 
 import DailyStats from '../../data/DailyStats';
-import StatsPerDay from '../charts/StatsPerDay';
+import Aggregates from '../../data/Aggregates';
 
 import {LoadOrgs} from '../../data_fetch/LoadOrgs.js'
 
 export default class CalculateButton extends Component {
     computeData() {
+        Aggregates()
         DailyStats()
     }
     render() {

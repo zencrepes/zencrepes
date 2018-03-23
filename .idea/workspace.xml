@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c79dba04-9d66-4387-8ddc-38ca3e5088e8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/imports/ui/charts/DaysToCompletion.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/imports/data/Aggregates.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/actions/index.js" afterPath="$PROJECT_DIR$/imports/actions/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/constants/action-types.js" afterPath="$PROJECT_DIR$/imports/constants/action-types.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.meteor/packages" afterPath="$PROJECT_DIR$/.meteor/packages" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.meteor/versions" afterPath="$PROJECT_DIR$/.meteor/versions" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/data/DailyStats.js" afterPath="$PROJECT_DIR$/imports/data/DailyStats.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/reducers/index.js" afterPath="$PROJECT_DIR$/imports/reducers/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/ui/App.js" afterPath="$PROJECT_DIR$/imports/ui/App.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/ui/Layout.js" afterPath="$PROJECT_DIR$/imports/ui/Layout.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imports/ui/menu/ComputeButton.js" afterPath="$PROJECT_DIR$/imports/ui/menu/ComputeButton.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -68,21 +66,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DailyStats.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/imports/data/DailyStats.js">
+      <file leaf-file-name="LoadIssues.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/imports/data_fetch/LoadIssues.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="171" column="4" lean-forward="false" selection-start-line="171" selection-start-column="4" selection-end-line="171" selection-end-column="4" />
+            <state relative-caret-position="195">
+              <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="26" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imports/store/index.js">
+      <file leaf-file-name="DailyStats.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/imports/data/DailyStats.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+            <state relative-caret-position="515">
+              <caret line="75" column="30" lean-forward="false" selection-start-line="75" selection-start-column="26" selection-end-line="75" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Aggregates.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/imports/data/Aggregates.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="858">
+              <caret line="61" column="39" lean-forward="false" selection-start-line="61" selection-start-column="39" selection-end-line="61" selection-end-column="39" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ComputeButton.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/imports/ui/menu/ComputeButton.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -93,30 +113,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="600">
               <caret line="40" column="14" lean-forward="false" selection-start-line="40" selection-start-column="14" selection-end-line="40" selection-end-column="14" />
-              <folding>
-                <element signature="e#53#94#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Layout.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imports/ui/Layout.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="48" column="70" lean-forward="false" selection-start-line="48" selection-start-column="70" selection-end-line="48" selection-end-column="70" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StatsPerDay.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imports/ui/charts/StatsPerDay.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="813">
-              <caret line="100" column="59" lean-forward="false" selection-start-line="100" selection-start-column="59" selection-end-line="100" selection-end-column="59" />
               <folding>
                 <element signature="e#53#94#0" expanded="true" />
               </folding>
@@ -138,8 +134,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>weeklyTicketsStore</find>
-      <find>getCreatedTicketsByWeek</find>
       <find>local_gh_issues</find>
       <find>ADD_DAY</find>
       <find>ADD_CLOSED_ISSUES_DAY</find>
@@ -168,6 +162,8 @@
       <find>completionVelocities</find>
       <find>getVelocityCreated</find>
       <find>now</find>
+      <find>author</find>
+      <find>each</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -231,7 +227,6 @@
         <option value="$PROJECT_DIR$/imports/ui/charts/StatsPerWeek.js" />
         <option value="$PROJECT_DIR$/imports/ui/charts/StatsPerDay.js" />
         <option value="$PROJECT_DIR$/imports/data/CompletionForecast.js" />
-        <option value="$PROJECT_DIR$/imports/ui/menu/ComputeButton.js" />
         <option value="$PROJECT_DIR$/imports/ui/Layout.js" />
         <option value="$PROJECT_DIR$/imports/constants/action-types.js" />
         <option value="$PROJECT_DIR$/imports/reducers/index.js" />
@@ -239,6 +234,8 @@
         <option value="$PROJECT_DIR$/imports/ui/App.js" />
         <option value="$PROJECT_DIR$/imports/ui/charts/DaysToCompletion.js" />
         <option value="$PROJECT_DIR$/imports/data/DailyStats.js" />
+        <option value="$PROJECT_DIR$/imports/ui/menu/ComputeButton.js" />
+        <option value="$PROJECT_DIR$/imports/data/Aggregates.js" />
       </list>
     </option>
   </component>
@@ -309,6 +306,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="github-agile-view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="github-agile-view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imports" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="menu" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -471,8 +490,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/imports/ui/charts" />
       <recent name="$PROJECT_DIR$/imports/data" />
+      <recent name="$PROJECT_DIR$/imports/ui/charts" />
       <recent name="$PROJECT_DIR$/imports/store" />
       <recent name="$PROJECT_DIR$/imports/actions" />
       <recent name="$PROJECT_DIR$/imports/reducers" />
@@ -784,7 +803,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62113000" />
+    <option name="totallyTimeSpent" value="65206000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="23" width="1920" height="1177" extended-state="6" />
@@ -839,13 +858,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/imports/ui/menu/ComputeButton.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="16" column="20" lean-forward="false" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imports/data_fetch/LoadOrgs.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -865,7 +877,7 @@
         <state relative-caret-position="1035">
           <caret line="82" column="86" lean-forward="false" selection-start-line="82" selection-start-column="81" selection-end-line="82" selection-end-column="86" />
           <folding>
-            <element signature="e#53#94#0" expanded="true" />
+            <element signature="e#53#94#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1065,28 +1077,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imports/ui/menu/ComputeButton.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imports/data/CompletionForecast.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
           <caret line="61" column="34" lean-forward="true" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imports/data_fetch/LoadIssues.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="17" />
           <folding />
         </state>
       </provider>
@@ -1104,7 +1098,7 @@
         <state relative-caret-position="813">
           <caret line="100" column="59" lean-forward="false" selection-start-line="100" selection-start-column="59" selection-end-line="100" selection-end-column="59" />
           <folding>
-            <element signature="e#53#94#0" expanded="true" />
+            <element signature="e#53#94#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1114,7 +1108,7 @@
         <state relative-caret-position="720">
           <caret line="48" column="70" lean-forward="false" selection-start-line="48" selection-start-column="70" selection-end-line="48" selection-end-column="70" />
           <folding>
-            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#0#26#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1184,11 +1178,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/imports/ui/menu/ComputeButton.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imports/data_fetch/LoadIssues.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="26" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/imports/data/DailyStats.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="171" column="4" lean-forward="false" selection-start-line="171" selection-start-column="4" selection-end-line="171" selection-end-column="4" />
+        <state relative-caret-position="515">
+          <caret line="75" column="30" lean-forward="false" selection-start-line="75" selection-start-column="26" selection-end-line="75" selection-end-column="30" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imports/data/Aggregates.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="858">
+          <caret line="61" column="39" lean-forward="false" selection-start-line="61" selection-start-column="39" selection-end-line="61" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

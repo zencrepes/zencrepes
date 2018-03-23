@@ -169,7 +169,7 @@ const DailyStats = () => {
         }
     });
 
-    
+
     completionVelocities.map(function(value, idx) {
         window.weeklyTicketsStore.dispatch(window.addCompletionEstimate(
             value
