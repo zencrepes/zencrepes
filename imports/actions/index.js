@@ -18,3 +18,7 @@ export const addWeekCreated = weekCreated => ({ type: "ADD_WEEK_CREATED", payloa
 export const addWeekClosed = weekClosed => ({ type: "ADD_WEEK_CLOSED", payload: weekClosed });
 export const addWeekVelocityCreated = weekVelocityCreated => ({ type: "ADD_WEEK_VELOCITY_CREATED", payload: weekVelocityCreated });
 export const addWeekVelocityClosed = weekVelocityClosed => ({ type: "ADD_WEEK_VELOCITY_CLOSED", payload: weekVelocityClosed });
+
+import { ADD_COMPLETION_ESTIMATE } from "../constants/action-types";
+export const addCompletionEstimate = completionEstimate => ({ type: "ADD_COMPLETION_ESTIMATE", payload: completionEstimate });
+

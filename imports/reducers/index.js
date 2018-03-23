@@ -7,7 +7,8 @@ import {
     ADD_DAY_VELOCITY_CLOSED,
     ADD_DAY_VELOCITY_CREATED,
     ADD_WEEK_VELOCITY_CLOSED,
-    ADD_WEEK_VELOCITY_CREATED
+    ADD_WEEK_VELOCITY_CREATED,
+    ADD_COMPLETION_ESTIMATE
     } from "../constants/action-types";
 
 const initialState = {
@@ -18,7 +19,8 @@ const initialState = {
     dayVelocityCreated: [],
     dayVelocityClosed: [],
     weekVelocityCreated: [],
-    weekVelocityClosed: []
+    weekVelocityClosed: [],
+    completionEstimate: []
 };
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -38,6 +40,8 @@ const rootReducer = (state = initialState, action) => {
             return { ...state, weekVelocityCreated: [...state.weekVelocityCreated, action.payload] };
         case ADD_WEEK_VELOCITY_CLOSED:
             return { ...state, weekVelocityClosed: [...state.weekVelocityClosed, action.payload] };
+        case ADD_COMPLETION_ESTIMATE:
+            return { ...state, completionEstimate: [...state.completionEstimate, action.payload] };
         default:
             return state;
     }

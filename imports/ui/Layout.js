@@ -8,6 +8,7 @@ import Header from './Header';
 import Table from './Table';
 import StatsPerDay from './charts/StatsPerDay';
 import StatsPerWeek from './charts/StatsPerWeek';
+import DaysToCompletion from './charts/DaysToCompletion';
 
 import Menu from './menu/Menu.js';
 
@@ -45,7 +46,7 @@ function FullWidthGrid(props) {
                     <Paper className={classes.paper}>Stats 2</Paper>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <Paper className={classes.paper}>Stats 3</Paper>
+                    <Paper className={classes.paper}><DaysToCompletion /></Paper>
                 </Grid>
                 <Grid item xs={6} sm={2}>
                     <Paper className={classes.paper}>Facets</Paper>

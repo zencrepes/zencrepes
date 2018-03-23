@@ -13,6 +13,8 @@ export let array_issues_per_day = [];
 export let array_completion_per_week = [];
 export let array_28d_avg = [];
 
+let completionVelocities = [];
+
 const formatDate = (dateString) => {
     day = new Date(dateString);
     day.setUTCHours(0);
@@ -84,7 +86,6 @@ const DailyStats = () => {
             }
         }
 
-
         // Populate weekly stats array
         createdDate = formatDate(formatDate(issue.createdAt));
         createdWeek = createdDate.getFullYear()*100 + getWeekYear(createdDate);
@@ -122,6 +123,57 @@ const DailyStats = () => {
             ticketsPerWeek[idx]['velocityCreatedPoints'] = calculateAverageVelocity(currentWindowIssues, "createdPoints");
             ticketsPerWeek[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
         }
+        if (idx == ticketsPerWeek.length-1) {
+            //This is the last date of the sprint, calculate velocity on various timeframes
+            let totalClosedIssues = gh_issues.find({state:'CLOSED'}).count();
+            let totalOpenIssues = gh_issues.find({state:'OPEN'}).count();
+
+            let currentCompletion = { // All Time
+                'range': 'all',
+                'velocityClosedCount': calculateAverageVelocity(ticketsPerWeek, "closedCount"),
+                'velocityClosedPoints': calculateAverageVelocity(ticketsPerWeek, "closedPoints")
+            }
+            currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+            completionVelocities.push(currentCompletion);
+
+            if (idx >= 4) { // 4 weeks
+                let currentWindowIssues = ticketsPerWeek.slice(idx-4, idx);
+                let currentCompletion = {
+                    'range': '4w',
+                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
+                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                }
+                currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+                completionVelocities.push(currentCompletion);
+            }
+            if (idx >= 8) { // 8 weeks
+                let currentWindowIssues = ticketsPerWeek.slice(idx-8, idx);
+                let currentCompletion = {
+                    'range': '8w',
+                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
+                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                }
+                currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+                completionVelocities.push(currentCompletion);
+            }
+            if (idx >= 12) { // 12 weeks
+                let currentWindowIssues = ticketsPerWeek.slice(idx-12, idx);
+                let currentCompletion = {
+                    'range': '12w',
+                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
+                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                }
+                currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+                completionVelocities.push(currentCompletion);
+            }
+        }
+    });
+
+    
+    completionVelocities.map(function(value, idx) {
+        window.weeklyTicketsStore.dispatch(window.addCompletionEstimate(
+            value
+        ));
     });
 
     ticketsPerDay.map(function(value, idx) {

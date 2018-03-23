@@ -18,7 +18,9 @@ import { addDayCreated,
     addDayVelocityClosed,
     addDayVelocityCreated,
     addWeekVelocityClosed,
-    addWeekVelocityCreated } from "../actions/index";
+    addWeekVelocityCreated,
+    addCompletionEstimate
+    } from "../actions/index";
 
 window.dailyTicketsStore = dailyTicketsStore;
 window.addDayCreated = addDayCreated;
@@ -31,7 +33,7 @@ window.addWeekCreated = addWeekCreated;
 window.addWeekClosed = addWeekClosed;
 window.addWeekVelocityClosed = addWeekVelocityClosed;
 window.addWeekVelocityCreated = addWeekVelocityCreated;
-
+window.addCompletionEstimate = addCompletionEstimate;
 /*
 export default class App extends Component {
     render() {
