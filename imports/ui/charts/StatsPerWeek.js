@@ -6,11 +6,16 @@ import { connect } from "react-redux";
 import Highcharts from 'highcharts/highstock';
 import {
     HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
-    AreaSplineSeries, SplineSeries, Navigator, RangeSelector, Tooltip
+    AreaSplineSeries, SplineSeries, Series, Navigator, RangeSelector, Tooltip
 } from 'react-jsx-highstock';
 
 const mapStateToProps = state => {
-    return { weeklyOpenedIssueCount: state.weeklyOpenedIssueCount, weeklyClosedIssueCount: state.weeklyClosedIssueCount };
+    return {
+        weeklyOpenedIssueCount: state.weeklyOpenedIssueCount,
+        weeklyClosedIssueCount: state.weeklyClosedIssueCount,
+        weekVelocityCreated: state.weekVelocityCreated,
+        weekVelocityClosed: state.weekVelocityClosed,
+    };
 };
 
 class StatsPerWeek extends Component {
@@ -29,6 +34,14 @@ class StatsPerWeek extends Component {
         this.state.subscription.tasks.stop();
     }
 
+    getVelocityCreated() {
+        return this.props.weekVelocityCreated;
+    }
+
+    getVelocityClosed() {
+        return this.props.weekVelocityClosed;
+    }
+
     getCreatedTicketsByWeek() {
         return this.props.weeklyOpenedIssueCount;
     }
@@ -38,6 +51,11 @@ class StatsPerWeek extends Component {
 
     render() {
         const { data1, data2 } = this.state;
+
+        const marker = {
+            enabled: true,
+            radius: 2
+        }
 
         return (
             <div className="app">
@@ -63,19 +81,20 @@ class StatsPerWeek extends Component {
                         <XAxis.Title>Time</XAxis.Title>
                     </XAxis>
 
-                    <YAxis id="price">
-                        <YAxis.Title>Tickets</YAxis.Title>
-                        <SplineSeries id="closed" name="Closed" data={this.getCreatedTicketsByWeek()} />
+                    <YAxis id="tickets">
+                        <YAxis.Title>Tickets Count</YAxis.Title>
+                        <Series id="created" name="Created" lineWidth="0" color="#43A047" marker={marker} data={this.getCreatedTicketsByWeek()} />
+                        <SplineSeries id="created-velocity" name="Created (Velocity)" color="#43A047" data={this.getVelocityCreated()} />
+                        <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getCreatedTicketsByWeek()} />
+                        <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getVelocityClosed()} />
                     </YAxis>
 
-                    <YAxis id="social" opposite>
-                        <YAxis.Title>Tickets</YAxis.Title>
-                        <SplineSeries id="created" name="Created" data={this.getClosedTicketsByWeek()} />
-                    </YAxis>
 
                     <Navigator>
                         <Navigator.Series seriesId="closed" />
+                        <Navigator.Series seriesId="closed-velocity" />
                         <Navigator.Series seriesId="created" />
+                        <Navigator.Series seriesId="created-velocity" />
                     </Navigator>
                 </HighchartsStockChart>
 

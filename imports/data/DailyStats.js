@@ -32,7 +32,9 @@ const buildArrayInterval = (startDate, endDate) => {
     var currentDate = startDate;
     while(currentDate < endDate) {
         currentDate.setDate(currentDate.getDate() + 1);
-        array_issues_per_day[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
+        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+            array_issues_per_day[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
+        }
 
         var currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
         if(typeof array_completion_per_week[currentWeekYear] === 'undefined') {
@@ -46,6 +48,7 @@ const calculateAverageVelocity = (array, indexValue) => {
     return array
         .map(values => values[indexValue])
         .reduce((accumulator, currentValue, currentIndex, array) => {
+            accumulator += currentValue;
             if (currentIndex === array.length-1) {
                 return accumulator/array.length;
             } else {
@@ -57,10 +60,6 @@ const calculateAverageVelocity = (array, indexValue) => {
 
 //Very basic non-optimized initial implementation
 const DailyStats = () => {
-
-    // Start by clearing the cache
-//    stats_issues_per_day.remove({});
-
     // Define first and last date
     let firstDay = formatDate(gh_issues.findOne({}, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
     let lastDay = formatDate(gh_issues.findOne({}, { sort: { createdAt: -1 }, reactive: false, transform: null }).updatedAt);
@@ -70,15 +69,21 @@ const DailyStats = () => {
     lastDay.setDate(lastDay.getDate() + 1);
     console.log("First Day: " + firstDay.toDateString() + " - Last Day: " + lastDay.toDateString());
 
-    // Trying to see if this is faster
     array_issues_per_day = buildArrayInterval(firstDay, lastDay);
     console.log("Number of days in the interval: " + Object.keys(array_issues_per_day).length);
     gh_issues.find({}).forEach((issue) => {
         // Populate daily stats array
-        array_issues_per_day[issue.createdAt.slice(0, 10)]['createdCount']++;
-        if (issue.closedAt !== null) {
-            array_issues_per_day[issue.closedAt.slice(0, 10)]['closedCount']++;
+        // Ensures the day exists in the array (i.e. not Sunday or Friday).
+        // If an issue has been created or closed during this interval, it is being discarded.
+        if (array_issues_per_day[issue.createdAt.slice(0, 10)] !== undefined) {
+            array_issues_per_day[issue.createdAt.slice(0, 10)]['createdCount']++;
+            if (issue.closedAt !== null) {
+                if (array_issues_per_day[issue.closedAt.slice(0, 10)] !== undefined) {
+                    array_issues_per_day[issue.closedAt.slice(0, 10)]['closedCount']++;
+                }
+            }
         }
+
 
         // Populate weekly stats array
         createdDate = formatDate(formatDate(issue.createdAt));
@@ -95,8 +100,8 @@ const DailyStats = () => {
 
     let ticketsPerDay = Object.values(array_issues_per_day);
     ticketsPerDay.map(function(value, idx) {
-        if (idx <=28) {startIdx = 0;}
-        else {startIdx = idx - 28;}
+        if (idx <=20) {startIdx = 0;}
+        else {startIdx = idx - 20;}
         if (idx !== 0) {
             let currentWindowIssues = ticketsPerDay.slice(startIdx, idx);
             ticketsPerDay[idx]['velocityCreatedCount'] = calculateAverageVelocity(currentWindowIssues, "createdCount");
@@ -120,41 +125,35 @@ const DailyStats = () => {
     });
 
     ticketsPerDay.map(function(value, idx) {
-        window.dailyIssuesCountStore.dispatch(window.addDailyIssueCount(
+        window.dailyTicketsStore.dispatch(window.addDailyIssueCount(
             [new Date(value.date).getTime(), value.createdCount]
         ));
-        window.dailyIssuesCountStore.dispatch(window.addClosedIssuesDay(
+        window.dailyTicketsStore.dispatch(window.addClosedIssuesDay(
             [new Date(value.date).getTime(), value.closedCount]
         ));
-        window.dailyVelocityStore.dispatch(window.addDayVelocityCreated(
+        window.dailyTicketsStore.dispatch(window.addDayVelocityCreated(
             [new Date(value.date).getTime(), value.velocityCreatedCount]
         ));
-        window.dailyVelocityStore.dispatch(window.addDayVelocityClosed(
+        window.dailyTicketsStore.dispatch(window.addDayVelocityClosed(
             [new Date(value.date).getTime(), value.velocityClosedCount]
         ));
     });
 
     ticketsPerWeek.map(function(value, idx) {
-        window.weeklyIssuesCountStore.dispatch(window.addWeeklyOpenedIssueCount(
+        window.weeklyTicketsStore.dispatch(window.addWeeklyOpenedIssueCount(
             [new Date(value.weekStart).getTime(), value.createdCount]
         ));
-        window.weeklyIssuesCountStore.dispatch(window.addWeeklyClosedIssueCount(
+        window.weeklyTicketsStore.dispatch(window.addWeeklyClosedIssueCount(
             [new Date(value.weekStart).getTime(), value.closedCount]
         ));
-        window.weeklyVelocityStore.dispatch(window.addWeekVelocityCreated(
+        window.weeklyTicketsStore.dispatch(window.addWeekVelocityCreated(
             [new Date(value.date).getTime(), value.velocityCreatedCount]
         ));
-        window.weeklyVelocityStore.dispatch(window.addWeekVelocityClosed(
+        window.weeklyTicketsStore.dispatch(window.addWeekVelocityClosed(
             [new Date(value.date).getTime(), value.velocityClosedCount]
         ));
     });
 
 }
 
-/*
-const List = connect(mapStateToProps)(ConnectedList);
-export default List;
-export default connect(mapStateToProps)(withHighcharts(StatsPerDay, Highcharts));
-*/
 export default DailyStats;
-//export default connect(mapStateToProps)(DailyStats);

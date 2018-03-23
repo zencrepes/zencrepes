@@ -8,10 +8,9 @@ import Layout from './Layout';
 import Reboot from 'material-ui/Reboot';
 import Drawer from './drawer/Drawer';
 
-import dailyIssuesCountStore from "../store/index";
-import weeklyIssuesCountStore from "../store/index";
-import dailyVelocityStore from "../store/index";
-import weeklyVelocityStore from "../store/index";
+import dailyTicketsStore from "../store/index";
+import weeklyTicketsStore from "../store/index";
+
 import { addDailyIssueCount,
     addClosedIssuesDay,
     addWeeklyClosedIssueCount,
@@ -21,19 +20,15 @@ import { addDailyIssueCount,
     addWeekVelocityClosed,
     addWeekVelocityCreated } from "../actions/index";
 
-window.dailyIssuesCountStore = dailyIssuesCountStore;
+window.dailyTicketsStore = dailyTicketsStore;
 window.addDailyIssueCount = addDailyIssueCount;
 window.addClosedIssuesDay = addClosedIssuesDay;
-
-window.weeklyIssuesCountStore = weeklyIssuesCountStore;
-window.addWeeklyOpenedIssueCount = addWeeklyOpenedIssueCount;
-window.addWeeklyClosedIssueCount = addWeeklyClosedIssueCount;
-
-window.dailyVelocityStore = dailyVelocityStore;
 window.addDayVelocityClosed = addDayVelocityClosed;
 window.addDayVelocityCreated = addDayVelocityCreated;
 
-window.weeklyVelocityStore = weeklyVelocityStore;
+window.weeklyTicketsStore = weeklyTicketsStore;
+window.addWeeklyOpenedIssueCount = addWeeklyOpenedIssueCount;
+window.addWeeklyClosedIssueCount = addWeeklyClosedIssueCount;
 window.addWeekVelocityClosed = addWeekVelocityClosed;
 window.addWeekVelocityCreated = addWeekVelocityCreated;
 

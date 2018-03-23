@@ -18,7 +18,11 @@ import {local_gh_organizations} from "../../data_fetch/LoadOrgs";
 
 
 const mapStateToProps = state => {
-    return { dailyIssuesCount: state.dailyIssuesCount, closedIssuesDays: state.closedIssuesDays };
+    return {
+        dailyIssuesCount: state.dailyIssuesCount,
+        closedIssuesDays: state.closedIssuesDays,
+        dayVelocityCreated: state.dayVelocityCreated,
+        dayVelocityClosed: state.dayVelocityClosed,};
 };
 
 class StatsPerDay extends Component {
@@ -35,6 +39,14 @@ class StatsPerDay extends Component {
 
     componentWillUnmount() {
         this.state.subscription.tasks.stop();
+    }
+
+    getVelocityCreated() {
+        return this.props.dayVelocityCreated;
+    }
+
+    getVelocityClosed() {
+        return this.props.dayVelocityClosed;
     }
 
     getCreatedTicketsByDay() {
@@ -57,7 +69,7 @@ class StatsPerDay extends Component {
                 <HighchartsStockChart>
                     <Chart zoomType="x" event="getChartData"/>
 
-                    <Title>Tickets Open & Closed per day</Title>
+                    <Title>Tickets Open & Closed per day (Monday-Friday)</Title>
 
                     <Legend />
 
@@ -76,19 +88,19 @@ class StatsPerDay extends Component {
                         <XAxis.Title>Time</XAxis.Title>
                     </XAxis>
 
-                    <YAxis id="price">
-                        <YAxis.Title>Tickets</YAxis.Title>
-                        <Series id="closed" name="Closed per Day" lineWidth="0" marker={marker} data={this.getClosedTicketsByDay()} />
-                    </YAxis>
-
-                    <YAxis id="social" opposite>
-                        <YAxis.Title>Tickets</YAxis.Title>
-                        <SplineSeries id="created" name="Created" data={this.getCreatedTicketsByDay()} />
+                    <YAxis id="tickets">
+                        <YAxis.Title>Tickets Count</YAxis.Title>
+                        <Series id="created" name="Created" lineWidth="0" color="#43A047" marker={marker} data={this.getCreatedTicketsByDay()} />
+                        <SplineSeries id="created-velocity" name="Created (Velocity)" color="#43A047" data={this.getVelocityCreated()} />
+                        <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getClosedTicketsByDay()} />
+                        <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getVelocityClosed()} />
                     </YAxis>
 
                     <Navigator>
                         <Navigator.Series seriesId="closed" />
+                        <Navigator.Series seriesId="closed-velocity" />
                         <Navigator.Series seriesId="created" />
+                        <Navigator.Series seriesId="created-velocity" />
                     </Navigator>
                 </HighchartsStockChart>
 
@@ -97,59 +109,4 @@ class StatsPerDay extends Component {
     }
 }
 
-/*
-export default withHighcharts(withTracker(() => {
-    return {
-        array_issues_per_day: array_issues_per_day,
-    };
-})(StatsPerDay), Highcharts);
-*/
 export default connect(mapStateToProps)(withHighcharts(StatsPerDay, Highcharts));
-
-
-/*
-import Highcharts from 'highcharts';
-import {
-    HighchartsChart, Chart, withHighcharts, XAxis, YAxis, Title, Subtitle, Legend, LineSeries
-} from 'react-jsx-highcharts';
-
-const plotOptions = {
-    series: {
-        pointStart: 2010
-    }
-};
-
-class StatsPerDay extends Component {
-    render () {
-        return (
-            <HighchartsChart plotOptions={plotOptions}>
-                <Chart />
-
-                <Title>Solar Employment Growth by Sector, 2010-2016</Title>
-
-                <Subtitle>Source: thesolarfoundation.com</Subtitle>
-
-                <Legend layout="vertical" align="right" verticalAlign="middle" />
-
-                <XAxis>
-                    <XAxis.Title>Time</XAxis.Title>
-                </XAxis>
-
-                <YAxis id="number">
-                    <YAxis.Title>Number of employees</YAxis.Title>
-                    <LineSeries id="installation" name="Installation" data={[43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]} />
-                    <LineSeries id="manufacturing" name="Manufacturing" data={[24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]} />
-                </YAxis>
-            </HighchartsChart>
-        );
-    }
-}
-
-export default withHighcharts(StatsPerDay, Highcharts);
-*/
-/*export default withTracker(() => {
-    return {
-        stats_issues_per_day: stats_issues_per_day,
-    };
-})(StatsPerDay);
-*/
