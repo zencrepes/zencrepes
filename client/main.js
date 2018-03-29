@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "../imports/store/index";
 
 import App from '../imports/ui/App.js';
+import AppState from '../imports/ui/AppState.js';
 
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
@@ -59,7 +60,9 @@ Meteor.startup(() => {
             render(
                 < ApolloProvider client = {client} >
                     <Provider store={store}>
-                        < App />
+                        < AppState >
+                            < App />
+                        </ AppState >
                     </Provider>
                 </ ApolloProvider >,
                 document.getElementById('render-target')

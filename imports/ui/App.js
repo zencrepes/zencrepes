@@ -50,12 +50,16 @@ export default class App extends Component {
 */
 
 export default class App extends Component {
+
+
     render() {
+        const state = this.props.appState;
+
         return (
             <div className="container">
                 <Reboot />
                 <Drawer />
-                <Layout />
+                <Layout state={state}/>
             </div>
         );
     }

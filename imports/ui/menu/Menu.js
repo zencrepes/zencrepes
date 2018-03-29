@@ -31,6 +31,9 @@ const styles = {
 
 function ButtonAppBar(props) {
     const { classes } = props;
+
+    const globalState = props.globalState;
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -42,7 +45,7 @@ function ButtonAppBar(props) {
                         Github Agile View
                     </Typography>
                     <ComputeButton color="inherit"></ComputeButton>
-                    <ReloadButton color="inherit"></ReloadButton>
+                    <ReloadButton color="inherit" globalState={globalState}></ReloadButton>
                 </Toolbar>
             </AppBar>
         </div>

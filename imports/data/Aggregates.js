@@ -14,7 +14,7 @@ let labels = {}
 
 // Build labels aggregate
 const buildLabelsAggregate = (issue) => {
-    if (issue.labels.length === 0) {
+    if (!issue.hasOwnProperty('labels')) {
         idx = 'unassigned';
         var label = {name: 'empty', 'description': 'No labels assigned'};
         if (labels[idx] === undefined) {
@@ -113,7 +113,7 @@ const buildAssigneesAggregate = (issue) => {
 }
 
 //Very basic non-optimized initial implementation
-const Aggregates = () => {
+const Aggregates = (globlaState) => {
     gh_issues.find({}).forEach((issue) => {
         buildAuthorsAggregate(issue);
         buildAssigneesAggregate(issue);
@@ -131,6 +131,8 @@ const Aggregates = () => {
             milestones_states[milestone.state]['issuesCount'] = milestones_states[milestone.state]['issuesCount'] + 1;
         }
     }
+
+    console.log(globlaState);
 
     console.log("Authors");
     console.log(authors);

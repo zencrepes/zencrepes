@@ -13,13 +13,16 @@ import Aggregates from '../../data/Aggregates';
 import {LoadOrgs} from '../../data_fetch/LoadOrgs.js'
 
 export default class CalculateButton extends Component {
-    computeData() {
-        Aggregates()
+
+    computeData(globalState) {
+        Aggregates(globalState)
         DailyStats()
     }
     render() {
+        const globalState = this.props.globalState;
+
         return (
-            <Button variant="raised" color="primary" onClick={this.computeData.bind(this)} >
+            <Button variant="raised" color="primary" onClick={this.computeData.bind(this, globalState)} >
                 (re)Compute
             </Button>
         );

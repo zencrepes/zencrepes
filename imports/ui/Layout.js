@@ -27,12 +27,27 @@ const styles = theme => ({
 function FullWidthGrid(props) {
     const { classes } = props;
 
+    const state = props.state;
+
     return (
         <div className={classes.root}>
             <Grid container spacing={8}>
                 <Grid item xs={12}>
                     <Header />
-                    <Menu />
+                    <Menu globalState={state} />
+                </Grid>
+                <Grid item xs={6} sm={2}>
+                    <IssueState states={state.states}/>
+                    <Paper className={classes.paper}>Facets</Paper>
+                </Grid>
+                <Grid item xs={6} sm={10}>
+                    <Table />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Paper className={classes.paper}>Stats 1</Paper>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Paper className={classes.paper}>Stats 2</Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <StatsPerDay />
@@ -41,20 +56,8 @@ function FullWidthGrid(props) {
                     <StatsPerWeek />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <Paper className={classes.paper}>Stats 1</Paper>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <Paper className={classes.paper}>Stats 2</Paper>
-                </Grid>
-                <Grid item xs={12} sm={4}>
                     <Paper className={classes.paper}><DaysToCompletion /></Paper>
                 </Grid>
-                <Grid item xs={6} sm={2}>
-                    <Paper className={classes.paper}>Facets</Paper>
-                </Grid>
-                <Grid item xs={6} sm={10}>
-                    <Table />
-                </Grid>>
             </Grid>
         </div>
     );
