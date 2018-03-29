@@ -9,12 +9,12 @@ import "react-table/react-table.css";
 const columns = [{
     Header: 'Title',
     accessor: 'title'
-}, {
-    Header: 'Org',
-    accessor: 'org'
-}, {
-    Header: 'Repo',
-    accessor: 'repo'
+//}, {
+//    Header: 'Org',
+//    accessor: 'org'
+//}, {
+//    Header: 'Repo',
+//    accessor: 'repo'
 }, {
     Header: 'State',
     accessor: 'state'

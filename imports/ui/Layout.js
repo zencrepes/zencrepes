@@ -11,6 +11,7 @@ import StatsPerWeek from './charts/StatsPerWeek';
 import DaysToCompletion from './charts/DaysToCompletion';
 
 import Menu from './menu/Menu.js';
+import IssueState from './facets/IssueState.js';
 
 const styles = theme => ({
     root: {

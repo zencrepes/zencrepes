@@ -8,8 +8,12 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
   viewer {
     organization(login: $org_name) {
       login
+      id
+      name
+      url
       repository(name: $repo_name) {
         name
+        url
         id
         issues(first: $increment, after: $repo_cursor) {
           totalCount
@@ -26,6 +30,17 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
               author {
                 login
                 url
+              }
+              labels (first: 5) {
+                totalCount
+                edges {
+                  node {
+                    id
+                    color
+                    name
+                    description
+                  }
+                }
               }
               milestone {
                 id
