@@ -8,7 +8,8 @@ class AppState extends Component {
             header: {
                 text: 'Some State'
             },
-            states: [{'issuesCount': 35, 'name': 'OPEN'}, {'issuesCount': 60, 'name': 'CLOSED'}],
+            //states: [{'issuesCount': 35, 'name': 'OPEN'}, {'issuesCount': 60, 'name': 'CLOSED'}],
+            states: [],
         };
         this.setAppState = this.setAppState.bind(this);
     }

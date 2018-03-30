@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { gh_issues } from '../data_fetch/LoadIssues.js'
 import { connect } from "react-redux";
 import {withHighcharts} from "react-jsx-highstock";
+import {addFacetState} from "../actions";
+import stateStore from "../store";
 
 let authors = {}
 let assignees = {}
@@ -113,7 +115,7 @@ const buildAssigneesAggregate = (issue) => {
 }
 
 //Very basic non-optimized initial implementation
-const Aggregates = (globlaState) => {
+const Aggregates = () => {
     gh_issues.find({}).forEach((issue) => {
         buildAuthorsAggregate(issue);
         buildAssigneesAggregate(issue);
@@ -132,25 +134,55 @@ const Aggregates = (globlaState) => {
         }
     }
 
-    console.log(globlaState);
+    // Populate the store with values for the different facets
+    Object.keys(states).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetState(
+            states[idx]
+        ));
+    });
 
-    console.log("Authors");
-    console.log(authors);
-    console.log('---');
-    console.log("Assignees");
-    console.log(assignees);
-    console.log("States");
-    console.log(states);
-    console.log("Organizations");
-    console.log(organizations);
-    console.log("Repositories");
-    console.log(repositories);
-    console.log("Milestones");
-    console.log(milestones);
-    console.log("Milestones States");
-    console.log(milestones_states);
-    console.log("Labels");
-    console.log(labels);
+    Object.keys(authors).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetAuthor(
+            authors[idx]
+        ));
+    });
+
+    Object.keys(assignees).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetAssignee(
+            assignees[idx]
+        ));
+    });
+
+    Object.keys(organizations).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetOrganization(
+            organizations[idx]
+        ));
+    });
+
+    Object.keys(repositories).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetRepository(
+            repositories[idx]
+        ));
+    });
+
+    Object.keys(milestones).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetMilestone(
+            milestones[idx]
+        ));
+    });
+
+    Object.keys(milestones_states).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetMilestoneState(
+            milestones_states[idx]
+        ));
+    });
+
+    Object.keys(labels).map(function(idx) {
+        window.stateStore.dispatch(window.addFacetLabel(
+            labels[idx]
+        ));
+    });
+
 }
 
 export default Aggregates;

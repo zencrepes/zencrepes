@@ -5,8 +5,12 @@ import PropTypes from 'prop-types';
 import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Chip from 'material-ui/Chip';
-import IconButton from 'material-ui/IconButton';
-import CommentIcon from 'material-ui-icons/Comment';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+
+import { connect } from "react-redux";
+
 
 const styles = theme => ({
     root: {
@@ -19,7 +23,17 @@ const styles = theme => ({
     },
 });
 
+const mapStateToProps = state => {
+    return {
+        facetState: state.facetState,
+    }
+};
+
 class IssueState extends React.Component {
+    constructor (props) {
+        super(props);
+    }
+
     state = {
         dense: true,
         checked: [0],
@@ -47,8 +61,13 @@ class IssueState extends React.Component {
 
         return (
             <div className={classes.root}>
+                <Toolbar>
+                    <Typography variant="title" color="inherit">
+                        States
+                    </Typography>
+                </Toolbar>
                 <List dense={dense}>
-                    {this.props.states.map(value => (
+                    {this.props.facetState.map(value => (
                         <ListItem
                             key={value.name}
                             role={undefined}
@@ -78,4 +97,4 @@ IssueState.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(IssueState);
+export default connect(mapStateToProps)(withStyles(styles)(IssueState));

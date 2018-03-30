@@ -10,6 +10,7 @@ import Drawer from './drawer/Drawer';
 
 import dailyTicketsStore from "../store/index";
 import weeklyTicketsStore from "../store/index";
+import stateStore from "../store/index";
 
 import { addDayCreated,
     addDayClosed,
@@ -19,7 +20,15 @@ import { addDayCreated,
     addDayVelocityCreated,
     addWeekVelocityClosed,
     addWeekVelocityCreated,
-    addCompletionEstimate
+    addCompletionEstimate,
+    addFacetState,
+    addFacetAuthor,
+    addFacetAssignee,
+    addFacetOrganization,
+    addFacetRepository,
+    addFacetMilestone,
+    addFacetMilestoneState,
+    addFacetLabel,
     } from "../actions/index";
 
 window.dailyTicketsStore = dailyTicketsStore;
@@ -34,6 +43,17 @@ window.addWeekClosed = addWeekClosed;
 window.addWeekVelocityClosed = addWeekVelocityClosed;
 window.addWeekVelocityCreated = addWeekVelocityCreated;
 window.addCompletionEstimate = addCompletionEstimate;
+
+window.stateStore = stateStore;
+window.addFacetState = addFacetState;
+window.addFacetAuthor = addFacetAuthor;
+window.addFacetAssignee = addFacetAssignee;
+window.addFacetOrganization = addFacetOrganization;
+window.addFacetRepository = addFacetRepository;
+window.addFacetMilestone = addFacetMilestone;
+window.addFacetMilestoneState = addFacetMilestoneState;
+window.addFacetLabel = addFacetLabel;
+
 /*
 export default class App extends Component {
     render() {
@@ -53,13 +73,11 @@ export default class App extends Component {
 
 
     render() {
-        const state = this.props.appState;
-
         return (
             <div className="container">
                 <Reboot />
                 <Drawer />
-                <Layout state={state}/>
+                <Layout />
             </div>
         );
     }

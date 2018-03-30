@@ -22,3 +22,20 @@ export const addWeekVelocityClosed = weekVelocityClosed => ({ type: "ADD_WEEK_VE
 import { ADD_COMPLETION_ESTIMATE } from "../constants/action-types";
 export const addCompletionEstimate = completionEstimate => ({ type: "ADD_COMPLETION_ESTIMATE", payload: completionEstimate });
 
+import { ADD_FACET_STATE } from "../constants/action-types";
+import { ADD_FACET_AUTHOR } from "../constants/action-types";
+import { ADD_FACET_ASSIGNEE } from "../constants/action-types";
+import { ADD_FACET_ORGANIZATION } from "../constants/action-types";
+import { ADD_FACET_REPOSITORY } from "../constants/action-types";
+import { ADD_FACET_MILESTONE } from "../constants/action-types";
+import { ADD_FACET_MILESTONE_STATE } from "../constants/action-types";
+import { ADD_FACET_LABEL } from "../constants/action-types";
+
+export const addFacetState = facetState => ({ type: "ADD_FACET_STATE", payload: facetState });
+export const addFacetAuthor = facetAuthor => ({ type: "ADD_FACET_AUTHOR", payload: facetAuthor });
+export const addFacetAssignee = facetAssignee => ({ type: "ADD_FACET_ASSIGNEE", payload: facetAssignee });
+export const addFacetOrganization = facetOrganization => ({ type: "ADD_FACET_ORGANIZATION", payload: facetOrganization });
+export const addFacetRepository = facetRepository => ({ type: "ADD_FACET_REPOSITORY", payload: facetRepository });
+export const addFacetMilestone = facetMilestone => ({ type: "ADD_FACET_MILESTONE", payload: facetMilestone });
+export const addFacetMilestoneState = facetMilestoneState => ({ type: "ADD_FACET_MILESTONE_STATE", payload: facetMilestoneState });
+export const addFacetLabel = facetLabel => ({ type: "ADD_FACET_LABEL", payload: facetLabel });
