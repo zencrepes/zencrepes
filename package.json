@@ -1,0 +1,17 @@
+{
+  "name": "github-agile-view",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.36",
+    "material-ui": "^1.0.0-beta.40",
+    "meteor-node-stubs": "^0.3.2",
+    "react": "^16.3.0",
+    "react-autobind": "^1.0.6",
+    "react-dom": "^16.3.0",
+    "react-komposer": "^2.0.0",
+    "react-router-dom": "^4.2.2"
+  }
+}
