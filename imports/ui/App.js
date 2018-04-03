@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Link, Route, Switch, Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 
 import PropTypes from 'prop-types'
 import autoBind from 'react-autobind';
 
 import Login from './login/index.js';
 import Dashboard from './dashboard/index.js';
+import Public from './components/Public/Public.js'
+import Authenticated from './components/Authenticated/Authenticated.js'
 
 class App extends Component {
     constructor(props) {
@@ -27,12 +30,9 @@ class App extends Component {
                 {!props.loading ? (
                     <div className="App">
                         <Switch>
-                            <Route path="/" exact component={Login} />
-                            <Route
-                                path="/dashboard"
-                                exact
-                                component={Dashboard}
-                            />
+                            <Public path="/" component={Login} {...props} {...state} />
+                            <Public path="/login" component={Login} {...props} {...state} />
+                            <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                         </Switch>
                     </div>
                 ) : ''}
@@ -53,6 +53,11 @@ App.propTypes = {
     emailVerified: PropTypes.bool.isRequired,
     authenticated: PropTypes.bool.isRequired,
 };
+
+const getUserName = name => ({
+    string: name,
+    object: `${name.first} ${name.last}`,
+}[typeof name]);
 
 
 export default withTracker(() => {
