@@ -2,7 +2,7 @@
   "name": "github-agile-view",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run --settings settings-development.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.44",
