@@ -9,6 +9,8 @@ import autoBind from 'react-autobind';
 
 import Login from './login/index.js';
 import Dashboard from './dashboard/index.js';
+import Index from './Index.js';
+
 import Public from './components/Public/Public.js'
 import Authenticated from './components/Authenticated/Authenticated.js'
 
@@ -30,7 +32,7 @@ class App extends Component {
                 {!props.loading ? (
                     <div className="App">
                         <Switch>
-                            <Public path="/" component={Login} {...props} {...state} />
+                            <Route exact name="index" path="/" component={Index} />
                             <Public path="/login" component={Login} {...props} {...state} />
                             <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                         </Switch>
