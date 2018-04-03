@@ -14,10 +14,6 @@ class Login extends Component {
         return (
             <OAuthLoginButtons
                 services={['github']}
-                emailMessage={{
-                    offset: 100,
-                    text: 'Log In with an Email Address',
-                }}
             />
         );
     }
