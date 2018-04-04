@@ -7,6 +7,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.44",
     "material-ui": "^1.0.0-beta.40",
+    "material-ui-icons": "^1.0.0-beta.36",
     "meteor-node-stubs": "^0.3.2",
     "prop-types": "^15.6.1",
     "react": "^16.3.0",
