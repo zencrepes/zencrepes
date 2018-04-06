@@ -12,21 +12,6 @@ export const chip = {
                 newChip = state;
             }
             return newChip;
-        },
-        updateLimit(state, limit){
-            return {
-                ...state,
-                ['limit']: limit
-            }
-        },
-        addBy(state, payload) {
-            return state + payload
-        }
-    },
-    effects: {
-        async addByAsync(payload, state) {
-            await delay(1000)
-            this.addBy(1)
         }
     }
 };

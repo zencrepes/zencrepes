@@ -16,24 +16,35 @@ const styles = {
     },
 };
 
-function UserAvatar(props) {
-    const { classes, currentUser, rateLimit } = props;
+class UserAvatar extends React.Component {
 
-    props.updateChip(rateLimit);
-    if (currentUser !== undefined) {
-        return (
-            <div className={classes.root}>
-                <Avatar alt={currentUser.name} src={currentUser.avatarUrl} className={classes.avatar} />
-            </div>
-        );
-    } else {
-        return null
+    componentWillMount() {
+        const { rateLimit } = this.props;
+        //console.log(rateLimit);
+        this.props.updateChip(rateLimit);
     }
+
+    render() {
+        const { classes, currentUser, rateLimit } = this.props;
+        this.props.updateChip(rateLimit);
+        if (currentUser !== undefined) {
+            return (
+                <div className={classes.root}>
+                    <Avatar alt={currentUser.name} src={currentUser.avatarUrl} className={classes.avatar}/>
+                </div>
+            );
+        } else {
+            return null
+        }
+    }
+
 }
 
 UserAvatar.propTypes = {
     classes: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
+    rateLimit: PropTypes.object,
+    updateChip: PropTypes.func,
 };
 
 const GET_USER_DATA = gql`
@@ -68,7 +79,6 @@ const withData = graphql(GET_USER_DATA, {
 });
 
 const mapDispatch = dispatch => ({
-    updateLimit: dispatch.chip.updateLimit,
     updateChip: dispatch.chip.updateChip
 });
 
