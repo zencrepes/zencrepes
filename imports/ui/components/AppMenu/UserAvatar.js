@@ -15,17 +15,21 @@ const styles = {
 };
 
 function UserAvatar(props) {
-    const { classes } = props;
-    console.log(props);
-    return (
-        <div className={classes.root}>
-            <Avatar alt={Meteor.user().services.github.username} src="https://avatars3.githubusercontent.com/u/5667028?s=40&v=4" className={classes.avatar} />
-        </div>
-    );
+    const { classes, currentUser } = props;
+    if (currentUser !== undefined) {
+        return (
+            <div className={classes.root}>
+                <Avatar alt={currentUser.name} src={currentUser.avatarUrl} className={classes.avatar} />
+            </div>
+        );
+    } else {
+        return null
+    }
 }
 
 UserAvatar.propTypes = {
     classes: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
 };
 
 const GET_USER_DATA = gql`
@@ -47,10 +51,10 @@ const GET_USER_DATA = gql`
 const withData = graphql(GET_USER_DATA, {
     // destructure the default props to more explicit ones
     props: ({ data: { error, loading, user, refetch } }) => {
-        console.log(user);
-        console.log(error);
-        console.log(loading);
-        console.log(refetch);
+//        console.log(user);
+//        console.log(error);
+//        console.log(loading);
+//        console.log(refetch);
         if (loading) return { userLoading: true };
         if (error) return { hasErrors: true };
 

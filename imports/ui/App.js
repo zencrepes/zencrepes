@@ -4,15 +4,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
-import { ApolloProvider } from 'react-apollo';
-import ApolloClient from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloLink, concat } from 'apollo-link';
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { setContext } from 'apollo-link-context';
-
 import PropTypes from 'prop-types'
 import autoBind from 'react-autobind';
 
@@ -23,26 +14,7 @@ import Index from './Index.js';
 import Public from './components/Public/Public.js'
 import Authenticated from './components/Authenticated/Authenticated.js'
 
-
-// Configure Apollo link
-const httpLink = new HttpLink({ uri: 'https://api.github.com/graphql' });
-const authMiddleware = new ApolloLink((operation, forward) => {
-    // add the authorization to the headers
-
-    const githubToken = localStorage.getItem('token');
-    operation.setContext({
-        headers: {
-            authorization: token ? `Bearer ${githubToken}` : "",
-        }
-    });
-
-    return forward(operation);
-})
-const client = new ApolloClient({
-    link: concat(authMiddleware, httpLink),
-    cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
-});
-
+import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
 class App extends Component {
     constructor(props) {
@@ -58,7 +30,7 @@ class App extends Component {
     render() {
         const { props, state, setAfterLoginPath } = this;
         return (
-            <ApolloProvider client={client}>
+            <ApolloProviderGithub>
                 <Router>
                     {!props.loading ? (
                         <div className="App">
@@ -70,7 +42,7 @@ class App extends Component {
                         </div>
                     ) : ''}
                 </Router>
-            </ApolloProvider>
+            </ApolloProviderGithub>
         );
     }
 }
