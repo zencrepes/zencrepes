@@ -4,6 +4,8 @@ import { withStyles } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { connect } from "react-redux";
+
 
 //import GQL_GET_USER from './../../../graphql/getUser.graphql';
 
@@ -15,7 +17,9 @@ const styles = {
 };
 
 function UserAvatar(props) {
-    const { classes, currentUser } = props;
+    const { classes, currentUser, rateLimit } = props;
+
+    props.updateChip(rateLimit);
     if (currentUser !== undefined) {
         return (
             <div className={classes.root}>
@@ -50,19 +54,22 @@ const GET_USER_DATA = gql`
 
 const withData = graphql(GET_USER_DATA, {
     // destructure the default props to more explicit ones
-    props: ({ data: { error, loading, user, refetch } }) => {
-//        console.log(user);
-//        console.log(error);
-//        console.log(loading);
-//        console.log(refetch);
+    props: ({ data: { error, loading, user, refetch, rateLimit } }) => {
+        console.log(rateLimit);
         if (loading) return { userLoading: true };
         if (error) return { hasErrors: true };
 
         return {
             currentUser: user,
+            rateLimit: rateLimit,
             refetch,
         };
     },
 });
 
-export default withData(withStyles(styles)(UserAvatar));
+const mapDispatch = dispatch => ({
+    updateLimit: dispatch.chip.updateLimit,
+    updateChip: dispatch.chip.updateChip
+});
+
+export default connect(null, mapDispatch)(withData(withStyles(styles)(UserAvatar)));

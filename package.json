@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.44",
+    "@rematch/core": "^0.6.0",
     "apollo-boost": "^0.1.4",
     "apollo-cache-inmemory": "^1.1.12",
     "apollo-client": "^2.2.8",
@@ -23,6 +24,7 @@
     "react-autobind": "^1.0.6",
     "react-dom": "^16.3.0",
     "react-komposer": "^2.0.0",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2"
   }
 }
