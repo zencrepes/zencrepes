@@ -1,0 +1,13 @@
+query ($login: String){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  user(login: $login) {
+    avatarUrl
+    name
+    login
+  }
+}
