@@ -7,11 +7,11 @@ import Drawer from 'material-ui/Drawer';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { Settings, TableLarge, ChartLine } from 'mdi-material-ui';
 import Divider from 'material-ui/Divider';
+import { Link } from 'react-router-dom';
 
 import GitRequests from './GitRequests.js';
 
 const drawerWidth = 200;
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -23,71 +23,22 @@ const styles = theme => ({
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    menuButton: {
-        marginLeft: 12,
-        marginRight: 36,
-    },
-    hide: {
-        display: 'none',
     },
     drawerPaper: {
         position: 'relative',
+        marginTop: '64px',
         width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing.unit * 7,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing.unit * 9,
-        },
-    },
-    toolbar: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        padding: '0 8px',
-        ...theme.mixins.toolbar,
     },
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3,
+        minWidth: 0, // So the Typography noWrap works
     },
+    toolbar: theme.mixins.toolbar,
 });
 
 class LeftDrawer extends Component {
-    state = {
-        open: true,
-    };
-
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
-    };
-
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
 
     render() {
         const { classes, theme } = this.props;
@@ -96,9 +47,8 @@ class LeftDrawer extends Component {
             <Drawer
                 variant="permanent"
                 classes={{
-                    paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+                    paper: classes.drawerPaper,
                 }}
-                open={this.state.open}
             >
                 <ListItem button>
                     <ListItemIcon>
@@ -113,12 +63,14 @@ class LeftDrawer extends Component {
                     <ListItemText primary="Charts" />
                 </ListItem>
                 <Divider />
-                <ListItem button>
-                    <ListItemIcon>
-                        <Settings />
-                    </ListItemIcon>
-                    <ListItemText primary="Settings" />
-                </ListItem>
+                <Link to="/settings">
+                    <ListItem button>
+                        <ListItemIcon>
+                            <Settings />
+                        </ListItemIcon>
+                        <ListItemText primary="Settings" />
+                    </ListItem>
+                </Link>
                 <GitRequests />
             </Drawer>
         );

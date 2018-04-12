@@ -47,19 +47,17 @@ class AppMenu extends Component {
         const open = Boolean(anchorEl);
 
         return (
-            <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>
-                            GitHub Agile View
-                        </Typography>
-                        <UserMenu />
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <AppBar position="absolute">
+                <Toolbar>
+                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="title" color="inherit" className={classes.flex}>
+                        GitHub Agile View
+                    </Typography>
+                    <UserMenu />
+                </Toolbar>
+            </AppBar>
         );
     }
 }

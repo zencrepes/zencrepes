@@ -11,6 +11,7 @@ class Dashboard extends Component {
             <div>
                 <AppMenu />
                 <LeftDrawer />
+                Dashboard
             </div>
         );
     }
