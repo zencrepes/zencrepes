@@ -10,8 +10,10 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import AccountCircle from 'material-ui-icons/AccountCircle';
 import Menu, { MenuItem } from 'material-ui/Menu';
+import Divider from 'material-ui/Divider';
 
-import UserAvatar from './UserAvatar.js';
+//import UserAvatar from './UserAvatar.js';
+import UserMenu from './UserMenu.js';
 
 const styles = {
     root: {
@@ -37,7 +39,6 @@ class AppMenu extends Component {
 
     handleClose = () => {
         this.setState({ anchorEl: null });
-        console.log(Meteor.user().services.github.username);
     };
 
     render() {
@@ -55,32 +56,7 @@ class AppMenu extends Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>
                             GitHub Agile View
                         </Typography>
-                        <div>
-                            <IconButton
-                                aria-owns={open ? 'menu-appbar' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleMenu}
-                                color="inherit"
-                            >
-                                <UserAvatar />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={open}
-                                onClose={this.handleClose}
-                            >
-                                <MenuItem onClick={this.handleClose}>Log Out</MenuItem>
-                            </Menu>
-                        </div>
+                        <UserMenu />
                     </Toolbar>
                 </AppBar>
             </div>

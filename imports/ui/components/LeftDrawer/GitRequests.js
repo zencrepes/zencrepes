@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { LinearProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
+import Tooltip from 'material-ui/Tooltip';
 
 const styles = {
     root: {
@@ -42,14 +43,12 @@ class GitRequests extends React.Component {
 
     render() {
         const { classes, limit, cost, remaining, resetAt } = this.props;
+        let tooltipValue = "Tokens: " + remaining + "/" + limit + " (Reset at: " + resetAt + ")";
         return (
             <div className={classes.root}>
-                <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
-                {this.getBarStatus(limit, remaining)} - reset At: {resetAt} <br/>
-                Limit: {limit} <br />
-                Cost: {cost} <br />
-                Remaining: {remaining} <br />
-                ResetAt: {resetAt} <br />
+                <Tooltip id="tooltip-bottom" title={tooltipValue} placement="bottom">
+                    <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
+                </Tooltip>
             </div>
         );
     }

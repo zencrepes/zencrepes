@@ -4,10 +4,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import classNames from 'classnames';
 import Drawer from 'material-ui/Drawer';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import { Settings, TableLarge, ChartLine } from 'mdi-material-ui';
+import Divider from 'material-ui/Divider';
 
 import GitRequests from './GitRequests.js';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const styles = theme => ({
     root: {
@@ -97,7 +100,26 @@ class LeftDrawer extends Component {
                 }}
                 open={this.state.open}
             >
-            <GitRequests />
+                <ListItem button>
+                    <ListItemIcon>
+                        <TableLarge />
+                    </ListItemIcon>
+                    <ListItemText primary="Search" />
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon>
+                        <ChartLine />
+                    </ListItemIcon>
+                    <ListItemText primary="Charts" />
+                </ListItem>
+                <Divider />
+                <ListItem button>
+                    <ListItemIcon>
+                        <Settings />
+                    </ListItemIcon>
+                    <ListItemText primary="Settings" />
+                </ListItem>
+                <GitRequests />
             </Drawer>
         );
     }

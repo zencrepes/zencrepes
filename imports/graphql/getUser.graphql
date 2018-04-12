@@ -1,4 +1,4 @@
-query ($login: String){
+query ($login: String!){
   rateLimit {
     limit
     cost
@@ -9,5 +9,6 @@ query ($login: String){
     avatarUrl
     name
     login
+    url
   }
 }
