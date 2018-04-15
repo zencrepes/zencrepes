@@ -11,10 +11,13 @@ class Repositories {
         this.client = props.client;
         this.currentRepos = [];
         this.updateChip = props.updateChip;
+        this.incrementTotalRepos = props.incrementTotalRepos;
+        this.incrementTotalIssues = props.incrementTotalIssues;
     }
 
     loadRepositories = (data) => {
         let lastCursor = null;
+        this.incrementTotalRepos(Object.entries(data.data.viewer.organization.repositories.edges).length);
         for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
             this.currentRepos.push({
                 id: currentRepo.node.id,
@@ -24,6 +27,8 @@ class Repositories {
                 org_login: data.data.viewer.organization.login,
                 cfg_use: false,
             });
+            this.incrementTotalIssues(currentRepo.node.issues.totalCount);
+
             console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentRepo.cursor
         }
@@ -53,5 +58,4 @@ class Repositories {
 }
 
 export default Repositories;
-
 

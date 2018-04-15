@@ -21,41 +21,38 @@ import { cfgSources } from '../../data/Sources.js';
 
 import GET_USER_DATA from '../../../graphql/getUser.graphql';
 
+const styles = {
+    root: {
+        flexGrow: 1,
+    },
+};
+
 class OrgRepoTree extends Component {
     state= { };
-/*
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { client, updateChip } = nextProps;
-        console.log(nextProps);
-        console.log(prevState);
-        const sources = new Sources(nextProps);
-        sources.load();
 
-        //updateChip(data.rateLimit);
-        return null;
-    }
-*/
     render() {
+        const { totalOrgs, totalRepos, totalIssues } = this.props;
         console.log(this.props);
         return (
             <div>
-                You have access to {this.props.OrgCount} Organizations and x Repositories
+                You have access to {totalOrgs} Organizations and {totalRepos} Repositories and {totalIssues} Issues
                 <h1>OrgRepoTree</h1>
             </div>
         );
     }
 }
 
+const mapState = state => ({
+    totalOrgs: state.github.totalOrgs,
+    totalRepos: state.github.totalRepos,
+    totalIssues: state.github.totalIssues,
+});
+
 const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip
 });
 
-export default connect(null, mapDispatch)(withTracker(() => {
-    return {
-        OrgCount: cfgSources.find({}).count()
-    };
-})(OrgRepoTree));
-
+export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));
 
 
 /*

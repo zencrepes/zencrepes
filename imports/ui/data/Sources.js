@@ -12,11 +12,13 @@ class Sources {
     constructor(props) {
         this.client = props.client;
         this.updateChip = props.updateChip;
+        this.incrementTotalOrgs = props.incrementTotalOrgs;
         this.repos = new Repositories(props);
     }
 
     loadOrganizations = (data) => {
         let lastCursor = null;
+        this.incrementTotalOrgs(Object.entries(data.data.viewer.organizations.edges).length);
         for (let [key, currentOrg] of Object.entries(data.data.viewer.organizations.edges)){
             cfgSources.insert({
                 _id: currentOrg.node.id,
@@ -48,7 +50,6 @@ class Sources {
 
     load() {
         this.getOrgsPagination(null, 10);
-        console.log(cfgSources);
     }
 
 }

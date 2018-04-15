@@ -132,7 +132,10 @@ Settings.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip
+    updateChip: dispatch.chip.updateChip,
+    incrementTotalOrgs: dispatch.github.incrementTotalOrgs,
+    incrementTotalRepos: dispatch.github.incrementTotalRepos,
+    incrementTotalIssues: dispatch.github.incrementTotalIssues,
 });
 
 export default connect(null, mapDispatch)(withStyles(styles)(withApollo(Settings)));
