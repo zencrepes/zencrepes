@@ -9,7 +9,7 @@ import Icon from '../../components/Icon/Icon.js';
 const handleLogin = (service, callback) => {
     const options = {
         github: {
-            requestPermissions: ['user:email'],
+            requestPermissions: ['user:email','read:org'],
             loginStyle: 'popup',
         }
     }[service];

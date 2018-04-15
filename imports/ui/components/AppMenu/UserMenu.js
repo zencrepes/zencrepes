@@ -34,6 +34,8 @@ const styles = {
     },
 };
 
+
+
 class UserMenu extends React.Component {
     state = {
         anchorEl: null,
@@ -108,14 +110,6 @@ class UserMenu extends React.Component {
     }
 }
 
-UserMenu.propTypes = {
-    classes: PropTypes.object.isRequired,
-    currentUser: PropTypes.object,
-    rateLimit: PropTypes.object,
-    updateChip: PropTypes.func,
-};
-
-
 const withData = graphql(GET_USER_DATA, {
     // destructure the default props to more explicit ones
     props: ({ data: { error, loading, user, refetch, rateLimit } }) => {
@@ -134,6 +128,13 @@ const withData = graphql(GET_USER_DATA, {
         },
     },
 });
+
+UserMenu.propTypes = {
+    classes: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
+    rateLimit: PropTypes.object,
+    updateChip: PropTypes.func,
+};
 
 const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip

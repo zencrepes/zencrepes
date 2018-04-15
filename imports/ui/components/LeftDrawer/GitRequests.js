@@ -49,6 +49,7 @@ class GitRequests extends React.Component {
                 <Tooltip id="tooltip-bottom" title={tooltipValue} placement="bottom">
                     <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
                 </Tooltip>
+                {remaining}
             </div>
         );
     }

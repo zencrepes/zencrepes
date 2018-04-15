@@ -1,0 +1,57 @@
+import React, { Component } from 'react';
+
+import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
+export const cfgRepositories = new Mongo.Collection('cfgRepositories', {connection: null});
+//export const localCfgRepositories = new PersistentMinimongo2(cfgSource, 'github-agile-view');
+
+import calculateQueryIncrement from './calculateQueryIncrement.js';
+
+class Repositories {
+    constructor(props) {
+        this.client = props.client;
+        this.currentRepos = [];
+        this.updateChip = props.updateChip;
+    }
+
+    loadRepositories = (data) => {
+        let lastCursor = null;
+        for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
+            this.currentRepos.push({
+                id: currentRepo.node.id,
+                name: currentRepo.node.name,
+                url: currentRepo.node.url,
+                issues_count: currentRepo.node.issues.totalCount,
+                org_login: data.data.viewer.organization.login,
+                cfg_use: false,
+            });
+            console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
+            lastCursor = currentRepo.cursor
+        }
+        return lastCursor;
+    }
+
+    getReposPagination = (cursor, increment, OrgLogin) => {
+        this.client.query({
+            query: GET_GITHUB_REPOS,
+            variables: {repo_cursor: cursor, increment: increment, org_name: OrgLogin}
+        }).then(data => {
+            this.updateChip(data.data.rateLimit);
+            lastCursor = this.loadRepositories(data);
+            queryIncrement = calculateQueryIncrement(this.currentRepos.length, data.data.viewer.organization.repositories.totalCount)
+            if (queryIncrement > 0) {
+                this.getReposPagination(lastCursor, queryIncrement, OrgLogin);
+            }
+        });
+    }
+
+    load(OrgLogin) {
+        this.currentRepos = [];
+        this.getReposPagination(null, 5, OrgLogin);
+        return this.currentRepos;
+    }
+
+}
+
+export default Repositories;
+
+

@@ -12,10 +12,6 @@ import { withStyles } from 'material-ui/styles';
 import DropdownTreeSelect from 'react-dropdown-tree-select';
 import 'react-dropdown-tree-select/dist/styles.css';
 
-import { withApollo } from 'react-apollo';
-
-import Sources from '../../data/Sources.js';
-
 import { graphql, Query } from 'react-apollo';
 import { connect } from "react-redux";
 
@@ -80,34 +76,7 @@ const assignObjectPaths = (obj, stack) => {
         }
     });
 };
-
-//<Query query={GET_GITHUB_ORGS} children={({ loading, error, data }) => <OrgRepoTree data={data}/>} />
 class Settings extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {sourcesInit: false};
-    }
-
-    /*
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { client, updateChip } = nextProps;
-        console.log(nextProps);
-        console.log(this.state);
-        //updateChip(data.rateLimit);
-        return null;
-    }
-    */
-     componentDidMount() {
-        if (this.state.sourcesInit === false) {
-            this.state.sourcesInit = true;
-            const sources = new Sources(this.props);
-            sources.load();
-        };
-//        console.log('component did mount');
-//        console.log(this.state);
-    }
-
-
     render() {
         const { classes } = this.props;
         return (
@@ -116,7 +85,8 @@ class Settings extends Component {
                 <LeftDrawer />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <OrgRepoTree />
+                    <Query query={GET_GITHUB_ORGS} children={({ loading, error, data }) => <OrgRepoTree data={data}/>} />
+
                     <DropdownTreeSelect data={data} onChange={onChange} className={classes.mdlDemo} />
                 </main>
             </div>
@@ -131,8 +101,4 @@ Settings.propTypes = {
     updateChip: PropTypes.func,
 };
 
-const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip
-});
-
-export default connect(null, mapDispatch)(withStyles(styles)(withApollo(Settings)));
+export default withStyles(styles)(Settings);

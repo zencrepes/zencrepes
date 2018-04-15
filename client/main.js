@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
+import { Accounts } from 'meteor/accounts-base';
 
 import { init } from "@rematch/core";
 import { Provider } from "react-redux";
