@@ -12,6 +12,7 @@ class Repositories {
         this.currentRepos = [];
         this.updateChip = props.updateChip;
         this.incrementTotalIssues = props.incrementTotalIssues;
+        this.updateTotalLoading = props.updateTotalLoading;
     }
 
     loadRepositories = (data) => {

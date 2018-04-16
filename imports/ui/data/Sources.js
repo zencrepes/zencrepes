@@ -14,6 +14,7 @@ class Sources {
         this.updateChip = props.updateChip;
         this.incrementTotalOrgs = props.incrementTotalOrgs;
         this.incrementTotalRepos = props.incrementTotalRepos;
+        this.updateTotalLoading = props.updateTotalLoading;
         this.repos = new Repositories(props);
     }
 
@@ -31,7 +32,7 @@ class Sources {
                 cfg_use: false,
                 repos: await this.repos.load(currentOrg.node.login, currentOrg.node.repositories.totalCount),
             });
-            lastCursor = currentOrg.cursor
+            lastCursor = currentOrg.cursor;
         }
         return lastCursor;
     }
@@ -44,10 +45,15 @@ class Sources {
         this.updateChip(data.data.rateLimit);
         lastCursor = await this.loadOrganizations(data);
         queryIncrement = calculateQueryIncrement(cfgSources.find({}).count(), data.data.viewer.organizations.totalCount);
+        if (queryIncrement > 0) {
+            await this.getOrgsPagination(lastCursor, queryIncrement);
+        }
     }
 
     load = async () => {
+        this.updateTotalLoading(true);
         await this.getOrgsPagination(null, 10);
+        this.updateTotalLoading(false);
     }
 
 }

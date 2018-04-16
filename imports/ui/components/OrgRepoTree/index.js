@@ -3,108 +3,91 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
-import IconButton from 'material-ui/IconButton';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-
-import { graphql } from 'react-apollo';
 import { connect } from "react-redux";
-import { GithubCircle, Logout } from 'mdi-material-ui'
-
 import { withTracker } from 'meteor/react-meteor-data';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
+import { CircularProgress } from 'material-ui/Progress';
+import DropdownTreeSelect from 'react-dropdown-tree-select';
 
-import { withApollo } from 'react-apollo';
-import Sources from '../../data/Sources.js';
-import { cfgSources } from '../../data/Sources.js';
-
-
-import GET_USER_DATA from '../../../graphql/getUser.graphql';
+import { cfgSources} from '../../data/Sources.js';
 
 const styles = {
     root: {
         flexGrow: 1,
     },
+    progress: {
+        margin: 10,
+    },
+    mdlDemo: { //https://dowjones.github.io/react-dropdown-tree-select/#/story/with-material-design-styles
+        fontSize: '12px',
+        color: '#555'
+    }
+};
+
+const onChange = (currentNode, selectedNodes) => {
+    console.log("currentNode::", currentNode);
+    console.log("selectedNodes::", selectedNodes);
 };
 
 class OrgRepoTree extends Component {
     state= { };
 
+    getData() {
+        let data = [];
+        console.log(cfgSources);
+        if (cfgSources !== undefined) {
+            cfgSources.find({}).forEach((issue) => {
+                let repos = []
+                Object.entries(issue.repos).forEach((repo) => {
+                    repos.push({
+                        label: repo.name,
+                        value: repo.id,
+                    })
+                });
+                /*
+                 name: currentOrg.node.name,
+                 login: currentOrg.node.login,
+                 url: currentOrg.node.url,
+                 repo_count: currentOrg.node.repositories.totalCount,
+                 */
+
+                data.push({
+                    label: issue.login,
+                    value: issue._id,
+                    children: repos,
+                })
+            });
+        }
+        return data;
+    }
+
     render() {
-        const { totalOrgs, totalRepos, totalIssues } = this.props;
-        //console.log(this.props);
-        return (
-            <div>
-                You have access to {totalOrgs} Organizations and {totalRepos} Repositories and {totalIssues} Issues
-                <h1>OrgRepoTree</h1>
-            </div>
-        );
+        const { classes, totalLoading, totalOrgs, totalRepos, totalIssues } = this.props;
+        console.log(totalLoading);
+        if (totalLoading) {
+            return (
+                <Card className={classes.card}>
+                    <CardContent>
+                        <CircularProgress className={classes.progress} /> Loading ...
+                    </CardContent>
+                </Card>
+            );
+        } else {
+            return (
+                <Card className={classes.card}>
+                    <CardContent>
+                        <DropdownTreeSelect data={this.getData()} onChange={onChange} className={classes.mdlDemo} />
+                    </CardContent>
+                </Card>
+            );
+        }
     }
 }
 
 const mapState = state => ({
-    totalOrgs: state.github.totalOrgs,
-    totalRepos: state.github.totalRepos,
-    totalIssues: state.github.totalIssues,
+    totalLoading: state.github.totalLoading,
 });
 
-const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));
+export default connect(mapState, null)(withStyles(styles)(OrgRepoTree));
 
 
-/*
-
-const styles = {
-    root: {
-        flexGrow: 1,
-    },
-    flex: {
-        flex: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
-    row: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-};
-
-
-
-class OrgRepoTree extends React.Component {
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { rateLimit, updateChip } = nextProps;
-        console.log(nextProps);
-        console.log(prevState);
-//        console.log(rateLimit);
-//        console.log(updateChip);
-//        updateChip(rateLimit);
-        return null;
-    }
-
-    render() {
-        console.log(this.props);
-        return (
-            <h1>Some Test </h1>
-        );
-    }
-}
-
-OrgRepoTree.propTypes = {
-    classes: PropTypes.object.isRequired,
-    currentUser: PropTypes.object,
-    rateLimit: PropTypes.object,
-    updateChip: PropTypes.func,
-};
-
-const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip
-});
-
-export default connect(null, mapDispatch)(withStyles(styles)(OrgRepoTree));
-*/

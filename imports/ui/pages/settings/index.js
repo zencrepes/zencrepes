@@ -16,6 +16,8 @@ import { withApollo } from 'react-apollo';
 
 import Sources from '../../data/Sources.js';
 
+import Grid from 'material-ui/Grid';
+
 import { graphql, Query } from 'react-apollo';
 import { connect } from "react-redux";
 
@@ -25,6 +27,8 @@ import GET_GITHUB_ORGS from '../../../graphql/getOrgs.graphql';
 //export const localCfgSource = new PersistentMinimongo2(cfgSource, 'github-agile-view');
 
 import OrgRepoTree from '../../components/OrgRepoTree/index.js';
+import Access from './Access.js';
+
 
 const styles = theme => ({
     root: {
@@ -116,8 +120,17 @@ class Settings extends Component {
                 <LeftDrawer />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <OrgRepoTree />
-                    <DropdownTreeSelect data={data} onChange={onChange} className={classes.mdlDemo} />
+                    <Grid container spacing={8}>
+                        <Grid item xs={12}>
+                            <Access />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <OrgRepoTree />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <DropdownTreeSelect data={data} onChange={onChange} className={classes.mdlDemo} />
+                        </Grid>
+                    </Grid>
                 </main>
             </div>
         );
@@ -136,6 +149,7 @@ const mapDispatch = dispatch => ({
     incrementTotalOrgs: dispatch.github.incrementTotalOrgs,
     incrementTotalRepos: dispatch.github.incrementTotalRepos,
     incrementTotalIssues: dispatch.github.incrementTotalIssues,
+    updateTotalLoading: dispatch.github.updateTotalLoading,
 });
 
 export default connect(null, mapDispatch)(withStyles(styles)(withApollo(Settings)));

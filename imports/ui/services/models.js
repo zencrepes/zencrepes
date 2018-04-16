@@ -21,19 +21,20 @@ export const github = {
         totalOrgs: 0,
         totalRepos: 0,
         totalIssues: 0,
+        totalLoading: false,
     },
     reducers: {
         incrementTotalOrgs(state, payload) {
-            state.totalOrgs = state.totalOrgs + payload;
-            return state
+            return { ...state, totalOrgs: state.totalOrgs + payload };
         },
         incrementTotalRepos(state, payload) {
-            state.totalRepos = state.totalRepos + payload;
-            return state
+            return { ...state, totalRepos: state.totalRepos + payload };
         },
         incrementTotalIssues(state, payload) {
-            state.totalIssues = state.totalIssues + payload;
-            return state
+            return { ...state, totalIssues: state.totalIssues + payload };
+        },
+        updateTotalLoading(state, payload) {
+            return { ...state, totalLoading: payload };
         },
 
     }
