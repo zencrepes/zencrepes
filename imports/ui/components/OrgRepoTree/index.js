@@ -32,7 +32,7 @@ class OrgRepoTree extends Component {
 
     render() {
         const { totalOrgs, totalRepos, totalIssues } = this.props;
-        console.log(this.props);
+        //console.log(this.props);
         return (
             <div>
                 You have access to {totalOrgs} Organizations and {totalRepos} Repositories and {totalIssues} Issues

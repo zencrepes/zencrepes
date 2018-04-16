@@ -13,13 +13,15 @@ class Sources {
         this.client = props.client;
         this.updateChip = props.updateChip;
         this.incrementTotalOrgs = props.incrementTotalOrgs;
+        this.incrementTotalRepos = props.incrementTotalRepos;
         this.repos = new Repositories(props);
     }
 
-    loadOrganizations = (data) => {
+    loadOrganizations = async (data) => {
         let lastCursor = null;
         this.incrementTotalOrgs(Object.entries(data.data.viewer.organizations.edges).length);
         for (let [key, currentOrg] of Object.entries(data.data.viewer.organizations.edges)){
+            this.incrementTotalRepos(currentOrg.node.repositories.totalCount);
             cfgSources.insert({
                 _id: currentOrg.node.id,
                 name: currentOrg.node.name,
@@ -27,29 +29,25 @@ class Sources {
                 url: currentOrg.node.url,
                 repo_count: currentOrg.node.repositories.totalCount,
                 cfg_use: false,
-                repos: this.repos.load(currentOrg.node.login),
+                repos: await this.repos.load(currentOrg.node.login, currentOrg.node.repositories.totalCount),
             });
             lastCursor = currentOrg.cursor
         }
         return lastCursor;
     }
 
-    getOrgsPagination = (cursor, increment) => {
-        this.client.query({
+    getOrgsPagination = async (cursor, increment) => {
+        let data = await this.client.query({
             query: GET_GITHUB_ORGS,
             variables: {repo_cursor: cursor, increment: increment}
-        }).then(data => {
-            this.updateChip(data.data.rateLimit);
-            lastCursor = this.loadOrganizations(data);
-            queryIncrement = calculateQueryIncrement(cfgSources.find({}).count(), data.data.viewer.organizations.totalCount)
-            if (queryIncrement > 0) {
-                this.getOrgsPagination(lastCursor, queryIncrement);
-            }
-        });
+        })
+        this.updateChip(data.data.rateLimit);
+        lastCursor = await this.loadOrganizations(data);
+        queryIncrement = calculateQueryIncrement(cfgSources.find({}).count(), data.data.viewer.organizations.totalCount);
     }
 
-    load() {
-        this.getOrgsPagination(null, 10);
+    load = async () => {
+        await this.getOrgsPagination(null, 10);
     }
 
 }

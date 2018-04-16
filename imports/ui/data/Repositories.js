@@ -11,13 +11,11 @@ class Repositories {
         this.client = props.client;
         this.currentRepos = [];
         this.updateChip = props.updateChip;
-        this.incrementTotalRepos = props.incrementTotalRepos;
         this.incrementTotalIssues = props.incrementTotalIssues;
     }
 
     loadRepositories = (data) => {
         let lastCursor = null;
-        this.incrementTotalRepos(Object.entries(data.data.viewer.organization.repositories.edges).length);
         for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
             this.currentRepos.push({
                 id: currentRepo.node.id,
@@ -28,30 +26,28 @@ class Repositories {
                 cfg_use: false,
             });
             this.incrementTotalIssues(currentRepo.node.issues.totalCount);
-
-            console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
+            //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentRepo.cursor
         }
         return lastCursor;
     }
 
-    getReposPagination = (cursor, increment, OrgLogin) => {
-        this.client.query({
+    getReposPagination = async (cursor, increment, OrgLogin) => {
+        let data = await this.client.query({
             query: GET_GITHUB_REPOS,
             variables: {repo_cursor: cursor, increment: increment, org_name: OrgLogin}
-        }).then(data => {
-            this.updateChip(data.data.rateLimit);
-            lastCursor = this.loadRepositories(data);
-            queryIncrement = calculateQueryIncrement(this.currentRepos.length, data.data.viewer.organization.repositories.totalCount)
-            if (queryIncrement > 0) {
-                this.getReposPagination(lastCursor, queryIncrement, OrgLogin);
-            }
         });
+        this.updateChip(data.data.rateLimit);
+        lastCursor = await this.loadRepositories(data);
+        queryIncrement = calculateQueryIncrement(this.currentRepos.length, data.data.viewer.organization.repositories.totalCount);
+        if (queryIncrement > 0) {
+            await this.getReposPagination(lastCursor, queryIncrement, OrgLogin);
+        }
     }
 
-    load(OrgLogin) {
+    load = async (OrgLogin, RepoCount) => {
         this.currentRepos = [];
-        this.getReposPagination(null, 5, OrgLogin);
+        await this.getReposPagination(null, 5, OrgLogin);
         return this.currentRepos;
     }
 
