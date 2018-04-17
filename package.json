@@ -28,6 +28,7 @@
     "react-fontawesome": "^1.6.1",
     "react-komposer": "^2.0.0",
     "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2"
+    "react-router-dom": "^4.2.2",
+    "react-treebeard": "^2.1.0"
   }
 }

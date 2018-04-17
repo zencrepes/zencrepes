@@ -26,7 +26,7 @@ class Repositories {
                 url: currentRepo.node.url,
                 issues_count: currentRepo.node.issues.totalCount,
                 org: OrgObj,
-                cfg_active: false,
+                active: false,
             });
             /*
             this.currentRepos.push({

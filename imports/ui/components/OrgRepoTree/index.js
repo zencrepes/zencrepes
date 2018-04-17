@@ -8,6 +8,9 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import DropdownTreeSelect from 'react-dropdown-tree-select';
+import {Treebeard, decorators} from 'react-treebeard';
+
+import { CheckboxBlankOutline, CheckboxMarkedOutline } from 'mdi-material-ui';
 
 import { cfgSources} from '../../data/Repositories.js';
 import _ from 'lodash'
@@ -30,45 +33,68 @@ const onChange = (currentNode, selectedNodes) => {
     console.log("selectedNodes::", selectedNodes);
 };
 
+decorators.Header = ({style, node}) => {
+    const iconType = node.children ? 'folder' : 'file-text';
+    const iconClass = `fa fa-${iconType}`;
+    const iconStyle = {marginRight: '5px'};
+
+    return (
+        <div style={style.base} onClick={this.onClick}>
+            {node.active ? (
+                <CheckboxMarkedOutline />
+            ) : (
+                <CheckboxBlankOutline />
+            )}
+            {node.name}
+        </div>
+    );
+};
+
 class OrgRepoTree extends Component {
-    state= { };
+    constructor(props){
+        super(props);
+        this.state = {};
+        this.onToggle = this.onToggle.bind(this);
+        this.toggled = {};
+    }
+
+    onToggle(node, toggled){
+        if(this.state.cursor){this.state.cursor.active = false;}
+        node.active = true;
+        if(node.children){ this.toggled[node.id] = toggled; }
+        this.setState({ cursor: node });
+        console.log(node);
+    }
+
+    onClick(node){
+        console.log("test");
+        console.log(node);
+    }
 
     getData() {
         let data = [];
-        console.log(cfgSources);
+        let orgIssuesCount = {};
         if (cfgSources !== undefined) {
-
             cfgSources.find({}).forEach((repo) => {
                 let orgIdx = _.findIndex(data, { 'value': repo.org.id});
                 if (orgIdx === -1 ) {
                     data.push({
-                        label: repo.org.name,
+                        name: repo.org.name,
                         value: repo.org.id,
+                        id: repo.org.id,
+                        toggled: this.toggled[repo.org.id],
                         children: [],
                     });
+                    orgIssuesCount[repo.org.id] = 0
                     orgIdx = data.length -1;
                 }
                 data[orgIdx].children.push({
-                    label: repo.name,
+                    name: repo.name + ' (' + repo.issues_count + ')',
                     value: repo.id,
+                    id: repo.id,
                 });
-
-                /*
-                let repos = [];
-                let issueCount = 0;
-                issue.repos.forEach((repo) => {
-                    repos.push({
-                        label: repo.name + " (" + repo.issues_count + ")",
-                        value: repo.id,
-                    })
-                    issueCount = issueCount + repo.issues_count;
-                });
-                data.push({
-                    label: issue.login + " (" + issueCount + ")",
-                    value: issue._id,
-                    children: repos,
-                })
-                */
+                orgIssuesCount[repo.org.id] = orgIssuesCount[repo.org.id] + repo.issues_count;
+                data[orgIdx]['name'] = repo.org.name + " (" + orgIssuesCount[repo.org.id] + ")";
             });
         }
         return data;
@@ -76,7 +102,6 @@ class OrgRepoTree extends Component {
 
     render() {
         const { classes, totalLoading, totalOrgs, totalRepos, totalIssues } = this.props;
-        console.log(totalLoading);
         if (totalLoading) {
             return (
                 <Card className={classes.card}>
@@ -89,14 +114,14 @@ class OrgRepoTree extends Component {
             return (
                 <Card className={classes.card}>
                     <CardContent>
-                        <DropdownTreeSelect data={this.getData()} onChange={onChange} className={classes.mdlDemo} />
+                        <Treebeard data={this.getData()} onToggle={this.onToggle} decorators={decorators} />
                     </CardContent>
                 </Card>
             );
         }
     }
 }
-
+// <DropdownTreeSelect data={this.getData()} onChange={onChange} className={classes.mdlDemo} />
 const mapState = state => ({
     totalLoading: state.github.totalLoading,
 });

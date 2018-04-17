@@ -127,9 +127,6 @@ class Settings extends Component {
                         <Grid item xs={6}>
                             <OrgRepoTree />
                         </Grid>
-                        <Grid item xs={6}>
-                            <DropdownTreeSelect data={data} onChange={onChange} className={classes.mdlDemo} />
-                        </Grid>
                     </Grid>
                 </main>
             </div>
