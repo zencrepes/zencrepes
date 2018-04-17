@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
-export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
+//export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
 //export const localCfgSource = new PersistentMinimongo2(cfgSource, 'github-agile-view');
 
 import Repositories from './Repositories.js';
@@ -16,6 +16,7 @@ class Sources {
         this.incrementTotalRepos = props.incrementTotalRepos;
         this.updateTotalLoading = props.updateTotalLoading;
         this.repos = new Repositories(props);
+        this.orgCount = 0;
     }
 
     loadOrganizations = async (data) => {
@@ -23,15 +24,18 @@ class Sources {
         this.incrementTotalOrgs(Object.entries(data.data.viewer.organizations.edges).length);
         for (let [key, currentOrg] of Object.entries(data.data.viewer.organizations.edges)){
             this.incrementTotalRepos(currentOrg.node.repositories.totalCount);
+            this.orgCount = this.orgCount + 1;
+            await this.repos.load(currentOrg.node)
+            /*
             cfgSources.insert({
                 _id: currentOrg.node.id,
                 name: currentOrg.node.name,
                 login: currentOrg.node.login,
                 url: currentOrg.node.url,
                 repo_count: currentOrg.node.repositories.totalCount,
-                cfg_use: false,
+                cfg_active: false,
                 repos: await this.repos.load(currentOrg.node.login, currentOrg.node.repositories.totalCount),
-            });
+            });*/
             lastCursor = currentOrg.cursor;
         }
         return lastCursor;
@@ -44,7 +48,7 @@ class Sources {
         })
         this.updateChip(data.data.rateLimit);
         lastCursor = await this.loadOrganizations(data);
-        queryIncrement = calculateQueryIncrement(cfgSources.find({}).count(), data.data.viewer.organizations.totalCount);
+        queryIncrement = calculateQueryIncrement(this.orgCount, data.data.viewer.organizations.totalCount);
         if (queryIncrement > 0) {
             await this.getOrgsPagination(lastCursor, queryIncrement);
         }

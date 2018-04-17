@@ -9,7 +9,8 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import DropdownTreeSelect from 'react-dropdown-tree-select';
 
-import { cfgSources} from '../../data/Sources.js';
+import { cfgSources} from '../../data/Repositories.js';
+import _ from 'lodash'
 
 const styles = {
     root: {
@@ -36,26 +37,38 @@ class OrgRepoTree extends Component {
         let data = [];
         console.log(cfgSources);
         if (cfgSources !== undefined) {
-            cfgSources.find({}).forEach((issue) => {
-                let repos = []
-                Object.entries(issue.repos).forEach((repo) => {
+
+            cfgSources.find({}).forEach((repo) => {
+                let orgIdx = _.findIndex(data, { 'value': repo.org.id});
+                if (orgIdx === -1 ) {
+                    data.push({
+                        label: repo.org.name,
+                        value: repo.org.id,
+                        children: [],
+                    });
+                    orgIdx = data.length -1;
+                }
+                data[orgIdx].children.push({
+                    label: repo.name,
+                    value: repo.id,
+                });
+
+                /*
+                let repos = [];
+                let issueCount = 0;
+                issue.repos.forEach((repo) => {
                     repos.push({
-                        label: repo.name,
+                        label: repo.name + " (" + repo.issues_count + ")",
                         value: repo.id,
                     })
+                    issueCount = issueCount + repo.issues_count;
                 });
-                /*
-                 name: currentOrg.node.name,
-                 login: currentOrg.node.login,
-                 url: currentOrg.node.url,
-                 repo_count: currentOrg.node.repositories.totalCount,
-                 */
-
                 data.push({
-                    label: issue.login,
+                    label: issue.login + " (" + issueCount + ")",
                     value: issue._id,
                     children: repos,
                 })
+                */
             });
         }
         return data;
