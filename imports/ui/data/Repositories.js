@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
 export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
-//export const localCfgRepositories = new PersistentMinimongo2(cfgSource, 'github-agile-view');
+export const localCfgSources = new PersistentMinimongo2(cfgSources, 'github-agile-view');
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 //import {cfgSources} from "./Sources";
@@ -20,13 +20,23 @@ class Repositories {
         let lastCursor = null;
         for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
             console.log('Inserting: ' + currentRepo.node.name);
-            cfgSources.insert({
+            let existNode = cfgSources.findOne({id: currentRepo.node.id});
+            let nodeActive = false;
+            if (existNode !== undefined) {
+                nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
+            }
+            let repoObj = {
                 id: currentRepo.node.id,
                 name: currentRepo.node.name,
                 url: currentRepo.node.url,
                 issues_count: currentRepo.node.issues.totalCount,
                 org: OrgObj,
-                active: false,
+                active: nodeActive,
+            }
+            cfgSources.upsert({
+                id: repoObj.id
+            }, {
+                $set: repoObj
             });
             /*
             this.currentRepos.push({
@@ -45,14 +55,19 @@ class Repositories {
     }
 
     getReposPagination = async (cursor, increment, OrgObj) => {
+        console.log('---')
         let data = await this.client.query({
             query: GET_GITHUB_REPOS,
             variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login}
         });
         this.updateChip(data.data.rateLimit);
         lastCursor = await this.loadRepositories(data, OrgObj);
-        console.log(cfgSources.find({org: OrgObj}).count());
-        queryIncrement = calculateQueryIncrement(cfgSources.find({org: OrgObj}).count(), data.data.viewer.organization.repositories.totalCount);
+        console.log('ORG OBJ: ' + OrgObj.id);
+        queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
+        console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
+        console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
+        console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
+        console.log('Query increment: ' + queryIncrement);
         if (queryIncrement > 0) {
             await this.getReposPagination(lastCursor, queryIncrement, OrgObj);
         }

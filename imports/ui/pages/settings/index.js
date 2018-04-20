@@ -33,7 +33,6 @@ import Access from './Access.js';
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        height: 430,
         zIndex: 1,
         overflow: 'hidden',
         position: 'relative',
@@ -46,44 +45,7 @@ const styles = theme => ({
         minWidth: 0, // So the Typography noWrap works
     },
     toolbar: theme.mixins.toolbar,
-    mdlDemo: { //https://dowjones.github.io/react-dropdown-tree-select/#/story/with-material-design-styles
-        fontSize: '12px',
-        color: '#555'
-    }
-
 });
-
-const data = {
-    label: 'search me',
-    value: 'searchme',
-    children: [
-        {
-            label: 'search me too',
-            value: 'searchmetoo',
-            children: [
-                {
-                    label: 'No one can get me',
-                    value: 'anonymous'
-                }
-            ]
-        }
-    ]
-}
-
-const onChange = (currentNode, selectedNodes) => {
-    console.log("currentNode::", currentNode);
-    console.log("selectedNodes::", selectedNodes);
-};
-
-const assignObjectPaths = (obj, stack) => {
-    Object.keys(obj).forEach(k => {
-        const node = obj[k];
-        if (typeof node === "object") {
-            node.path = stack ? `${stack}.${k}` : k;
-            assignObjectPaths(node, node.path);
-        }
-    });
-};
 
 //<Query query={GET_GITHUB_ORGS} children={({ loading, error, data }) => <OrgRepoTree data={data}/>} />
 class Settings extends Component {
@@ -92,23 +54,12 @@ class Settings extends Component {
         this.state = {sourcesInit: false};
     }
 
-    /*
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { client, updateChip } = nextProps;
-        console.log(nextProps);
-        console.log(this.state);
-        //updateChip(data.rateLimit);
-        return null;
-    }
-    */
      componentDidMount() {
         if (this.state.sourcesInit === false) {
             this.state.sourcesInit = true;
             const sources = new Sources(this.props);
             sources.load();
         };
-//        console.log('component did mount');
-//        console.log(this.state);
     }
 
 

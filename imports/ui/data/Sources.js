@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
+
+import { localCfgSources } from './Repositories.js';
+
 //export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
 //export const localCfgSource = new PersistentMinimongo2(cfgSource, 'github-agile-view');
 
@@ -56,6 +59,8 @@ class Sources {
 
     load = async () => {
         this.updateTotalLoading(true);
+        //console.log(localCfgSources);
+        await localCfgSources.refresh();
         await this.getOrgsPagination(null, 10);
         this.updateTotalLoading(false);
     }

@@ -31,11 +31,6 @@ const styles = {
     },
 };
 
-const onChange = (currentNode, selectedNodes) => {
-    console.log("currentNode::", currentNode);
-    console.log("selectedNodes::", selectedNodes);
-};
-
 decorators.Header = ({style, node}) => {
     const iconType = node.children ? 'folder' : 'file-text';
     const iconClass = `fa fa-${iconType}`;
@@ -53,10 +48,38 @@ decorators.Header = ({style, node}) => {
     );
 };
 
+function loadData() {
+    let data = [];
+    let orgIssuesCount = {};
+    if (cfgSources !== undefined) {
+        cfgSources.find({}).forEach((repo) => {
+            let orgIdx = _.findIndex(data, { 'data': repo.org.id});
+            if (orgIdx === -1 ) {
+                data.push({
+                    label: repo.org.name,
+                    data: repo.org.id,
+                    id: repo.org.id,
+                    children: [],
+                });
+                orgIssuesCount[repo.org.id] = 0
+                orgIdx = data.length -1;
+            }
+            data[orgIdx].children.push({
+                label: repo.name + ' (' + repo.issues_count + ')',
+                data: repo.id,
+                id: repo.id,
+            });
+            orgIssuesCount[repo.org.id] = orgIssuesCount[repo.org.id] + repo.issues_count;
+            data[orgIdx]['label'] = repo.org.name + " (" + orgIssuesCount[repo.org.id] + ")";
+        });
+    }
+    return data;
+}
+
 class OrgRepoTree extends Component {
     constructor(props){
         super(props);
-        this.state = { selectedFile: null, selectedFiles1: [], selectedFiles2: [], selectedFile3: null };
+        this.state = { totalLoading: true, selectedFile: null, selectedFiles1: [], selectedFiles2: [], selectedFile3: null, data: [] };
         this.onToggle = this.onToggle.bind(this);
         this.toggled = {};
     }
@@ -74,40 +97,27 @@ class OrgRepoTree extends Component {
         console.log(node);
     }
 
-    getData() {
-        let data = [];
-        let orgIssuesCount = {};
-        if (cfgSources !== undefined) {
-            cfgSources.find({}).forEach((repo) => {
-                let orgIdx = _.findIndex(data, { 'data': repo.org.id});
-                if (orgIdx === -1 ) {
-                    data.push({
-                        label: repo.org.name,
-                        data: repo.org.id,
-                        id: repo.org.id,
-//                        expandedIcon: 'fa-folder-open',
-//                        collapsedIcon: 'fa-folder',
-                        toggled: this.toggled[repo.org.id],
-                        children: [],
-                    });
-                    orgIssuesCount[repo.org.id] = 0
-                    orgIdx = data.length -1;
-                }
-                data[orgIdx].children.push({
-                    label: repo.name + ' (' + repo.issues_count + ')',
-                    data: repo.id,
-                    id: repo.id,
-                });
-                orgIssuesCount[repo.org.id] = orgIssuesCount[repo.org.id] + repo.issues_count;
-                data[orgIdx]['label'] = repo.org.name + " (" + orgIssuesCount[repo.org.id] + ")";
-            });
-        }
-        return data;
-    }
 
     onCheckboxSelectionChange(e) {
-        console.log(e);
+        console.log(e.selection);
         this.setState({ selectedFiles2: e.selection });
+        console.log(this.state);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.state.selectedFiles2.map(node => {
+            cfgSources.update(node.id, {active: true});
+            console.log(node);
+        });
+    }
+    
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.totalLoading === true && nextProps.totalLoading === false && cfgSources.find({}).count() > 0) {
+            console.log(this);
+            return { ...this.state, data: loadData() };
+        } else {
+            return null;
+        }
     }
 
     render() {
@@ -124,7 +134,7 @@ class OrgRepoTree extends Component {
             return (
                 <Card className={classes.card}>
                     <CardContent>
-                        <Tree value={this.getData()} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>
+                        <Tree value={this.state.data} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>
                     </CardContent>
                 </Card>
             );

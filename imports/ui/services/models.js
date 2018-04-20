@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 // https://rematch.gitbooks.io/rematch/#examples
 export const chip = {
     state: {
@@ -36,6 +38,5 @@ export const github = {
         updateTotalLoading(state, payload) {
             return { ...state, totalLoading: payload };
         },
-
     }
 };
