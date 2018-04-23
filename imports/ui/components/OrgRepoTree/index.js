@@ -102,12 +102,21 @@ class OrgRepoTree extends Component {
     }
 
     updateSelectedFromMongo() {
+        console.log('updateSelectedFromMongo');
+        this.state.data.map(rootNode => {
+            console.log(rootNode);
+            let childCount = 0;
+            rootNode.children.map(child => {
+                console.log(child);
+            });
+        });
+        /*
         _.find(this.state.data, function(o) { return o.age < 40; });
 
         cfgSources.find({'active': true}).map(node => {
             idx = _.findIndex(this.state.data, { 'id': node.id});
-
         })
+        */
 
     }
 
