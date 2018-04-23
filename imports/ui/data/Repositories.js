@@ -19,7 +19,7 @@ class Repositories {
     loadRepositories = (data, OrgObj) => {
         let lastCursor = null;
         for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
-            console.log('Inserting: ' + currentRepo.node.name);
+            //console.log('Inserting: ' + currentRepo.node.name);
             let existNode = cfgSources.findOne({id: currentRepo.node.id});
             let nodeActive = false;
             if (existNode !== undefined) {
@@ -55,19 +55,19 @@ class Repositories {
     }
 
     getReposPagination = async (cursor, increment, OrgObj) => {
-        console.log('---')
+        //console.log('---')
         let data = await this.client.query({
             query: GET_GITHUB_REPOS,
             variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login}
         });
         this.updateChip(data.data.rateLimit);
         lastCursor = await this.loadRepositories(data, OrgObj);
-        console.log('ORG OBJ: ' + OrgObj.id);
+        //console.log('ORG OBJ: ' + OrgObj.id);
         queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
-        console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
-        console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
-        console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
-        console.log('Query increment: ' + queryIncrement);
+        //console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
+        //console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
+        //console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
+        //console.log('Query increment: ' + queryIncrement);
         if (queryIncrement > 0) {
             await this.getReposPagination(lastCursor, queryIncrement, OrgObj);
         }
@@ -75,7 +75,7 @@ class Repositories {
 
     load = async (OrgObj) => {
         this.currentRepos = [];
-        console.log('Loading repos for: ' + OrgObj.login);
+        //console.log('Loading repos for: ' + OrgObj.login);
         await this.getReposPagination(null, 5, OrgObj);
         return this.currentRepos;
     }

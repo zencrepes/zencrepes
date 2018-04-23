@@ -12,6 +12,8 @@ import {Treebeard, decorators} from 'react-treebeard';
 import {Tree} from 'primereact/components/tree/Tree';
 import primeClass from 'primereact/components/tree/Tree.css';
 
+import Button from 'material-ui/Button';
+
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/omega/theme.css';
 
@@ -39,9 +41,9 @@ decorators.Header = ({style, node}) => {
     return (
         <div style={style.base} >
             {node.active ? (
-                <CheckboxMarkedOutline onClick={this.onClick}/>
+                <CheckboxMarkedOutline />
             ) : (
-                <CheckboxBlankOutline onClick={this.onClick}/>
+                <CheckboxBlankOutline />
             )}
             {node.name}
         </div>
@@ -49,6 +51,7 @@ decorators.Header = ({style, node}) => {
 };
 
 function loadData() {
+    console.log('loadData');
     let data = [];
     let orgIssuesCount = {};
     if (cfgSources !== undefined) {
@@ -68,6 +71,7 @@ function loadData() {
                 label: repo.name + ' (' + repo.issues_count + ')',
                 data: repo.id,
                 id: repo.id,
+                active: repo.active,
             });
             orgIssuesCount[repo.org.id] = orgIssuesCount[repo.org.id] + repo.issues_count;
             data[orgIdx]['label'] = repo.org.name + " (" + orgIssuesCount[repo.org.id] + ")";
@@ -79,41 +83,59 @@ function loadData() {
 class OrgRepoTree extends Component {
     constructor(props){
         super(props);
-        this.state = { totalLoading: true, selectedFile: null, selectedFiles1: [], selectedFiles2: [], selectedFile3: null, data: [] };
+        this.state = { totalLoading: true, initLoad: true, selectedFile: null, selectedFiles1: [], selectedFiles2: [], selectedFile3: null, data: [] };
         this.onToggle = this.onToggle.bind(this);
         this.toggled = {};
     }
 
+    save() {
+        cfgSources.find({}).map(node => {
+            if (_.findIndex(this.state.selectedFiles2, { 'id': node.id})  === -1) {
+                //Node is not in selected files, active => false
+                cfgSources.update({id: node.id}, {$set:{'active':false}});
+            } else {
+                //Node is in selected files, active => true
+                cfgSources.update({id: node.id}, {$set:{'active':true}});
+            }
+        })
+        console.log('Save - Number of active repos: ' + cfgSources.find({'active': true}).count());
+    }
+
+    updateSelectedFromMongo() {
+        _.find(this.state.data, function(o) { return o.age < 40; });
+
+        cfgSources.find({'active': true}).map(node => {
+            idx = _.findIndex(this.state.data, { 'id': node.id});
+
+        })
+
+    }
+
     onToggle(node, toggled){
+        console.log('onToggle');
         if(this.state.cursor){this.state.cursor.active = false;}
         node.active = true;
         if(node.children){ this.toggled[node.id] = toggled; }
         this.setState({ cursor: node });
-        console.log(node);
     }
-
-    onClick(node){
-        console.log("test");
-        console.log(node);
-    }
-
 
     onCheckboxSelectionChange(e) {
+        console.log('onCheckboxSelectionChange');
         console.log(e.selection);
         this.setState({ selectedFiles2: e.selection });
-        console.log(this.state);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.state.selectedFiles2.map(node => {
-            cfgSources.update(node.id, {active: true});
-            console.log(node);
-        });
+        console.log('componentDidUpdate');
+        if (this.state.initLoad === true && this.state.data.length > 0) {
+            this.setState({ initLoad: false });
+            this.updateSelectedFromMongo();
+        }
     }
-    
+
     static getDerivedStateFromProps(nextProps, prevState) {
+        console.log('getDerivedStateFromProps');
         if (prevState.totalLoading === true && nextProps.totalLoading === false && cfgSources.find({}).count() > 0) {
-            console.log(this);
             return { ...this.state, data: loadData() };
         } else {
             return null;
@@ -134,6 +156,7 @@ class OrgRepoTree extends Component {
             return (
                 <Card className={classes.card}>
                     <CardContent>
+                        <Button variant="raised" size="small" color="primary" onClick={() => this.save()}>Save</Button>
                         <Tree value={this.state.data} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>
                     </CardContent>
                 </Card>
