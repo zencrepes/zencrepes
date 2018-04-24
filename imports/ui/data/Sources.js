@@ -10,6 +10,7 @@ import { localCfgSources } from './Repositories.js';
 import Repositories from './Repositories.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+import {cfgSources} from "./Repositories";
 
 class Sources {
     constructor(props) {
