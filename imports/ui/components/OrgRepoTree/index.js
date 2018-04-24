@@ -73,6 +73,8 @@ function loadData() {
                 data: repo.id,
                 id: repo.id,
                 active: repo.active,
+                partialSelected: false,
+                _$visited: false,
             });
             orgIssuesCount[repo.org.id] = orgIssuesCount[repo.org.id] + repo.issues_count;
             data[orgIdx]['label'] = repo.org.name + " (" + orgIssuesCount[repo.org.id] + ")";
@@ -109,6 +111,7 @@ class OrgRepoTree extends Component {
             let childCount = 0;
             rootNode.children.map(child => {
                 if (child.active === true) {
+                    child.parent = rootNode;
                     selectedFiles.push(child);
                     childCount++;
                 }
@@ -119,7 +122,6 @@ class OrgRepoTree extends Component {
         });
         console.log(selectedFiles);
         this.setState({ selectedFiles2: selectedFiles });
-        console.log(this.state.selectedFiles2);
     }
 
     onToggle(node, toggled){
