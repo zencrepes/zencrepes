@@ -19,6 +19,9 @@ class Sources {
         this.incrementTotalOrgs = props.incrementTotalOrgs;
         this.incrementTotalRepos = props.incrementTotalRepos;
         this.updateTotalLoading = props.updateTotalLoading;
+        this.setTotalRepos = props.setTotalRepos;
+        this.setTotalIssues = props.setTotalIssues;
+        this.setTotalOrgs = props.setTotalOrgs;
         this.repos = new Repositories(props);
         this.orgCount = 0;
     }
@@ -30,16 +33,6 @@ class Sources {
             this.incrementTotalRepos(currentOrg.node.repositories.totalCount);
             this.orgCount = this.orgCount + 1;
             await this.repos.load(currentOrg.node)
-            /*
-            cfgSources.insert({
-                _id: currentOrg.node.id,
-                name: currentOrg.node.name,
-                login: currentOrg.node.login,
-                url: currentOrg.node.url,
-                repo_count: currentOrg.node.repositories.totalCount,
-                cfg_active: false,
-                repos: await this.repos.load(currentOrg.node.login, currentOrg.node.repositories.totalCount),
-            });*/
             lastCursor = currentOrg.cursor;
         }
         return lastCursor;
@@ -61,6 +54,9 @@ class Sources {
     load = async () => {
         this.updateTotalLoading(true);
         //console.log(localCfgSources);
+        this.setTotalRepos(0);
+        this.setTotalIssues(0);
+        this.setTotalOrgs(0);
         await localCfgSources.refresh();
         await this.getOrgsPagination(null, 10);
         this.updateTotalLoading(false);

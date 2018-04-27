@@ -50,12 +50,14 @@ class LeftDrawer extends Component {
                     paper: classes.drawerPaper,
                 }}
             >
-                <ListItem button>
-                    <ListItemIcon>
-                        <TableLarge />
-                    </ListItemIcon>
-                    <ListItemText primary="Search" />
-                </ListItem>
+                <Link to="/search">
+                    <ListItem button>
+                        <ListItemIcon>
+                            <TableLarge />
+                        </ListItemIcon>
+                        <ListItemText primary="Search" />
+                    </ListItem>
+                </Link>
                 <ListItem button>
                     <ListItemIcon>
                         <ChartLine />

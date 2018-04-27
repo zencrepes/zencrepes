@@ -54,7 +54,7 @@ class Settings extends Component {
         this.state = {sourcesInit: false};
     }
 
-     componentDidMount() {
+    componentDidMount() {
         if (this.state.sourcesInit === false) {
             this.state.sourcesInit = true;
             const sources = new Sources(this.props);
@@ -97,6 +97,9 @@ const mapDispatch = dispatch => ({
     incrementTotalOrgs: dispatch.github.incrementTotalOrgs,
     incrementTotalRepos: dispatch.github.incrementTotalRepos,
     incrementTotalIssues: dispatch.github.incrementTotalIssues,
+    setTotalRepos: dispatch.github.setTotalRepos,
+    setTotalIssues: dispatch.github.setTotalIssues,
+    setTotalOrgs: dispatch.github.setTotalOrgs,
     updateTotalLoading: dispatch.github.updateTotalLoading,
 });
 
