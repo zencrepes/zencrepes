@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
 export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
-export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'github-agile-view');
+export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 
 import {cfgSources} from "./Repositories.js";
 
@@ -74,7 +74,7 @@ class Issues {
 
     load = async () => {
         this.updateIssuesLoading(true);
-        await localCfgIssues.refresh();
+        //await localCfgIssues.refresh();
         let allRepos = await cfgSources.find({}).fetch();
         for (let repo of allRepos) {
             if (repo.active === false) {

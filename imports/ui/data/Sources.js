@@ -57,7 +57,7 @@ class Sources {
         this.setTotalRepos(0);
         this.setTotalIssues(0);
         this.setTotalOrgs(0);
-        await localCfgSources.refresh();
+        //await localCfgSources.refresh();
         await this.getOrgsPagination(null, 10);
         this.updateTotalLoading(false);
     }

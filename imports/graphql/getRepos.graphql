@@ -7,6 +7,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
   }
   viewer {
     organization(login: $org_name) {
+      id
       login
       repositories(first: $increment, after: $repo_cursor) {
         totalCount

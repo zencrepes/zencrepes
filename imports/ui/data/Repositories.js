@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
 export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
-export const localCfgSources = new PersistentMinimongo2(cfgSources, 'github-agile-view');
+export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 //import {cfgSources} from "./Sources";

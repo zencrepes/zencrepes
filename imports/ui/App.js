@@ -18,6 +18,10 @@ import Authenticated from './components/Authenticated/Authenticated.js'
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
+import { cfgIssues, localCfgIssues } from './data/Issues.js';
+import { cfgSources, localCfgSources } from './data/Repositories.js';
+
+
 class App extends Component {
     constructor(props) {
         super(props);

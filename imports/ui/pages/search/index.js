@@ -11,9 +11,10 @@ import { cfgSources } from '../../data/Repositories.js';
 import NoRepos from '../../components/Dialogs/NoRepos.js';
 
 import Issues, { cfgIssues } from '../../data/Issues.js';
-
-import Facets from './Facets.js';
-
+import Grid from 'material-ui/Grid';
+import Facets from '../../components/Facets/index.js';
+import Query from '../../components/Query/index.js';
+import IssuesTable from '../../components/Table/index.js';
 
 const styles = theme => ({
     root: {
@@ -39,11 +40,21 @@ class Search extends Component {
     }
 
     componentDidMount() {
-        if (this.state.sourcesInit === false) {
-            this.state.sourcesInit = true;
+        const { loadIssues, setLoadIssues } = this.props;
+        if (loadIssues === true || cfgIssues.find({}).count() === 0) {
+            setLoadIssues(false);
+            const issues = new Issues(this.props);
+            issues.load();
+        }
+        /*
+
+        if (cfgIssues.find({}).count() > 0) {this.state.sourcesInit = true;}
+        if (this.state.sourcesInit === false || ) {
+            this.setState({sourcesInit: true});
             const issues = new Issues(this.props);
             issues.load();
         };
+        */
     }
 
     render() {
@@ -54,8 +65,17 @@ class Search extends Component {
                     <AppMenu />
                     <LeftDrawer />
                     <main className={classes.content}>
-                        <Facets />
-                        <h1> There is some content available </h1>
+                        <Grid container spacing={8}>
+                            <Grid item xs={12}>
+                                <Query />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Facets />
+                            </Grid>
+                            <Grid item xs={8}>
+                                <IssuesTable />
+                            </Grid>
+                        </Grid>
                     </main>
                 </div>
             );
@@ -80,10 +100,15 @@ Search.propTypes = {
     updateChip: PropTypes.func,
 };
 
+const mapState = state => ({
+    loadIssues: state.github.loadIssues,
+});
+
 const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
     incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
     updateIssuesLoading: dispatch.github.updateIssuesLoading,
+    setLoadIssues: dispatch.github.setLoadIssues,
 });
 
-export default connect(null, mapDispatch)(withStyles(styles)(withApollo(Search)));
+export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(Search)));

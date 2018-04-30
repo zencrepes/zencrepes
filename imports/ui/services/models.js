@@ -26,6 +26,7 @@ export const github = {
         unfilteredIssues: 0,
         totalLoading: false,
         issuesLoading: false,
+        loadIssues: false,
     },
     reducers: {
         setTotalRepos(state, payload) {
@@ -54,6 +55,9 @@ export const github = {
         },
         updateIssuesLoading(state, payload) {
             return { ...state, issuesLoading: payload };
+        },
+        setLoadIssues(state, payload) {
+            return { ...state, loadIssues: payload };
         },
     }
 };

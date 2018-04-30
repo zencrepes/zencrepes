@@ -19,7 +19,8 @@ import 'primereact/resources/themes/omega/theme.css';
 
 import { CheckboxBlankOutline, CheckboxMarkedOutline } from 'mdi-material-ui';
 
-import { cfgSources} from '../../data/Repositories.js';
+import { cfgSources } from '../../data/Repositories.js';
+import { cfgIssues } from '../../data/Issues.js';
 import _ from 'lodash';
 
 //https://github.com/primefaces/primereact/blob/75ebcc93a37918fee88578b77e70fa6d94207332/src/components/tree/Tree.css
@@ -92,6 +93,8 @@ class OrgRepoTree extends Component {
     }
 
     save() {
+        const { setLoadIssues } = this.props;
+
         cfgSources.find({}).map(node => {
             if (_.findIndex(this.state.selectedFiles2, { 'id': node.id})  === -1) {
                 //Node is not in selected files, active => false
@@ -101,6 +104,7 @@ class OrgRepoTree extends Component {
                 cfgSources.update({id: node.id}, {$set:{'active':true}});
             }
         })
+        setLoadIssues(true);
         console.log('Save - Number of active repos: ' + cfgSources.find({'active': true}).count());
     }
 
@@ -199,6 +203,10 @@ const mapState = state => ({
     totalLoading: state.github.totalLoading,
 });
 
-export default connect(mapState, null)(withStyles(styles)(OrgRepoTree));
+const mapDispatch = dispatch => ({
+    setLoadIssues: dispatch.github.setLoadIssues,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));
 
 
