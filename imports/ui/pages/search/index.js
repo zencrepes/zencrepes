@@ -12,6 +12,8 @@ import NoRepos from '../../components/Dialogs/NoRepos.js';
 
 import Issues, { cfgIssues } from '../../data/Issues.js';
 
+import Facets from './Facets.js';
+
 
 const styles = theme => ({
     root: {
@@ -40,25 +42,23 @@ class Search extends Component {
         if (this.state.sourcesInit === false) {
             this.state.sourcesInit = true;
             const issues = new Issues(this.props);
-            console.log(issues);
             issues.load();
         };
     }
 
     render() {
         const { classes } = this.props;
-        console.log(cfgSources.find({}).count());
         if (cfgSources.find({'active': true}).count() > 0 ) {
             return (
                 <div className={classes.root}>
                     <AppMenu />
                     <LeftDrawer />
                     <main className={classes.content}>
+                        <Facets />
                         <h1> There is some content available </h1>
                     </main>
                 </div>
             );
-
         } else {
             return (
                 <div className={classes.root}>

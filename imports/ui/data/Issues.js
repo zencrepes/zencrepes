@@ -58,6 +58,7 @@ class Issues {
     }
 
     getIssuesPagination = async (cursor, increment, RepoObj) => {
+        console.log('Querying server');
         let data = await this.client.query({
             query: GET_GITHUB_ISSUES,
             variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name}
@@ -65,7 +66,7 @@ class Issues {
         this.updateChip(data.data.rateLimit);
         lastCursor = await this.loadIssues(data);
         queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
-        //console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+        console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
         if (queryIncrement > 0) {
             await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
         }
@@ -73,17 +74,18 @@ class Issues {
 
     load = async () => {
         this.updateIssuesLoading(true);
-        await cfgSources.find({}).forEach(async (repo) => {
-            console.log('Going through repo: ' + repo.name);
+        await localCfgIssues.refresh();
+        let allRepos = await cfgSources.find({}).fetch();
+        for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any issues attached to this repo (if any)
-                let attachedIssues = cfgIssues.find({'repo.id': repo.id}).count();
+                //let attachedIssues = cfgIssues.find({'repo.id': repo.id}).count();
                 //console.log('Repo is inactive, removing: ' + attachedIssues + ' attached issues');
-                cfgIssues.remove({'repo.id': repo.id});
+                await cfgIssues.remove({'repo.id': repo.id});
             } else {
                 //If repo is active, load all issues attached to this repo (if any)
                 if (repo.issues_count >= 0) {
-                    console.log('Repo is active and has issues, loading data');
+                    console.log('Going through repo: ' + repo.name + ' - Is active and has ' + repo.issues_count + ' issues');
 
                     //First, marked all existing issues are non-refreshed
                     let updatedDocs = cfgIssues.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
@@ -94,12 +96,14 @@ class Issues {
                     if (repo.issues_count < 100) {
                         queryIncrement = repo.issues_count;
                     }
+                    console.log('Query Increment: ' + queryIncrement);
                     await this.getIssuesPagination(null, queryIncrement, repo);
                 }
             }
-        });
+
+        }
         this.updateIssuesLoading(false);
-        console.log(cfgIssues.find({}).fetch());
+        console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues loaded');
     }
 }
 
