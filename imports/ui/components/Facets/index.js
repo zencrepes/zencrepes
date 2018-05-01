@@ -6,9 +6,7 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
-
-import IssueStates from './IssueStates.js';
-import IssueMilestones from './IssueMilestones.js';
+import TextFacet from './TextFacet.js';
 
 const styles = theme => ({
     root: {
@@ -24,6 +22,21 @@ const styles = theme => ({
 });
 
 class Facets extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            facets: [
+                {header: 'States', group: 'state', nested: false},
+                {header: 'Organizations', group: 'org.name', nested: false},
+                {header: 'Repositories', group: 'repo.name', nested: false},
+                {header: 'Authors', group: 'author.name', nested: false},
+                {header: 'Labels', group: 'labels', nested: 'name'},
+                {header: 'Assignees', group: 'assignees', nested: 'name'},
+                {header: 'Milestones', group: 'milestone.title', nested: false},
+                {header: 'Milestones Status', group: 'milestone.state', nested: false},
+            ],
+        };
+    }
 
     render() {
         const { classes, issuesLoading } = this.props;
@@ -42,8 +55,9 @@ class Facets extends Component {
                 <div className={classes.root}>
                     <Card className={classes.card}>
                         <CardContent>
-                            <IssueStates />
-                            <IssueMilestones />
+                            {this.state.facets.map(value => (
+                                <TextFacet data={value} key={value.header}/>
+                            ))}
                         </CardContent>
                     </Card>
                 </div>

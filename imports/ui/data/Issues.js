@@ -35,7 +35,7 @@ class Issues {
                 author: currentIssue.node.author,
                 org: {'login': data.data.viewer.organization.login, 'id': data.data.viewer.organization.id, 'name': data.data.viewer.organization.name, 'url': data.data.viewer.organization.url},
                 repo: {'name': data.data.viewer.organization.repository.name, 'id': data.data.viewer.organization.repository.id, 'url': data.data.viewer.organization.repository.url},
-                labels: currentIssue.node.labels.edges,
+                labels: currentIssue.node.labels,
                 repo_id: data.data.viewer.organization.repository.id,
                 state: currentIssue.node.state,
                 milestone: currentIssue.node.milestone,

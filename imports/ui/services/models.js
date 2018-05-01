@@ -18,6 +18,21 @@ export const chip = {
     }
 };
 
+export const query = {
+    state: {
+        values: {},
+        results: 0,
+    },
+    reducers: {
+        updateResults(state, payload) {
+            return { ...state, results: payload };
+        },
+        updateQuery(state, payload) {
+            return { ...state, values: payload };
+        }
+    }
+};
+
 export const github = {
     state: {
         totalOrgs: 0,

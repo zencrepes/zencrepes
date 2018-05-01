@@ -46,15 +46,6 @@ class Search extends Component {
             const issues = new Issues(this.props);
             issues.load();
         }
-        /*
-
-        if (cfgIssues.find({}).count() > 0) {this.state.sourcesInit = true;}
-        if (this.state.sourcesInit === false || ) {
-            this.setState({sourcesInit: true});
-            const issues = new Issues(this.props);
-            issues.load();
-        };
-        */
     }
 
     render() {
