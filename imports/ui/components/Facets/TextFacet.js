@@ -64,20 +64,25 @@ class TextFacet extends Component {
     }
 
     handleToggle = value => () => {
+        const { addToQuery, removeFromQuery } = this.props;
         const { checked } = this.state;
+        console.log(value);
+        console.log(checked);
         //Return the index of the object containing name
         const currentIndex = checked.map((v) => {return v.name}).indexOf(value.name);
         const newChecked = [...checked];
 
         if (currentIndex === -1) {
             newChecked.push(value);
+            addToQuery(value);
         } else {
             newChecked.splice(currentIndex, 1);
+            removeFromQuery(value);
         }
         this.setState({
             checked: newChecked,
         });
-        
+
     };
 
     render() {
@@ -123,7 +128,8 @@ TextFacet.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    updateQuery: dispatch.query.updateQuery,
+    addToQuery: dispatch.query.addToQuery,
+    removeFromQuery: dispatch.query.removeFromQuery,
 });
 
 export default connect(null, mapDispatch)(withStyles(styles)(TextFacet));
