@@ -8,6 +8,7 @@ import Paper from 'material-ui/Paper';
 
 import { connect } from "react-redux";
 
+import QueryFacets from './QueryFacets.js';
 
 const styles = theme => ({
     root: {
@@ -36,22 +37,14 @@ class Query extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <h1>Some TEST</h1>
-                        <Chip
-                            key='SOME KEY'
-                            label='some label'
-                            className={classes.chip}
-                        />
-                        <Paper className={classes.root}>
-                            {queryValues['state'].map(data => {
-                                return (
-                                    <Chip
-                                        key={data.name}
-                                        label={data.name}
-                                        className={classes.chip}
-                                    />
-                                );
-                            })}
-                        </Paper>
+                        {Object.keys(queryValues).map(idx => {
+                            console.log(idx);
+                            return (
+                                <Paper className={classes.root}>
+                                    <QueryFacets queryContent={queryValues[idx]}/>
+                                </Paper>
+                            );
+                        })}
                     </CardContent>
                 </Card>
             </div>

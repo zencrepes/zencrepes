@@ -20,14 +20,15 @@ export const chip = {
 
 export const query = {
     state: {
-        values: {'state': [{count: 954, name: "CLOSED", group: "state", nested: false}]},
+        values: {state:[]},
         results: 0,
     },
     reducers: {
         addToQuery(state, payload) {
+            console.log(state);
             const { group } = payload;
             //Lookup payload in current state group
-            let currentValues = state.values;
+            let currentValues = Object.assign({}, state.values);
             if (state.values[group] === undefined) {currentValues[group] = [];}
             const currentIndex = currentValues[group].map((v) => {return v.name}).indexOf(payload.name);
             if (currentIndex === -1) {
@@ -42,8 +43,9 @@ export const query = {
             }
         },
         removeFromQuery(state, payload) {
+            console.log(state);
             const { group } = payload;
-            let currentValues = state.values;
+            let currentValues = Object.assign({}, state.values);
             if (state.values[group] === undefined) {return state;}
             const currentIndex = currentValues[group].map((v) => {return v.name}).indexOf(payload.name);
             if (currentIndex === -1) {

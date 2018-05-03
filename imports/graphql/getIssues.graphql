@@ -29,7 +29,6 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
               state
               author {
                 login
-                name
                 url
               }
               labels (first: 5) {
