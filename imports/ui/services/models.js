@@ -20,30 +20,24 @@ export const chip = {
 
 export const query = {
     state: {
-        values: {state:[]},
+        values: {},
         results: 0,
     },
     reducers: {
         addToQuery(state, payload) {
-            console.log(state);
             const { group } = payload;
             //Lookup payload in current state group
             let currentValues = Object.assign({}, state.values);
             if (state.values[group] === undefined) {currentValues[group] = [];}
             const currentIndex = currentValues[group].map((v) => {return v.name}).indexOf(payload.name);
             if (currentIndex === -1) {
-                console.log('addToQuery - Does not exist, pushing ');
                 currentValues[group].push(payload);
-                console.log(currentValues);
-                console.log({ ...state, values: currentValues });
                 return { ...state, values: currentValues };
             } else {
-                console.log('addToQuery - Exists, not pushing ');
                 return state;
             }
         },
         removeFromQuery(state, payload) {
-            console.log(state);
             const { group } = payload;
             let currentValues = Object.assign({}, state.values);
             if (state.values[group] === undefined) {return state;}

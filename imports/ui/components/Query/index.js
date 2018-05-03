@@ -30,8 +30,6 @@ class Query extends Component {
     }
     render() {
         const { classes, queryValues } = this.props;
-        console.log('Re-render query');
-        console.log(queryValues);
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
@@ -40,8 +38,8 @@ class Query extends Component {
                         {Object.keys(queryValues).map(idx => {
                             console.log(idx);
                             return (
-                                <Paper className={classes.root}>
-                                    <QueryFacets queryContent={queryValues[idx]}/>
+                                <Paper className={classes.root} key={idx}>
+                                    <QueryFacets queryContent={queryValues[idx]} />
                                 </Paper>
                             );
                         })}

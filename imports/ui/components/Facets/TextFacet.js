@@ -28,6 +28,7 @@ class TextFacet extends Component {
         this.state = {
             dense: true,
             checked: [],
+            queryValues: {},
         };
     }
 
@@ -85,9 +86,43 @@ class TextFacet extends Component {
 
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('Preparing to update group: ' + nextProps.data.group);
+        let previousQueryValues = {};
+        let newQueryValues = {};
+
+        // Compare query values with previous ones for this particular facet type to identify possible changes
+        if (this.props.queryValues[this.props.data.group] !== undefined) {
+            previousQueryValues = this.props.queryValues[this.props.data.group];
+        }
+        if (nextProps.queryValues[this.props.data.group] !== undefined) {
+            newQueryValues = nextProps.queryValues[this.props.data.group];
+        }
+        if (_.isMatch(previousQueryValues, newQueryValues)) {
+            console.log('No changes in queries, not re-rendering');
+            return false;
+        } else {
+            console.log(this.props);
+            console.log(nextProps);
+//        if (this.state.checked.length === nextState.checked.length) {
+//            return false;
+//        }
+            //console.log(this.state);
+            //console.log(nextState);
+            return true;
+        }
+    }
+
+    refreshChecked() {
+
+    }
+
     render() {
-        const { classes, data } = this.props;
+        const { classes, data, queryValues } = this.props;
         const {header, group, nested } = data;
+
+        console.log(queryValues);
+        console.log('Render: ' + header + ' - Group:' + group);
 
         return (
             <div className={classes.root}>
@@ -119,7 +154,7 @@ class TextFacet extends Component {
                     ))}
                 </List>
             </div>
-    );
+        );
     }
 }
 
@@ -132,4 +167,7 @@ const mapDispatch = dispatch => ({
     removeFromQuery: dispatch.query.removeFromQuery,
 });
 
-export default connect(null, mapDispatch)(withStyles(styles)(TextFacet));
+const mapState = state => ({
+    queryValues: state.query.values,
+});
+export default connect(mapState, mapDispatch)(withStyles(styles)(TextFacet));
