@@ -65,27 +65,24 @@ class TextFacet extends Component {
     }
 
     handleToggle = value => () => {
-        const { addToQuery, removeFromQuery } = this.props;
-        const { checked } = this.state;
-        console.log(value);
-        console.log(checked);
-        //Return the index of the object containing name
-        const currentIndex = checked.map((v) => {return v.name}).indexOf(value.name);
-        const newChecked = [...checked];
+        const { addToQuery, removeFromQuery, queryValues } = this.props;
 
+        //check to handle the situation where the group does not exist yet
+        let valueChecked = [];
+        if (queryValues[value.group] !== undefined) {
+            valueChecked = queryValues[value.group];
+        }
+        //Check if the value is already in the model, if yes remove, if not add.
+        const currentIndex = valueChecked.map((v) => {return v.name}).indexOf(value.name);
         if (currentIndex === -1) {
-            newChecked.push(value);
             addToQuery(value);
         } else {
-            newChecked.splice(currentIndex, 1);
             removeFromQuery(value);
         }
-        this.setState({
-            checked: newChecked,
-        });
-
     };
 
+    //TODO - Might want to check if there has been a change in props instead of re-rendering all facets for any clicks
+    /*
     shouldComponentUpdate(nextProps, nextState) {
         console.log('Preparing to update group: ' + nextProps.data.group);
         let previousQueryValues = {};
@@ -102,27 +99,19 @@ class TextFacet extends Component {
             console.log('No changes in queries, not re-rendering');
             return false;
         } else {
-            console.log(this.props);
-            console.log(nextProps);
-//        if (this.state.checked.length === nextState.checked.length) {
-//            return false;
-//        }
-            //console.log(this.state);
-            //console.log(nextState);
             return true;
         }
     }
-
-    refreshChecked() {
-
-    }
+    */
 
     render() {
         const { classes, data, queryValues } = this.props;
         const {header, group, nested } = data;
 
-        console.log(queryValues);
-        console.log('Render: ' + header + ' - Group:' + group);
+        let valueChecked = [];
+        if (queryValues[group] !== undefined) {
+            valueChecked = queryValues[group];
+        }
 
         return (
             <div className={classes.root}>
@@ -142,7 +131,7 @@ class TextFacet extends Component {
                             className={classes.listItem}
                         >
                             <Checkbox
-                                checked={this.state.checked.map((v) => {return v.name}).indexOf(value.name) !== -1}
+                                checked={valueChecked.map((v) => {return v.name}).indexOf(value.name) !== -1}
                                 tabIndex={-1}
                                 disableRipple
                             />

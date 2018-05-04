@@ -15,7 +15,8 @@ const styles = theme => ({
         flexGrow: 1,
         zIndex: 1,
         overflow: 'hidden',
-        position: 'relative',
+        top: 30,
+        //position: 'relative',
         display: 'flex',
     },
     chip: {
@@ -34,9 +35,7 @@ class Query extends Component {
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent>
-                        <h1>Some TEST</h1>
                         {Object.keys(queryValues).map(idx => {
-                            console.log(idx);
                             return (
                                 <Paper className={classes.root} key={idx}>
                                     <QueryFacets queryContent={queryValues[idx]} />
