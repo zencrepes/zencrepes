@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { dispatch } from '@rematch/core'
 
 // https://rematch.gitbooks.io/rematch/#examples
 export const chip = {
@@ -18,42 +19,49 @@ export const chip = {
     }
 };
 
-export const query = {
+export const filters = {
     state: {
-        values: {},
+        filters: {},
         results: 0,
     },
     reducers: {
-        addToQuery(state, payload) {
+        addFilter(state, payload) {
+            console.log('Add Filter');
             const { group } = payload;
             //Lookup payload in current state group
-            let currentValues = Object.assign({}, state.values);
-            if (state.values[group] === undefined) {currentValues[group] = [];}
+            let currentValues = Object.assign({}, state.filters);
+            if (state.filters[group] === undefined) {currentValues[group] = [];}
             const currentIndex = currentValues[group].map((v) => {return v.name}).indexOf(payload.name);
             if (currentIndex === -1) {
                 currentValues[group].push(payload);
-                return { ...state, values: currentValues };
+                return { ...state, filters: currentValues };
             } else {
                 return state;
             }
         },
-        removeFromQuery(state, payload) {
+        removeFilter(state, payload) {
             const { group } = payload;
-            let currentValues = Object.assign({}, state.values);
-            if (state.values[group] === undefined) {return state;}
+            let currentValues = Object.assign({}, state.filters);
+            if (state.filters[group] === undefined) {return state;}
             const currentIndex = currentValues[group].map((v) => {return v.name}).indexOf(payload.name);
             if (currentIndex === -1) {
                 return state;
             } else {
                 currentValues[group].splice(currentIndex, 1);
-                return { ...state, values: currentValues };
+                return { ...state, filters: currentValues };
             }
         },
         updateResults(state, payload) {
             return { ...state, results: payload };
-        },
-        updateQuery(state, payload) {
-            return { ...state, values: payload };
+        }
+    },
+    effects: {
+        async addFilterEffect(payload, rootState) {
+            console.log(rootState);
+            console.log(rootState.filters.filters);
+            let newState = await this.addFilter(payload);
+            console.log('Updated State');
+            console.log(rootState);
         }
     }
 };

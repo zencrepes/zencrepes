@@ -24,8 +24,8 @@ class QueryFacets extends Component {
     }
 
     handleDelete = data => () => {
-        const { removeFromQuery } = this.props;
-        removeFromQuery(data);
+        const { removeFilter } = this.props;
+        removeFilter(data);
     }
 
     render() {
@@ -52,11 +52,11 @@ QueryFacets.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    removeFromQuery: dispatch.query.removeFromQuery,
+    removeFilter: dispatch.filters.removeFilter,
 });
 
 const mapState = state => ({
-    queryValues: state.query.values,
+    queryValues: state.filters.filters,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(QueryFacets));

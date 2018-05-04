@@ -65,7 +65,7 @@ class TextFacet extends Component {
     }
 
     handleToggle = value => () => {
-        const { addToQuery, removeFromQuery, queryValues } = this.props;
+        const { addFilter, addFilterEffect, removeFilter, queryValues } = this.props;
 
         //check to handle the situation where the group does not exist yet
         let valueChecked = [];
@@ -75,9 +75,10 @@ class TextFacet extends Component {
         //Check if the value is already in the model, if yes remove, if not add.
         const currentIndex = valueChecked.map((v) => {return v.name}).indexOf(value.name);
         if (currentIndex === -1) {
-            addToQuery(value);
+            //addFilter(value);
+            addFilterEffect(value);
         } else {
-            removeFromQuery(value);
+            removeFilter(value);
         }
     };
 
@@ -152,11 +153,12 @@ TextFacet.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    addToQuery: dispatch.query.addToQuery,
-    removeFromQuery: dispatch.query.removeFromQuery,
+    addFilter: dispatch.filters.addFilter,
+    addFilterEffect: dispatch.filters.addFilterEffect,
+    removeFilter: dispatch.filters.removeFilter,
 });
 
 const mapState = state => ({
-    queryValues: state.query.values,
+    queryValues: state.filters.filters,
 });
 export default connect(mapState, mapDispatch)(withStyles(styles)(TextFacet));
