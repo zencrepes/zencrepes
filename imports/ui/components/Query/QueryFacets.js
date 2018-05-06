@@ -24,8 +24,8 @@ class QueryFacets extends Component {
     }
 
     handleDelete = data => () => {
-        const { removeFilter } = this.props;
-        removeFilter(data);
+        const { removeFilterRefresh } = this.props;
+        removeFilterRefresh(data);
     }
 
     render() {
@@ -52,7 +52,7 @@ QueryFacets.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    removeFilter: dispatch.filters.removeFilter,
+    removeFilterRefresh: dispatch.filters.removeFilterRefresh,
 });
 
 const mapState = state => ({

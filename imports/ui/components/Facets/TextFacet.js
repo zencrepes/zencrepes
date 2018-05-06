@@ -65,7 +65,7 @@ class TextFacet extends Component {
     }
 
     handleToggle = value => () => {
-        const { addFilter, addFilterEffect, removeFilter, queryValues } = this.props;
+        const { addFilterRefresh, removeFilterRefresh, queryValues } = this.props;
 
         //check to handle the situation where the group does not exist yet
         let valueChecked = [];
@@ -75,10 +75,9 @@ class TextFacet extends Component {
         //Check if the value is already in the model, if yes remove, if not add.
         const currentIndex = valueChecked.map((v) => {return v.name}).indexOf(value.name);
         if (currentIndex === -1) {
-            //addFilter(value);
-            addFilterEffect(value);
+            addFilterRefresh(value);
         } else {
-            removeFilter(value);
+            removeFilterRefresh(value);
         }
     };
 
@@ -153,9 +152,8 @@ TextFacet.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    addFilter: dispatch.filters.addFilter,
-    addFilterEffect: dispatch.filters.addFilterEffect,
-    removeFilter: dispatch.filters.removeFilter,
+    addFilterRefresh: dispatch.filters.addFilterRefresh,
+    removeFilterRefresh: dispatch.filters.removeFilterRefresh,
 });
 
 const mapState = state => ({

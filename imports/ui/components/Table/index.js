@@ -39,13 +39,13 @@ class IssuesTable extends Component {
             ]
         };
     }
-
+/*
     getRows() {
         return cfgIssues.find({}).fetch();
     }
-
+*/
     render() {
-        const { classes, issuesLoading } = this.props;
+        const { classes, issuesLoading, filtersResults } = this.props;
         const { columns } = this.state;
 
         return (
@@ -53,7 +53,7 @@ class IssuesTable extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <Grid
-                            rows={this.getRows()}
+                            rows={filtersResults}
                             columns={columns}
                         >
                             <Table />
@@ -72,6 +72,7 @@ IssuesTable.propTypes = {
 
 const mapState = state => ({
     issuesLoading: state.github.issuesLoading,
+    filtersResults: state.filters.results,
 });
 
 
