@@ -98,7 +98,7 @@ const getFacetData = (facet) => {
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
-        cfgIssues.find({}).forEach((issue) => {
+        cfgIssues.find({filtered: false}).forEach((issue) => {
             if (issue[facet.group].totalCount === 0) {
                 allValues.push({name: 'EMPTY'});
             } else {
@@ -201,6 +201,14 @@ export const data = {
             let updatedFilters = addToFilters(payload, rootState.data.filters);
             this.addFilter(payload);
 
+            let facets = JSON.parse(JSON.stringify(rootState.data.facets));
+            facets.map((facet) => {
+                let facetData = getFacetData(facet);
+                facet.data = facetData;
+                return facet;
+            });
+            await this.updateFacets(facets);
+
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
             this.updateResults(cfgIssues.find(mongoFilter).fetch());
@@ -208,6 +216,14 @@ export const data = {
         async removeFilterRefresh(payload, rootState) {
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);
             this.removeFilter(payload);
+
+            let facets = JSON.parse(JSON.stringify(rootState.data.facets));
+            facets.map((facet) => {
+                let facetData = getFacetData(facet);
+                facet.data = facetData;
+                return facet;
+            });
+            await this.updateFacets(facets);
 
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
