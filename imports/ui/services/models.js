@@ -119,7 +119,7 @@ export const data = {
             {header: 'States', group: 'state', nested: false, data: [] },
             {header: 'Organizations', group: 'org.name', nested: false, data: [] },
             {header: 'Repositories', group: 'repo.name', nested: false, data: [] },
-            {header: 'Authors', group: 'author.name', nested: false, data: [] },
+            {header: 'Authors', group: 'author.login', nested: false, data: [] },
             {header: 'Labels', group: 'labels', nested: 'name', data: [] },
             {header: 'Assignees', group: 'assignees', nested: 'name', data: [] },
             {header: 'Milestones', group: 'milestone.title', nested: false, data: []} ,

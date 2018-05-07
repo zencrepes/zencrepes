@@ -49,7 +49,7 @@ class TextFacet extends Component {
             removeFilterRefresh(value);
         }
     };
-    
+
     render() {
         console.log('Facet render()');
         const { classes, facet, queryValues } = this.props;
