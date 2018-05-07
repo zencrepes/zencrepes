@@ -56,7 +56,7 @@ Query.propTypes = {
 
 
 const mapState = state => ({
-    queryValues: state.filters.filters,
+    queryValues: state.data.filters,
 });
 
 export default connect(mapState, null)(withStyles(styles)(Query));

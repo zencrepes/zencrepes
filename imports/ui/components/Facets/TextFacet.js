@@ -32,6 +32,7 @@ class TextFacet extends Component {
         };
     }
 
+    /*
     getFacetStatesData (group, nested) {
         let statesGroup = []
         if (nested) {
@@ -63,7 +64,7 @@ class TextFacet extends Component {
         //Return the array sorted by count
         return states.sort((a, b) => b.count - a.count);
     }
-
+    */
     handleToggle = value => () => {
         const { addFilterRefresh, removeFilterRefresh, queryValues } = this.props;
 
@@ -105,8 +106,8 @@ class TextFacet extends Component {
     */
 
     render() {
-        const { classes, data, queryValues } = this.props;
-        const {header, group, nested } = data;
+        const { classes, facet, queryValues } = this.props;
+        const {header, group, nested, data } = facet;
 
         let valueChecked = [];
         if (queryValues[group] !== undefined) {
@@ -121,7 +122,7 @@ class TextFacet extends Component {
                     </Typography>
                 </Toolbar>
                 <List dense={this.state.dense}>
-                    {this.getFacetStatesData(group, nested).map(value => (
+                    {data.map(value => (
                         <ListItem
                             key={value.name}
                             role={undefined}
@@ -152,11 +153,11 @@ TextFacet.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    addFilterRefresh: dispatch.filters.addFilterRefresh,
-    removeFilterRefresh: dispatch.filters.removeFilterRefresh,
+    addFilterRefresh: dispatch.data.addFilterRefresh,
+    removeFilterRefresh: dispatch.data.removeFilterRefresh,
 });
 
 const mapState = state => ({
-    queryValues: state.filters.filters,
+    queryValues: state.data.filters,
 });
 export default connect(mapState, mapDispatch)(withStyles(styles)(TextFacet));

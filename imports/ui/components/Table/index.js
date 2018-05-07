@@ -72,7 +72,7 @@ IssuesTable.propTypes = {
 
 const mapState = state => ({
     issuesLoading: state.github.issuesLoading,
-    filtersResults: state.filters.results,
+    filtersResults: state.data.results,
 });
 
 

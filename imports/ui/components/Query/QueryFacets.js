@@ -52,11 +52,11 @@ QueryFacets.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    removeFilterRefresh: dispatch.filters.removeFilterRefresh,
+    removeFilterRefresh: dispatch.data.removeFilterRefresh,
 });
 
 const mapState = state => ({
-    queryValues: state.filters.filters,
+    queryValues: state.data.filters,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(QueryFacets));

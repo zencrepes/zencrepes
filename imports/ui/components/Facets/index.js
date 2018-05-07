@@ -21,26 +21,42 @@ const styles = theme => ({
     },
 });
 
+
 class Facets extends Component {
     constructor (props) {
         super(props);
-        this.state = {
-            facets: [
-                {header: 'States', group: 'state', nested: false},
-                {header: 'Organizations', group: 'org.name', nested: false},
-                {header: 'Repositories', group: 'repo.name', nested: false},
-                {header: 'Authors', group: 'author.name', nested: false},
-                {header: 'Labels', group: 'labels', nested: 'name'},
-                {header: 'Assignees', group: 'assignees', nested: 'name'},
-                {header: 'Milestones', group: 'milestone.title', nested: false},
-                {header: 'Milestones Status', group: 'milestone.state', nested: false},
-            ],
-        };
+        this.state = {};
     }
 
+    componentDidMount() {
+        console.log('ComponentDidMount');
+        const { initFacets } = this.props;
+        initFacets();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('shouldComponentUpdate');
+        // Do not update the components of facets or issues are currently loading
+        if (nextProps.facetsLoading === true || nextProps.issuesLoading === true) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /*
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { initFacets } = this.props;
+        console.log('shouldComponentUpdate');
+        initFacets();
+    }
+*/
     render() {
-        const { classes, issuesLoading } = this.props;
+        console.log('render()');
+        const { classes, issuesLoading, facets, clearFilters, clearResults, initFacets } = this.props;
         if (issuesLoading) {
+            clearFilters();
+            clearResults();
             return (
                 <div className={classes.root}>
                     <Card className={classes.card}>
@@ -55,8 +71,8 @@ class Facets extends Component {
                 <div className={classes.root}>
                     <Card className={classes.card}>
                         <CardContent>
-                            {this.state.facets.map(value => (
-                                <TextFacet data={value} key={value.header}/>
+                            {facets.map(facet => (
+                                <TextFacet facet={facet} key={facet.header}/>
                             ))}
                         </CardContent>
                     </Card>
@@ -73,6 +89,14 @@ Facets.propTypes = {
 
 const mapState = state => ({
     issuesLoading: state.github.issuesLoading,
+    facets: state.data.facets,
+    facetsLoading: state.data.loading,
 });
 
-export default connect(mapState, null)(withStyles(styles)(Facets));
+const mapDispatch = dispatch => ({
+    clearFilters: dispatch.data.clearFilters,
+    clearResults: dispatch.data.clearResults,
+    initFacets: dispatch.data.initFacets,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(Facets));
