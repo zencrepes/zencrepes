@@ -3,7 +3,6 @@ import { dispatch } from '@rematch/core';
 
 import { cfgIssues } from '../data/Issues.js';
 
-
 // https://rematch.gitbooks.io/rematch/#examples
 export const chip = {
     state: {
@@ -50,18 +49,16 @@ const removeFromFilters = (payload, currentFilters) => {
 //Rebuild the data output based on filters
 const buildMongoFilter = (filters) => {
     //Build Mongo filter
-    console.log('Current Filters');
-    console.log(filters);
-
+    console.log('Current Filters: ' + JSON.stringify(filters));
     //{ fruit: { $in: ['peach', 'plum', 'pear'] } }
 
     //Groups:
     let mongoFilter = {};
     Object.keys(filters).map(idx => {
-        console.log('Group: ' + idx);
+        //console.log('Group: ' + idx);
         filterValues = [];
         filters[idx].map(value => {
-            console.log('Group: ' + idx + ' Value: ' + value.name);
+            //console.log('Group: ' + idx + ' Value: ' + value.name);
             filterValues.push(value.name);
         })
         if (filters[idx].length > 0) {
@@ -73,28 +70,22 @@ const buildMongoFilter = (filters) => {
     return mongoFilter
 };
 
+const clearIssuesFilters = async () => {
+    console.log('clearIssuesFilters - Total issues before: ' + cfgIssues.find({filtered: false}).count());
+    await cfgIssues.update({}, { $set: { filtered: false } }, {multi: true});
+    console.log('clearIssuesFilters - Total issues after: ' + cfgIssues.find({filtered: false}).count());
+}
+
 const filterMongo = async (mongoFilter) => {
     //Filter Mongo to only return specific data
     await cfgIssues.update({}, { $set: { filtered: true } }, {multi: true});
     await cfgIssues.update(mongoFilter, { $set: { filtered: false } }, {multi: true});
 }
-/*
-db.collection.update(
-   <query>,
-   <update>,
-   {
-     upsert: <boolean>,
-     multi: <boolean>,
-     writeConcern: <document>,
-     collation: <document>,
-     arrayFilters: [ <filterdocument1>, ... ]
-   }
-)
-
- */
 
 const getFacetData = (facet) => {
     console.log('getFacetData - Process Facet Group: ' + facet.group);
+    console.log('getFacetData - Filtered: ' + cfgIssues.find({filtered: true}).count());
+    console.log('getFacetData - Unfiltered: ' + cfgIssues.find({filtered: false}).count());
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
@@ -201,16 +192,15 @@ export const data = {
             let updatedFilters = addToFilters(payload, rootState.data.filters);
             this.addFilter(payload);
 
-            let facets = JSON.parse(JSON.stringify(rootState.data.facets));
-            facets.map((facet) => {
-                let facetData = getFacetData(facet);
-                facet.data = facetData;
-                return facet;
-            });
-            await this.updateFacets(facets);
-
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
+
+            let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
+                return {...facet, data: getFacetData(facet)};
+            });
+            console.log(newFacets);
+            await this.updateFacets(newFacets);
+
             this.updateResults(cfgIssues.find(mongoFilter).fetch());
         },
         async removeFilterRefresh(payload, rootState) {
@@ -232,6 +222,7 @@ export const data = {
         async initFacets(payload, rootState) {
             console.log('initFacets');
             this.updateLoading(true);
+            await clearIssuesFilters();
             let facets = JSON.parse(JSON.stringify(rootState.data.facets));
             facets.map((facet) => {
                 let facetData = getFacetData(facet);

@@ -28,5 +28,5 @@ Meteor.startup(() => {
                 <App />
             </Provider>
             , document.getElementById('render-target'));
-    }, 500);
+    }, 2000);
 });
