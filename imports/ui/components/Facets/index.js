@@ -44,13 +44,6 @@ class Facets extends Component {
         }
     }
 
-    /*
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { initFacets } = this.props;
-        console.log('shouldComponentUpdate');
-        initFacets();
-    }
-*/
     render() {
         console.log('render()');
         const { classes, issuesLoading, facets, clearFilters, clearResults, initFacets } = this.props;

@@ -32,39 +32,7 @@ class TextFacet extends Component {
         };
     }
 
-    /*
-    getFacetStatesData (group, nested) {
-        let statesGroup = []
-        if (nested) {
-            let allValues = [];
-            cfgIssues.find({}).forEach((issue) => {
-                if (issue[group].totalCount === 0) {
-                    allValues.push({name: 'EMPTY'});
-                } else {
-                    issue[group].edges.map((nestedValue) => {
-                        if (nestedValue.node[nested] === null || nestedValue.node[nested] === '' || nestedValue.node[nested] === undefined ) {
-                            //console.log({...nestedValue.node, name: nestedValue.node.login});
-                            allValues.push({...nestedValue.node, name: nestedValue.node.login});
-                        } else {
-                            allValues.push(nestedValue.node);
-                        }
-                    })
-                }
-            })
-            statesGroup = _.groupBy(allValues, nested);
-        } else {
-            statesGroup = _.groupBy(cfgIssues.find({}).fetch(), group);
-        }
-        let states = [];
-        //console.log(statesGroup);
-        Object.keys(statesGroup).forEach(function(key) {
-            states.push({count: statesGroup[key].length, name: key, group: group, nested: nested});
-        });
-        //console.log(states);
-        //Return the array sorted by count
-        return states.sort((a, b) => b.count - a.count);
-    }
-    */
+
     handleToggle = value => () => {
         const { addFilterRefresh, removeFilterRefresh, queryValues } = this.props;
 
@@ -81,31 +49,9 @@ class TextFacet extends Component {
             removeFilterRefresh(value);
         }
     };
-
-    //TODO - Might want to check if there has been a change in props instead of re-rendering all facets for any clicks
-    /*
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log('Preparing to update group: ' + nextProps.data.group);
-        let previousQueryValues = {};
-        let newQueryValues = {};
-
-        // Compare query values with previous ones for this particular facet type to identify possible changes
-        if (this.props.queryValues[this.props.data.group] !== undefined) {
-            previousQueryValues = this.props.queryValues[this.props.data.group];
-        }
-        if (nextProps.queryValues[this.props.data.group] !== undefined) {
-            newQueryValues = nextProps.queryValues[this.props.data.group];
-        }
-        if (_.isMatch(previousQueryValues, newQueryValues)) {
-            console.log('No changes in queries, not re-rendering');
-            return false;
-        } else {
-            return true;
-        }
-    }
-    */
-
+    
     render() {
+        console.log('Facet render()');
         const { classes, facet, queryValues } = this.props;
         const {header, group, nested, data } = facet;
 

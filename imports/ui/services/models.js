@@ -84,8 +84,6 @@ const filterMongo = async (mongoFilter) => {
 
 const getFacetData = (facet) => {
     console.log('getFacetData - Process Facet Group: ' + facet.group);
-    console.log('getFacetData - Filtered: ' + cfgIssues.find({filtered: true}).count());
-    console.log('getFacetData - Unfiltered: ' + cfgIssues.find({filtered: false}).count());
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
@@ -105,7 +103,7 @@ const getFacetData = (facet) => {
         });
         statesGroup = _.groupBy(allValues, facet.nested);
     } else {
-        statesGroup = _.groupBy(cfgIssues.find({}).fetch(), facet.group);
+        statesGroup = _.groupBy(cfgIssues.find({filtered: false}).fetch(), facet.group);
     }
     let states = [];
     Object.keys(statesGroup).forEach(function(key) {
@@ -114,40 +112,6 @@ const getFacetData = (facet) => {
     //Return the array sorted by count
     return states.sort((a, b) => b.count - a.count);
 };
-
-/*
-const getFacetStatesData = (group, nested) => {
-    let statesGroup = []
-    if (nested) {
-        let allValues = [];
-        cfgIssues.find({}).forEach((issue) => {
-            if (issue[group].totalCount === 0) {
-                allValues.push({name: 'EMPTY'});
-            } else {
-                issue[group].edges.map((nestedValue) => {
-                    if (nestedValue.node[nested] === null || nestedValue.node[nested] === '' || nestedValue.node[nested] === undefined ) {
-                        //console.log({...nestedValue.node, name: nestedValue.node.login});
-                        allValues.push({...nestedValue.node, name: nestedValue.node.login});
-                    } else {
-                        allValues.push(nestedValue.node);
-                    }
-                })
-            }
-        })
-        statesGroup = _.groupBy(allValues, nested);
-    } else {
-        statesGroup = _.groupBy(cfgIssues.find({}).fetch(), group);
-    }
-    let states = [];
-    //console.log(statesGroup);
-    Object.keys(statesGroup).forEach(function(key) {
-        states.push({count: statesGroup[key].length, name: key, group: group, nested: nested});
-    });
-    //console.log(states);
-    //Return the array sorted by count
-    return states.sort((a, b) => b.count - a.count);
-}
-*/
 
 export const data = {
     state: {
@@ -189,50 +153,59 @@ export const data = {
     effects: {
         //Add a filter, then refresh the data points
         async addFilterRefresh(payload, rootState) {
+            //Get the list of updated filters, and push received filter payload to state
             let updatedFilters = addToFilters(payload, rootState.data.filters);
             this.addFilter(payload);
 
+            // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
 
+            // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 return {...facet, data: getFacetData(facet)};
             });
-            console.log(newFacets);
             await this.updateFacets(newFacets);
 
+            // Update the results
             this.updateResults(cfgIssues.find(mongoFilter).fetch());
         },
         async removeFilterRefresh(payload, rootState) {
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);
             this.removeFilter(payload);
 
-            let facets = JSON.parse(JSON.stringify(rootState.data.facets));
-            facets.map((facet) => {
-                let facetData = getFacetData(facet);
-                facet.data = facetData;
-                return facet;
-            });
-            await this.updateFacets(facets);
-
+            // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
+
+            // Refresh/populate the facets data from mongo
+            let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
+                return {...facet, data: getFacetData(facet)};
+            });
+            await this.updateFacets(newFacets);
+
+            // Update the results
             this.updateResults(cfgIssues.find(mongoFilter).fetch());
         },
         async initFacets(payload, rootState) {
             console.log('initFacets');
             this.updateLoading(true);
+
             await clearIssuesFilters();
-            let facets = JSON.parse(JSON.stringify(rootState.data.facets));
-            facets.map((facet) => {
-                let facetData = getFacetData(facet);
-                facet.data = facetData;
-                return facet;
-            });
-            let updatedFacets = await this.updateFacets(facets);
+
+            // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoFilter(rootState.data.filters);
             await filterMongo(mongoFilter);
+
+            // Refresh/populate the facets data from mongo
+            let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
+                return {...facet, data: getFacetData(facet)};
+            });
+            await this.updateFacets(newFacets);
+
+            // Update the results
             this.updateResults(cfgIssues.find(mongoFilter).fetch());
+
             this.updateLoading(false);
         }
     }
