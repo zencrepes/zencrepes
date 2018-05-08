@@ -65,15 +65,15 @@ const buildMongoFilter = (filters) => {
             mongoFilter[idx] = { $in : filterValues };
         }
     })
-    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
-    console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
+//    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
+//    console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
     return mongoFilter
 };
 
 const clearIssuesFilters = async () => {
-    console.log('clearIssuesFilters - Total issues before: ' + cfgIssues.find({filtered: false}).count());
+//    console.log('clearIssuesFilters - Total issues before: ' + cfgIssues.find({filtered: false}).count());
     await cfgIssues.update({}, { $set: { filtered: false } }, {multi: true});
-    console.log('clearIssuesFilters - Total issues after: ' + cfgIssues.find({filtered: false}).count());
+//    console.log('clearIssuesFilters - Total issues after: ' + cfgIssues.find({filtered: false}).count());
 }
 
 const filterMongo = async (mongoFilter) => {
@@ -82,12 +82,23 @@ const filterMongo = async (mongoFilter) => {
     await cfgIssues.update(mongoFilter, { $set: { filtered: false } }, {multi: true});
 }
 
-const getFacetData = (facet) => {
-    console.log('getFacetData - Process Facet Group: ' + facet.group);
+const getFacetData = (facet, mongoFilter) => {
+//    console.log('getFacetData - Process Facet Group: ' + facet.group);
+//    console.log('getFacetData - Mongo Query: ' + JSON.stringify(mongoFilter));
+
+    //Prep Mongo filter
+    // If current facet is one of the index of MongoFilter, then no filtering at all.
+    // This allow for the creation of the "in" operator
+    if (Object.keys(mongoFilter).indexOf(facet.group) !== -1 && mongoFilter[facet.group].length > 0) {
+        // Filter includes some filtering on current facet
+        //{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
+        mongoFilter = {};
+    }
+
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
-        cfgIssues.find({filtered: false}).forEach((issue) => {
+        cfgIssues.find(mongoFilter).forEach((issue) => {
             if (issue[facet.group].totalCount === 0) {
                 allValues.push({name: 'EMPTY'});
             } else {
@@ -103,7 +114,8 @@ const getFacetData = (facet) => {
         });
         statesGroup = _.groupBy(allValues, facet.nested);
     } else {
-        statesGroup = _.groupBy(cfgIssues.find({filtered: false}).fetch(), facet.group);
+        statesGroup = _.groupBy(cfgIssues.find(mongoFilter).fetch(), facet.group);
+        //statesGroup = _.groupBy(cfgIssues.find({ $or: [{filtered: false}, {'repo.name': facet.group}]}).fetch(), facet.group);
     }
     let states = [];
     Object.keys(statesGroup).forEach(function(key) {
@@ -127,17 +139,16 @@ export const data = {
         ],
         filters: {},
         results: [],
+        mongoFilters: null,
         loading: false,
     },
     reducers: {
         clearFilters(state) {return {...state, filters: {}};},
         clearResults(state) {return { ...state, results: []};},
         addFilter(state, payload) {
-            console.log('Add Filter');
             return {...state, filters: addToFilters(payload, state.filters)}
         },
         removeFilter(state, payload) {
-            console.log('Remove Filter');
             return {...state, filters: removeFromFilters(payload, state.filters)}
         },
         updateFacets(state, payload) {
@@ -148,6 +159,9 @@ export const data = {
         },
         updateLoading(state, payload) {
             return { ...state, loading: payload };
+        },
+        updateMongoFilters(state, payload) {
+            return { ...state, mongoFilters: payload };
         }
     },
     effects: {
@@ -160,10 +174,11 @@ export const data = {
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
+            this.updateMongoFilters(mongoFilter);
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
-                return {...facet, data: getFacetData(facet)};
+                return {...facet, data: getFacetData(facet, mongoFilter)};
             });
             await this.updateFacets(newFacets);
 
@@ -177,10 +192,11 @@ export const data = {
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoFilter(updatedFilters);
             await filterMongo(mongoFilter);
+            this.updateMongoFilters(mongoFilter);
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
-                return {...facet, data: getFacetData(facet)};
+                return {...facet, data: getFacetData(facet, mongoFilter)};
             });
             await this.updateFacets(newFacets);
 
@@ -188,18 +204,19 @@ export const data = {
             this.updateResults(cfgIssues.find(mongoFilter).fetch());
         },
         async initFacets(payload, rootState) {
-            console.log('initFacets');
             this.updateLoading(true);
 
             await clearIssuesFilters();
 
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoFilter(rootState.data.filters);
+
             await filterMongo(mongoFilter);
+            this.updateMongoFilters(mongoFilter);
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
-                return {...facet, data: getFacetData(facet)};
+                return {...facet, data: getFacetData(facet, mongoFilter)};
             });
             await this.updateFacets(newFacets);
 

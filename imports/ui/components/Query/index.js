@@ -30,7 +30,7 @@ class Query extends Component {
         this.state = {};
     }
     render() {
-        const { classes, queryValues } = this.props;
+        const { classes, queryValues, mongoFilters } = this.props;
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
@@ -42,6 +42,7 @@ class Query extends Component {
                                 </Paper>
                             );
                         })}
+                        <br /><i>{JSON.stringify(mongoFilters)}</i>
                     </CardContent>
                 </Card>
             </div>
@@ -57,6 +58,7 @@ Query.propTypes = {
 
 const mapState = state => ({
     queryValues: state.data.filters,
+    mongoFilters: state.data.mongoFilters,
 });
 
 export default connect(mapState, null)(withStyles(styles)(Query));
