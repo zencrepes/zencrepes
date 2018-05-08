@@ -68,7 +68,6 @@ class Settings extends Component {
         return (
             <div className={classes.root}>
                 <AppMenu />
-                <LeftDrawer />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Grid container spacing={8}>
@@ -77,6 +76,9 @@ class Settings extends Component {
                         </Grid>
                         <Grid item xs={6}>
                             <OrgRepoTree />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <GitRequests />
                         </Grid>
                     </Grid>
                 </main>

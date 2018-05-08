@@ -16,6 +16,7 @@ import Grid from 'material-ui/Grid';
 import Facets from '../../components/Facets/index.js';
 import Query from '../../components/Query/index.js';
 import IssuesTable from '../../components/Table/index.js';
+import GitRequests from '../../components/Github/GitRequests.js';
 
 const styles = theme => ({
     root: {
@@ -56,7 +57,6 @@ class Search extends Component {
             return (
                 <div className={classes.root}>
                     <AppMenu />
-                    <LeftDrawer />
                     <main className={classes.content}>
                         <Grid container spacing={8}>
                             <Grid item xs={12}>
@@ -67,6 +67,9 @@ class Search extends Component {
                             </Grid>
                             <Grid item xs={8}>
                                 <IssuesTable />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <GitRequests />
                             </Grid>
                         </Grid>
                     </main>
