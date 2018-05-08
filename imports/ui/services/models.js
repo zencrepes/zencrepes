@@ -89,7 +89,7 @@ const getFacetData = (facet, mongoFilter) => {
     //Prep Mongo filter
     // If current facet is one of the index of MongoFilter, then no filtering at all.
     // This allow for the creation of the "in" operator
-    if (Object.keys(mongoFilter).indexOf(facet.group) !== -1 && mongoFilter[facet.group].length > 0) {
+    if (Object.keys(mongoFilter).indexOf(facet.group) !== -1 && mongoFilter[facet.group]['$in'].length > 0) {
         // Filter includes some filtering on current facet
         //{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
         mongoFilter = {};

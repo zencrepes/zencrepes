@@ -35,7 +35,8 @@ class IssuesTable extends Component {
                 { name: 'state', title: 'State' },
                 { name: 'title', title: 'Title' },
                 { name: 'createdAt', title: 'Created At' },
-                { name: 'closedAt', title: 'Closed At' }
+                { name: 'closedAt', title: 'Closed At' },
+                { name: 'url', title: 'URL' }
             ]
         };
     }

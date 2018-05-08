@@ -28,6 +28,7 @@ import GET_GITHUB_ORGS from '../../../graphql/getOrgs.graphql';
 
 import OrgRepoTree from '../../components/OrgRepoTree/index.js';
 import Access from './Access.js';
+import GitRequests from '../../components/Github/GitRequests.js';
 
 
 const styles = theme => ({
