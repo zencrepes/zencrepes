@@ -7,13 +7,13 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
 import AccountCircle from 'material-ui-icons/AccountCircle';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import Divider from 'material-ui/Divider';
 
 //import UserAvatar from './UserAvatar.js';
 import UserMenu from './UserMenu.js';
+import NavigationMenu from './NavigationMenu.js';
 
 const styles = {
     root: {
@@ -34,6 +34,7 @@ class AppMenu extends Component {
     };
 
     handleMenu = event => {
+        console.log('handleMenu');
         this.setState({ anchorEl: event.currentTarget });
     };
 
@@ -50,7 +51,7 @@ class AppMenu extends Component {
             <AppBar position="absolute">
                 <Toolbar>
                     <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                        <MenuIcon />
+                        <NavigationMenu />
                     </IconButton>
                     <Typography variant="title" color="inherit" className={classes.flex}>
                         GitHub Agile View
