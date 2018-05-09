@@ -28,8 +28,8 @@ class CompletionPerDay extends Component {
 
     componentDidMount() {
         console.log('ComponentDidMount');
-        const { initFacets } = this.props;
-        initFacets();
+        const { initStates } = this.props;
+        initStates();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -81,7 +81,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    initFacets: dispatch.data.initFacets,
+    initStates: dispatch.velocity.initStates,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(CompletionPerDay));
