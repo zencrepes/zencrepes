@@ -11,6 +11,7 @@ import Login from './pages/login/index.js';
 import Dashboard from './pages/dashboard/index.js';
 import Settings from './pages/settings/index.js';
 import Search from './pages/search/index.js';
+import Velocity from './pages/velocity/index.js';
 import Index from './Index.js';
 
 import Public from './components/Public/Public.js'
@@ -46,6 +47,7 @@ class App extends Component {
                                 <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                 <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                 <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                             </Switch>
                         </div>
                     ) : ''}

@@ -62,12 +62,14 @@ class NavigationMenu extends React.Component {
                             <ListItemText classes={{ primary: classes.primary }} inset primary="Search" />
                         </MenuItem>
                     </Link>
-                    <MenuItem className={classes.menuItem} onClick={this.handleClose}>
-                        <ListItemIcon className={classes.icon}>
-                            <ChartLine />
-                        </ListItemIcon>
-                        <ListItemText classes={{ primary: classes.primary }} inset primary="Charts" />
-                    </MenuItem>
+                    <Link to="/velocity">
+                        <MenuItem className={classes.menuItem} onClick={this.handleClose}>
+                            <ListItemIcon className={classes.icon}>
+                                <ChartLine />
+                            </ListItemIcon>
+                            <ListItemText classes={{ primary: classes.primary }} inset primary="Velocity" />
+                        </MenuItem>
+                    </Link>
                     <Link to="/settings">
                         <MenuItem className={classes.menuItem} onClick={this.handleClose}>
                             <ListItemIcon className={classes.icon}>

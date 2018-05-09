@@ -13,7 +13,7 @@ import NoRepos from '../../components/Dialogs/NoRepos.js';
 
 import Issues, { cfgIssues } from '../../data/Issues.js';
 import Grid from 'material-ui/Grid';
-import Facets from '../../components/Facets/index.js';
+import CompletionPerDay from '../../components/Charts/CompletionPerDay.js';
 import Query from '../../components/Query/index.js';
 import IssuesTable from '../../components/Table/index.js';
 import GitRequests from '../../components/Github/GitRequests.js';
@@ -36,7 +36,7 @@ const styles = theme => ({
     toolbar: theme.mixins.toolbar,
 });
 
-class Search extends Component {
+class Velocity extends Component {
     constructor(props) {
         super(props);
         this.state = {sourcesInit: false};
@@ -62,11 +62,8 @@ class Search extends Component {
                             <Grid item xs={12}>
                                 <Query />
                             </Grid>
-                            <Grid item xs={4}>
-                                <Facets />
-                            </Grid>
-                            <Grid item xs={8}>
-                                <IssuesTable />
+                            <Grid item xs={12}>
+                                <CompletionPerDay />
                             </Grid>
                             <Grid item xs={12}>
                                 <GitRequests />
@@ -88,7 +85,7 @@ class Search extends Component {
     }
 }
 
-Search.propTypes = {
+Velocity.propTypes = {
     classes: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     rateLimit: PropTypes.object,
@@ -106,4 +103,4 @@ const mapDispatch = dispatch => ({
     setLoadIssues: dispatch.github.setLoadIssues,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(Search)));
+export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(Velocity)));

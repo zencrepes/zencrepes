@@ -74,10 +74,9 @@ class IssuesTable extends Component {
                 { name: 'updatedAt', title: 'Updated' },
                 { name: 'closedAt', title: 'Closed' },
                 { name: 'state', title: 'State' },
-                { name: 'url', title: 'Link' }
+                { name: 'url', title: '' }
             ],
             tableColumnExtensions: [
-                //{ columnName: 'title', width: 180 },
                 { columnName: 'createdAt', width: 90 },
                 { columnName: 'updatedAt', width: 90 },
                 { columnName: 'closedAt', width: 90 },

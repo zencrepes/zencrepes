@@ -1,28 +1,8 @@
 import _ from 'lodash';
-import { dispatch } from '@rematch/core';
-
-import { cfgIssues } from '../data/Issues.js';
-
-// https://rematch.gitbooks.io/rematch/#examples
-export const chip = {
-    state: {
-        limit: 5000,
-        cost: 1,
-        remaining: 5000,
-        resetAt: null,
-    },
-    reducers: {
-        updateChip(state, newChip) {
-            if (newChip === undefined) {
-                newChip = state;
-            }
-            return newChip;
-        }
-    }
-};
-
 
 //Add the payload to current filters
+import {cfgIssues} from "../../data/Issues";
+
 const addToFilters = (payload, currentFilters) => {
     if (currentFilters[payload.group] === undefined) {currentFilters[payload.group] = [];}
     const currentIndex = currentFilters[payload.group].map((v) => {return v.name}).indexOf(payload.name);
@@ -126,7 +106,7 @@ const getFacetData = (facet, mongoFilter) => {
     return states.sort((a, b) => b.count - a.count);
 };
 
-export const data = {
+export default {
     state: {
         facets: [ // Statically define facets to be displayed
             {header: 'States', group: 'state', nested: false, data: [] },
@@ -226,49 +206,5 @@ export const data = {
 
             this.updateLoading(false);
         }
-    }
-};
-
-export const github = {
-    state: {
-        totalOrgs: 0,
-        totalRepos: 0,
-        totalIssues: 0,
-        unfilteredIssues: 0,
-        totalLoading: false,
-        issuesLoading: false,
-        loadIssues: false,
-    },
-    reducers: {
-        setTotalRepos(state, payload) {
-            return { ...state, totalRepos: payload };
-        },
-        setTotalIssues(state, payload) {
-            return { ...state, totalIssues: payload };
-        },
-        setTotalOrgs(state, payload) {
-            return { ...state, totalOrgs: payload };
-        },
-        incrementTotalOrgs(state, payload) {
-            return { ...state, totalOrgs: state.totalOrgs + payload };
-        },
-        incrementTotalRepos(state, payload) {
-            return { ...state, totalRepos: state.totalRepos + payload };
-        },
-        incrementTotalIssues(state, payload) {
-            return { ...state, totalIssues: state.totalIssues + payload };
-        },
-        incrementUnfilteredIssues(state, payload) {
-            return { ...state, totalIssues: state.unfilteredIssues + payload };
-        },
-        updateTotalLoading(state, payload) {
-            return { ...state, totalLoading: payload };
-        },
-        updateIssuesLoading(state, payload) {
-            return { ...state, issuesLoading: payload };
-        },
-        setLoadIssues(state, payload) {
-            return { ...state, loadIssues: payload };
-        },
     }
 };
