@@ -29,9 +29,10 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
               state
               author {
                 login
+                avatarUrl
                 url
               }
-              labels (first: 5) {
+              labels (first: 10) {
                 totalCount
                 edges {
                   node {
@@ -57,11 +58,18 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
                 edges {
                   node {
                     id
+                    avatarUrl
                     login
                     name
                     url
                   }
                 }
+              }
+              comments(first: 1) {
+                totalCount
+              }
+              participants(first: 1) {
+                totalCount
               }
             }
           }

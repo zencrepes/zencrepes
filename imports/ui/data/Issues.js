@@ -43,6 +43,8 @@ class Issues {
                 createdAt: currentIssue.node.createdAt,
                 updatedAt: currentIssue.node.updatedAt,
                 closedAt: currentIssue.node.closedAt,
+                comments: currentIssue.node.comments,
+                participants: currentIssue.node.participants,
                 refreshed: true,
             }
             await cfgIssues.upsert({

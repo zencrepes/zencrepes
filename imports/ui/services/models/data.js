@@ -117,6 +117,7 @@ export default {
             {header: 'Assignees', group: 'assignees', nested: 'name', data: [] },
             {header: 'Milestones', group: 'milestone.title', nested: false, data: []} ,
             {header: 'Milestones Status', group: 'milestone.state', nested: false, data: [] },
+            {header: 'Comments', group: 'comments.totalCount', nested: false, data: [] },
         ],
         filters: {},
         results: [],

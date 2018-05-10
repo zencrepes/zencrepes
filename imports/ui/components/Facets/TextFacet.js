@@ -11,6 +11,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 import { connect } from "react-redux";
+import Button from 'material-ui/Button';
 
 import { cfgIssues } from '../../data/Issues.js';
 
@@ -20,13 +21,27 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
     },
+    button: {
+        margin: theme.spacing.unit,
+    },
 });
+
+const ExpandButton = (props) => {
+    if (props.collapsed && props.length > 5) {
+        return ( <Button color="primary" size="small" className={props.classes.button} onClick={props.onClick(false)}>more...</Button>);
+    } else if (!props.collapsed && props.length > 5) {
+        return (<Button color="primary" size="small" className={props.classes.button} onClick={props.onClick(true)}>less</Button>);
+    } else {
+        return null;
+    }
+}
 
 class TextFacet extends Component {
     constructor (props) {
         super(props);
         this.state = {
             dense: true,
+            collapsed: true,
             checked: [],
             queryValues: {},
         };
@@ -50,14 +65,25 @@ class TextFacet extends Component {
         }
     };
 
+    collapseFacet = value => () => {
+        console.log('CollapseFacet: ' + value)
+        this.setState({collapsed: value})
+    };
+
     render() {
         console.log('Facet render()');
         const { classes, facet, queryValues } = this.props;
+        const { collapsed } = this.state;
         const {header, group, nested, data } = facet;
 
         let valueChecked = [];
         if (queryValues[group] !== undefined) {
             valueChecked = queryValues[group];
+        }
+
+        let facetsData = data;
+        if (collapsed) {
+            facetsData = data.slice(0, 5);
         }
 
         return (
@@ -68,7 +94,7 @@ class TextFacet extends Component {
                     </Typography>
                 </Toolbar>
                 <List dense={this.state.dense}>
-                    {data.map(value => (
+                    {facetsData.map(value => (
                         <ListItem
                             key={value.name}
                             role={undefined}
@@ -89,6 +115,7 @@ class TextFacet extends Component {
                         </ListItem>
                     ))}
                 </List>
+                <ExpandButton collapsed={collapsed} length={data.length} classes={classes} onClick={this.collapseFacet}/>
             </div>
         );
     }
