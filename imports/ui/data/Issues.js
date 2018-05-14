@@ -6,8 +6,17 @@ export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 
 import {cfgSources} from "./Repositories.js";
 
-
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+
+
+function daysSince(referenceDate){
+    if (referenceDate !== null) {
+        var today = new Date();
+        return (today-referenceDate)/(1000*3600*24);
+    } else {
+        return null;
+    }
+}
 
 class Issues {
     constructor(props) {
@@ -41,8 +50,11 @@ class Issues {
                 milestone: currentIssue.node.milestone,
                 assignees: currentIssue.node.assignees,
                 createdAt: currentIssue.node.createdAt,
+                createdSince: daysSince(currentIssue.node.createdAt),
                 updatedAt: currentIssue.node.updatedAt,
+                updatedSince: daysSince(currentIssue.node.updatedAt),
                 closedAt: currentIssue.node.closedAt,
+                closedSince: daysSince(currentIssue.node.closedAt),
                 comments: currentIssue.node.comments,
                 participants: currentIssue.node.participants,
                 refreshed: true,
