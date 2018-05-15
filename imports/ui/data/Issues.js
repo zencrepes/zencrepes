@@ -8,14 +8,36 @@ import {cfgSources} from "./Repositories.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 
-
-function daysSince(referenceDate){
-    if (referenceDate !== null) {
-        var today = new Date();
-        return (today-referenceDate)/(1000*3600*24);
-    } else {
-        return null;
+//Get various stats around issue timing
+function getStats(createdAt, updatedAt, closedAt) {
+    //This issue has been opened for X days
+    let openedDuring = null;
+    if (createdAt !== null && closedAt !== null) {
+        openedDuring = Math.round((new Date(closedAt) - new Date(createdAt)) / (1000 * 3600 * 24), 0);
     }
+
+    //This issue was first opened X days ago
+    let openedSince = null;
+    if (createdAt !== null) {
+        openedSince = Math.round((new Date() - new Date(createdAt)) / (1000 * 3600 * 24), 0);
+    }
+    //This issue was closed X days ago
+    let closedSince = null;
+    if (closedAt !== null) {
+        closedSince = Math.round((new Date() - new Date(closedAt)) / (1000 * 3600 * 24), 0);
+    }
+    //This issue was last updated X days ago
+    let updatedSince = null;
+    if (updatedAt !== null) {
+        updatedSince = Math.round((new Date() - new Date(updatedAt)) / (1000 * 3600 * 24), 0);
+    }
+    let stats = {
+        openedDuring: openedDuring,
+        openedSince: openedSince,
+        closedSince: closedSince,
+        updatedSince: updatedSince,
+    };
+    return stats;
 }
 
 class Issues {
@@ -50,11 +72,9 @@ class Issues {
                 milestone: currentIssue.node.milestone,
                 assignees: currentIssue.node.assignees,
                 createdAt: currentIssue.node.createdAt,
-                createdSince: daysSince(currentIssue.node.createdAt),
                 updatedAt: currentIssue.node.updatedAt,
-                updatedSince: daysSince(currentIssue.node.updatedAt),
                 closedAt: currentIssue.node.closedAt,
-                closedSince: daysSince(currentIssue.node.closedAt),
+                stats: getStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt),
                 comments: currentIssue.node.comments,
                 participants: currentIssue.node.participants,
                 refreshed: true,
