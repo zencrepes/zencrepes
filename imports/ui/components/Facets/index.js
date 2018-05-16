@@ -7,7 +7,8 @@ import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
 import TextFacet from './TextFacet.js';
-import RangeFacet from './RangeFacet.js';
+import RangeFacet from './Range/index.js';
+import TermFacet from './Term/index.js';
 
 const styles = theme => ({
     root: {
@@ -68,7 +69,7 @@ class Facets extends Component {
                             {facets.map(facet => {
                                 switch (facet.type) {
                                     case 'text':
-                                        return ( <TextFacet facet={facet} key={facet.header}/>);
+                                        return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'range':
                                         return ( <RangeFacet facet={facet} key={facet.header}/>);
                                 }

@@ -1,23 +1,16 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles, createGenerateClassName } from 'material-ui/styles';
 
-import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import Chip from 'material-ui/Chip';
-import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
-import InputRange from 'react-input-range';
-
+import InputRange from 'react-input-range'; //https://github.com/davidchin/react-input-range
+import 'react-input-range/lib/css/index.css';
 import { connect } from "react-redux";
-import Button from 'material-ui/Button';
 
-import { cfgIssues } from '../../data/Issues.js';
-
-import _ from 'lodash';
+import InputRangeFacet from './InputRangeFacet.js';
 
 const styles = theme => ({
     root: {
@@ -28,23 +21,20 @@ const styles = theme => ({
     },
 });
 
-
 class RangeFacet extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            dense: true,
-            checked: [],
-            queryValues: {},
+            value: { min: 2, max: 10 },
         };
     }
-
+/*
     shouldComponentUpdate(nextProps, nextState) {
         console.log('shouldComponentUpdate');
         if (nextProps.data !== undefined && nextProps.data.length > 0 ) {return true;}
         else {return false;}
     }
-
+*/
     handleToggle = value => () => {
         const { addFilterRefresh, removeFilterRefresh, queryValues } = this.props;
 
@@ -63,10 +53,16 @@ class RangeFacet extends Component {
     };
 
     getMax = (data) => {
-        return Math.max.apply(Math, data.map(function(o) { return o.name; }));
+        if (data.length > 0)
+            return Math.max.apply(Math, data.map(x =>  Number.parseInt(x.name) || 0 ));
+        else
+            return 1;
     };
     getMin = (data) => {
-        return Math.min.apply(Math, data.map(function(o) { return o.name; }));
+        if (data.length > 0)
+            return Math.min.apply(Math, data.map(x =>  Number.parseInt(x.name) || 0 ));
+        else
+            return 0;
     };
 
     render() {
@@ -84,15 +80,21 @@ class RangeFacet extends Component {
                         {header}
                     </Typography>
                 </Toolbar>
-                <InputRange
-                    draggableTrack
-                    minValue={this.getMin(data)}
-                    maxValue={this.getMax(data)}
-                />
+                <InputRangeFacet />
             </div>
         );
     }
 }
+
+/*
+ <InputRange
+ draggableTrack
+ minValue={this.getMin(data)}
+ maxValue={this.getMax(data)}
+ value={0}
+ onChange={value => this.setState({ value })}
+ />
+ */
 
 RangeFacet.propTypes = {
     classes: PropTypes.object.isRequired,
