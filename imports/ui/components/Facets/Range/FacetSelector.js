@@ -10,13 +10,19 @@ class FacetSelector extends React.Component {
         super(props);
 
         this.state = {
-            value: { min: 0, max: 1 },
+            value: {},
         };
+    };
+
+    onChangeComplete = () => {
+        const { value } = this.state;
+        console.log('handleSlider');
+        console.log(value);
     }
 
     getMax = (data) => {
         if (data.length > 0)
-            return Math.max.apply(Math, data.map(x =>  Number.parseInt(x.name) || 0 ));
+            return Math.max.apply(Math, data.map(x =>  Number.parseInt(x.name) || 1 ));
         else
             return 1;
     };
@@ -32,17 +38,29 @@ class FacetSelector extends React.Component {
         const { data } = this.props;
         const { value } = this.state;
 
+        let selectedValue = {};
+        if (Object.keys(value).length !== 0) {
+            selectedValue = value;
+        } else {
+            selectedValue = {min: this.getMin(data),max: this.getMax(data)};
+        }
+
         return (
             <div className="input-range-wrapper">
                 <InputRange
                     maxValue={this.getMax(data)}
                     minValue={this.getMin(data)}
                     formatLabel={value => `${value} days`}
-                    value={value}
-                    onChange={value => this.setState({ value })} />
+                    value={selectedValue}
+                    onChange={value => this.setState({ value })}
+                    onChangeComplete={this.onChangeComplete}
+                />
+
             </div>
         );
     }
 }
+//onChange={value => this.setState({ value })} />
+//                    onChange={this.handleSlider(value)} />
 
 export default FacetSelector;

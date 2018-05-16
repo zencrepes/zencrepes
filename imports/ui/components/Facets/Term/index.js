@@ -60,6 +60,7 @@ class TermFacet extends Component {
                     {facetsData.map(value => (
                         <FacetSelector
                             data={value}
+                            key={value.name}
                             selected={valueChecked.map((v) => {return v.name}).indexOf(value.name) !== -1}
                         />
                     ))}

@@ -27,6 +27,8 @@ class RangeFacet extends Component {
         const { classes, facet } = this.props;
         const {header, data } = facet;
 
+        console.log(data);
+
         return (
             <div className={classes.root}>
                 <FacetTitle title={header} />
