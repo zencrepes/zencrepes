@@ -16,8 +16,21 @@ class FacetSelector extends React.Component {
 
     onChangeComplete = () => {
         const { value } = this.state;
-        console.log('handleSlider');
-        console.log(value);
+        const { data } = this.props;
+        console.log('onChangeComplete');
+        if (data.length > 0) {
+            //Check if max and min values are in the data array, if not in the array, return a default value with a count of 0
+            let minValue = {count: 0, name: value.min, group: data[0].group, nested: data[0].nested};
+            let minIdx = data.map((v) => {return Number.parseInt(v.name)}).indexOf(value.min);
+            if (minIdx !== -1) { minValue = data[minIdx];}
+
+            let maxValue = {count: 0, name: value.max, group: data[0].group, nested: data[0].nested};
+            let maxIdx = data.map((v) => {return Number.parseInt(v.name)}).indexOf(value.max);
+            if (maxIdx !== -1) { maxValue = data[maxIdx];}
+
+            console.log('onChangeComplete - Min: ' + JSON.stringify(minValue));
+            console.log('onChangeComplete - Max: ' + JSON.stringify(maxValue));
+        }
     }
 
     getMax = (data) => {

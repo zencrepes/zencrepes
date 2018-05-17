@@ -42,7 +42,8 @@ class Query extends Component {
                                 </Paper>
                             );
                         })}
-                        <br /><i>{JSON.stringify(mongoFilters)}</i>
+                        <br />Filter Object<i>{JSON.stringify(queryValues)}</i>
+                        <br />Mongo Filter: <i>{JSON.stringify(mongoFilters)}</i>
                     </CardContent>
                 </Card>
             </div>

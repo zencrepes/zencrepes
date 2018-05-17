@@ -36,14 +36,27 @@ const buildMongoFilter = (filters) => {
     //Groups:
     let mongoFilter = {};
     Object.keys(filters).map(idx => {
-        //console.log('Group: ' + idx);
+        console.log('Group: ' + idx);
         filterValues = [];
         filters[idx].map(value => {
+            console.log(value);
             //console.log('Group: ' + idx + ' Value: ' + value.name);
             filterValues.push(value.name);
         })
         if (filters[idx].length > 0) {
-            mongoFilter[idx] = { $in : filterValues };
+            if (filters[idx][0].nested === false ) {
+                mongoFilter[idx] = { $in : filterValues };
+            } else { // If we are searching in a nest array
+                //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
+                //{"state":{"$in":["OPEN"]}}
+                //window.issues.find({"assignees.edges":{$elemMatch:{"node.login":"USERLOGIN"}}}).fetch();
+                //mongoFilter[idx] = {$elemMatch:{$elemMatch:{"name": { $in : filterValues }}}};
+                let subFilter = "node." + filters[idx][0].nested;
+                mongoFilter[idx + ".edges"] = {};
+                mongoFilter[idx + ".edges"]["$elemMatch"] = {};
+                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
+                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filterValues;
+            }
         }
     })
 //    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
@@ -70,7 +83,13 @@ const getFacetData = (facet, mongoFilter) => {
     //Prep Mongo filter
     // If current facet is one of the index of MongoFilter, then no filtering at all.
     // This allow for the creation of the "in" operator
-    if (Object.keys(mongoFilter).indexOf(facet.group) !== -1 && mongoFilter[facet.group]['$in'].length > 0) {
+    //if (Object.keys(mongoFilter).indexOf(facet.group) !== -1 && mongoFilter[facet.group]['$in'].length > 0) {
+    console.log(facet);
+    let indexExist = facet.group
+    if (facet.nested !== false ) {
+        indexExist = facet.group + ".edges";
+    }
+    if (Object.keys(mongoFilter).indexOf(indexExist) !== -1 ) {
         // Filter includes some filtering on current facet
         //{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
         mongoFilter = {};
@@ -114,7 +133,7 @@ export default {
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
             {header: 'Labels', group: 'labels', type: 'text', nested: 'name', data: [] },
-            {header: 'Assignees', group: 'assignees', type: 'text', nested: 'name', data: [] },
+            {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', data: [] },
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, data: []} ,
             {header: 'Milestones Status', group: 'milestone.state', type: 'text', nested: false, data: [] },
             {header: 'Comments', group: 'comments.totalCount', type: 'text', nested: false, data: [] },

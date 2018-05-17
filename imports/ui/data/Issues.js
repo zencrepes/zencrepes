@@ -4,6 +4,8 @@ import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
 export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
 export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 
+window.issues = cfgIssues;
+
 import {cfgSources} from "./Repositories.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
