@@ -27,5 +27,4 @@ ddp-rate-limiter@1.0.7
 service-configuration@1.0.11
 accounts-github@1.4.1
 swydo:graphql
-nathantreid:css-modules
 frozeman:persistent-minimongo2

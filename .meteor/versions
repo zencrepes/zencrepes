@@ -59,7 +59,6 @@ modules-runtime@0.9.2
 mongo@1.4.5
 mongo-dev-server@1.1.0
 mongo-id@1.0.7
-nathantreid:css-modules@3.1.0
 npm-mongo@2.2.34
 oauth@1.2.3
 oauth2@1.2.0
