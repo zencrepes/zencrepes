@@ -15,13 +15,14 @@ import primeClass from 'primereact/components/tree/Tree.css';
 import Button from 'material-ui/Button';
 
 import 'primereact/resources/primereact.min.css';
-import 'primereact/resources/themes/omega/theme.css';
+//import 'primereact/resources/themes/omega/theme.css';
 
 import { CheckboxBlankOutline, CheckboxMarkedOutline } from 'mdi-material-ui';
 
 import { cfgSources } from '../../data/Repositories.js';
 import { cfgIssues } from '../../data/Issues.js';
 import _ from 'lodash';
+import Issues from "../../data/Issues";
 
 //https://github.com/primefaces/primereact/blob/75ebcc93a37918fee88578b77e70fa6d94207332/src/components/tree/Tree.css
 
@@ -108,6 +109,13 @@ class OrgRepoTree extends Component {
         console.log('Save - Number of active repos: ' + cfgSources.find({'active': true}).count());
     }
 
+    loadIssues() {
+        console.log('loadIssues');
+        console.log(this.props);
+        const issues = new Issues(this.props);
+        issues.load();
+    }
+
     updateSelectedFromMongo() {
         console.log('updateSelectedFromMongo');
         let selectedFiles = [];
@@ -165,7 +173,7 @@ class OrgRepoTree extends Component {
             return (
                 <Card className={classes.card}>
                     <CardContent>
-                        <CircularProgress className={classes.progress} /> Loading ...
+                        <CircularProgress className={classes.progress} /> Fetching the list of repositories from your profile ...
                     </CardContent>
                 </Card>
             );
@@ -174,6 +182,7 @@ class OrgRepoTree extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <Button variant="raised" size="small" color="primary" onClick={() => this.save()}>Save</Button>
+                        <Button variant="raised" size="small" color="primary" onClick={() => this.loadIssues()}>Load Issues</Button>
                         <Tree value={this.state.data} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>
                     </CardContent>
                 </Card>
@@ -201,10 +210,15 @@ class OrgRepoTree extends Component {
 //<Treebeard data={this.getData()} onToggle={this.onToggle} decorators={decorators} />
 const mapState = state => ({
     totalLoading: state.github.totalLoading,
+    loadIssues: state.github.loadIssues,
+    issuesLoading: state.github.issuesLoading,
 });
 
 const mapDispatch = dispatch => ({
+    updateChip: dispatch.chip.updateChip,
     setLoadIssues: dispatch.github.setLoadIssues,
+    incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
+    updateIssuesLoading: dispatch.github.updateIssuesLoading,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));

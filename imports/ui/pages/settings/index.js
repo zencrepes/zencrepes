@@ -30,6 +30,7 @@ import OrgRepoTree from '../../components/OrgRepoTree/index.js';
 import Access from './Access.js';
 import GitRequests from '../../components/Github/GitRequests.js';
 
+import IssuesLoading from '../../components/IssuesLoading/index.js';
 
 const styles = theme => ({
     root: {
@@ -56,6 +57,7 @@ class Settings extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         if (this.state.sourcesInit === false) {
             this.state.sourcesInit = true;
             const sources = new Sources(this.props);
@@ -68,6 +70,7 @@ class Settings extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
+                <IssuesLoading />
                 <AppMenu />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -76,7 +79,7 @@ class Settings extends Component {
                             <Access />
                         </Grid>
                         <Grid item xs={6}>
-                            <OrgRepoTree />
+                            <OrgRepoTree client={this.props.client}/>
                         </Grid>
                         <Grid item xs={12}>
                             <GitRequests />

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { connect } from "react-redux";
+
 import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
 export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
 export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
@@ -9,6 +11,7 @@ window.issues = cfgIssues;
 import {cfgSources} from "./Repositories.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+import {withStyles} from "@material-ui/core/styles/index";
 
 //Get various stats around issue timing
 function getStats(createdAt, updatedAt, closedAt) {
@@ -49,6 +52,7 @@ class Issues {
         this.updateChip = props.updateChip;
         this.incrementUnfilteredIssues = props.incrementUnfilteredIssues;
         this.updateIssuesLoading = props.updateIssuesLoading;
+        this.issuesLoading = props.issuesLoading;
     }
 
     loadIssues = async (data) => {
@@ -94,7 +98,7 @@ class Issues {
     }
 
     getIssuesPagination = async (cursor, increment, RepoObj) => {
-        console.log('Querying server');
+        //console.log('Querying server - ' + this.issuesLoading);
         let data = await this.client.query({
             query: GET_GITHUB_ISSUES,
             variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name}
@@ -110,7 +114,7 @@ class Issues {
 
     load = async () => {
         this.updateIssuesLoading(true);
-        //await localCfgIssues.refresh();
+
         let allRepos = await cfgSources.find({}).fetch();
         for (let repo of allRepos) {
             if (repo.active === false) {
@@ -136,12 +140,12 @@ class Issues {
                     await this.getIssuesPagination(null, queryIncrement, repo);
                 }
             }
-
         }
+
         this.updateIssuesLoading(false);
         console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues loaded');
+
     }
 }
 
 export default Issues;
-

@@ -4,12 +4,20 @@ export default {
         totalOrgs: 0,
         totalRepos: 0,
         totalIssues: 0,
+        selectedOrgs: 0,
+        selectedRepos: 0,
+        selectedIssues: 0,
+        loadedOrgs: 0,
+        loadedRepos: 0,
+        loadedIssues: 0,
+
         unfilteredIssues: 0,
         totalLoading: false,
-        issuesLoading: false,
+        issuesLoading: false, // Boolean to indicate issues are currently loading
         loadIssues: false,
     },
     reducers: {
+        //Total are the overall items available to a user
         setTotalRepos(state, payload) {
             return { ...state, totalRepos: payload };
         },
@@ -19,6 +27,29 @@ export default {
         setTotalOrgs(state, payload) {
             return { ...state, totalOrgs: payload };
         },
+
+        //Selected are the total items selected by a user for load
+        setSelectedOrgs(state, payload) {
+            return { ...state, selectedOrgs: payload };
+        },
+        setSelectedRepos(state, payload) {
+            return { ...state, selectedRepos: payload };
+        },
+        setSelectedIssues(state, payload) {
+            return { ...state, selectedIssues: payload };
+        },
+
+        //Loaded are the total items actually loaded from GitHub
+        setLoadedOrgs(state, payload) {
+            return { ...state, loadedOrgs: payload };
+        },
+        setLoadedRepos(state, payload) {
+            return { ...state, loadedRepos: payload };
+        },
+        setLoadedIssues(state, payload) {
+            return { ...state, loadedIssues: payload };
+        },
+
         incrementTotalOrgs(state, payload) {
             return { ...state, totalOrgs: state.totalOrgs + payload };
         },
@@ -35,6 +66,8 @@ export default {
             return { ...state, totalLoading: payload };
         },
         updateIssuesLoading(state, payload) {
+            console.log('updateIssuesLoading:' + payload);
+            console.log(state);
             return { ...state, issuesLoading: payload };
         },
         setLoadIssues(state, payload) {
