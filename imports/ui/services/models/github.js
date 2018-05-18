@@ -66,12 +66,19 @@ export default {
             return { ...state, totalLoading: payload };
         },
         updateIssuesLoading(state, payload) {
-            console.log('updateIssuesLoading:' + payload);
-            console.log(state);
             return { ...state, issuesLoading: payload };
         },
         setLoadIssues(state, payload) {
             return { ...state, loadIssues: payload };
         },
+        setIssuesLoading(state, payload) {
+            return { ...state, issuesLoading: payload };
+        },
+    },
+    effects: {
+        //Add a filter, then refresh the data points
+        abc() {
+            return 'abc';
+        }
     }
 };

@@ -105,15 +105,19 @@ class OrgRepoTree extends Component {
                 cfgSources.update({id: node.id}, {$set:{'active':true}});
             }
         })
-        setLoadIssues(true);
+        //setLoadIssues(true);
         console.log('Save - Number of active repos: ' + cfgSources.find({'active': true}).count());
     }
 
     loadIssues() {
         console.log('loadIssues');
+        const { setLoadIssues } = this.props;
+        setLoadIssues(true);
+        /*
         console.log(this.props);
         const issues = new Issues(this.props);
         issues.load();
+        */
     }
 
     updateSelectedFromMongo() {
@@ -219,6 +223,7 @@ const mapDispatch = dispatch => ({
     setLoadIssues: dispatch.github.setLoadIssues,
     incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
     updateIssuesLoading: dispatch.github.updateIssuesLoading,
+    setLoadIssues: dispatch.github.setLoadIssues,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));

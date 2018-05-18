@@ -22,6 +22,7 @@ import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 import { cfgIssues, localCfgIssues } from './data/Issues.js';
 import { cfgSources, localCfgSources } from './data/Repositories.js';
 
+import FetchIssues from './data/FetchIssues.js';
 
 class App extends Component {
     constructor(props) {
@@ -38,20 +39,23 @@ class App extends Component {
         const { props, state, setAfterLoginPath } = this;
         return (
             <ApolloProviderGithub>
-                <Router>
-                    {!props.loading ? (
-                        <div className="App">
-                            <Switch>
-                                <Route exact name="index" path="/" component={Index} />
-                                <Public path="/login" component={Login} {...props} {...state} />
-                                <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                            </Switch>
-                        </div>
-                    ) : ''}
-                </Router>
+                <div>
+                    <FetchIssues />
+                    <Router>
+                        {!props.loading ? (
+                            <div className="App">
+                                <Switch>
+                                    <Route exact name="index" path="/" component={Index} />
+                                    <Public path="/login" component={Login} {...props} {...state} />
+                                    <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                </Switch>
+                            </div>
+                        ) : ''}
+                    </Router>
+                </div>
             </ApolloProviderGithub>
         );
     }

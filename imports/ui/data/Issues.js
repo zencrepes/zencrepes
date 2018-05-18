@@ -53,6 +53,7 @@ class Issues {
         this.incrementUnfilteredIssues = props.incrementUnfilteredIssues;
         this.updateIssuesLoading = props.updateIssuesLoading;
         this.issuesLoading = props.issuesLoading;
+        this.abc = props.abc;
     }
 
     loadIssues = async (data) => {
@@ -114,7 +115,11 @@ class Issues {
 
     load = async () => {
         this.updateIssuesLoading(true);
+        console.log('-------');
+        console.log(this.issuesLoading);
+        console.log('-------');
 
+        /*
         let allRepos = await cfgSources.find({}).fetch();
         for (let repo of allRepos) {
             if (repo.active === false) {
@@ -143,6 +148,8 @@ class Issues {
         }
 
         this.updateIssuesLoading(false);
+        */
+
         console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues loaded');
 
     }
