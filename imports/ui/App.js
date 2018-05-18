@@ -37,6 +37,7 @@ class App extends Component {
 
     render() {
         const { props, state, setAfterLoginPath } = this;
+        console.log(props);
         return (
             <ApolloProviderGithub>
                 <div>

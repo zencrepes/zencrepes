@@ -43,6 +43,9 @@ export default {
         setLoadedOrgs(state, payload) {
             return { ...state, loadedOrgs: payload };
         },
+        incrementLoadedRepos(state, payload) {
+            return { ...state, loadedRepos: state.loadedRepos + payload };
+        },
         setLoadedRepos(state, payload) {
             return { ...state, loadedRepos: payload };
         },
@@ -72,6 +75,7 @@ export default {
             return { ...state, loadIssues: payload };
         },
         setIssuesLoading(state, payload) {
+            console.log('setIssuesLoading: ' + payload);
             return { ...state, issuesLoading: payload };
         },
     },
