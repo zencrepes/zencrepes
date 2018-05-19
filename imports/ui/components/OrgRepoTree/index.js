@@ -93,9 +93,18 @@ class OrgRepoTree extends Component {
         this.toggled = {};
     }
 
-    save() {
-        const { setLoadIssues } = this.props;
+    resetCounts = () => {
+        const { setSelectedOrgs, setSelectedRepos, setSelectedIssues} = this.props;
+        setSelectedOrgs(0);
+        setSelectedRepos(0);
+        setSelectedIssues(0);
+    }
 
+    save() {
+        const { setLoadIssues, setSelectedOrgs, incrementSelectedRepos, incrementSelectedIssues } = this.props;
+
+        this.resetCounts();
+        let selectedOrgs = {};
         cfgSources.find({}).map(node => {
             if (_.findIndex(this.state.selectedFiles2, { 'id': node.id})  === -1) {
                 //Node is not in selected files, active => false
@@ -103,9 +112,13 @@ class OrgRepoTree extends Component {
             } else {
                 //Node is in selected files, active => true
                 cfgSources.update({id: node.id}, {$set:{'active':true}});
+                incrementSelectedRepos(1);
+                incrementSelectedIssues(node.issues_count);
+                selectedOrgs[node.org.id] = true;
             }
-        })
-        //setLoadIssues(true);
+        });
+        incrementSelectedRepos(1);
+        setSelectedOrgs(Object.keys(selectedOrgs).length);
         console.log('Save - Number of active repos: ' + cfgSources.find({'active': true}).count());
     }
 
@@ -223,7 +236,11 @@ const mapDispatch = dispatch => ({
     setLoadIssues: dispatch.github.setLoadIssues,
     incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
     updateIssuesLoading: dispatch.github.updateIssuesLoading,
-    setLoadIssues: dispatch.github.setLoadIssues,
+    incrementSelectedRepos: dispatch.github.incrementSelectedRepos,
+    incrementSelectedIssues: dispatch.github.incrementSelectedIssues,
+    setSelectedOrgs: dispatch.github.setSelectedOrgs,
+    setSelectedRepos: dispatch.github.setSelectedRepos,
+    setSelectedIssues: dispatch.github.setSelectedIssues,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));

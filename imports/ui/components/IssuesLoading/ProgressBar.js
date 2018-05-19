@@ -18,11 +18,11 @@ class ProgressBar extends React.Component {
         super(props);
 
         this.state = {
-            completed: 0,
-            buffer: 10,
+            //completed: 0,
+            //buffer: 0,
         };
     }
-
+/*
     componentDidMount() {
         this.timer = setInterval(this.progress, 500);
     }
@@ -43,13 +43,23 @@ class ProgressBar extends React.Component {
             this.setState({ completed: completed + diff, buffer: completed + diff + diff2 });
         }
     };
+*/
+    getValue = () => {
+        const { selectedIssues, loadedIssues } = this.props;
+        return Math.round((loadedIssues*100/selectedIssues),0);
+    };
+
+    getBuffer = () => {
+        const { classes, selectedIssues, loadedIssues, loadedIssuesBuffer } = this.props;
+        return Math.round((loadedIssuesBuffer*100/selectedIssues),0);
+    };
 
     render() {
-        const { classes } = this.props;
-        const { completed, buffer } = this.state;
+        const { classes, selectedIssues, loadedIssues, loadedIssuesBuffer } = this.props;
+        //const { completed, buffer } = this.state;
         return (
             <div className={classes.root}>
-                <LinearProgress color="secondary" variant="buffer" value={completed} valueBuffer={buffer} />
+                <LinearProgress color="secondary" variant="buffer" value={this.getValue()} valueBuffer={this.getBuffer()} />
             </div>
         );
     }
@@ -64,7 +74,9 @@ const mapDispatch = dispatch => ({
 });
 
 const mapState = state => ({
-
+    selectedIssues: state.github.selectedIssues,
+    loadedIssues: state.github.loadedIssues,
+    loadedIssuesBuffer: state.github.loadedIssuesBuffer,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ProgressBar));

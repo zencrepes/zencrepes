@@ -10,6 +10,7 @@ export default {
         loadedOrgs: 0,
         loadedRepos: 0,
         loadedIssues: 0,
+        loadedIssuesBuffer: 0, // Only used for the progress bar buffer value
 
         unfilteredIssues: 0,
         totalLoading: false,
@@ -32,11 +33,20 @@ export default {
         setSelectedOrgs(state, payload) {
             return { ...state, selectedOrgs: payload };
         },
+        incrementSelectedOrgs(state, payload) {
+            return { ...state, selectedOrgs: state.selectedOrgs + payload };
+        },
         setSelectedRepos(state, payload) {
             return { ...state, selectedRepos: payload };
         },
+        incrementSelectedRepos(state, payload) {
+            return { ...state, selectedRepos: state.selectedRepos + payload };
+        },
         setSelectedIssues(state, payload) {
             return { ...state, selectedIssues: payload };
+        },
+        incrementSelectedIssues(state, payload) {
+            return { ...state, selectedIssues: state.selectedIssues + payload };
         },
 
         //Loaded are the total items actually loaded from GitHub
@@ -49,8 +59,17 @@ export default {
         setLoadedRepos(state, payload) {
             return { ...state, loadedRepos: payload };
         },
+        incrementLoadedIssues(state, payload) {
+            return { ...state, loadedIssues: state.loadedIssues + payload };
+        },
+        incrementLoadedIssuesBuffer(state, payload) {
+            return { ...state, loadedIssuesBuffer: state.loadedIssuesBuffer + payload };
+        },
         setLoadedIssues(state, payload) {
             return { ...state, loadedIssues: payload };
+        },
+        setLoadedIssuesBuffer(state, payload) {
+            return { ...state, loadedIssuesBuffer: payload };
         },
 
         incrementTotalOrgs(state, payload) {
