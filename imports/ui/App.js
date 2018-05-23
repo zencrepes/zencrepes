@@ -22,7 +22,8 @@ import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 import { cfgIssues, localCfgIssues } from './data/Issues.js';
 import { cfgSources, localCfgSources } from './data/Repositories.js';
 
-import FetchIssues from './data/FetchIssues.js';
+import Issues from './data/Issues.js';
+import Repos from './data/Repos.js';
 
 class App extends Component {
     constructor(props) {
@@ -41,7 +42,8 @@ class App extends Component {
         return (
             <ApolloProviderGithub>
                 <div>
-                    <FetchIssues />
+                    <Issues />
+                    <Repos />
                     <Router>
                         {!props.loading ? (
                             <div className="App">

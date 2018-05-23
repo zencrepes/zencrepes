@@ -126,11 +126,12 @@ class OrgRepoTree extends Component {
         console.log('loadIssues');
         const { setLoadIssues } = this.props;
         setLoadIssues(true);
-        /*
-        console.log(this.props);
-        const issues = new Issues(this.props);
-        issues.load();
-        */
+    }
+
+    loadRepos() {
+        console.log('loadRepos');
+        const { setReposLoadFlag } = this.props;
+        setReposLoadFlag(true);
     }
 
     updateSelectedFromMongo() {
@@ -185,8 +186,8 @@ class OrgRepoTree extends Component {
     }
 
     render() {
-        const { classes, totalLoading, totalOrgs, totalRepos, totalIssues } = this.props;
-        if (totalLoading) {
+        const { classes, reposLoadingFlag, totalOrgs, totalRepos, totalIssues } = this.props;
+        if (reposLoadingFlag) {
             return (
                 <Card className={classes.card}>
                     <CardContent>
@@ -198,7 +199,8 @@ class OrgRepoTree extends Component {
             return (
                 <Card className={classes.card}>
                     <CardContent>
-                        <Button variant="raised" size="small" color="primary" onClick={() => this.save()}>Save</Button>
+                        <Button variant="raised" size="small" color="primary" onClick={() => this.loadRepos()}>Load Repos</Button>
+                        <Button variant="raised" size="small" color="primary" onClick={() => this.save()}>Save Selection</Button>
                         <Button variant="raised" size="small" color="primary" onClick={() => this.loadIssues()}>Load Issues</Button>
                         <Tree value={this.state.data} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>
                     </CardContent>
@@ -229,6 +231,8 @@ const mapState = state => ({
     totalLoading: state.github.totalLoading,
     loadIssues: state.github.loadIssues,
     issuesLoading: state.github.issuesLoading,
+
+    reposLoadingFlag: state.githubRepos.reposLoadingFlag
 });
 
 const mapDispatch = dispatch => ({
@@ -241,6 +245,10 @@ const mapDispatch = dispatch => ({
     setSelectedOrgs: dispatch.github.setSelectedOrgs,
     setSelectedRepos: dispatch.github.setSelectedRepos,
     setSelectedIssues: dispatch.github.setSelectedIssues,
+
+    setReposLoadFlag: dispatch.githubRepos.setReposLoadFlag,
+
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(OrgRepoTree));

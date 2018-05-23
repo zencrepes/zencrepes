@@ -58,11 +58,13 @@ class Settings extends Component {
 
     componentDidMount() {
         console.log(this.props);
+        /*
         if (this.state.sourcesInit === false) {
             this.state.sourcesInit = true;
             const sources = new Sources(this.props);
             sources.load();
         };
+        */
     }
 
 

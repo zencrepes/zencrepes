@@ -14,8 +14,11 @@ export default {
 
         unfilteredIssues: 0,
         totalLoading: false,
-        issuesLoading: false, // Boolean to indicate issues are currently loading
-        loadIssues: false,
+
+
+        repositoriesLoading: false,   // Boolean to indicate issues are currently loading
+        loadRepositories: false,      // Boolean to trigger issue load
+
     },
     reducers: {
         //Total are the overall items available to a user
@@ -94,14 +97,13 @@ export default {
             return { ...state, loadIssues: payload };
         },
         setIssuesLoading(state, payload) {
-            console.log('setIssuesLoading: ' + payload);
             return { ...state, issuesLoading: payload };
         },
+        setLoadRepositories(state, payload) {
+            return { ...state, loadRepositories: payload };
+        },
+        setRepositoriesLoading(state, payload) {
+            return { ...state, repositoriesLoading: payload };
+        },
     },
-    effects: {
-        //Add a filter, then refresh the data points
-        abc() {
-            return 'abc';
-        }
-    }
 };

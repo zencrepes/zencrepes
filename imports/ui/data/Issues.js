@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import { Component } from 'react'
 
+import PropTypes from 'prop-types';
 import { connect } from "react-redux";
+import { withApollo } from 'react-apollo';
+
+//cfgIssues is the minimongo instance holding all issues imported from GitHub
 
 import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
 export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
 export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
-
 window.issues = cfgIssues;
 
+//cfgSources is a minimongo instance holding all repositories.
 import {cfgSources} from "./Repositories.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
-import {withStyles} from "@material-ui/core/styles/index";
 
 //Get various stats around issue timing
 function getStats(createdAt, updatedAt, closedAt) {
@@ -45,19 +48,97 @@ function getStats(createdAt, updatedAt, closedAt) {
     return stats;
 }
 
-class Issues {
-    constructor(props) {
-        this.client = props.client;
-        this.currentRepos = [];
-        this.updateChip = props.updateChip;
-        this.incrementUnfilteredIssues = props.incrementUnfilteredIssues;
-        this.updateIssuesLoading = props.updateIssuesLoading;
-        this.issuesLoading = props.issuesLoading;
-        this.abc = props.abc;
+class Issues extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {};
     }
 
-    loadIssues = async (data) => {
+    componentDidMount() {
+        console.log('FectchIssues - Initialized');
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { setLoadIssues, setIssuesLoading, loadIssues, issuesLoading} = this.props;
+
+        if (loadIssues) {
+            setLoadIssues(false); // Right away set loadIssues to false
+            this.resetCounts(); // Reset all counts since those will be refresh by loadIssues
+            this.loadIssues(); // Logic to load Issues
+        }
+
+    }
+
+    resetCounts = () => {
+        const { setLoadedOrgs, setLoadedRepos, setLoadedIssues, setLoadedIssuesBuffer} = this.props;
+        setLoadedOrgs(0);
+        setLoadedRepos(0);
+        setLoadedIssues(0);
+        setLoadedIssuesBuffer(0);
+    }
+
+    loadIssues = async () => {
+        const { setIssuesLoading, setLoadedOrgs, incrementLoadedRepos, loadIssues, issuesLoading, incrementLoadedIssuesBuffer} = this.props;
+        setIssuesLoading(true);  // Set issuesLoading to true to indicate issues are actually loading.
+
+        let allRepos = await cfgSources.find({}).fetch();
+        let loadedOrgs = {};
+        for (let repo of allRepos) {
+            if (repo.active === false) {
+                //If repo is inactive, delete any issues attached to this repo (if any)
+                //let attachedIssues = cfgIssues.find({'repo.id': repo.id}).count();
+                //console.log('Repo is inactive, removing: ' + attachedIssues + ' attached issues');
+                await cfgIssues.remove({'repo.id': repo.id});
+            } else {
+                //If repo is active, load all issues attached to this repo (if any)
+                if (repo.issues_count > 0) {
+                    console.log('Going through repo: ' + repo.name + ' - Is active and has ' + repo.issues_count + ' issues');
+
+                    //First, marked all existing issues are non-refreshed
+                    let updatedDocs = cfgIssues.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
+                    console.log('Set the refreshed flag to false for: ' + updatedDocs + ' documents');
+
+                    //Increment the issues buffer, used for showing a progress bar buffer value
+                    incrementLoadedIssuesBuffer(repo.issues_count);
+
+                    //Load as many issues as possible
+                    let queryIncrement = 100;
+                    if (repo.issues_count < 100) {
+                        queryIncrement = repo.issues_count;
+                    }
+                    console.log('Query Increment: ' + queryIncrement);
+
+                    if (this.props.issuesLoading)
+                        await this.getIssuesPagination(null, queryIncrement, repo);
+                        loadedOrgs[repo.org.id] = true;
+                        setLoadedOrgs(Object.keys(loadedOrgs).length);
+                }
+                incrementLoadedRepos(1);
+            }
+        }
+        setIssuesLoading(false);
+        console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues loaded');
+    };
+
+    getIssuesPagination = async (cursor, increment, RepoObj) => {
+        const { client, issuesLoading } = this.props;
+        let data = await client.query({
+            query: GET_GITHUB_ISSUES,
+            variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name}
+        });
+        this.props.updateChip(data.data.rateLimit);
+        lastCursor = await this.ingestIssues(data);
+        queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
+        console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+        if (queryIncrement > 0) {
+            await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
+        }
+    }
+
+    ingestIssues = async (data) => {
         let lastCursor = null;
+        console.log(data.data.viewer.organization.repository);
         for (let [key, currentIssue] of Object.entries(data.data.viewer.organization.repository.issues.edges)){
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
@@ -91,68 +172,42 @@ class Issues {
             }, {
                 $set: issueObj
             });
-            await this.incrementUnfilteredIssues(1);
+            this.props.incrementLoadedIssues(1);
             //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentIssue.cursor
         }
         return lastCursor;
     }
 
-    getIssuesPagination = async (cursor, increment, RepoObj) => {
-        //console.log('Querying server - ' + this.issuesLoading);
-        let data = await this.client.query({
-            query: GET_GITHUB_ISSUES,
-            variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name}
-        });
-        this.updateChip(data.data.rateLimit);
-        lastCursor = await this.loadIssues(data);
-        queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
-        console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
-        if (queryIncrement > 0) {
-            await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
-        }
-    }
-
-    load = async () => {
-        this.updateIssuesLoading(true);
-        console.log('-------');
-        console.log(this.issuesLoading);
-        console.log('-------');
-
-        /*
-        let allRepos = await cfgSources.find({}).fetch();
-        for (let repo of allRepos) {
-            if (repo.active === false) {
-                //If repo is inactive, delete any issues attached to this repo (if any)
-                //let attachedIssues = cfgIssues.find({'repo.id': repo.id}).count();
-                //console.log('Repo is inactive, removing: ' + attachedIssues + ' attached issues');
-                await cfgIssues.remove({'repo.id': repo.id});
-            } else {
-                //If repo is active, load all issues attached to this repo (if any)
-                if (repo.issues_count >= 0) {
-                    console.log('Going through repo: ' + repo.name + ' - Is active and has ' + repo.issues_count + ' issues');
-
-                    //First, marked all existing issues are non-refreshed
-                    let updatedDocs = cfgIssues.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
-                    console.log('Set the refreshed flag to false for: ' + updatedDocs + ' documents');
-
-                    //Load as many issues as possible
-                    let queryIncrement = 100;
-                    if (repo.issues_count < 100) {
-                        queryIncrement = repo.issues_count;
-                    }
-                    console.log('Query Increment: ' + queryIncrement);
-                    await this.getIssuesPagination(null, queryIncrement, repo);
-                }
-            }
-        }
-
-        this.updateIssuesLoading(false);
-        */
-
-        console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues loaded');
-
+    render() {
+        return null;
     }
 }
 
-export default Issues;
+Issues.propTypes = {
+
+};
+
+const mapState = state => ({
+    loadIssues: state.github.loadIssues,
+    issuesLoading: state.github.issuesLoading,
+
+});
+
+const mapDispatch = dispatch => ({
+    setLoadIssues: dispatch.github.setLoadIssues,
+    setIssuesLoading: dispatch.github.setIssuesLoading,
+    incrementLoadedRepos: dispatch.github.incrementLoadedRepos,
+    incrementLoadedIssues: dispatch.github.incrementLoadedIssues,
+    incrementLoadedIssuesBuffer: dispatch.github.incrementLoadedIssuesBuffer,
+    setLoadedOrgs: dispatch.github.setLoadedOrgs,
+    setLoadedRepos: dispatch.github.setLoadedRepos,
+    setLoadedIssues: dispatch.github.setLoadedIssues,
+    setLoadedIssuesBuffer: dispatch.github.setLoadedIssuesBuffer,
+    updateChip: dispatch.chip.updateChip,
+
+
+});
+
+export default connect(mapState, mapDispatch)(withApollo(Issues));
+
