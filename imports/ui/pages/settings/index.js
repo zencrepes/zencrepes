@@ -30,7 +30,8 @@ import OrgRepoTree from '../../components/OrgRepoTree/index.js';
 import Access from './Access.js';
 import GitRequests from '../../components/Github/GitRequests.js';
 
-import IssuesLoading from '../../components/IssuesLoading/index.js';
+import LoadingIssues from '../../components/Loading/Issues/index.js';
+import LoadingRepos from '../../components/Loading/Repos/index.js';
 
 const styles = theme => ({
     root: {
@@ -72,7 +73,8 @@ class Settings extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <IssuesLoading />
+                <LoadingIssues />
+                <LoadingRepos />
                 <AppMenu />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />

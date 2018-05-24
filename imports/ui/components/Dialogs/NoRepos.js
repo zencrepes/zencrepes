@@ -27,7 +27,7 @@ class NoRepos extends React.Component {
                     <DialogTitle id="alert-dialog-title">{"App not configured"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            You have access to {totalRepos} repositories. But none are enabled, please do so in Settings.
+                            Please indicates which repositories to search through.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

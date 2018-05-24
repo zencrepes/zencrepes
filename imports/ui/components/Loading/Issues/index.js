@@ -18,8 +18,7 @@ const styles = theme => ({
     }
 });
 
-
-class IssuesLoading extends Component {
+class LoadingIssues extends Component {
     constructor (props) {
         super(props);
         this.state = {};
@@ -32,7 +31,7 @@ class IssuesLoading extends Component {
 
     render() {
         const { classes, issuesLoading } = this.props;
-        console.log('IssuesLoading - render()');
+        console.log('LoadingIssues - render()');
         if (issuesLoading) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={issuesLoading}>
@@ -56,7 +55,7 @@ class IssuesLoading extends Component {
     }
 }
 
-IssuesLoading.propTypes = {
+LoadingIssues.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -68,4 +67,4 @@ const mapDispatch = dispatch => ({
     updateIssuesLoading: dispatch.github.updateIssuesLoading,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesLoading));
+export default connect(mapState, mapDispatch)(withStyles(styles)(LoadingIssues));

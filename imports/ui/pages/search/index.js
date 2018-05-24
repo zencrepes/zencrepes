@@ -45,11 +45,12 @@ class Search extends Component {
     componentDidMount() {
         const { loadIssues, setLoadIssues } = this.props;
         console.log(this.props);
+        /*
         if (loadIssues === true || cfgIssues.find({}).count() === 0) {
             setLoadIssues(false);
             const issues = new Issues(this.props);
             issues.load();
-        }
+        }*/
     }
 
     render() {
