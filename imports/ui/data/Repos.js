@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
+import Promise from 'bluebird';
+
 import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
 import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
 
 export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
 export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
+window.repos = cfgSources;
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 
@@ -54,11 +57,10 @@ class Repos extends Component {
 
 
         console.log('Initiate Repositories load');
-        await this.githubOrgs.map((orgObj) => {
+        await Promise.map(this.githubOrgs, async (orgObj): Promise<number> => {
             console.log('Loading Org');
             console.log(orgObj);
-            this.getReposPagination(null, 5, orgObj);
-
+            await this.getReposPagination(null, 5, orgObj);
         });
         console.log('Repositories loaded: ' + cfgSources.find({}).count());
 
@@ -69,14 +71,12 @@ class Repos extends Component {
         const { client, updateChip } = this.props;
         let data = await client.query({
             query: GET_GITHUB_ORGS,
-            variables: {repo_cursor: cursor, increment: increment}
+            variables: {repo_cursor: cursor, increment: increment},
+            fetchPolicy: 'no-cache',
         })
         updateChip(data.data.rateLimit);
         lastCursor = await this.loadOrganizations(data);
         queryIncrement = calculateQueryIncrement(this.githubOrgs.length, data.data.viewer.organizations.totalCount);
-        console.log(queryIncrement);
-        console.log(data);
-        console.log('---');
         if (queryIncrement > 0) {
             await this.getOrgsPagination(lastCursor, queryIncrement);
         }
@@ -97,7 +97,8 @@ class Repos extends Component {
         //console.log('---')
         let data = await client.query({
             query: GET_GITHUB_REPOS,
-            variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login}
+            variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
+            fetchPolicy: 'no-cache',
         });
         updateChip(data.data.rateLimit);
         lastCursor = await this.loadRepositories(data, OrgObj);
@@ -112,7 +113,7 @@ class Repos extends Component {
         }
     };
 
-    loadRepositories = (data, OrgObj) => {
+    loadRepositories = async (data, OrgObj) => {
         let lastCursor = null;
         for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
             console.log('Inserting: ' + currentRepo.node.name);
@@ -129,21 +130,11 @@ class Repos extends Component {
                 org: OrgObj,
                 active: nodeActive,
             }
-            cfgSources.upsert({
+            await cfgSources.upsert({
                 id: repoObj.id
             }, {
                 $set: repoObj
             });
-            /*
-             this.currentRepos.push({
-             id: currentRepo.node.id,
-             name: currentRepo.node.name,
-             url: currentRepo.node.url,
-             issues_count: currentRepo.node.issues.totalCount,
-             org: OrgObj,
-             cfg_active: false,
-             });*/
-            //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentRepo.cursor
         }
         return lastCursor;

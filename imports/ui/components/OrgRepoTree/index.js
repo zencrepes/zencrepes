@@ -19,7 +19,7 @@ import 'primereact/resources/primereact.min.css';
 
 import { CheckboxBlankOutline, CheckboxMarkedOutline } from 'mdi-material-ui';
 
-import { cfgSources } from '../../data/Repositories.js';
+import { cfgSources } from '../../data/Repos.js';
 import { cfgIssues } from '../../data/Issues.js';
 import _ from 'lodash';
 import Issues from "../../data/Issues";
@@ -199,7 +199,7 @@ class OrgRepoTree extends Component {
             return (
                 <Card className={classes.card}>
                     <CardContent>
-                        <Button variant="raised" size="small" color="primary" onClick={() => this.loadRepos()}>Load Repos</Button>
+                        <Button variant="raised" size="small" color="primary" onClick={() => this.loadRepos()}>Refresh Repos</Button>
                         <Button variant="raised" size="small" color="primary" onClick={() => this.save()}>Save Selection</Button>
                         <Button variant="raised" size="small" color="primary" onClick={() => this.loadIssues()}>Load Issues</Button>
                         <Tree value={this.state.data} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>

@@ -6,6 +6,8 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
+import CompletionChart from './CompletionChart.js';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -60,7 +62,7 @@ class CompletionPerDay extends Component {
                 <div className={classes.root}>
                     <Card className={classes.card}>
                         <CardContent>
-                            <h1>Display chart</h1>
+                            <CompletionChart />
                         </CardContent>
                     </Card>
                 </div>

@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import AppMenu from '../../components/AppMenu/index.js';
 import LeftDrawer from '../../components/LeftDrawer/index.js'
 
-import { cfgSources } from '../../data/Repositories.js';
+import { cfgSources } from '../../data/Repos.js';
 
 import NoRepos from '../../components/Dialogs/NoRepos.js';
 
@@ -17,6 +17,7 @@ import Facets from '../../components/Facets/index.js';
 import Query from '../../components/Query/index.js';
 import IssuesTable from '../../components/Table/index.js';
 import GitRequests from '../../components/Github/GitRequests.js';
+import LoadingIssues from '../../components/Loading/Issues/index.js';
 
 const styles = theme => ({
     root: {
@@ -43,8 +44,10 @@ class Search extends Component {
     }
 
     componentDidMount() {
-        const { loadIssues, setLoadIssues } = this.props;
-        console.log(this.props);
+        console.log('Search: componentDidMount');
+//        const { loadIssues, setLoadIssues } = this.props;
+//        console.log(this.props);
+        this.loadIssues();
         /*
         if (loadIssues === true || cfgIssues.find({}).count() === 0) {
             setLoadIssues(false);
@@ -53,11 +56,25 @@ class Search extends Component {
         }*/
     }
 
+    loadIssues() {
+        console.log('Search: loadIssues : ' + cfgIssues.find({}).count());
+        const { setLoadIssues } = this.props;
+        if (cfgIssues.find({}).count() === 0) {
+            setLoadIssues(true);
+        }
+    }
+
+    componentDidUpdate() {
+        console.log('Search: componentDidUpdate');
+        this.loadIssues();
+    }
+
     render() {
         const { classes } = this.props;
         if (cfgSources.find({'active': true}).count() > 0 ) {
             return (
                 <div className={classes.root}>
+                    <LoadingIssues />
                     <AppMenu />
                     <main className={classes.content}>
                         <Grid container spacing={8}>
@@ -94,17 +111,13 @@ Search.propTypes = {
     classes: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     rateLimit: PropTypes.object,
-    updateChip: PropTypes.func,
 };
 
 const mapState = state => ({
-    loadIssues: state.github.loadIssues,
+//    loadIssues: state.github.loadIssues,
 });
 
 const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip,
-    incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
-    updateIssuesLoading: dispatch.github.updateIssuesLoading,
     setLoadIssues: dispatch.github.setLoadIssues,
 });
 

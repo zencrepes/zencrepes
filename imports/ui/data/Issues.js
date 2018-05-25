@@ -62,7 +62,7 @@ class Issues extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { setLoadIssues, setIssuesLoading, loadIssues, issuesLoading} = this.props;
 
-        if (loadIssues) {
+        if (loadIssues && issuesLoading === false) {
             setLoadIssues(false); // Right away set loadIssues to false
             this.resetCounts(); // Reset all counts since those will be refresh by loadIssues
             this.loadIssues(); // Logic to load Issues
@@ -117,15 +117,17 @@ class Issues extends Component {
                 incrementLoadedRepos(1);
             }
         }
-        setIssuesLoading(false);
         console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues loaded');
+        setIssuesLoading(false);
     };
 
     getIssuesPagination = async (cursor, increment, RepoObj) => {
         const { client, issuesLoading } = this.props;
         let data = await client.query({
             query: GET_GITHUB_ISSUES,
-            variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name}
+            variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
+            fetchPolicy: 'no-cache',
+
         });
         this.props.updateChip(data.data.rateLimit);
         lastCursor = await this.ingestIssues(data);

@@ -48,7 +48,6 @@ class LoadingIssues extends Component {
                 </Dialog>
             );
         } else {
-            console.log('Return Null');
             return null;
         }
 

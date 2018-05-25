@@ -33,6 +33,9 @@ import GitRequests from '../../components/Github/GitRequests.js';
 import LoadingIssues from '../../components/Loading/Issues/index.js';
 import LoadingRepos from '../../components/Loading/Repos/index.js';
 
+import { cfgSources } from '../../data/Repos.js';
+
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -58,14 +61,11 @@ class Settings extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
-        /*
-        if (this.state.sourcesInit === false) {
-            this.state.sourcesInit = true;
-            const sources = new Sources(this.props);
-            sources.load();
-        };
-        */
+        const { setReposLoadFlag } = this.props;
+        if (cfgSources.find({}).count() === 0) {
+            console.log('No repositories loaded, fetching data');
+            setReposLoadFlag(true);
+        }
     }
 
 
@@ -83,7 +83,7 @@ class Settings extends Component {
                             <Access />
                         </Grid>
                         <Grid item xs={6}>
-                            <OrgRepoTree client={this.props.client}/>
+                            <OrgRepoTree />
                         </Grid>
                         <Grid item xs={12}>
                             <GitRequests />
@@ -99,18 +99,10 @@ Settings.propTypes = {
     classes: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     rateLimit: PropTypes.object,
-    updateChip: PropTypes.func,
 };
 
 const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip,
-    incrementTotalOrgs: dispatch.github.incrementTotalOrgs,
-    incrementTotalRepos: dispatch.github.incrementTotalRepos,
-    incrementTotalIssues: dispatch.github.incrementTotalIssues,
-    setTotalRepos: dispatch.github.setTotalRepos,
-    setTotalIssues: dispatch.github.setTotalIssues,
-    setTotalOrgs: dispatch.github.setTotalOrgs,
-    updateTotalLoading: dispatch.github.updateTotalLoading,
+    setReposLoadFlag: dispatch.githubRepos.setReposLoadFlag,
 });
 
 export default connect(null, mapDispatch)(withStyles(styles)(withApollo(Settings)));
