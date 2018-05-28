@@ -14,6 +14,7 @@ import NoRepos from '../../components/Dialogs/NoRepos.js';
 import Issues, { cfgIssues } from '../../data/Issues.js';
 import Grid from 'material-ui/Grid';
 import CompletionPerDay from '../../components/Charts/CompletionPerDay/index.js';
+import CompletionPerWeek from '../../components/Charts/CompletionPerWeek/index.js';
 import Query from '../../components/Query/index.js';
 import IssuesTable from '../../components/Table/index.js';
 import GitRequests from '../../components/Github/GitRequests.js';
@@ -64,6 +65,9 @@ class Velocity extends Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <CompletionPerDay />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <CompletionPerWeek />
                             </Grid>
                             <Grid item xs={12}>
                                 <GitRequests />

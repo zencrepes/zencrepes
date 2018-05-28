@@ -81,7 +81,9 @@ class Facets extends Component {
                         <CardContent>
                             {facets.map(facet => {
                                 switch (facet.type) {
-                                    case 'text':
+                                    case 'text' :
+                                        return ( <TermFacet facet={facet} key={facet.header}/>);
+                                    case 'textNull':
                                         return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'range':
                                         return ( <RangeFacet facet={facet} key={facet.header}/>);

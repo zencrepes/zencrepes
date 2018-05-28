@@ -34,6 +34,7 @@ const buildMongoFilter = (filters) => {
     //{ fruit: { $in: ['peach', 'plum', 'pear'] } }
 
     //Groups:
+    /*
     let mongoFilter = {};
     Object.keys(filters).map(idx => {
         console.log('Group: ' + idx);
@@ -44,8 +45,13 @@ const buildMongoFilter = (filters) => {
             filterValues.push(value.name);
         })
         if (filters[idx].length > 0) {
+            console.log(filterValues);
+            console.log(filters[idx][0]);
             if (filters[idx][0].nested === false ) {
                 mongoFilter[idx] = { $in : filterValues };
+            } else if (filters[idx][0].nullName === filters[idx][0].name) {
+                console.log('this is a test');
+                mongoFilter[idx + ".totalCount"] = { $eq : 0 };
             } else { // If we are searching in a nest array
                 //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
                 //{"state":{"$in":["OPEN"]}}
@@ -58,11 +64,80 @@ const buildMongoFilter = (filters) => {
                 mongoFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filterValues;
             }
         }
-    })
-//    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
-//    console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
+    });
+    */
+
+    let mongoFilter = {};
+    // First loop through the object, each index is a facet.
+    Object.keys(filters).map(idx => {
+        console.log('Building filter for group: ' + idx);
+        console.log('Values: ' + JSON.stringify(filters[idx]));
+
+        /*
+{
+  "repo.name": [
+    {
+      "count": 135,
+      "name": "SONG",
+      "group": "repo.name",
+      "nested": false
+    },
+    {
+      "count": 190,
+      "name": "kf-api-dataservice",
+      "group": "repo.name",
+      "nested": false
+    }
+  ],
+  "author.login": [
+    {
+      "count": 61,
+      "name": "dankolbman",
+      "group": "author.login",
+      "nested": false
+    }
+  ]
+}
+         */
+
+
+
+        filterValues = [];
+        filters[idx].map(value => {
+            console.log(value);
+            //console.log('Group: ' + idx + ' Value: ' + value.name);
+            filterValues.push(value.name);
+        })
+        if (filters[idx].length > 0) {
+            console.log(filterValues);
+            console.log(filters[idx][0]);
+            if (filters[idx][0].nested === false ) {
+                mongoFilter[idx] = { $in : filterValues };
+            } else if (filters[idx][0].nullName === filters[idx][0].name) {
+                console.log('this is a test');
+                mongoFilter[idx + ".totalCount"] = { $eq : 0 };
+            } else { // If we are searching in a nest array
+                //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
+                //{"state":{"$in":["OPEN"]}}
+                //window.issues.find({"assignees.edges":{$elemMatch:{"node.login":"USERLOGIN"}}}).fetch();
+                //mongoFilter[idx] = {$elemMatch:{$elemMatch:{"name": { $in : filterValues }}}};
+                let subFilter = "node." + filters[idx][0].nested;
+                mongoFilter[idx + ".edges"] = {};
+                mongoFilter[idx + ".edges"]["$elemMatch"] = {};
+                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
+                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filterValues;
+            }
+        }
+    });
+
+
+
+    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
+    console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
     return mongoFilter
 };
+
+//{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
 
 const clearIssuesFilters = async () => {
 //    console.log('clearIssuesFilters - Total issues before: ' + cfgIssues.find({filtered: false}).count());
@@ -100,7 +175,7 @@ const getFacetData = (facet, mongoFilter) => {
         let allValues = [];
         cfgIssues.find(mongoFilter).forEach((issue) => {
             if (issue[facet.group].totalCount === 0) {
-                allValues.push({name: 'EMPTY'});
+                allValues.push({name: facet.nullName});
             } else {
                 issue[facet.group].edges.map((nestedValue) => {
                     if (nestedValue.node[facet.nested] === null || nestedValue.node[facet.nested] === '' || nestedValue.node[facet.nested] === undefined ) {
@@ -119,7 +194,7 @@ const getFacetData = (facet, mongoFilter) => {
     }
     let states = [];
     Object.keys(statesGroup).forEach(function(key) {
-        states.push({count: statesGroup[key].length, name: key, group: facet.group, nested: facet.nested});
+        states.push({count: statesGroup[key].length, name: key, group: facet.group, nested: facet.nested, nullName: facet.nullName});
     });
     //Return the array sorted by count
     return states.sort((a, b) => b.count - a.count);
@@ -128,11 +203,17 @@ const getFacetData = (facet, mongoFilter) => {
 export default {
     state: {
         facets: [ // Statically define facets to be displayed
+            //header: Header text displayed on the facet
+            //group: Minimongo field to group on
+            //text: Type of facet
+            //nested: Is this going through nested data, if yes, on which idx ?
+            //nullName: Name to be displayed if empty or undefined
+            //data: Facets data
             {header: 'States', group: 'state', type: 'text', nested: false, data: [] },
             {header: 'Organizations', group: 'org.name', type: 'text', nested: false, data: [] },
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
-            {header: 'Labels', group: 'labels', type: 'text', nested: 'name', data: [] },
+            {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'EMPTY', data: []},
             {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', data: [] },
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, data: []} ,
             {header: 'Milestones Status', group: 'milestone.state', type: 'text', nested: false, data: [] },

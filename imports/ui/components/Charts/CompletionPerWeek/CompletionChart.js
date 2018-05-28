@@ -17,8 +17,12 @@ class CompletionChart extends Component {
         this.state = {};
     }
 
+    getData() {
+        return [];
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.loading === true || nextProps.ticketsPerDay.length === 0) {
+        if (nextProps.loading === true || nextProps.ticketsPerWeek.length === 0) {
             return false;
         } else {
             return true;
@@ -26,42 +30,38 @@ class CompletionChart extends Component {
     }
 
 
-    getData() {
-        return [];
-    }
-
-    getCreatedTickets() {
-        const { ticketsPerDay } = this.props;
-        return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.createdCount];
+    getCreatedTicketsByWeek() {
+        const { ticketsPerWeek } = this.props;
+        return ticketsPerWeek.map((value) => {
+            return [new Date(value.weekStart).getTime(), value.createdCount];
         });
     }
 
-    getCreatedVelocityTickets() {
-        const { ticketsPerDay } = this.props;
-        return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.velocityCreatedCount];
+    getVelocityCreated() {
+        const { ticketsPerWeek } = this.props;
+        return ticketsPerWeek.map((value) => {
+            return [new Date(value.weekStart).getTime(), value.velocityCreatedCount];
         });
     }
 
-    getClosedTickets() {
-        const { ticketsPerDay } = this.props;
-        return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.closedCount];
+    getClosedTicketsByWeek() {
+        const { ticketsPerWeek } = this.props;
+        return ticketsPerWeek.map((value) => {
+            return [new Date(value.weekStart).getTime(), value.closedCount];
         });
     }
 
-    getClosedVelocityTickets() {
-        const { ticketsPerDay } = this.props;
-        return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.velocityClosedCount];
+    getVelocityClosed() {
+        const { ticketsPerWeek } = this.props;
+        return ticketsPerWeek.map((value) => {
+            return [new Date(value.weekStart).getTime(), value.velocityClosedCount];
         });
     }
 
     render() {
-        console.log('Day - render()');
-        const { ticketsPerDay, loading } = this.props;
-        console.log(ticketsPerDay);
+        console.log('Week - render()');
+        const { ticketsPerWeek, loading } = this.props;
+        console.log(ticketsPerWeek);
         const marker = {
             enabled: true,
             radius: 2
@@ -70,7 +70,7 @@ class CompletionChart extends Component {
             <HighchartsStockChart>
                 <Chart zoomType="x" event="getChartData"/>
 
-                <Title>Tickets Open & Closed per day (Monday-Friday)</Title>
+                <Title>Tickets Open & Closed per Week</Title>
 
                 <Legend />
 
@@ -91,10 +91,10 @@ class CompletionChart extends Component {
 
                 <YAxis id="tickets">
                     <YAxis.Title>Tickets Count</YAxis.Title>
-                    <Series id="created" name="Created" lineWidth="0" color="#F44336" marker={marker} data={this.getCreatedTickets()} />
-                    <SplineSeries id="created-velocity" name="Created (Velocity)" color="#F44336" data={this.getCreatedVelocityTickets()} />
-                    <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getClosedTickets()} />
-                    <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getClosedVelocityTickets()} />
+                    <Series id="created" name="Created" lineWidth="0" color="#F44336" marker={marker} data={this.getCreatedTicketsByWeek()} />
+                    <SplineSeries id="created-velocity" name="Created (Velocity)" color="#F44336" data={this.getVelocityCreated()} />
+                    <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getClosedTicketsByWeek()} />
+                    <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getVelocityClosed()} />
                 </YAxis>
 
                 <Navigator>
@@ -107,20 +107,13 @@ class CompletionChart extends Component {
         );
     }
 }
-/*
- <Series id="created" name="Created" lineWidth="0" color="#F44336" marker={marker} data={this.getData} />
- <SplineSeries id="created-velocity" name="Created (Velocity)" color="#F44336" data={this.getData} />
- <Series id="closed" name="Closed" lineWidth="0" marker={marker} color="#03A9F4" data={this.getData} />
- <SplineSeries id="closed-velocity" name="Closed (Velocity)" color="#03A9F4" data={this.getData} />
 
- */
 CompletionChart.propTypes = {
 };
 
 const mapState = state => ({
-    ticketsPerDay: state.velocity.ticketsPerDay,
+    ticketsPerWeek: state.velocity.ticketsPerWeek,
     loading: state.velocity.loading,
-
 });
 
 const mapDispatch = dispatch => ({

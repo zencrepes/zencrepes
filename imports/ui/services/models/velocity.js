@@ -11,7 +11,7 @@ const formatDate = (dateString) => {
 const getWeekYear = (dateObj) => {
     var jan4th = new Date(dateObj.getFullYear(),0,4);
     return Math.ceil((((dateObj - jan4th) / 86400000) + jan4th.getDay()+1)/7);
-}
+};
 
 const getFirstDay = (mongoFilter) => {
     let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
@@ -25,36 +25,49 @@ const getLastDay = (mongoFilter) => {
     return lastDay
 };
 
+const calculateAverageVelocity = (array, indexValue) => {
+    return array
+        .map(values => values[indexValue])
+        .reduce((accumulator, currentValue, currentIndex, array) => {
+            accumulator += currentValue;
+            if (currentIndex === array.length-1) {
+                return accumulator/array.length;
+            } else {
+                return accumulator
+            }
+        });
+};
+
 const initArrays = (firstDay, lastDay) => {
-    console.log('initArrays');
-    let days = [];
-    let weeks = [];
+//    console.log('initArrays');
+    let emptyDays = [];
+    let emptyWeeks = [];
     let currentDate = firstDay;
     while(currentDate < lastDay) {
         currentDate.setDate(currentDate.getDate() + 1);
         if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-            days[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
+            emptyDays[currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
         }
 
         let currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
-        if(typeof weeks[currentWeekYear] === 'undefined') {
-            weeks[currentWeekYear] = {weekStart: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
+        if(typeof emptyWeeks[currentWeekYear] === 'undefined') {
+            emptyWeeks[currentWeekYear] = {weekStart: currentDate.toJSON(), createdCount: 0, closedCount: 0, createdPoints: 0, closedPoints:0};
         }
     }
-    return {days, weeks};
+    return {emptyDays, emptyWeeks};
 };
 
-const populateArrays = (days, weeks, issues) => {
-    console.log('populateArrays');
+const populateArrays = (countDays, countWeeks, issues) => {
+//    console.log('populateArrays');
     issues.forEach((issue) => {
         // Populate daily stats array
         // Ensures the day exists in the array (i.e. not Sunday or Friday).
         // If an issue has been created or closed during this interval, it is being discarded.
-        if (days[issue.createdAt.slice(0, 10)] !== undefined) {
-            days[issue.createdAt.slice(0, 10)]['createdCount']++;
+        if (countDays[issue.createdAt.slice(0, 10)] !== undefined) {
+            countDays[issue.createdAt.slice(0, 10)]['createdCount']++;
             if (issue.closedAt !== null) {
-                if (days[issue.closedAt.slice(0, 10)] !== undefined) {
-                    days[issue.closedAt.slice(0, 10)]['closedCount']++;
+                if (countDays[issue.closedAt.slice(0, 10)] !== undefined) {
+                    countDays[issue.closedAt.slice(0, 10)]['closedCount']++;
                 }
             }
         }
@@ -62,18 +75,97 @@ const populateArrays = (days, weeks, issues) => {
         // Populate weekly stats array
         createdDate = formatDate(formatDate(issue.createdAt));
         createdWeek = createdDate.getFullYear()*100 + getWeekYear(createdDate);
-        weeks[createdWeek]['createdCount']++;
+        countWeeks[createdWeek]['createdCount']++;
 
         if (issue.closedAt !== null) {
             closedDate = formatDate(formatDate(issue.closedAt));
             closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
-            weeks[createdWeek]['closedCount']++;
+            countWeeks[createdWeek]['closedCount']++;
         }
     });
-    console.log(days);
-    console.log(weeks);
-    return {days, weeks};
+    return {countDays, countWeeks};
+};
+
+const populateTicketsPerDay = (days) => {
+//    console.log('populateTicketsPerDay');
+    let ticketsPerDay = Object.values(days);
+    let startIdx = 0;
+    ticketsPerDay.map(function(value, idx) {
+        if (idx <=20) {startIdx = 0;}
+        else {startIdx = idx - 20;}
+        if (idx !== 0) {
+            let currentWindowIssues = ticketsPerDay.slice(startIdx, idx); // This limited the window or velocity calculation to 20 days (4 weeks).
+            ticketsPerDay[idx]['velocityCreatedCount'] = calculateAverageVelocity(currentWindowIssues, "createdCount");
+            ticketsPerDay[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
+            ticketsPerDay[idx]['velocityCreatedPoints'] = calculateAverageVelocity(currentWindowIssues, "createdPoints");
+            ticketsPerDay[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
+        }
+    });
+    return ticketsPerDay;
+};
+
+const populateTicketsPerWeek = (weeks, issues) => {
+//    console.log('populateTicketsPerWeek');
+    let completionVelocities = [];
+    let ticketsPerWeek = Object.values(weeks);
+    ticketsPerWeek.map(function(value, idx) {
+        if (idx <=4) {startIdx = 0;}
+        else {startIdx = idx - 4;}
+        if (idx !== 0) {
+            let currentWindowIssues = ticketsPerWeek.slice(startIdx, idx);
+            ticketsPerWeek[idx]['velocityCreatedCount'] = calculateAverageVelocity(currentWindowIssues, "createdCount");
+            ticketsPerWeek[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
+            ticketsPerWeek[idx]['velocityCreatedPoints'] = calculateAverageVelocity(currentWindowIssues, "createdPoints");
+            ticketsPerWeek[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
+        }
+        if (idx == ticketsPerWeek.length-1) {
+            //This is the last date of the sprint, calculate velocity on various timeframes
+            let totalClosedIssues = issues.find({state:'CLOSED'}).count();
+            let totalOpenIssues = issues.find({state:'OPEN'}).count();
+
+            let currentCompletion = { // All Time
+                'range': 'all',
+                'velocityClosedCount': calculateAverageVelocity(ticketsPerWeek, "closedCount"),
+                'velocityClosedPoints': calculateAverageVelocity(ticketsPerWeek, "closedPoints")
+            }
+            currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+            completionVelocities.push(currentCompletion);
+
+            if (idx >= 4) { // 4 weeks
+                let currentWindowIssues = ticketsPerWeek.slice(idx-4, idx);
+                let currentCompletion = {
+                    'range': '4w',
+                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
+                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                }
+                currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+                completionVelocities.push(currentCompletion);
+            }
+            if (idx >= 8) { // 8 weeks
+                let currentWindowIssues = ticketsPerWeek.slice(idx-8, idx);
+                let currentCompletion = {
+                    'range': '8w',
+                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
+                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                }
+                currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+                completionVelocities.push(currentCompletion);
+            }
+            if (idx >= 12) { // 12 weeks
+                let currentWindowIssues = ticketsPerWeek.slice(idx-12, idx);
+                let currentCompletion = {
+                    'range': '12w',
+                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
+                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                }
+                currentCompletion['effortCountDays'] = Math.round(totalOpenIssues / currentCompletion['velocityClosedCount'],0);
+                completionVelocities.push(currentCompletion);
+            }
+        }
+    });
+    return {ticketsPerWeek, completionVelocities};
 }
+
 
 
 export default {
@@ -81,31 +173,45 @@ export default {
         loading: false,
         firstDay: null,
         lastDay: null,
+        ticketsPerDay: [],
+        ticketsPerWeek: [],
+        velocity: [],
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
-        setFirstDay(state, payload) {return { ...state, loading: payload };},
-        setLastDay(state, payload) {return { ...state, loading: payload };},
+        setFirstDay(state, payload) {return { ...state, firstDay: payload };},
+        setLastDay(state, payload) {return { ...state, lastDay: payload };},
+        setTicketsPerDay(state, payload) {return { ...state, ticketsPerDay: payload };},
+        setTicketsPerWeek(state, payload) {return { ...state, ticketsPerWeek: payload };},
+        setVelocity(state, payload) {return { ...state, velocity: payload };},
     },
     effects: {
         async initStates(payload, rootState) {
             console.log('Init state');
+            this.setLoading(true);
             let firstDay = getFirstDay({});
             this.setFirstDay(firstDay);
             let lastDay = getLastDay({});
             this.setLastDay(lastDay);
 
             console.log("First Day: " + firstDay.toDateString() + " - Last Day: " + lastDay.toDateString());
-            let {days, weeks} = initArrays(firstDay, lastDay);
-            console.log('---');
-            console.log(days);
-            console.log(weeks);
-            console.log('---');
-            populateArrays(days, weeks, cfgIssues.find({}).fetch());
-//            console.log(days);
-//            console.log(weeks);
-            console.log('---');
 
+            let {emptyDays, emptyWeeks} = initArrays(firstDay, lastDay); // Build an array of all days and weeks between two dates
+            let {countDays, countWeeks} = populateArrays(emptyDays, emptyWeeks, cfgIssues.find({}).fetch()); // Populate the array with count of days and weeks
+
+            let ticketsPerDay = populateTicketsPerDay(countDays);
+            this.setTicketsPerDay(Object.values(ticketsPerDay));
+
+            let {ticketsPerWeek, completionVelocities} = populateTicketsPerWeek(countWeeks, cfgIssues);
+            this.setTicketsPerWeek(Object.values(ticketsPerWeek));
+            this.setVelocity(Object.values(completionVelocities));
+
+            console.log('---');
+            console.log(ticketsPerDay);
+            console.log(ticketsPerWeek);
+            console.log(completionVelocities);
+            console.log('---');
+            this.setLoading(false);
 
         }
     }

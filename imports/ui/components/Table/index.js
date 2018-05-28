@@ -63,6 +63,21 @@ const DateTypeProvider = props => (
     />
 );
 
+const LabelsFormatter = ({ value }) => {
+    if (value.totalCount > 0) {
+        return Array.prototype.map.call(value.edges, s => s.node.name).toString()
+    } else {
+        return '-';
+    }
+};
+
+const LabelsTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={LabelsFormatter}
+        {...props}
+    />
+);
+
 class IssuesTable extends Component {
     constructor(props) {
         super(props);
@@ -70,11 +85,15 @@ class IssuesTable extends Component {
         this.state = {
             columns: [
                 { name: 'title', title: 'Title' },
+                { name: 'org', title: 'Organizartion', getCellValue: row => (row.org ? row.org.name : undefined)},
+                { name: 'repo', title: 'Repo', getCellValue: row => (row.repo ? row.repo.name : undefined)},
+                { name: 'author', title: 'Author', getCellValue: row => (row.author ? row.author.login : undefined)},
+                { name: 'labels', title: 'Labels' },
+                { name: 'state', title: 'State' },
                 { name: 'createdAt', title: 'Created' },
                 { name: 'updatedAt', title: 'Updated' },
                 { name: 'closedAt', title: 'Closed' },
-                { name: 'state', title: 'State' },
-                { name: 'url', title: '' }
+                { name: 'url', title: '' },
             ],
             tableColumnExtensions: [
                 { columnName: 'createdAt', width: 90 },
@@ -85,6 +104,7 @@ class IssuesTable extends Component {
             ],
             linkColumns: ['url'],
             dateColumns: ['createdAt', 'updatedAt', 'closedAt'],
+            labelsColumns: ['labels'],
             hiddenColumnNames: ['updatedAt'],
             currentPage: 0,
             pageSize: 50,
@@ -100,7 +120,7 @@ class IssuesTable extends Component {
 
     render() {
         const { classes, issuesLoading, filtersResults } = this.props;
-        const { columns, linkColumns, pageSize, pageSizes, currentPage, dateColumns, hiddenColumnNames, tableColumnExtensions} = this.state;
+        const { columns, linkColumns, labelsColumns, pageSize, pageSizes, currentPage, dateColumns, hiddenColumnNames, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
@@ -119,6 +139,9 @@ class IssuesTable extends Component {
                             <IntegratedPaging />
                             <DateTypeProvider
                                 for={dateColumns}
+                            />
+                            <LabelsTypeProvider
+                                for={labelsColumns}
                             />
                             <LinkTypeProvider
                                 for={linkColumns}
