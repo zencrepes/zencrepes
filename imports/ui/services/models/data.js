@@ -27,110 +27,115 @@ const removeFromFilters = (payload, currentFilters) => {
     }
 };
 
+
+
 //Rebuild the data output based on filters
 const buildMongoFilter = (filters) => {
     //Build Mongo filter
     console.log('Current Filters: ' + JSON.stringify(filters));
-    //{ fruit: { $in: ['peach', 'plum', 'pear'] } }
-
-    //Groups:
-    /*
-    let mongoFilter = {};
-    Object.keys(filters).map(idx => {
-        console.log('Group: ' + idx);
-        filterValues = [];
-        filters[idx].map(value => {
-            console.log(value);
-            //console.log('Group: ' + idx + ' Value: ' + value.name);
-            filterValues.push(value.name);
-        })
-        if (filters[idx].length > 0) {
-            console.log(filterValues);
-            console.log(filters[idx][0]);
-            if (filters[idx][0].nested === false ) {
-                mongoFilter[idx] = { $in : filterValues };
-            } else if (filters[idx][0].nullName === filters[idx][0].name) {
-                console.log('this is a test');
-                mongoFilter[idx + ".totalCount"] = { $eq : 0 };
-            } else { // If we are searching in a nest array
-                //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
-                //{"state":{"$in":["OPEN"]}}
-                //window.issues.find({"assignees.edges":{$elemMatch:{"node.login":"USERLOGIN"}}}).fetch();
-                //mongoFilter[idx] = {$elemMatch:{$elemMatch:{"name": { $in : filterValues }}}};
-                let subFilter = "node." + filters[idx][0].nested;
-                mongoFilter[idx + ".edges"] = {};
-                mongoFilter[idx + ".edges"]["$elemMatch"] = {};
-                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
-                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filterValues;
-            }
-        }
-    });
-    */
-
-    let mongoFilter = {};
-    // First loop through the object, each index is a facet.
-    Object.keys(filters).map(idx => {
-        console.log('Building filter for group: ' + idx);
-        console.log('Values: ' + JSON.stringify(filters[idx]));
-
         /*
-{
-  "repo.name": [
-    {
-      "count": 135,
-      "name": "SONG",
-      "group": "repo.name",
-      "nested": false
-    },
-    {
-      "count": 190,
-      "name": "kf-api-dataservice",
-      "group": "repo.name",
-      "nested": false
-    }
-  ],
-  "author.login": [
-    {
-      "count": 61,
-      "name": "dankolbman",
-      "group": "author.login",
-      "nested": false
-    }
-  ]
-}
+        TEST DATA
+         let filters = {
+         "repo.name": [
+         {"count": 135, "name": "SONG", "group": "repo.name","nested": false,"nullName":"EMPTY"},
+         {"count": 190,"name": "kf-api-dataservice","group": "repo.name","nested": false,"nullName":"EMPTY"},
+         {"count": 190,"name": "EMPTY","group": "repo.name","nested": false,"nullName":"EMPTY"}
+         ],
+         "author.login": [
+         {"count": 61, "name": "dankolbman", "group": "author.login","nested": false}
+         ],
+         "labels": [
+         {"count":948,"name":"EMPTY","group":"labels","nested":"name","nullName":"EMPTY"},
+         {"count":159,"name":"bug","group":"labels","nested":"name","nullName":"EMPTY"}
+         ]
+         };
+
+         Codepen: https://codepen.io/anon/pen/dKyOXo?editors=0010
          */
 
+    let mongoFilter = Object.keys(filters).map(idx => {
+        console.log('Building filter for group: ' + idx);
+        console.log('Values: ' + JSON.stringify(filters[idx]));
+        // Build an array of values;
+        let filteredValues = filters[idx].map(v => v.name);
+        console.log(filteredValues);
 
+        if (filteredValues.length > 0) { // Do not do anything if there are no values
 
-        filterValues = [];
-        filters[idx].map(value => {
-            console.log(value);
-            //console.log('Group: ' + idx + ' Value: ' + value.name);
-            filterValues.push(value.name);
-        })
-        if (filters[idx].length > 0) {
-            console.log(filterValues);
-            console.log(filters[idx][0]);
+            //For text values
+            let currentFilter = {};
             if (filters[idx][0].nested === false ) {
-                mongoFilter[idx] = { $in : filterValues };
-            } else if (filters[idx][0].nullName === filters[idx][0].name) {
-                console.log('this is a test');
-                mongoFilter[idx + ".totalCount"] = { $eq : 0 };
+                currentFilter[idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) }; // Filter out nullName value
+                // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
+                if (filteredValues.includes(filters[idx][0].nullName)) {
+                    console.log('The array contains an empty value');
+                    // If it contains an empty value, it becomes necessary to add an "or" statement
+                    //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
+                    currentFilter = {$or :[{},{}]};
+                    currentFilter["$or"][0][idx+".totalCount"] = { $eq : 0 };
+                    currentFilter["$or"][1][idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) };
+                }
+                return currentFilter;
             } else { // If we are searching in a nest array
                 //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
                 //{"state":{"$in":["OPEN"]}}
                 //window.issues.find({"assignees.edges":{$elemMatch:{"node.login":"USERLOGIN"}}}).fetch();
                 //mongoFilter[idx] = {$elemMatch:{$elemMatch:{"name": { $in : filterValues }}}};
+                //labels.totalCount
                 let subFilter = "node." + filters[idx][0].nested;
-                mongoFilter[idx + ".edges"] = {};
-                mongoFilter[idx + ".edges"]["$elemMatch"] = {};
-                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
-                mongoFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filterValues;
+                currentFilter[idx + ".edges"] = {$elemMatch: {}};
+                //currentFilter[idx + ".edges"]["$elemMatch"] = {};
+                currentFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
+                currentFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filteredValues.filter(val => val !== filters[idx][0].nullName);
+                // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
+                if (filteredValues.includes(filters[idx][0].nullName)) {
+                    console.log('The array contains an empty value');
+                    // If it contains an empty value, it becomes necessary to add an "or" statement
+                    //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
+                    let masterFilter = {$or :[currentFilter, {}]};
+                    masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
+                    return masterFilter;
+                } else {
+                    return currentFilter;
+                }
             }
         }
     });
 
+    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
 
+    // Convert array of objects to an object that can be parsed by Mongo
+    /*
+        Example 1:
+        From: [{"state":{"$in":["OPEN"]}}]
+        To: {"state":{"$in":["OPEN"]}}
+
+        Example 2:
+        From: [{"org.name":{"$in":["Overture"]}},{"state":{"$in":["OPEN"]}}]
+        To: [{"org.name":{"$in":["Overture"]}},{"state":{"$in":["OPEN"]}}]
+
+        Example 3:
+        From: [{"org.name":{"$in":["Overture","ICGC DCC"]}},{"state":{"$in":["OPEN"]}}]
+        To: {"org.name":{"$in":["Overture","ICGC DCC"]},"state":{"$in":["OPEN"]}}
+
+        Example 4:
+        From: [null]
+        To: {}
+     */
+
+    // Strip all null values (example 4)
+    mongoFilter = mongoFilter.filter(v => v !== undefined);
+
+    if (mongoFilter.length === 0) {
+        mongoFilter = {};
+    } else  {
+        let convertedMongoFilter = {};
+        mongoFilter.forEach(value => {
+            idx = Object.keys(value)[0];
+            convertedMongoFilter[idx] = value[idx];
+        });
+        mongoFilter = convertedMongoFilter;
+    }
 
     console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
     console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
@@ -151,6 +156,12 @@ const filterMongo = async (mongoFilter) => {
     await cfgIssues.update(mongoFilter, { $set: { filtered: false } }, {multi: true});
 }
 
+const doesIndexExist = () => {
+    console.log('doesIndexExist');
+
+}
+
+
 const getFacetData = (facet, mongoFilter) => {
 //    console.log('getFacetData - Process Facet Group: ' + facet.group);
 //    console.log('getFacetData - Mongo Query: ' + JSON.stringify(mongoFilter));
@@ -164,6 +175,8 @@ const getFacetData = (facet, mongoFilter) => {
     if (facet.nested !== false ) {
         indexExist = facet.group + ".edges";
     }
+    console.log(mongoFilter);
+    console.log(indexExist);
     if (Object.keys(mongoFilter).indexOf(indexExist) !== -1 ) {
         // Filter includes some filtering on current facet
         //{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
@@ -214,7 +227,7 @@ export default {
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
             {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'EMPTY', data: []},
-            {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', data: [] },
+            {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', data: [] },
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, data: []} ,
             {header: 'Milestones Status', group: 'milestone.state', type: 'text', nested: false, data: [] },
             {header: 'Comments', group: 'comments.totalCount', type: 'text', nested: false, data: [] },
