@@ -68,14 +68,13 @@ const buildMongoFilter = (filters) => {
                 currentFilter[idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) }; // Filter out nullName value
                 // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
                 if (filteredValues.includes(filters[idx][0].nullName)) {
-                    console.log('The array contains an empty value');
-                    // If it contains an empty value, it becomes necessary to add an "or" statement
-                    //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
-                    currentFilter = {$or :[{},{}]};
-                    currentFilter["$or"][0][idx+".totalCount"] = { $eq : 0 };
-                    currentFilter["$or"][1][idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) };
+                    if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
+                        return filters[idx][0].nullFilter;
+                    } else {
+                        return {$or :[filters[idx][0].nullFilter,currentFilter]}; // Wrapping the regular filters in an OR condition with the nullName value
+                        //currentFilter["$or"][1][idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) };
+                    }
                 }
-                return currentFilter;
             } else { // If we are searching in a nest array
                 //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
                 //{"state":{"$in":["OPEN"]}}
@@ -90,14 +89,19 @@ const buildMongoFilter = (filters) => {
                 // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
                 if (filteredValues.includes(filters[idx][0].nullName)) {
                     console.log('The array contains an empty value');
-                    // If it contains an empty value, it becomes necessary to add an "or" statement
-                    //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
-                    let masterFilter = {$or :[currentFilter, {}]};
-                    masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
-                    return masterFilter;
-                } else {
-                    return currentFilter;
+                    if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
+                        return filters[idx][0].nullFilter;
+                    } else {
+                        // If it contains an empty value, it becomes necessary to add an "or" statement
+                        //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
+                        //let masterFilter = {$or :[currentFilter, filters[idx][0].nullFilter]};
+                        // masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
+                        return {$or :[currentFilter, filters[idx][0].nullFilter]};
+                    }
+
                 }
+
+                return currentFilter;
             }
         }
     });
@@ -181,22 +185,22 @@ const isFacetSelected = (facet, updatedFilters) => {
 };
 
 /**
- * getFacetData() returns data to be displayed in the facet.
+ * getFacetAggregations() returns data to be displayed in the facet.
  *   If the facet has one of its element already selected, display all available elements for that facet.
  *
  * Arguments:
  * - facet: Current facet being processed
  * - mongoFilter: Mongo filter used to collect relevant data
  */
-const getFacetData = (facet, mongoFilter) => {
-//    console.log('getFacetData - Process Facet Group: ' + facet.group);
-//    console.log('getFacetData - Mongo Query: ' + JSON.stringify(mongoFilter));
+const getFacetAggregations = (facet, mongoFilter) => {
+//    console.log('getFacetAggregations - Process Facet Group: ' + facet.group);
+//    console.log('getFacetAggregations - Mongo Query: ' + JSON.stringify(mongoFilter));
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
         cfgIssues.find(mongoFilter).forEach((issue) => {
             if (issue[facet.group].totalCount === 0) {
-                //console.log('getFacetData - processing: ' + facet.group + ' - Null value: ' + facet.nullName);
+                //console.log('getFacetAggregations - processing: ' + facet.group + ' - Null value: ' + facet.nullName);
                 //console.log(allValues);
                 let pushObj = {};
                 pushObj[facet.nested] = facet.nullName;
@@ -217,12 +221,20 @@ const getFacetData = (facet, mongoFilter) => {
         statesGroup = _.groupBy(cfgIssues.find(mongoFilter).fetch(), facet.group);
         //statesGroup = _.groupBy(cfgIssues.find({ $or: [{filtered: false}, {'repo.name': facet.group}]}).fetch(), facet.group);
     }
+
+    // If the key is 'undefined', replace with default facet name
+    if (statesGroup['undefined'] !== undefined) {
+        statesGroup[facet.nullName] = statesGroup['undefined'];
+        delete statesGroup['undefined'];
+    }
+
     let states = [];
     Object.keys(statesGroup).forEach(function(key) {
-        let facetItemName = key;
-        if (key === null || key === undefined || key === 'undefined' || key === 'null') {facetItemName = facet.nullName;} // If name is undefined or null, replace with its nullValue
-        //TODO - Add a check to ensure the name doesn't exist already.
-        states.push({count: statesGroup[key].length, name: facetItemName, group: facet.group, nested: facet.nested, nullName: facet.nullName});
+        //if (key === null || key === undefined || key === 'undefined' || key === 'null') {facetItemName = facet.nullName;} // If name is undefined or null, replace with its nullValue
+        //Check to avoid any duplicate keys
+        //if (states.findIndex((v) => { console.log(v.name + " == " + facetItemName);return v.name === facetItemName;}) === -1) {
+            states.push({count: statesGroup[key].length, name: key, group: facet.group, nested: facet.nested, nullName: facet.nullName, nullFilter: facet.nullFilter});
+        //}
     });
     //Return the array sorted by count
     return states.sort((a, b) => b.count - a.count);
@@ -241,9 +253,9 @@ export default {
             {header: 'Organizations', group: 'org.name', type: 'text', nested: false, data: [] },
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
-            {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'NO LABEL', data: []},
-            {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', data: [] },
-            {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE',data: []} ,
+            {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'NO LABEL', nullFilter: {'labels.totalCount': { $eq : 0 }},data: []},
+            {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, data: [] },
+            {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE', nullFilter: {'milestone': { $eq : null }},data: []} ,
             {header: 'Milestones Status', group: 'milestone.state', type: 'text', nested: false, data: [] },
             {header: 'Comments', group: 'comments.totalCount', type: 'text', nested: false, data: [] },
             {header: 'Created Since', group: 'createdSince', type: 'text', nested: false, data: [] },
@@ -293,7 +305,7 @@ export default {
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 let facetMongoFilter = mongoFilter;
                 if (isFacetSelected(facet, updatedFilters) === true) {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
-                return {...facet, data: getFacetData(facet, facetMongoFilter)};
+                return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);
 
@@ -313,7 +325,7 @@ export default {
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 let facetMongoFilter = mongoFilter;
                 if (isFacetSelected(facet, updatedFilters) === true) {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
-                return {...facet, data: getFacetData(facet, facetMongoFilter)};
+                return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);
 
@@ -333,7 +345,7 @@ export default {
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
-                return {...facet, data: getFacetData(facet, mongoFilter)};
+                return {...facet, data: getFacetAggregations(facet, mongoFilter)};
             });
             await this.updateFacets(newFacets);
 
