@@ -78,6 +78,27 @@ const LabelsTypeProvider = props => (
     />
 );
 
+const AssigneesFormatter = ({ value }) => {
+    if (value.totalCount > 0) {
+        return Array.prototype.map.call(value.edges, s => {
+            if (s.node.name === null) {
+                return s.node.login;
+            } else {
+                return s.node.name;
+            }
+        }).toString()
+    } else {
+        return '-';
+    }
+};
+
+const AssigneesTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={AssigneesFormatter}
+        {...props}
+    />
+);
+
 class IssuesTable extends Component {
     constructor(props) {
         super(props);
@@ -89,6 +110,7 @@ class IssuesTable extends Component {
                 { name: 'repo', title: 'Repo', getCellValue: row => (row.repo ? row.repo.name : undefined)},
                 { name: 'author', title: 'Author', getCellValue: row => (row.author ? row.author.login : undefined)},
                 { name: 'labels', title: 'Labels' },
+                { name: 'assignees', title: 'Assignees' },
                 { name: 'state', title: 'State' },
                 { name: 'createdAt', title: 'Created' },
                 { name: 'updatedAt', title: 'Updated' },
@@ -105,6 +127,7 @@ class IssuesTable extends Component {
             linkColumns: ['url'],
             dateColumns: ['createdAt', 'updatedAt', 'closedAt'],
             labelsColumns: ['labels'],
+            assigneesColumns: ['assignees'],
             hiddenColumnNames: ['updatedAt'],
             currentPage: 0,
             pageSize: 50,
@@ -120,7 +143,7 @@ class IssuesTable extends Component {
 
     render() {
         const { classes, issuesLoading, filtersResults } = this.props;
-        const { columns, linkColumns, labelsColumns, pageSize, pageSizes, currentPage, dateColumns, hiddenColumnNames, tableColumnExtensions} = this.state;
+        const { columns, linkColumns, labelsColumns, assigneesColumns, pageSize, pageSizes, currentPage, dateColumns, hiddenColumnNames, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
@@ -142,6 +165,9 @@ class IssuesTable extends Component {
                             />
                             <LabelsTypeProvider
                                 for={labelsColumns}
+                            />
+                            <AssigneesTypeProvider
+                                for={assigneesColumns}
                             />
                             <LinkTypeProvider
                                 for={linkColumns}

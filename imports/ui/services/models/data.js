@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
-//Add the payload to current filters
+
 import {cfgIssues} from "../../data/Issues";
 
+//Add the payload to current filters
 const addToFilters = (payload, currentFilters) => {
     if (currentFilters[payload.group] === undefined) {currentFilters[payload.group] = [];}
     const currentIndex = currentFilters[payload.group].map((v) => {return v.name}).indexOf(payload.name);
@@ -58,13 +59,22 @@ const buildMongoFilter = (filters) => {
         console.log('Values: ' + JSON.stringify(filters[idx]));
         // Build an array of values;
         let filteredValues = filters[idx].map(v => v.name);
-        console.log(filteredValues);
 
         if (filteredValues.length > 0) { // Do not do anything if there are no values
+            //If the facet is of type textCount, convert all values to numbers.
+            if (filters[idx][0].type  === 'textCount') {filteredValues = filters[idx].map(v => parseInt(v.name));}
+
+            console.log(filteredValues);
 
             //For text values
             let currentFilter = {};
-            if (filters[idx][0].nested === false ) {
+            if (filters[idx][0].type === 'range' ) {
+                let gte = {};
+                gte[idx] = {$gte:filters[idx][0].min};
+                let lte = {};
+                lte[idx] = {$lte:filters[idx][0].max};
+                currentFilter = {$and:[gte, lte]};
+            } else if (filters[idx][0].nested === false ) {
                 currentFilter[idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) }; // Filter out nullName value
                 // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
                 if (filteredValues.includes(filters[idx][0].nullName)) {
@@ -100,9 +110,8 @@ const buildMongoFilter = (filters) => {
                     }
 
                 }
-
-                return currentFilter;
             }
+            return currentFilter;
         }
     });
 
@@ -233,7 +242,7 @@ const getFacetAggregations = (facet, mongoFilter) => {
         //if (key === null || key === undefined || key === 'undefined' || key === 'null') {facetItemName = facet.nullName;} // If name is undefined or null, replace with its nullValue
         //Check to avoid any duplicate keys
         //if (states.findIndex((v) => { console.log(v.name + " == " + facetItemName);return v.name === facetItemName;}) === -1) {
-            states.push({count: statesGroup[key].length, name: key, group: facet.group, nested: facet.nested, nullName: facet.nullName, nullFilter: facet.nullFilter});
+            states.push({count: statesGroup[key].length, name: key, group: facet.group, nested: facet.nested, type: facet.type, nullName: facet.nullName, nullFilter: facet.nullFilter});
         //}
     });
     //Return the array sorted by count
@@ -256,8 +265,8 @@ export default {
             {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'NO LABEL', nullFilter: {'labels.totalCount': { $eq : 0 }},data: []},
             {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, data: [] },
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE', nullFilter: {'milestone': { $eq : null }},data: []} ,
-            {header: 'Milestones Status', group: 'milestone.state', type: 'text', nested: false, data: [] },
-            {header: 'Comments', group: 'comments.totalCount', type: 'text', nested: false, data: [] },
+            {header: 'Milestones States', group: 'milestone.state', type: 'text', nested: false, data: [] },
+            {header: 'Comments', group: 'comments.totalCount', type: 'textCount', nested: false, data: [] },
             {header: 'Created Since', group: 'createdSince', type: 'text', nested: false, data: [] },
             {header: 'Last updated Since', group: 'updatedSince', type: 'text', nested: false, data: [] },
             {header: 'Closed Since', group: 'stats.closedSince', type: 'range', nested: false, data: [] },

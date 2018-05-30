@@ -85,6 +85,8 @@ class Facets extends Component {
                                         return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'textNull':
                                         return ( <TermFacet facet={facet} key={facet.header}/>);
+                                    case 'textCount':
+                                        return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'range':
                                         return ( <RangeFacet facet={facet} key={facet.header}/>);
                                 }
