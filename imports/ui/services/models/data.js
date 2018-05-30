@@ -196,7 +196,11 @@ const getFacetData = (facet, mongoFilter) => {
         let allValues = [];
         cfgIssues.find(mongoFilter).forEach((issue) => {
             if (issue[facet.group].totalCount === 0) {
-                allValues.push({name: facet.nullName});
+                //console.log('getFacetData - processing: ' + facet.group + ' - Null value: ' + facet.nullName);
+                //console.log(allValues);
+                let pushObj = {};
+                pushObj[facet.nested] = facet.nullName;
+                allValues.push(pushObj);
             } else {
                 issue[facet.group].edges.map((nestedValue) => {
                     if (nestedValue.node[facet.nested] === null || nestedValue.node[facet.nested] === '' || nestedValue.node[facet.nested] === undefined ) {
@@ -215,7 +219,10 @@ const getFacetData = (facet, mongoFilter) => {
     }
     let states = [];
     Object.keys(statesGroup).forEach(function(key) {
-        states.push({count: statesGroup[key].length, name: key, group: facet.group, nested: facet.nested, nullName: facet.nullName});
+        let facetItemName = key;
+        if (key === null || key === undefined || key === 'undefined' || key === 'null') {facetItemName = facet.nullName;} // If name is undefined or null, replace with its nullValue
+        //TODO - Add a check to ensure the name doesn't exist already.
+        states.push({count: statesGroup[key].length, name: facetItemName, group: facet.group, nested: facet.nested, nullName: facet.nullName});
     });
     //Return the array sorted by count
     return states.sort((a, b) => b.count - a.count);
@@ -234,9 +241,9 @@ export default {
             {header: 'Organizations', group: 'org.name', type: 'text', nested: false, data: [] },
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
-            {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'EMPTY', data: []},
+            {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'NO LABEL', data: []},
             {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', data: [] },
-            {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, data: []} ,
+            {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE',data: []} ,
             {header: 'Milestones Status', group: 'milestone.state', type: 'text', nested: false, data: [] },
             {header: 'Comments', group: 'comments.totalCount', type: 'text', nested: false, data: [] },
             {header: 'Created Since', group: 'createdSince', type: 'text', nested: false, data: [] },
