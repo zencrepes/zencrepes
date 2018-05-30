@@ -150,39 +150,47 @@ const clearIssuesFilters = async () => {
 //    console.log('clearIssuesFilters - Total issues after: ' + cfgIssues.find({filtered: false}).count());
 }
 
+/**
+ * filterMongo() Set the filtered state to minimongo
+ *
+ * Arguments:
+ * - mongoFilter: to use for filtered items
+ */
 const filterMongo = async (mongoFilter) => {
     //Filter Mongo to only return specific data
     await cfgIssues.update({}, { $set: { filtered: true } }, {multi: true});
     await cfgIssues.update(mongoFilter, { $set: { filtered: false } }, {multi: true});
 }
 
-const doesIndexExist = () => {
-    console.log('doesIndexExist');
 
-}
+/**
+ * isFacetSelected() returns true if the facet currently has of its elements selected.
+ *
+ * Arguments:
+ * - facet: Current facet being processed
+ * - updatedFilters: List of selected filters
+ */
+const isFacetSelected = (facet, updatedFilters) => {
+    if (updatedFilters[facet.group] === undefined) {
+        return false;
+    } else if (updatedFilters[facet.group].length > 0) {
+        return true;
+    } else {
+        return false
+    }
+};
 
-
+/**
+ * getFacetData() returns data to be displayed in the facet.
+ *   If the facet has one of its element already selected, display all available elements for that facet.
+ *
+ * Arguments:
+ * - facet: Current facet being processed
+ * - mongoFilter: Mongo filter used to collect relevant data
+ */
 const getFacetData = (facet, mongoFilter) => {
 //    console.log('getFacetData - Process Facet Group: ' + facet.group);
 //    console.log('getFacetData - Mongo Query: ' + JSON.stringify(mongoFilter));
-
-    //Prep Mongo filter
-    // If current facet is one of the index of MongoFilter, then no filtering at all.
-    // This allow for the creation of the "in" operator
-    //if (Object.keys(mongoFilter).indexOf(facet.group) !== -1 && mongoFilter[facet.group]['$in'].length > 0) {
-    console.log(facet);
-    let indexExist = facet.group
-    if (facet.nested !== false ) {
-        indexExist = facet.group + ".edges";
-    }
-    console.log(mongoFilter);
-    console.log(indexExist);
-    if (Object.keys(mongoFilter).indexOf(indexExist) !== -1 ) {
-        // Filter includes some filtering on current facet
-        //{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
-        mongoFilter = {};
-    }
-
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
@@ -276,7 +284,9 @@ export default {
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
-                return {...facet, data: getFacetData(facet, mongoFilter)};
+                let facetMongoFilter = mongoFilter;
+                if (isFacetSelected(facet, updatedFilters) === true) {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
+                return {...facet, data: getFacetData(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);
 
@@ -294,7 +304,9 @@ export default {
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
-                return {...facet, data: getFacetData(facet, mongoFilter)};
+                let facetMongoFilter = mongoFilter;
+                if (isFacetSelected(facet, updatedFilters) === true) {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
+                return {...facet, data: getFacetData(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);
 
