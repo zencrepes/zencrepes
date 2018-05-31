@@ -20,6 +20,8 @@ const addToFilters = (payload, currentFilters, currentFacets) => {
         } else if (currentFacets[facetIdx].type === 'range') {
             currentFilters[payload.group].min = 0;
             currentFilters[payload.group].max = 1;
+        } else if (currentFacets[facetIdx].type === 'bool') {
+            currentFilters[payload.group].bool = null;
         }
     }
 
@@ -33,7 +35,7 @@ const addToFilters = (payload, currentFilters, currentFacets) => {
         }
     }
 
-    if (currentFacets[facetIdx].type === 'range') {
+    else if (currentFacets[facetIdx].type === 'range') {
         if (payload.min !== currentFilters[payload.group].min || payload.max !== currentFilters[payload.group].max) {
             let updatedFilters = JSON.parse(JSON.stringify(currentFilters)); //TODO - Replace this with something better to copy object ?
             updatedFilters[payload.group].min = payload.min;
@@ -42,8 +44,20 @@ const addToFilters = (payload, currentFilters, currentFacets) => {
         }
     }
 
+    else if (currentFacets[facetIdx].type === 'bool') {
+        if (payload.bool !== currentFilters[payload.group].bool) {
+            let updatedFilters = JSON.parse(JSON.stringify(currentFilters)); //TODO - Replace this with something better to copy object ?
+            if (payload.bool === null) {
+                delete updatedFilters[payload.group];
+            } else {
+                updatedFilters[payload.group].bool = payload.bool;
+            }
+            return updatedFilters;
+        }
+    }
+
     console.log('addToFilters - No updating filters');
-    return currentFIlters;
+    return currentFilters;
 
     /*
     if (currentFilters[payload.group] === undefined) {currentFilters[payload.group] = [];}
@@ -170,6 +184,8 @@ const buildMongoFilter = (filters) => {
             let lte = {};
             lte[idx] = {$lte:currentFilter.max};
             currentQuery = {$and:[gte, lte]};
+        } else if (currentFilter.type === 'bool') {
+            currentQuery[idx]= { $eq : currentFilter.bool };
         }
         return currentQuery;
 
@@ -304,8 +320,10 @@ const filterMongo = async (mongoFilter) => {
  */
 const isFacetSelected = (facet, updatedFilters) => {
     if (updatedFilters[facet.group] === undefined) {
+        console.log('return false');
         return false;
     } else {
+        console.log('return true');
         return true;
     }
 };
@@ -319,8 +337,6 @@ const isFacetSelected = (facet, updatedFilters) => {
  * - mongoFilter: Mongo filter used to collect relevant data
  */
 const getFacetAggregations = (facet, mongoFilter) => {
-//    console.log('getFacetAggregations - Process Facet Group: ' + facet.group);
-//    console.log('getFacetAggregations - Mongo Query: ' + JSON.stringify(mongoFilter));
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
@@ -375,6 +391,7 @@ export default {
             //nested: Is this going through nested data, if yes, on which idx ?
             //nullName: Name to be displayed if empty or undefined
             //data: Facets data
+            {header: 'Selected', group: 'pinned', type: 'bool', nested: false, data: [] },
             {header: 'States', group: 'state', type: 'text', nested: false, data: [] },
             {header: 'Organizations', group: 'org.name', type: 'text', nested: false, data: [] },
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
@@ -384,12 +401,14 @@ export default {
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE', nullFilter: {'milestone': { $eq : null }},data: []} ,
             {header: 'Milestones States', group: 'milestone.state', type: 'text', nested: false, data: [] },
             {header: 'Comments', group: 'comments.totalCount', type: 'textCount', nested: false, data: [] },
-            {header: 'Created Since', group: 'createdSince', type: 'text', nested: false, data: [] },
-            {header: 'Last updated Since', group: 'updatedSince', type: 'text', nested: false, data: [] },
-            {header: 'Closed Since', group: 'stats.closedSince', type: 'range', nested: false, data: [] },
+            {header: 'Days since closing', group: 'stats.closedSince', type: 'range', nested: false, data: [] },
+            {header: 'Days since creation', group: 'stats.createdSince', type: 'range', nested: false, data: [] },
+            {header: 'Opened For', group: 'stats.openedDuring', type: 'range', nested: false, data: [] },
+            {header: 'Days since last update', group: 'stats.updatedSince', type: 'range', nested: false, data: [] },
         ],
         filters: {},
         results: [],
+        tableSelection: [],
         mongoFilters: null,
         loading: false,
     },
@@ -407,6 +426,9 @@ export default {
         },
         updateResults(state, payload) {
             return { ...state, results: payload };
+        },
+        updateTableSelection(state, payload) {
+            return { ...state, tableSelection: payload };
         },
         updateLoading(state, payload) {
             return { ...state, loading: payload };
@@ -436,7 +458,16 @@ export default {
             await this.updateFacets(newFacets);
 
             // Update the results
-            this.updateResults(cfgIssues.find(mongoFilter).fetch());
+            let updatedResults = cfgIssues.find(mongoFilter).fetch()
+            this.updateResults(updatedResults);
+
+            let selectedIssues = [];
+            Object.values(updatedResults).forEach((value,index)=>{
+                if (value.pinned === true) {
+                    selectedIssues.push(index);
+                }
+            });
+            this.updateTableSelection(selectedIssues);
         },
         async removeFilterRefresh(payload, rootState) {
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);
@@ -456,7 +487,17 @@ export default {
             await this.updateFacets(newFacets);
 
             // Update the results
-            this.updateResults(cfgIssues.find(mongoFilter).fetch());
+            let updatedResults = cfgIssues.find(mongoFilter).fetch()
+            this.updateResults(updatedResults);
+
+            let selectedIssues = [];
+            Object.values(updatedResults).forEach((value,index)=>{
+                if (value.pinned === true) {
+                    selectedIssues.push(index);
+                }
+            });
+            this.updateTableSelection(selectedIssues);
+
         },
         async initFacets(payload, rootState) {
             this.updateLoading(true);
@@ -476,7 +517,16 @@ export default {
             await this.updateFacets(newFacets);
 
             // Update the results
-            this.updateResults(cfgIssues.find(mongoFilter).fetch());
+            let updatedResults = cfgIssues.find(mongoFilter).fetch()
+            this.updateResults(updatedResults);
+
+            let selectedIssues = [];
+            Object.values(updatedResults).forEach((value,index)=>{
+                if (value.pinned === true) {
+                    selectedIssues.push(index);
+                }
+            });
+            this.updateTableSelection(selectedIssues);
 
             this.updateLoading(false);
         }

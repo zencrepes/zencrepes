@@ -9,7 +9,9 @@ import { Link } from 'react-router-dom';
 
 import {
     // State or Local Processing Plugins
+    SelectionState,
     PagingState,
+    IntegratedSelection,
     IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
@@ -20,6 +22,7 @@ import {
     PagingPanel,
     ColumnChooser,
     TableColumnVisibility,
+    TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
@@ -132,6 +135,7 @@ class IssuesTable extends Component {
             currentPage: 0,
             pageSize: 50,
             pageSizes: [20, 50, 100],
+            selection: [],
 
         };
         this.changeCurrentPage = currentPage => this.setState({ currentPage });
@@ -139,26 +143,48 @@ class IssuesTable extends Component {
         this.hiddenColumnNamesChange = (hiddenColumnNames) => {
             this.setState({ hiddenColumnNames });
         };
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log('Component did update');
+        // Updated selection
+    }
+
+    changeSelection = async (selection) => {
+        const { filtersResults, updateTableSelection } = this.props;
+        updateTableSelection(selection);
+//        this.setState({ selection });
+        await cfgIssues.update({}, { $set: { pinned: false } }, {multi: true});
+        selection.forEach((idx) => {
+            cfgIssues.update({_id: filtersResults[idx]._id}, {$set: { pinned: true }});
+        })
     }
 
     render() {
-        const { classes, issuesLoading, filtersResults } = this.props;
+        const { classes, issuesLoading, filtersResults, tableSelection } = this.props;
         const { columns, linkColumns, labelsColumns, assigneesColumns, pageSize, pageSizes, currentPage, dateColumns, hiddenColumnNames, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent>
+                        <span>Total rows selected: {tableSelection.length}</span>
                         <Grid
                             rows={filtersResults}
                             columns={columns}
                         >
-                            <PagingState
-                            currentPage={currentPage}
-                            onCurrentPageChange={this.changeCurrentPage}
-                            pageSize={pageSize}
-                            onPageSizeChange={this.changePageSize}
+                            <SelectionState
+                                selection={tableSelection}
+                                onSelectionChange={this.changeSelection}
                             />
+                            <PagingState
+                                currentPage={currentPage}
+                                onCurrentPageChange={this.changeCurrentPage}
+                                pageSize={pageSize}
+                                onPageSizeChange={this.changePageSize}
+                            />
+                            <IntegratedSelection />
                             <IntegratedPaging />
                             <DateTypeProvider
                                 for={dateColumns}
@@ -174,6 +200,7 @@ class IssuesTable extends Component {
                             />
                             <Table columnExtensions={tableColumnExtensions} />
                             <TableHeaderRow />
+                            <TableSelection showSelectAll />
                             <TableColumnVisibility
                                 hiddenColumnNames={hiddenColumnNames}
                                 onHiddenColumnNamesChange={this.hiddenColumnNamesChange}
@@ -195,10 +222,16 @@ IssuesTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapState = state => ({
-    issuesLoading: state.github.issuesLoading,
-    filtersResults: state.data.results,
+const mapDispatch = dispatch => ({
+    updateTableSelection: dispatch.data.updateTableSelection,
 });
 
 
-export default connect(mapState, null)(withStyles(styles)(IssuesTable));
+const mapState = state => ({
+    issuesLoading: state.github.issuesLoading,
+    filtersResults: state.data.results,
+    tableSelection: state.data.tableSelection,
+});
+
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesTable));

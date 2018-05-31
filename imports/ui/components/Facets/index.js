@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import TextFacet from './TextFacet.js';
 import RangeFacet from './Range/index.js';
 import TermFacet from './Term/index.js';
+import BoolFacet from './Bool/index.js';
 
 import {cfgIssues} from '../../data/Issues.js';
 
@@ -87,6 +88,8 @@ class Facets extends Component {
                                         return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'range':
                                         return ( <RangeFacet facet={facet} key={facet.header}/>);
+                                    case 'bool':
+                                        return ( <BoolFacet facet={facet} key={facet.header}/>);
                                 }
                             })}
                         </CardContent>

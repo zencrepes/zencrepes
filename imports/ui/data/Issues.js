@@ -25,9 +25,9 @@ function getStats(createdAt, updatedAt, closedAt) {
     }
 
     //This issue was first opened X days ago
-    let openedSince = null;
+    let createdSince = null;
     if (createdAt !== null) {
-        openedSince = Math.round((new Date() - new Date(createdAt)) / (1000 * 3600 * 24), 0);
+        createdSince = Math.round((new Date() - new Date(createdAt)) / (1000 * 3600 * 24), 0);
     }
     //This issue was closed X days ago
     let closedSince = null;
@@ -41,7 +41,7 @@ function getStats(createdAt, updatedAt, closedAt) {
     }
     let stats = {
         openedDuring: openedDuring,
-        openedSince: openedSince,
+        createdSince: createdSince,
         closedSince: closedSince,
         updatedSince: updatedSince,
     };
@@ -145,10 +145,17 @@ class Issues extends Component {
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
 
+            /*
             let nodeFiltered = false;
             if (existNode !== undefined) {
                 nodeFiltered = existNode.filtered;
             }
+            */
+            let nodePinned = false;
+            if (existNode !== undefined) {
+                nodePinned = existNode.pinned;
+            }
+
             let issueObj = {
                 id: currentIssue.node.id,
                 title: currentIssue.node.title,
@@ -168,6 +175,7 @@ class Issues extends Component {
                 comments: currentIssue.node.comments,
                 participants: currentIssue.node.participants,
                 refreshed: true,
+                pinned: nodePinned,
             }
             await cfgIssues.upsert({
                 id: issueObj.id
