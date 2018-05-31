@@ -28,12 +28,12 @@ class FacetSelector extends React.Component {
         const { addFilterRefresh, removeFilterRefresh, queryValues } = this.props;
 
         //check to handle the situation where the group does not exist yet
-        let valueChecked = [];
+        let valueChecked = {in:[]};
         if (queryValues[value.group] !== undefined) {
             valueChecked = queryValues[value.group];
         }
         //Check if the value is already in the model, if yes remove, if not add.
-        const currentIndex = valueChecked.map((v) => {return v.name}).indexOf(value.name);
+        const currentIndex = valueChecked.in.map((v) => {return v}).indexOf(value.name);
         if (currentIndex === -1) {
             addFilterRefresh(value);
         } else {

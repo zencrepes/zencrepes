@@ -83,8 +83,6 @@ class Facets extends Component {
                                 switch (facet.type) {
                                     case 'text' :
                                         return ( <TermFacet facet={facet} key={facet.header}/>);
-                                    case 'textNull':
-                                        return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'textCount':
                                         return ( <TermFacet facet={facet} key={facet.header}/>);
                                     case 'range':

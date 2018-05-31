@@ -27,22 +27,7 @@ class FacetSelector extends React.Component {
             if (prevProps.queryValues[facetGroup]!== undefined && prevProps.queryValues[facetGroup].length > 0 && queryValues[facetGroup].length === 0){
                 this.setState({value: {min: this.getMin(data),max: this.getMax(data)}});
             }
-
-            //TODO -
-            console.log('---');
-            console.log(prevState.value);
-            console.log(this.state.value);
-            console.log(prevProps.queryValues[facetGroup]);
-            console.log(queryValues[facetGroup]);
-            console.log('---');
-
-            // Remove a previously applied filter.
-            //if (prevProps.queryValues[facetGroup] !== undefined && prevProps.queryValues[facetGroup][0] !== undefined ) {
-            //    removeFilter(prevProps.queryValues[facetGroup][0]);
-            //}
         }
-
-
 
     };
 
@@ -65,7 +50,9 @@ class FacetSelector extends React.Component {
             console.log('onChangeComplete - Max: ' + JSON.stringify(maxValue));
 
             // Merge min & max'
-            let rangeValue = {count: 0, name: 'Range: ' + data[0].group, group: data[0].group, nested: data[0].nested, type: data[0].type, min: parseInt(minValue.name), max: parseInt(maxValue.name)};
+            let rangeValue = {group: data[0].group, min: parseInt(minValue.name), max: parseInt(maxValue.name)};
+            addFilterRefresh(rangeValue);
+            /*
             console.log(rangeValue);
             //replaceFilterRefresh(rangeValue);
 
@@ -81,7 +68,7 @@ class FacetSelector extends React.Component {
                 addFilterRefresh(rangeValue);
             } else {
                 removeFilterRefresh(rangeValue);
-            }
+            }*/
         }
     }
 

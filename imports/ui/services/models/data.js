@@ -4,7 +4,48 @@ import _ from 'lodash';
 import {cfgIssues} from "../../data/Issues";
 
 //Add the payload to current filters
-const addToFilters = (payload, currentFilters) => {
+const addToFilters = (payload, currentFilters, currentFacets) => {
+    console.log('addToFilters');
+
+    //Look for facet data corresponding to the selected filter
+    let facetIdx = _.findIndex(currentFacets, function(v) { return v.group == payload.group; });
+
+    //Initialize the filter with default values
+    if (currentFilters[payload.group] === undefined) {
+        currentFilters[payload.group] = Object.assign({}, currentFacets[facetIdx]);
+        delete currentFilters[payload.group].data;
+        if (currentFacets[facetIdx].type === 'text' || currentFacets[facetIdx].type === 'textCount') {
+            currentFilters[payload.group].in = [];
+            currentFilters[payload.group].nullSelected = false;
+        } else if (currentFacets[facetIdx].type === 'range') {
+            currentFilters[payload.group].min = 0;
+            currentFilters[payload.group].max = 1;
+        }
+    }
+
+    //If current filter is of type text, look for name in the 'in' array
+    if (currentFacets[facetIdx].type === 'text' || currentFacets[facetIdx].type === 'textCount') {
+        const currentIndex = currentFilters[payload.group].in.indexOf(payload.name);
+        if (currentIndex === -1) {
+            let updatedFilters = JSON.parse(JSON.stringify(currentFilters)); //TODO - Replace this with something better to copy object ?
+            updatedFilters[payload.group].in.push(payload.name);
+            return updatedFilters;
+        }
+    }
+
+    if (currentFacets[facetIdx].type === 'range') {
+        if (payload.min !== currentFilters[payload.group].min || payload.max !== currentFilters[payload.group].max) {
+            let updatedFilters = JSON.parse(JSON.stringify(currentFilters)); //TODO - Replace this with something better to copy object ?
+            updatedFilters[payload.group].min = payload.min;
+            updatedFilters[payload.group].max = payload.max;
+            return updatedFilters;
+        }
+    }
+
+    console.log('addToFilters - No updating filters');
+    return currentFIlters;
+
+    /*
     if (currentFilters[payload.group] === undefined) {currentFilters[payload.group] = [];}
     const currentIndex = currentFilters[payload.group].map((v) => {return v.name}).indexOf(payload.name);
     if (currentIndex === -1) {
@@ -14,9 +55,33 @@ const addToFilters = (payload, currentFilters) => {
     } else {
         return currentFilters;
     }
-}
+    */
+};
 //Remove the payload from current filters
 const removeFromFilters = (payload, currentFilters) => {
+    console.log(payload);
+    console.log(currentFilters);
+    if (currentFilters[payload.group].type === 'text' || currentFilters[payload.group].type === 'textCount') {
+        //Search for payload in 'in' array
+        const currentIndex = currentFilters[payload.group].in.indexOf(payload.name);
+        if (currentIndex !== -1) {
+            let updatedFilters = JSON.parse(JSON.stringify(currentFilters)); //TODO - Replace this with something better to copy object ?
+            updatedFilters[payload.group].in.splice(currentIndex, 1);
+
+            //If array is empty, entirely remove the filter
+            if (updatedFilters[payload.group].in.length === 0) {
+                delete updatedFilters[payload.group];
+            }
+            return updatedFilters;
+        }
+    } else if (currentFilters[payload.group].type === 'range') {
+        if (payload.min === null && payload.max === null) { // If either max or min are null, the entire filter is dropped
+            let updatedFilters = JSON.parse(JSON.stringify(currentFilters)); //TODO - Replace this with something better to copy object ?
+            delete updatedFilters[payload.group]
+        }
+    }
+    return currentFilters;
+    /*
     if (currentFilters[payload.group] === undefined) {return currentFilters;}
     const currentIndex = currentFilters[payload.group].map((v) => {return v.name}).indexOf(payload.name);
     if (currentIndex === -1) {
@@ -26,6 +91,7 @@ const removeFromFilters = (payload, currentFilters) => {
         updatedFilters[payload.group].splice(currentIndex, 1);
         return updatedFilters;
     }
+    */
 };
 
 
@@ -57,31 +123,83 @@ const buildMongoFilter = (filters) => {
     let mongoFilter = Object.keys(filters).map(idx => {
         console.log('Building filter for group: ' + idx);
         console.log('Values: ' + JSON.stringify(filters[idx]));
+
+        let currentQuery = {};
+        // If filter type if text
+        let currentFilter = filters[idx];
+        if (currentFilter.type === 'text' || currentFilter.type === 'textCount') {
+            //Only do something if there is content to be filtered on.
+            if (currentFilter.in.length > 0) {
+                let filteredValues = filters[idx].in;
+                //If the facet is of type textCount, convert all values to numbers.
+                if (currentFilter.type  === 'textCount') {filteredValues = currentFilter.in.map(v => parseInt(v));}
+
+                if (filters[idx].nested === false ) {
+                    currentQuery[idx] = { $in : filteredValues.filter(val => val !== currentFilter.nullName) }; // Filter out nullName value
+                    // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
+                    if (filteredValues.includes(currentFilter.nullName)) {
+                        if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
+                            return currentFilter.nullFilter;
+                        } else {
+                            return {$or :[currentFilter.nullFilter,currentQuery]}; // Wrapping the regular filters in an OR condition with the nullName value
+                        }
+                    }
+                } else {
+                    let subFilter = "node." + filters[idx].nested;
+                    currentQuery[idx + ".edges"] = {$elemMatch: {}};
+                    currentQuery[idx + ".edges"]["$elemMatch"][subFilter] = {};
+                    currentQuery[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filteredValues.filter(val => val !== currentFilter.nullName);
+                    // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
+                    if (filteredValues.includes(currentFilter.nullName)) {
+                        console.log('The array contains an empty value');
+                        if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
+                            return currentFilter.nullFilter;
+                        } else {
+                            // If it contains an empty value, it becomes necessary to add an "or" statement
+                            //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
+                            //let masterFilter = {$or :[currentFilter, filters[idx][0].nullFilter]};
+                            // masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
+                            return {$or :[currentQuery, currentFilter.nullFilter]};
+                        }
+                    }
+                }
+            }
+        } else if (currentFilter.type === 'range') {
+            let gte = {};
+            gte[idx] = {$gte:currentFilter.min};
+            let lte = {};
+            lte[idx] = {$lte:currentFilter.max};
+            currentQuery = {$and:[gte, lte]};
+        }
+        return currentQuery;
+
+
+        /*
         // Build an array of values;
-        let filteredValues = filters[idx].map(v => v.name);
+        let filteredValues = filters[idx].in.map(v => v.name);
 
         if (filteredValues.length > 0) { // Do not do anything if there are no values
             //If the facet is of type textCount, convert all values to numbers.
-            if (filters[idx][0].type  === 'textCount') {filteredValues = filters[idx].map(v => parseInt(v.name));}
+            if (filters[idx].type  === 'textCount') {filteredValues = filters[idx].map(v => parseInt(v.name));}
 
             console.log(filteredValues);
 
             //For text values
             let currentFilter = {};
-            if (filters[idx][0].type === 'range' ) {
+            if (filters[idx].type === 'range' ) {
                 let gte = {};
-                gte[idx] = {$gte:filters[idx][0].min};
+                gte[idx] = {$gte:filters[idx].min};
                 let lte = {};
-                lte[idx] = {$lte:filters[idx][0].max};
+                lte[idx] = {$lte:filters[idx].max};
                 currentFilter = {$and:[gte, lte]};
-            } else if (filters[idx][0].nested === false ) {
+            } else if (filters[idx].nested === false ) {
                 currentFilter[idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) }; // Filter out nullName value
                 // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
-                if (filteredValues.includes(filters[idx][0].nullName)) {
+                if (filteredValues.includes(filters[idx].nullName)) {
                     if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
-                        return filters[idx][0].nullFilter;
+                        return filters[idx].nullFilter;
                     } else {
-                        return {$or :[filters[idx][0].nullFilter,currentFilter]}; // Wrapping the regular filters in an OR condition with the nullName value
+                        return {$or :[filters[idx].nullFilter,currentFilter]}; // Wrapping the regular filters in an OR condition with the nullName value
                         //currentFilter["$or"][1][idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) };
                     }
                 }
@@ -91,28 +209,29 @@ const buildMongoFilter = (filters) => {
                 //window.issues.find({"assignees.edges":{$elemMatch:{"node.login":"USERLOGIN"}}}).fetch();
                 //mongoFilter[idx] = {$elemMatch:{$elemMatch:{"name": { $in : filterValues }}}};
                 //labels.totalCount
-                let subFilter = "node." + filters[idx][0].nested;
+                let subFilter = "node." + filters[idx].nested;
                 currentFilter[idx + ".edges"] = {$elemMatch: {}};
                 //currentFilter[idx + ".edges"]["$elemMatch"] = {};
                 currentFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
                 currentFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filteredValues.filter(val => val !== filters[idx][0].nullName);
                 // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
-                if (filteredValues.includes(filters[idx][0].nullName)) {
+                if (filteredValues.includes(filters[idx].nullName)) {
                     console.log('The array contains an empty value');
                     if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
-                        return filters[idx][0].nullFilter;
+                        return filters[idx].nullFilter;
                     } else {
                         // If it contains an empty value, it becomes necessary to add an "or" statement
                         //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
                         //let masterFilter = {$or :[currentFilter, filters[idx][0].nullFilter]};
                         // masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
-                        return {$or :[currentFilter, filters[idx][0].nullFilter]};
+                        return {$or :[currentFilter, filters[idx].nullFilter]};
                     }
 
                 }
             }
             return currentFilter;
         }
+        */
     });
 
     console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
@@ -186,10 +305,8 @@ const filterMongo = async (mongoFilter) => {
 const isFacetSelected = (facet, updatedFilters) => {
     if (updatedFilters[facet.group] === undefined) {
         return false;
-    } else if (updatedFilters[facet.group].length > 0) {
-        return true;
     } else {
-        return false
+        return true;
     }
 };
 
@@ -262,7 +379,7 @@ export default {
             {header: 'Organizations', group: 'org.name', type: 'text', nested: false, data: [] },
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
-            {header: 'Labels', group: 'labels', type: 'textNull', nested: 'name', nullName: 'NO LABEL', nullFilter: {'labels.totalCount': { $eq : 0 }},data: []},
+            {header: 'Labels', group: 'labels', type: 'text', nested: 'name', nullName: 'NO LABEL', nullFilter: {'labels.totalCount': { $eq : 0 }},data: []},
             {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, data: [] },
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE', nullFilter: {'milestone': { $eq : null }},data: []} ,
             {header: 'Milestones States', group: 'milestone.state', type: 'text', nested: false, data: [] },
@@ -280,7 +397,7 @@ export default {
         clearFilters(state) {return {...state, filters: {}};},
         clearResults(state) {return { ...state, results: []};},
         addFilter(state, payload) {
-            return {...state, filters: addToFilters(payload, state.filters)}
+            return {...state, filters: addToFilters(payload, state.filters, state.facets)}
         },
         removeFilter(state, payload) {
             return {...state, filters: removeFromFilters(payload, state.filters)}
@@ -302,7 +419,7 @@ export default {
         //Add a filter, then refresh the data points
         async addFilterRefresh(payload, rootState) {
             //Get the list of updated filters, and push received filter payload to state
-            let updatedFilters = addToFilters(payload, rootState.data.filters);
+            let updatedFilters = addToFilters(payload, rootState.data.filters, rootState.data.facets);
             this.addFilter(payload);
 
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.

@@ -23,27 +23,49 @@ class QueryFacets extends Component {
         this.state = {};
     }
 
-    handleDelete = data => () => {
+    handleDelete = (data, group) => () => {
         const { removeFilterRefresh } = this.props;
-        removeFilterRefresh(data);
+        console.log(data);
+        removeFilterRefresh({group: group, name: data});
     }
 
     render() {
         const { classes, queryContent, queryValues } = this.props;
-        return (
-            <div className={classes.root}>
-                {queryContent.map(data => {
+        console.log(queryContent);
+
+        if (queryContent.type === 'text' || queryContent.type === 'textCount') {
+            return (
+                <div className={classes.root}>
+                    {queryContent.in.map(data => {
                         return (
                             <Chip
-                                key={data.name}
-                                label={data.name}
-                                onDelete={this.handleDelete(data)}
+                                key={data}
+                                label={data}
+                                onDelete={this.handleDelete(data, queryContent.group)}
                                 className={classes.chip}
                             />
                         );
-                })}
-            </div>
-        );
+                    })}
+                </div>
+            );
+        } else if (queryContent.type === 'range') {
+            return (
+                <div className={classes.root}>
+                    <Chip
+                        key={queryContent.min}
+                        label={'Min: ' + queryContent.min}
+                        className={classes.chip}
+                    />
+                    <Chip
+                        key={queryContent.max}
+                        label={'Max: ' + queryContent.max}
+                        className={classes.chip}
+                    />
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 }
 

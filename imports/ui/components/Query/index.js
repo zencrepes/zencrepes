@@ -31,6 +31,7 @@ class Query extends Component {
     }
     render() {
         const { classes, queryValues, mongoFilters } = this.props;
+        console.log(queryValues);
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>

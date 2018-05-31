@@ -39,13 +39,13 @@ class TermFacet extends Component {
     };
 
     render() {
-        const { classes, facet, queryValues } = this.props;
+        const { classes, facet, currentFilters } = this.props;
         const {header, data, group } = facet;
         const { collapsed } = this.state;
 
-        let valueChecked = [];
-        if (queryValues[group] !== undefined) {
-            valueChecked = queryValues[group];
+        let valueChecked = {in:[]};
+        if (currentFilters[group] !== undefined) {
+            valueChecked = currentFilters[group];
         }
 
         let facetsData = data;
@@ -61,7 +61,7 @@ class TermFacet extends Component {
                         <FacetSelector
                             data={value}
                             key={value.name}
-                            selected={valueChecked.map((v) => {return v.name}).indexOf(value.name) !== -1}
+                            selected={valueChecked.in.map((v) => {return v}).indexOf(value.name) !== -1}
                         />
                     ))}
                 </List>
@@ -81,7 +81,7 @@ const mapDispatch = dispatch => ({
 });
 
 const mapState = state => ({
-    queryValues: state.data.filters,
+    currentFilters: state.data.filters,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(TermFacet));
