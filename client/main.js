@@ -20,6 +20,8 @@ const store = init({
     models
 });
 
+window.store = store;
+
 Meteor.startup(() => {
     // TODO - This definitely need to be replaced by a better logic
     // Used to give enough time for minimongo to refresh from local storage before proceeding with app load

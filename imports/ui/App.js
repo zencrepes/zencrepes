@@ -24,6 +24,8 @@ import { cfgSources, localCfgSources } from './data/Repositories.js';
 
 import Issues from './data/Issues.js';
 import Repos from './data/Repos.js';
+import QueryManager from './components/QueryManager/index.js';
+import SaveQuery from './components/SaveQuery/index.js';
 
 class App extends Component {
     constructor(props) {
@@ -44,6 +46,8 @@ class App extends Component {
                 <div>
                     <Issues />
                     <Repos />
+                    <QueryManager />
+                    <SaveQuery />
                     <Router>
                         {!props.loading ? (
                             <div className="App">

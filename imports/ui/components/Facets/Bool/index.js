@@ -30,26 +30,11 @@ class BoolFacet extends Component {
     updateBool = value => {
         console.log('updateBool');
         const { facet, addFilterRefresh } = this.props;
-        if (value.count > 0) {
+        if (value.count > 0 || value.bool === null) {
             addFilterRefresh({group: facet.group, bool: value.bool});
         }
     };
-
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log(nextProps);
-//        if (nextProps.facet.data.length === 0){
-//            return false;
-//        }
-        if (!_.isEqual(this.getYes(this.props.tableSelection, this.props.currentFilters, this.props.facet), this.getYes(nextProps.tableSelection, nextProps.currentFilters, nextProps.facet))) {
-            return true;
-        } else if (!_.isEqual(this.getNo(this.props.currentResults, this.props.tableSelection, this.props.currentFilters, this.props.facet), this.getNo(nextProps.currentResults, nextProps.tableSelection, nextProps.currentFilters, nextProps.facet))) {
-            return true;
-        } else if (!_.isEqual(this.getAny(this.props.currentResults, this.props.currentFilters, this.props.facet), this.getAny(nextProps.currentResults, nextProps.currentFilters, nextProps.facet))) {
-            return true;
-        }
-        else {return false;}
-    }
-
+    
     getCount = (facet, name) => {
         let value = _.find(facet.data, {'name': name});
         console.log(value);
@@ -57,7 +42,7 @@ class BoolFacet extends Component {
         return value.count;
     };
 
-    getYes = ( tableSelection, currentFilters, facet) => {
+    getYes = (currentFilters, facet) => {
         console.log(facet);
         let value = {
             color: 'primary',
@@ -72,7 +57,7 @@ class BoolFacet extends Component {
         return value;
     };
 
-    getNo = (currentResults, tableSelection, currentFilters, facet) => {
+    getNo = (currentFilters, facet) => {
         console.log(facet);
         let value = {
             color: 'primary',
@@ -87,28 +72,25 @@ class BoolFacet extends Component {
         return value;
     };
 
-    getAny = (currentResults, currentFilters, facet) => {
+    getAny = (currentFilters, facet) => {
         console.log(facet);
-        let count = this.getCount(facet, "true") + this.getCount(facet, "false");
-        if (count === 0) {count = currentResults.length;}
         let value = {
             color: 'primary',
             bool: null,
-            count: count,
         };
         // If nothing is selected, any becomes the default:
         if (currentFilters[facet.group] === undefined) {value.variant = 'raised'; value.color = 'secondary';}
         else {value.variant = null;}
-        value.text = 'ANY (' + value.count + ')';
+        value.text = 'ANY';
         return value;
     };
 
     render() {
-        const { classes, facet, currentResults, tableSelection, currentFilters } = this.props;
+        const { classes, facet, currentFilters } = this.props;
         // Since it's just 3 values, doing manual implementation
-        yesContent = this.getYes(tableSelection, currentFilters, facet);
-        noContent = this.getNo(currentResults, tableSelection, currentFilters, facet);
-        anyContent = this.getAny(currentResults, currentFilters, facet);
+        yesContent = this.getYes(currentFilters, facet);
+        noContent = this.getNo(currentFilters, facet);
+        anyContent = this.getAny(currentFilters, facet);
         return (
             <div className={classes.root}>
                 <FacetTitle title={facet.header} />
@@ -130,8 +112,6 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     currentFilters: state.data.filters,
-    currentResults: state.data.results,
-    tableSelection: state.data.tableSelection,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(BoolFacet));

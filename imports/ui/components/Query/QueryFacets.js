@@ -21,13 +21,18 @@ class QueryFacets extends Component {
     constructor (props) {
         super(props);
         this.state = {};
-    }
+    };
 
     handleDelete = (data, group) => () => {
         const { removeFilterRefresh } = this.props;
         console.log(data);
         removeFilterRefresh({group: group, name: data});
-    }
+    };
+
+    clearBool = (group) => {
+        const { addFilterRefresh } = this.props;
+        addFilterRefresh({group: group, bool: null});
+    };
 
     render() {
         const { classes, queryContent, queryValues } = this.props;
@@ -63,6 +68,19 @@ class QueryFacets extends Component {
                     />
                 </div>
             );
+        } else if (queryContent.type === 'bool') {
+            let label = 'YES';
+            if (queryContent.bool === false) {label = 'NO';}
+            return (
+                <div className={classes.root}>
+                    <Chip
+                        key={queryContent.bool}
+                        label={label}
+                        //onDelete={this.clearBool(queryContent.group)}
+                        className={classes.chip}
+                    />
+                </div>
+            );
         } else {
             return null;
         }
@@ -75,6 +93,7 @@ QueryFacets.propTypes = {
 
 const mapDispatch = dispatch => ({
     removeFilterRefresh: dispatch.data.removeFilterRefresh,
+    addFilterRefresh: dispatch.data.addFilterRefresh,
 });
 
 const mapState = state => ({

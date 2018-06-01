@@ -452,7 +452,7 @@ export default {
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 let facetMongoFilter = mongoFilter;
-                if (isFacetSelected(facet, updatedFilters) === true) {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
+                if (isFacetSelected(facet, updatedFilters) === true && facet.type !== 'bool') {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
                 return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);
@@ -481,7 +481,7 @@ export default {
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 let facetMongoFilter = mongoFilter;
-                if (isFacetSelected(facet, updatedFilters) === true) {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
+                if (isFacetSelected(facet, updatedFilters) === true && facet.type !== 'bool') {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
                 return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);

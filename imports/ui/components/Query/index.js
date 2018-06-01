@@ -6,6 +6,8 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
 
+import Button from '@material-ui/core/Button';
+
 import { connect } from "react-redux";
 
 import QueryFacets from './QueryFacets.js';
@@ -29,6 +31,17 @@ class Query extends Component {
         super(props);
         this.state = {};
     }
+
+    openQueryManager = () => {
+        const { setOpenQueryManager } = this.props;
+        setOpenQueryManager(true);
+    };
+
+    openSaveQuery = () => {
+        const { setOpenSaveQuery } = this.props;
+        setOpenSaveQuery(true);
+    };
+
     render() {
         const { classes, queryValues, mongoFilters } = this.props;
         console.log(queryValues);
@@ -45,6 +58,13 @@ class Query extends Component {
                         })}
                         <br />Filter Object: <i>{JSON.stringify(queryValues)}</i>
                         <br />Mongo Filter: <i>{JSON.stringify(mongoFilters)}</i>
+                        <br />
+                        <Button onClick={this.openSaveQuery} color="primary" autoFocus>
+                            Save Query
+                        </Button>
+                        <Button onClick={this.openQueryManager} color="primary" autoFocus>
+                            Open Query Manager
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
@@ -63,4 +83,9 @@ const mapState = state => ({
     mongoFilters: state.data.mongoFilters,
 });
 
-export default connect(mapState, null)(withStyles(styles)(Query));
+const mapDispatch = dispatch => ({
+    setOpenQueryManager: dispatch.queries.setOpenQueryManager,
+    setOpenSaveQuery: dispatch.queries.setOpenSaveQuery,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(Query));

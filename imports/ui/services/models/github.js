@@ -104,9 +104,6 @@ export default {
         },
     },
     effects: {
-        //Add a filter, then refresh the data points
-        abc() {
-            return 'abc';
-        }
+
     }
 };
