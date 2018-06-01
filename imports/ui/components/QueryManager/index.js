@@ -10,6 +10,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
+import QueriesTable from './QueriesTable.js';
+
 const styles = theme => ({
     root: {
     }
@@ -34,7 +36,7 @@ class QueryManager extends Component {
                 <Dialog aria-labelledby="simple-dialog-title" open={openQueryManager}>
                     <DialogTitle id="simple-dialog-title">Query Manager</DialogTitle>
                     <DialogContent>
-                        <h1>Some Content</h1>
+                        <QueriesTable />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.close} color="primary" autoFocus>

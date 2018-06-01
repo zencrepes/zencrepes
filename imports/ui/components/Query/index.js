@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import { connect } from "react-redux";
 
 import QueryFacets from './QueryFacets.js';
+import QuerySaved from './QuerySaved.js';
 
 const styles = theme => ({
     root: {
@@ -65,6 +66,7 @@ class Query extends Component {
                         <Button onClick={this.openQueryManager} color="primary" autoFocus>
                             Open Query Manager
                         </Button>
+                        <QuerySaved />
                     </CardContent>
                 </Card>
             </div>

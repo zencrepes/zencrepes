@@ -26,7 +26,9 @@ class SaveQuery extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            queryName: '',
+            queryNameValue: '',
+            queryNameError: false,
+            queryNameHelperText: 'Pick a name for your query',
         };
     }
 
@@ -37,21 +39,52 @@ class SaveQuery extends Component {
 
     save = () => {
         const { setOpenSaveQuery, filters, mongoFilters } = this.props;
-        const { queryName } = this.state;
+        const { queryNameValue } = this.state;
 
         // Search within minmongo for a query with the same name
-        console.log(queryName);
-        //setOpenSaveQuery(false);
+        //console.log(queryName);
+        if (!this.doesQueryNameExists(event.target.value)) {
+            const queryId = cfgQueries.insert({
+                name: queryNameValue,
+                mongo: JSON.stringify(mongoFilters),
+                filters: JSON.stringify(filters),
+            });
+
+            console.log('Query ID: ' + queryId);
+            setOpenSaveQuery(false);
+        }
     };
 
-    handleChange = name => event => {
-        this.setState({
-            [name]: event.target.value,
-        });
+    doesQueryNameExists = (name) => {
+        if (cfgQueries.find({'name': {$eq: name}}).count() > 0) {
+            console.log('changeQueryName - This query name already exists');
+            return true;
+        } else {
+            console.log('changeQueryName - This query name does not exists');
+            return false;
+        }
+    };
+
+    changeQueryName = name => event => {
+        console.log('changeQueryName');
+        //Search for existing query name
+        if (this.doesQueryNameExists(event.target.value)) {
+            this.setState({
+                ['queryNameError']: true,
+                ['queryNameHelperText']: 'A query with this name already exists',
+            });
+        } else {
+            this.setState({
+                ['queryNameError']: false,
+                ['queryNameHelperText']: 'Pick a name for your query',
+                ['queryNameValue']: event.target.value,
+            });
+        }
     };
 
     render() {
         const { classes, openSaveQuery } = this.props;
+        const { queryNameError, queryNameHelperText } = this.state;
         console.log('QueryManager - render()');
         if (openSaveQuery) {
             return (
@@ -61,14 +94,15 @@ class SaveQuery extends Component {
                         <TextField
                             id="full-width"
                             label="Query Name"
+                            error={queryNameError}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             className={classes.textField}
-                            helperText="Pick name for your query"
+                            helperText={queryNameHelperText}
                             fullWidth
                             margin="normal"
-                            onChange={this.handleChange('queryName')}
+                            onChange={this.changeQueryName()}
                         />
                     </DialogContent>
                     <DialogActions>
