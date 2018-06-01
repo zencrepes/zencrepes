@@ -45,15 +45,7 @@ class Search extends Component {
 
     componentDidMount() {
         console.log('Search: componentDidMount');
-//        const { loadIssues, setLoadIssues } = this.props;
-//        console.log(this.props);
         this.loadIssues();
-        /*
-        if (loadIssues === true || cfgIssues.find({}).count() === 0) {
-            setLoadIssues(false);
-            const issues = new Issues(this.props);
-            issues.load();
-        }*/
     }
 
     loadIssues() {

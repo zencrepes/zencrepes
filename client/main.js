@@ -14,6 +14,7 @@ import App from '../imports/ui/App.js';
 
 import { localCfgIssues } from '../imports/ui/data/Issues.js';
 import { localCfgSources } from '../imports/ui/data/Repositories.js';
+import { localCfgQueries } from '../imports/ui/data/Queries.js';
 
 // generate Redux store
 const store = init({
@@ -27,6 +28,7 @@ Meteor.startup(() => {
     // Used to give enough time for minimongo to refresh from local storage before proceeding with app load
     localCfgSources.refresh();
     localCfgIssues.refresh();
+    localCfgQueries.refresh();
     Meteor.setTimeout(() => {
         render(
             <Provider store={store}>

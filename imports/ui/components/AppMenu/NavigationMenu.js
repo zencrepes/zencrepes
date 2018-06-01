@@ -2,7 +2,7 @@ import React from 'react';
 import Button from 'material-ui/Button';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import MenuIcon from 'material-ui-icons/Menu';
-import { Settings, TableLarge, ChartLine } from 'mdi-material-ui';
+import { Settings, TableLarge, ChartLine, ViewDashboard } from 'mdi-material-ui';
 import { ListItemIcon, ListItemText } from 'material-ui/List';
 import {withStyles} from "material-ui/styles/index";
 import PropTypes from "prop-types";
@@ -54,6 +54,14 @@ class NavigationMenu extends React.Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
+                    <Link to="/dashboard">
+                        <MenuItem className={classes.menuItem} onClick={this.handleClose}>
+                            <ListItemIcon className={classes.icon}>
+                                <ViewDashboard />
+                            </ListItemIcon>
+                            <ListItemText classes={{ primary: classes.primary }} inset primary="Dashboard" />
+                        </MenuItem>
+                    </Link>
                     <Link to="/search">
                         <MenuItem className={classes.menuItem} onClick={this.handleClose}>
                             <ListItemIcon className={classes.icon}>
