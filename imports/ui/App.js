@@ -24,6 +24,8 @@ import { cfgSources, localCfgSources } from './data/Repositories.js';
 
 import Issues from './data/Issues.js';
 import Repos from './data/Repos.js';
+import VelocityData from './data/VelocityData.js';
+import RepartitionData from './data/RepartitionData.js';
 import QueryManager from './components/QueryManager/index.js';
 import SaveQuery from './components/SaveQuery/index.js';
 
@@ -46,6 +48,8 @@ class App extends Component {
                 <div>
                     <Issues />
                     <Repos />
+                    <VelocityData />
+                    <RepartitionData />
                     <QueryManager />
                     <SaveQuery />
                     <Router>

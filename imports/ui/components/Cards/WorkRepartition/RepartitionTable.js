@@ -26,7 +26,7 @@ const styles = theme => ({
 });
 
 
-class VelocityChart extends Component {
+class RepartitionTable extends Component {
     constructor(props) {
         super(props);
 
@@ -34,20 +34,20 @@ class VelocityChart extends Component {
     }
 
     render() {
-        const { classes, queriesList } = this.props;
+        const { classes, repartition } = this.props;
         const { columns, pageSize, pageSizes, currentPage, editingStateColumnExtensions } = this.state;
 
 
 
         return (
             <div className={classes.root}>
-                <h3>Velocity Chart </h3>
+                {JSON.stringify(repartition)}
             </div>
         );
     }
 }
 
-VelocityChart.propTypes = {
+RepartitionTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -57,6 +57,7 @@ const mapDispatch = dispatch => ({
 
 
 const mapState = state => ({
+    repartition: state.repartition.repartition,
 
 });
 
@@ -66,7 +67,7 @@ export default
     (
         withTracker(() => {return {queriesList: cfgQueries.find({}).fetch()}})
         (
-            withStyles(styles)(VelocityChart)
+            withStyles(styles)(RepartitionTable)
         )
     );
 

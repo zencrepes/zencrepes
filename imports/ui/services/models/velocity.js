@@ -14,6 +14,9 @@ const getWeekYear = (dateObj) => {
 };
 
 const getFirstDay = (mongoFilter) => {
+    console.log(mongoFilter);
+    console.log(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }));
+
     let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
     firstDay.setDate(firstDay.getDate() - 1);
     return firstDay
@@ -104,7 +107,7 @@ const populateTicketsPerDay = (days) => {
     return ticketsPerDay;
 };
 
-const populateTicketsPerWeek = (weeks, issues) => {
+const populateTicketsPerWeek = (weeks, issues, mongoFilter) => {
 //    console.log('populateTicketsPerWeek');
     let completionVelocities = [];
     let ticketsPerWeek = Object.values(weeks);
@@ -120,8 +123,17 @@ const populateTicketsPerWeek = (weeks, issues) => {
         }
         if (idx == ticketsPerWeek.length-1) {
             //This is the last date of the sprint, calculate velocity on various timeframes
+            let mongoState = null;
+
+            if (mongoFilter['state'] !== undefined) {let mongoState = mongoFilter['state']; delete mongoFilter['state'];}
+            mongoFilter['state'] = 'CLOSED';
             let totalClosedIssues = issues.find({state:'CLOSED'}).count();
+            mongoFilter['state'] = 'OPEN';
             let totalOpenIssues = issues.find({state:'OPEN'}).count();
+            mongoFilter['state'] = 'OPEN';
+            delete mongoFilter['state'];
+            if (mongoState !== null) {mongoFilter['state'] = mongoState;};
+
 
             let currentCompletion = { // All Time
                 'range': 'all',
@@ -170,39 +182,45 @@ const populateTicketsPerWeek = (weeks, issues) => {
 
 export default {
     state: {
+        loadFlag: false,
         loading: false,
         firstDay: null,
         lastDay: null,
         ticketsPerDay: [],
         ticketsPerWeek: [],
         velocity: [],
+        mongoFilter: {},
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
+        setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
         setFirstDay(state, payload) {return { ...state, firstDay: payload };},
         setLastDay(state, payload) {return { ...state, lastDay: payload };},
         setTicketsPerDay(state, payload) {return { ...state, ticketsPerDay: payload };},
         setTicketsPerWeek(state, payload) {return { ...state, ticketsPerWeek: payload };},
         setVelocity(state, payload) {return { ...state, velocity: payload };},
+        setMongoFilter(state, payload) {return { ...state, mongoFilter: payload };},
     },
     effects: {
         async initStates(payload, rootState) {
             console.log('Init state');
+            console.log('Velocity Mongo Filter: ' + rootState.velocity.mongoFilter);
+            console.log(cfgIssues.find(rootState.velocity.mongoFilter).fetch());
             this.setLoading(true);
-            let firstDay = getFirstDay({});
+            let firstDay = getFirstDay(rootState.velocity.mongoFilter);
             this.setFirstDay(firstDay);
-            let lastDay = getLastDay({});
+            let lastDay = getLastDay(rootState.velocity.mongoFilter);
             this.setLastDay(lastDay);
 
             console.log("First Day: " + firstDay.toDateString() + " - Last Day: " + lastDay.toDateString());
 
             let {emptyDays, emptyWeeks} = initArrays(firstDay, lastDay); // Build an array of all days and weeks between two dates
-            let {countDays, countWeeks} = populateArrays(emptyDays, emptyWeeks, cfgIssues.find({}).fetch()); // Populate the array with count of days and weeks
+            let {countDays, countWeeks} = populateArrays(emptyDays, emptyWeeks, cfgIssues.find(rootState.velocity.mongoFilter).fetch()); // Populate the array with count of days and weeks
 
             let ticketsPerDay = populateTicketsPerDay(countDays);
             this.setTicketsPerDay(Object.values(ticketsPerDay));
 
-            let {ticketsPerWeek, completionVelocities} = populateTicketsPerWeek(countWeeks, cfgIssues);
+            let {ticketsPerWeek, completionVelocities} = populateTicketsPerWeek(countWeeks, cfgIssues, rootState.velocity.mongoFilter);
             this.setTicketsPerWeek(Object.values(ticketsPerWeek));
             this.setVelocity(Object.values(completionVelocities));
 

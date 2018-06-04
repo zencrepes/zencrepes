@@ -17,7 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Refresh } from 'mdi-material-ui';
 
 
-import VelocityTable from './VelocityTable.js';
+import RepartitionTable from './RepartitionTable.js';
 import QueryPicker from './QueryPicker.js';
 import TextField from '@material-ui/core/TextField';
 
@@ -53,7 +53,7 @@ const styles = theme => ({
     },
 });
 
-class EstimateCompletion extends Component {
+class WorkRepartition extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -61,24 +61,9 @@ class EstimateCompletion extends Component {
         };
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(this.props.velocity);
-        if (this.props.velocity.length === 0) {
-            console.log('componentDidUpdate - Velocity table empty');
-        }
-    }
-
-    componentDidMount() {
-        console.log(this.props.velocity);
-        if (this.props.velocity.length === 0) {
-            console.log('componentDidMount - Velocity table empty');
-            this.props.setLoadFlag(true);
-        }
-    }
-
     render() {
         const { classes } = this.props;
-        console.log('EstimateCompletion - render()');
+        console.log('WeeklyVelocity - render()');
         return (
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader}
@@ -87,11 +72,11 @@ class EstimateCompletion extends Component {
                             <Refresh />
                         </IconButton>
                     }
-                    title="Days to completion"
+                    title="Repartition by Assignee"
                 />
                 <CardContent className={classes.cardContent}>
                     <QueryPicker />
-                    <VelocityTable />
+                    <RepartitionTable />
                 </CardContent>
             </Card>
         );
@@ -99,19 +84,16 @@ class EstimateCompletion extends Component {
     };
 }
 
-EstimateCompletion.propTypes = {
+WorkRepartition.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    loading: state.velocity.loading,
-    velocity: state.velocity.velocity,
 
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.velocity.setLoadFlag,
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(EstimateCompletion));
+export default connect(mapState, mapDispatch)(withStyles(styles)(WorkRepartition));

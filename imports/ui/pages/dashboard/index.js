@@ -7,6 +7,9 @@ import { connect } from "react-redux";
 import AppMenu from '../../components/AppMenu/index.js';
 import EstimateCompletion from '../../components/Cards/EstimateCompletion/index.js';
 import WeeklyVelocity from '../../components/Cards/WeeklyVelocity/index.js';
+import WorkRepartition from '../../components/Cards/WorkRepartition/index.js';
+
+
 
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -53,7 +56,10 @@ class Dashboard extends Component {
                         <GridListTile cols={2} rows={2}>
                             <EstimateCompletion />
                         </GridListTile>
-                        <GridListTile cols={3} rows={1}>
+                        <GridListTile cols={3} rows={2}>
+                            <WorkRepartition />
+                        </GridListTile>
+                        <GridListTile cols={3} rows={2}>
                             <WeeklyVelocity />
                         </GridListTile>
                     </GridList>

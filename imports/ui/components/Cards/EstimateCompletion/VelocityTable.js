@@ -49,7 +49,7 @@ class VelocityTable extends Component {
     }
 
     render() {
-        const { classes, queriesList } = this.props;
+        const { classes, velocityData } = this.props;
         const { columns, pageSize, pageSizes, currentPage, editingStateColumnExtensions } = this.state;
 
         /*
@@ -66,17 +66,17 @@ class VelocityTable extends Component {
                     <TableHead>
                         <TableRow className={classes.row}>
                             <TableCell>Period</TableCell>
-                            <TableCell numeric>Daily Velocity</TableCell>
+                            <TableCell numeric>Weekly Velocity</TableCell>
                             <TableCell numeric>Days to Completion</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map(n => {
+                        {velocityData.map(n => {
                             return (
-                                <TableRow key={n.id} className={classes.row}>
-                                    <TableCell component="th" scope="row">{n.period}</TableCell>
-                                    <TableCell numeric>{n.daily}</TableCell>
-                                    <TableCell numeric>{n.days}</TableCell>
+                                <TableRow key={n.range} className={classes.row}>
+                                    <TableCell component="th" scope="row">{n.range}</TableCell>
+                                    <TableCell numeric>{Math.round(n.velocityClosedCount, 1)}</TableCell>
+                                    <TableCell numeric>{Math.round(n.effortCountDays, 1)}</TableCell>
                                 </TableRow>
                             );
                         })}
@@ -97,6 +97,7 @@ const mapDispatch = dispatch => ({
 
 
 const mapState = state => ({
+    velocityData: state.velocity.velocity,
 
 });
 
