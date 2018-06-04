@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 
 import AppMenu from '../../components/AppMenu/index.js';
 import EstimateCompletion from '../../components/Cards/EstimateCompletion/index.js';
+import WeeklyVelocity from '../../components/Cards/WeeklyVelocity/index.js';
 
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -24,13 +25,12 @@ const styles = theme => ({
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
         paddingTop: 80,
         minWidth: 0, // So the Typography noWrap works
     },
     gridList: {
-        width: 500,
-        height: 450,
+        width: '100%',
+        //height: 450,
     },
     subheader: {
         width: '100%',
@@ -49,9 +49,12 @@ class Dashboard extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
-                    <GridList className={classes.gridList}>
-                        <GridListTile cols={2}>
+                    <GridList className={classes.gridList} cols={5}>
+                        <GridListTile cols={2} rows={2}>
                             <EstimateCompletion />
+                        </GridListTile>
+                        <GridListTile cols={3} rows={1}>
+                            <WeeklyVelocity />
                         </GridListTile>
                     </GridList>
                 </main>

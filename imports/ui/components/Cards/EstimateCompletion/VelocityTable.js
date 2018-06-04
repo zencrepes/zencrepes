@@ -18,26 +18,27 @@ import { cfgQueries } from '../../../data/Queries.js';
 const styles = theme => ({
     root: {
         width: '100%',
-        marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
     },
     table: {
-        minWidth: 700,
+        //width: 700,
+    },
+    row: {
+        height: 24,
     },
 });
 
 let id = 0;
-function createData(name, calories, fat, carbs, protein) {
+function createData(period, daily, days) {
     id += 1;
-    return { id, name, calories, fat, carbs, protein };
+    return { id, period, daily, days };
 }
 
 const data = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
+    createData('All time', 4.9, 100),
+    createData('4 weeks', 20.2, 24),
+    createData('8 weeks', 24.6, 20),
+    createData('12 weeks', 31, 16),
 ];
 
 class VelocityTable extends Component {
@@ -63,7 +64,7 @@ class VelocityTable extends Component {
             <div className={classes.root}>
                 <Table className={classes.table}>
                     <TableHead>
-                        <TableRow>
+                        <TableRow className={classes.row}>
                             <TableCell>Period</TableCell>
                             <TableCell numeric>Daily Velocity</TableCell>
                             <TableCell numeric>Days to Completion</TableCell>
@@ -72,14 +73,10 @@ class VelocityTable extends Component {
                     <TableBody>
                         {data.map(n => {
                             return (
-                                <TableRow key={n.id}>
-                                    <TableCell component="th" scope="row">
-                                        {n.name}
-                                    </TableCell>
-                                    <TableCell numeric>{n.calories}</TableCell>
-                                    <TableCell numeric>{n.fat}</TableCell>
-                                    <TableCell numeric>{n.carbs}</TableCell>
-                                    <TableCell numeric>{n.protein}</TableCell>
+                                <TableRow key={n.id} className={classes.row}>
+                                    <TableCell component="th" scope="row">{n.period}</TableCell>
+                                    <TableCell numeric>{n.daily}</TableCell>
+                                    <TableCell numeric>{n.days}</TableCell>
                                 </TableRow>
                             );
                         })}

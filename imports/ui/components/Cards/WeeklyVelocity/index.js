@@ -17,7 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Refresh } from 'mdi-material-ui';
 
 
-import VelocityTable from './VelocityTable.js';
+import VelocityChart from './VelocityChart.js';
 import TextField from '@material-ui/core/TextField';
 
 import { cfgQueries } from '../../../data/Queries.js';
@@ -25,14 +25,6 @@ import { cfgQueries } from '../../../data/Queries.js';
 const styles = theme => ({
     card: {
         maxWidth: 400,
-    },
-    cardHeader: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-    cardContent: {
-        paddingTop: 0,
-        paddingBottom: 0,
     },
     actions: {
         display: 'flex',
@@ -52,7 +44,7 @@ const styles = theme => ({
     },
 });
 
-class EstimateCompletion extends Component {
+class WeeklyVelocity extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -62,19 +54,19 @@ class EstimateCompletion extends Component {
 
     render() {
         const { classes } = this.props;
-        console.log('EstimateCompletion - render()');
+        console.log('WeeklyVelocity - render()');
         return (
             <Card className={classes.card}>
-                <CardHeader className={classes.cardHeader}
+                <CardHeader
                     action={
                         <IconButton>
                             <Refresh />
                         </IconButton>
                     }
-                    title="Days to completion"
+                    title="Weekly Velocity"
                 />
-                <CardContent className={classes.cardContent}>
-                    <VelocityTable />
+                <CardContent>
+                    <VelocityChart />
                 </CardContent>
             </Card>
         );
@@ -82,7 +74,7 @@ class EstimateCompletion extends Component {
     };
 }
 
-EstimateCompletion.propTypes = {
+WeeklyVelocity.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -94,4 +86,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(EstimateCompletion));
+export default connect(mapState, mapDispatch)(withStyles(styles)(WeeklyVelocity));
