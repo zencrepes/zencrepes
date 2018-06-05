@@ -14,9 +14,6 @@ const getWeekYear = (dateObj) => {
 };
 
 const getFirstDay = (mongoFilter) => {
-    console.log(mongoFilter);
-    console.log(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }));
-
     let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
     firstDay.setDate(firstDay.getDate() - 1);
     return firstDay
@@ -97,7 +94,7 @@ const populateTicketsPerDay = (days) => {
         if (idx <=20) {startIdx = 0;}
         else {startIdx = idx - 20;}
         if (idx !== 0) {
-            let currentWindowIssues = ticketsPerDay.slice(startIdx, idx); // This limited the window or velocity calculation to 20 days (4 weeks).
+            let currentWindowIssues = ticketsPerDay.slice(startIdx, idx); // This limits the window or velocity calculation to 20 days (4 weeks).
             ticketsPerDay[idx]['velocityCreatedCount'] = calculateAverageVelocity(currentWindowIssues, "createdCount");
             ticketsPerDay[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
             ticketsPerDay[idx]['velocityCreatedPoints'] = calculateAverageVelocity(currentWindowIssues, "createdPoints");
@@ -214,8 +211,8 @@ export default {
 
             console.log("First Day: " + firstDay.toDateString() + " - Last Day: " + lastDay.toDateString());
 
-            let {emptyDays, emptyWeeks} = initArrays(firstDay, lastDay); // Build an array of all days and weeks between two dates
-            let {countDays, countWeeks} = populateArrays(emptyDays, emptyWeeks, cfgIssues.find(rootState.velocity.mongoFilter).fetch()); // Populate the array with count of days and weeks
+            let {emptyDays, emptyWeeks} = initArrays(firstDay, lastDay); // Build an object of all days and weeks between two dates
+            let {countDays, countWeeks} = populateArrays(emptyDays, emptyWeeks, cfgIssues.find(rootState.velocity.mongoFilter).fetch()); // Populate the object with count of days and weeks
 
             let ticketsPerDay = populateTicketsPerDay(countDays);
             this.setTicketsPerDay(Object.values(ticketsPerDay));

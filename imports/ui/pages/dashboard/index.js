@@ -52,11 +52,11 @@ class Dashboard extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
-                    <GridList className={classes.gridList} cols={5}>
+                    <GridList className={classes.gridList} cols={6}>
                         <GridListTile cols={2} rows={2}>
                             <EstimateCompletion />
                         </GridListTile>
-                        <GridListTile cols={3} rows={2}>
+                        <GridListTile cols={4} rows={2}>
                             <WorkRepartition />
                         </GridListTile>
                         <GridListTile cols={3} rows={2}>

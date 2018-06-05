@@ -8,7 +8,9 @@ import { connect } from "react-redux";
 import { GithubCircle } from 'mdi-material-ui'
 import { Link } from 'react-router-dom';
 
-//import { ResponsiveLine } from '@nivo/line'
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid/dist/styles/ag-grid.css';
+import 'ag-grid/dist/styles/ag-theme-balham.css';
 
 import { cfgQueries } from '../../../data/Queries.js';
 
@@ -25,25 +27,66 @@ const styles = theme => ({
     },
 });
 
+const velocityDailyFormatter = (params) => {
+    console.log(params);
+    if (params.value === undefined) {
+        return '-';
+    } else {
+        var value = params.value.find(function(element) {
+            return element.range === '8w';
+        });
+        return Math.round(value['velocityClosedCount'], 1);
+    }
+}
+
+const velocityRemainingFormatter = (params) => {
+    console.log(params);
+    if (params.value === undefined) {
+        return '-';
+    } else {
+        var value = params.value.find(function(element) {
+            return element.range === '8w';
+        });
+        return value['effortCountDays'];
+    }
+}
 
 class RepartitionTable extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            columnDefs: [
+                {headerName: "Assignee", field: "login"},
+                {headerName: "Open Issues", field: "count"},
+                {headerName: "Per Day", field: "velocity", valueFormatter: velocityDailyFormatter},
+                {headerName: "Days To Completion", field: "velocity", valueFormatter: velocityRemainingFormatter},
+            ],
+        };
     }
 
     render() {
-        const { classes, repartition } = this.props;
-        const { columns, pageSize, pageSizes, currentPage, editingStateColumnExtensions } = this.state;
+        const { classes, repartition, loading } = this.props;
+        const { columns, columnDefs, pageSizes, currentPage, editingStateColumnExtensions } = this.state;
 
+        if (!loading) {
+            console.log(repartition);
+            return (
+                <div className="ag-theme-balham"
+                     style={{
+                         height: '500px',
+                         width: '100%' }}
+                >
+                    <AgGridReact
+                        columnDefs={columnDefs}
+                        rowData={repartition}>
+                    </AgGridReact>
+                </div>
+            );
+        } else {
+            return null;
+        }
 
-
-        return (
-            <div className={classes.root}>
-                {JSON.stringify(repartition)}
-            </div>
-        );
     }
 }
 
@@ -58,6 +101,7 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     repartition: state.repartition.repartition,
+    loading: state.repartition.loading,
 
 });
 

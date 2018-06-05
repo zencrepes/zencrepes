@@ -1,5 +1,7 @@
 import { cfgIssues } from '../../data/Issues.js';
 
+import { getFirstDay, getLastDay, initObject, populateObject, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
+
 const getAssignees = (issues) => {
     console.log('getAssignees');
 
@@ -8,8 +10,6 @@ const getAssignees = (issues) => {
     let allValues = [];
     issues.forEach((issue) => {
         if (issue['assignees'].totalCount === 0) {
-            //console.log('getFacetAggregations - processing: ' + facet.group + ' - Null value: ' + facet.nullName);
-            //console.log(allValues);
             let pushObj = {};
             pushObj['login'] = 'UNASSIGNED';
             allValues.push(pushObj);
@@ -35,12 +35,10 @@ const getAssignees = (issues) => {
 
     let states = [];
     Object.keys(statesGroup).forEach(function(key) {
-        states.push({count: statesGroup[key].length, name: key });
+        states.push({count: statesGroup[key].length, login: key });
     });
     //Return the array sorted by count
-    console.log(states);
     return states.sort((a, b) => b.count - a.count);
-
     //{header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, data: [] },
 
 };
@@ -69,13 +67,42 @@ export default {
     effects: {
         async initStates(payload, rootState) {
             console.log('Repartition Mongo Filter: ' + JSON.stringify(rootState.repartition.mongoFilter));
-            console.log(cfgIssues.find(rootState.repartition.mongoFilter).fetch());
+            //console.log(cfgIssues.find(rootState.repartition.mongoFilter).fetch());
             this.setLoading(true);
 
-            console.log('Start Loading');
+            //console.log('Start Loading');
 
             //Build an aggregate by assignee
-            this.setRepartition(getAssignees(cfgIssues.find(openedIssues(rootState.repartition.mongoFilter)).fetch()));
+            let assignees = getAssignees(cfgIssues.find(openedIssues(rootState.repartition.mongoFilter)).fetch());
+            assignees = assignees.map((assignee) => {
+                //console.log('Repartition - processing: ' + assignee.login);
+                let closedIssuesFilter = {'state':{$in:['CLOSED']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}};
+                let openedIssuesFilter = {...rootState.repartition.mongoFilter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}}};
+                console.log(closedIssuesFilter);
+                console.log(JSON.stringify(openedIssuesFilter));
+
+                if (cfgIssues.find(closedIssuesFilter).count() > 0) {
+                    let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
+                    let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
+
+                    let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
+                    dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate the object with count of days and weeks
+                    dataObject = populateTicketsPerDay(dataObject);
+                    dataObject = populateTicketsPerWeek(dataObject, cfgIssues.find(openedIssuesFilter).count());
+                    //console.log(dataObject);
+
+                    //1- Calculate velocity for this user. Velocity calculate over the entire dataset.
+                    //
+                    // {"assignees.edges":{"$elemMatch":{"node.login":{"$in":["rtisma"]}}}}
+                    // {"state":{"$in":["OPEN"]},"assignees.edges":{"$elemMatch":{"node.login":{"$in":["rtisma"]}}}}
+                    //return Object.assign({}, assignee, dataObject);
+                    return {...assignee, ...dataObject}
+                } else {
+                    return assignee
+                }
+            });
+
+            this.setRepartition(assignees);
 
             this.setLoading(false);
         }

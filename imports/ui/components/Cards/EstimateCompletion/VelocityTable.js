@@ -82,6 +82,7 @@ class VelocityTable extends Component {
                         })}
                     </TableBody>
                 </Table>
+                <i>Calculates velocity over the selected period.</i>
             </div>
         );
     }
