@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
 
-import {cfgIssues} from "../../data/Issues";
+import {cfgIssues} from "../../data/Issues.js";
+import {buildMongoSelector} from "../../utils/mongo/index.js";
 
 //Add the payload to current filters
 const addToFilters = (payload, currentFilters, currentFacets) => {
@@ -107,190 +108,6 @@ const removeFromFilters = (payload, currentFilters) => {
     }
     */
 };
-
-
-
-//Rebuild the data output based on filters
-const buildMongoFilter = (filters) => {
-    //Build Mongo filter
-    console.log('Current Filters: ' + JSON.stringify(filters));
-        /*
-        TEST DATA
-         let filters = {
-         "repo.name": [
-         {"count": 135, "name": "SONG", "group": "repo.name","nested": false,"nullName":"EMPTY"},
-         {"count": 190,"name": "kf-api-dataservice","group": "repo.name","nested": false,"nullName":"EMPTY"},
-         {"count": 190,"name": "EMPTY","group": "repo.name","nested": false,"nullName":"EMPTY"}
-         ],
-         "author.login": [
-         {"count": 61, "name": "dankolbman", "group": "author.login","nested": false}
-         ],
-         "labels": [
-         {"count":948,"name":"EMPTY","group":"labels","nested":"name","nullName":"EMPTY"},
-         {"count":159,"name":"bug","group":"labels","nested":"name","nullName":"EMPTY"}
-         ]
-         };
-
-         Codepen: https://codepen.io/anon/pen/dKyOXo?editors=0010
-         */
-
-    let mongoFilter = Object.keys(filters).map(idx => {
-        console.log('Building filter for group: ' + idx);
-        console.log('Values: ' + JSON.stringify(filters[idx]));
-
-        let currentQuery = {};
-        // If filter type if text
-        let currentFilter = filters[idx];
-        if (currentFilter.type === 'text' || currentFilter.type === 'textCount') {
-            //Only do something if there is content to be filtered on.
-            if (currentFilter.in.length > 0) {
-                let filteredValues = filters[idx].in;
-                //If the facet is of type textCount, convert all values to numbers.
-                if (currentFilter.type  === 'textCount') {filteredValues = currentFilter.in.map(v => parseInt(v));}
-
-                if (filters[idx].nested === false ) {
-                    currentQuery[idx] = { $in : filteredValues.filter(val => val !== currentFilter.nullName) }; // Filter out nullName value
-                    // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
-                    if (filteredValues.includes(currentFilter.nullName)) {
-                        if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
-                            return currentFilter.nullFilter;
-                        } else {
-                            return {$or :[currentFilter.nullFilter,currentQuery]}; // Wrapping the regular filters in an OR condition with the nullName value
-                        }
-                    }
-                } else {
-                    let subFilter = "node." + filters[idx].nested;
-                    currentQuery[idx + ".edges"] = {$elemMatch: {}};
-                    currentQuery[idx + ".edges"]["$elemMatch"][subFilter] = {};
-                    currentQuery[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filteredValues.filter(val => val !== currentFilter.nullName);
-                    // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
-                    if (filteredValues.includes(currentFilter.nullName)) {
-                        console.log('The array contains an empty value');
-                        if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
-                            return currentFilter.nullFilter;
-                        } else {
-                            // If it contains an empty value, it becomes necessary to add an "or" statement
-                            //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
-                            //let masterFilter = {$or :[currentFilter, filters[idx][0].nullFilter]};
-                            // masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
-                            return {$or :[currentQuery, currentFilter.nullFilter]};
-                        }
-                    }
-                }
-            }
-        } else if (currentFilter.type === 'range') {
-            let gte = {};
-            gte[idx] = {$gte:currentFilter.min};
-            let lte = {};
-            lte[idx] = {$lte:currentFilter.max};
-            currentQuery = {$and:[gte, lte]};
-        } else if (currentFilter.type === 'bool') {
-            currentQuery[idx]= { $eq : currentFilter.bool };
-        }
-        return currentQuery;
-
-
-        /*
-        // Build an array of values;
-        let filteredValues = filters[idx].in.map(v => v.name);
-
-        if (filteredValues.length > 0) { // Do not do anything if there are no values
-            //If the facet is of type textCount, convert all values to numbers.
-            if (filters[idx].type  === 'textCount') {filteredValues = filters[idx].map(v => parseInt(v.name));}
-
-            console.log(filteredValues);
-
-            //For text values
-            let currentFilter = {};
-            if (filters[idx].type === 'range' ) {
-                let gte = {};
-                gte[idx] = {$gte:filters[idx].min};
-                let lte = {};
-                lte[idx] = {$lte:filters[idx].max};
-                currentFilter = {$and:[gte, lte]};
-            } else if (filters[idx].nested === false ) {
-                currentFilter[idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) }; // Filter out nullName value
-                // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
-                if (filteredValues.includes(filters[idx].nullName)) {
-                    if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
-                        return filters[idx].nullFilter;
-                    } else {
-                        return {$or :[filters[idx].nullFilter,currentFilter]}; // Wrapping the regular filters in an OR condition with the nullName value
-                        //currentFilter["$or"][1][idx] = { $in : filteredValues.filter(val => val !== filters[idx][0].nullName) };
-                    }
-                }
-            } else { // If we are searching in a nest array
-                //db.multiArr.find({'Keys':{$elemMatch:{$elemMatch:{$in:['carrot']}}}})
-                //{"state":{"$in":["OPEN"]}}
-                //window.issues.find({"assignees.edges":{$elemMatch:{"node.login":"USERLOGIN"}}}).fetch();
-                //mongoFilter[idx] = {$elemMatch:{$elemMatch:{"name": { $in : filterValues }}}};
-                //labels.totalCount
-                let subFilter = "node." + filters[idx].nested;
-                currentFilter[idx + ".edges"] = {$elemMatch: {}};
-                //currentFilter[idx + ".edges"]["$elemMatch"] = {};
-                currentFilter[idx + ".edges"]["$elemMatch"][subFilter] = {};
-                currentFilter[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filteredValues.filter(val => val !== filters[idx][0].nullName);
-                // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
-                if (filteredValues.includes(filters[idx].nullName)) {
-                    console.log('The array contains an empty value');
-                    if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
-                        return filters[idx].nullFilter;
-                    } else {
-                        // If it contains an empty value, it becomes necessary to add an "or" statement
-                        //{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
-                        //let masterFilter = {$or :[currentFilter, filters[idx][0].nullFilter]};
-                        // masterFilter["$or"][1][idx + ".totalCount"] = { $eq : 0 };
-                        return {$or :[currentFilter, filters[idx].nullFilter]};
-                    }
-
-                }
-            }
-            return currentFilter;
-        }
-        */
-    });
-
-    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
-
-    // Convert array of objects to an object that can be parsed by Mongo
-    /*
-        Example 1:
-        From: [{"state":{"$in":["OPEN"]}}]
-        To: {"state":{"$in":["OPEN"]}}
-
-        Example 2:
-        From: [{"org.name":{"$in":["Overture"]}},{"state":{"$in":["OPEN"]}}]
-        To: [{"org.name":{"$in":["Overture"]}},{"state":{"$in":["OPEN"]}}]
-
-        Example 3:
-        From: [{"org.name":{"$in":["Overture","ICGC DCC"]}},{"state":{"$in":["OPEN"]}}]
-        To: {"org.name":{"$in":["Overture","ICGC DCC"]},"state":{"$in":["OPEN"]}}
-
-        Example 4:
-        From: [null]
-        To: {}
-     */
-
-    // Strip all null values (example 4)
-    mongoFilter = mongoFilter.filter(v => v !== undefined);
-
-    if (mongoFilter.length === 0) {
-        mongoFilter = {};
-    } else  {
-        let convertedMongoFilter = {};
-        mongoFilter.forEach(value => {
-            idx = Object.keys(value)[0];
-            convertedMongoFilter[idx] = value[idx];
-        });
-        mongoFilter = convertedMongoFilter;
-    }
-
-    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
-    console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
-    return mongoFilter
-};
-
-//{ $or: [{"labels.totalCount":{"$eq":0}}, {"labels.edges":{"$elemMatch":{"node.name":{"$in":["bug"]}}}}] }
 
 const clearIssuesFilters = async () => {
 //    console.log('clearIssuesFilters - Total issues before: ' + cfgIssues.find({filtered: false}).count());
@@ -445,7 +262,7 @@ export default {
             this.addFilter(payload);
 
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
-            let mongoFilter = await buildMongoFilter(updatedFilters);
+            let mongoFilter = await buildMongoSelector(updatedFilters);
             await filterMongo(mongoFilter);
             this.updateMongoFilters(mongoFilter);
 
@@ -474,7 +291,7 @@ export default {
             this.removeFilter(payload);
 
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
-            let mongoFilter = await buildMongoFilter(updatedFilters);
+            let mongoFilter = await buildMongoSelector(updatedFilters);
             await filterMongo(mongoFilter);
             this.updateMongoFilters(mongoFilter);
 
@@ -505,7 +322,7 @@ export default {
             await clearIssuesFilters();
 
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
-            let mongoFilter = await buildMongoFilter(rootState.data.filters);
+            let mongoFilter = await buildMongoSelector(rootState.data.filters);
 
             await filterMongo(mongoFilter);
             this.updateMongoFilters(mongoFilter);
@@ -529,6 +346,38 @@ export default {
             this.updateTableSelection(selectedIssues);
 
             this.updateLoading(false);
+        },
+        async updateFromQuery(mongoFilter, rootState, history) {
+            console.log(mongoFilter);
+            console.log(rootState);
+            console.log(history);
+
+            this.updateLoading(true);
+
+            await filterMongo(mongoFilter);
+            this.updateMongoFilters(mongoFilter);
+
+            let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
+                return {...facet, data: getFacetAggregations(facet, mongoFilter)};
+            });
+            await this.updateFacets(newFacets);
+
+            // Update the results
+            let updatedResults = cfgIssues.find(mongoFilter).fetch()
+            this.updateResults(updatedResults);
+
+            let selectedIssues = [];
+            Object.values(updatedResults).forEach((value,index)=>{
+                if (value.pinned === true) {
+                    selectedIssues.push(index);
+                }
+            });
+            this.updateTableSelection(selectedIssues);
+
+            this.updateLoading(false);
+            history.push('/search');
+
         }
+
     }
 };
