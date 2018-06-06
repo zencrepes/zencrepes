@@ -82,11 +82,55 @@ class RepartitionTable extends Component {
      *
      */
     clickAssignee = (params) => {
-        const { mongoFilter, updateFromQuery } = this.props;
+        const { filter, updateFromQuery } = this.props;
         console.log(params);
-        let updatedQuery = {...mongoFilter, ...{'state':{$in:['OPEN']},'assignees.totalCount':{$eq:0}}};
+
+        let updatedQuery = {};
         if (params.value !== 'UNASSIGNED') {
-            updatedQuery = {...mongoFilter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[params.value]}}}}};
+            //updatedQuery = {...filter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[params.value]}}}}};
+            updatedQuery = {...filter, ...{
+                state: {
+                    header: 'States',
+                    group: 'state',
+                    type: 'text',
+                    nested: false,
+                    in: ['OPEN'],
+                    nullSelected: false
+                }
+                ,
+                assignees: {
+                    header: 'Assignees',
+                    group: 'assignees',
+                    type: 'text',
+                    nested: 'login',
+                    nullName: 'UNASSIGNED',
+                    nullFilter: {'assignees.totalCount': {'$eq': 0}},
+                    in: [params.value],
+                    nullSelected: false
+                }
+            }};
+        } else {
+            updatedQuery = {...filter, ...{
+                state: {
+                    header: 'States',
+                    group: 'state',
+                    type: 'text',
+                    nested: false,
+                    in: ['OPEN'],
+                    nullSelected: false
+                }
+                ,
+                assignees: {
+                    header: 'Assignees',
+                    group: 'assignees',
+                    type: 'text',
+                    nested: 'login',
+                    nullName: 'UNASSIGNED',
+                    nullFilter: {'assignees.totalCount': {'$eq': 0}},
+                    in: ['UNASSIGNED'],
+                    nullSelected: false
+                }
+            }};
         }
         updateFromQuery(updatedQuery, this.props.history);
         //console.log(this.props);
@@ -132,7 +176,7 @@ const mapDispatch = dispatch => ({
 const mapState = state => ({
     repartition: state.repartition.repartition,
     loading: state.repartition.loading,
-    mongoFilter: state.repartition.mongoFilter,
+    filter: state.repartition.filter,
 });
 
 

@@ -13,6 +13,8 @@ import { connect } from "react-redux";
 import QueryFacets from './QueryFacets.js';
 import QuerySaved from './QuerySaved.js';
 
+import {buildMongoSelector} from '../../utils/mongo/index.js';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -44,21 +46,21 @@ class Query extends Component {
     };
 
     render() {
-        const { classes, queryValues, mongoFilters } = this.props;
-        console.log(queryValues);
+        const { classes, filters } = this.props;
+        console.log(filters);
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent>
-                        {Object.keys(queryValues).map(idx => {
+                        {Object.keys(filters).map(idx => {
                             return (
                                 <Paper className={classes.root} key={idx}>
-                                    <QueryFacets queryContent={queryValues[idx]} />
+                                    <QueryFacets queryContent={filters[idx]} />
                                 </Paper>
                             );
                         })}
-                        <br />Filter Object: <i>{JSON.stringify(queryValues)}</i>
-                        <br />Mongo Filter: <i>{JSON.stringify(mongoFilters)}</i>
+                        <br />Filter Object: <i>{JSON.stringify(filters)}</i>
+                        <br />Mongo Filter: <i>{JSON.stringify(buildMongoSelector(filters))}</i>
                         <br />
                         <Button onClick={this.openSaveQuery} color="primary" autoFocus>
                             Save Query
@@ -76,13 +78,12 @@ class Query extends Component {
 
 Query.propTypes = {
     classes: PropTypes.object.isRequired,
-    queryValues: PropTypes.object.isRequired,
+    filters: PropTypes.object.isRequired,
 };
 
 
 const mapState = state => ({
-    queryValues: state.data.filters,
-    mongoFilters: state.data.mongoFilters,
+    filters: state.data.filters,
 });
 
 const mapDispatch = dispatch => ({

@@ -1,6 +1,7 @@
 import { cfgIssues } from '../../data/Issues.js';
 
 import { getFirstDay, getLastDay, initObject, populateObject, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
+import {buildMongoSelector} from "../../utils/mongo/index.js";
 
 const getAssignees = (issues) => {
     console.log('getAssignees');
@@ -54,32 +55,35 @@ export default {
     state: {
         loadFlag: false,
         loading: false,
-        mongoFilter: {},
+        filter: {},
         repartition: [],
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
-        setMongoFilter(state, payload) {return { ...state, mongoFilter: payload };},
+        setFilter(state, payload) {return { ...state, filter: payload };},
         setRepartition(state, payload) {return { ...state, repartition: payload };},
 
     },
     effects: {
         async initStates(payload, rootState) {
-            console.log('Repartition Mongo Filter: ' + JSON.stringify(rootState.repartition.mongoFilter));
+            //console.log('Repartition Filter: ' + JSON.stringify(rootState.repartition.filter));
+            let mongoSelector = buildMongoSelector(rootState.repartition.filter);
+            //console.log('Repartition Mongo Selector: ' + JSON.stringify(mongoSelector));
+
             //console.log(cfgIssues.find(rootState.repartition.mongoFilter).fetch());
             this.setLoading(true);
 
             //console.log('Start Loading');
 
             //Build an aggregate by assignee
-            let assignees = getAssignees(cfgIssues.find(openedIssues(rootState.repartition.mongoFilter)).fetch());
+            let assignees = getAssignees(cfgIssues.find(openedIssues(mongoSelector)).fetch());
             assignees = assignees.map((assignee) => {
                 //console.log('Repartition - processing: ' + assignee.login);
                 let closedIssuesFilter = {'state':{$in:['CLOSED']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}};
-                let openedIssuesFilter = {...rootState.repartition.mongoFilter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}}};
-                console.log(closedIssuesFilter);
-                console.log(JSON.stringify(openedIssuesFilter));
+                let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}}};
+                //console.log(closedIssuesFilter);
+                //console.log(JSON.stringify(openedIssuesFilter));
 
                 if (cfgIssues.find(closedIssuesFilter).count() > 0) {
                     let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);

@@ -29,12 +29,19 @@ class QueryPicker extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {query: [{name: 'default', mongo: '{}'}]};
+        this.state = {query: [{id: null, name: '{}'}]};
     }
 
     handleChange = name => event => {
-        this.props.setMongoFilter(JSON.parse(event.target.value));
-        this.props.setLoadFlag(true);
+        console.log('handleChange');
+        const { setFilter, setLoadFlag } = this.props;
+        let selectedQuery = cfgQueries.findOne({_id: event.target.value});
+        if (selectedQuery !== undefined) {
+            setFilter(JSON.parse(selectedQuery.filters));
+            setLoadFlag(true);
+        } else {
+            console.log('handleChange - UNABLE TO FIND QUERY');
+        }
         this.setState({
             [name]: event.target.value,
         });
@@ -50,7 +57,7 @@ class QueryPicker extends Component {
                     select
                     label="Select"
                     className={classes.textField}
-                    value={this.state.query}
+                    value={this.state._id}
                     onChange={this.handleChange('query')}
                     SelectProps={{
                         MenuProps: {
@@ -60,7 +67,7 @@ class QueryPicker extends Component {
                     margin="normal"
                 >
                     {queriesList.map(query => (
-                        <MenuItem key={query._id} value={query.mongo}>
+                        <MenuItem key={query._id} value={query._id}>
                             {query.name}
                         </MenuItem>
                     ))}
@@ -75,7 +82,7 @@ QueryPicker.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    setMongoFilter: dispatch.repartition.setMongoFilter,
+    setFilter: dispatch.repartition.setFilter,
     setLoadFlag: dispatch.repartition.setLoadFlag,
 
 });

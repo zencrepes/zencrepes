@@ -25,9 +25,9 @@ class QuerySaved extends Component {
     };
 
     render() {
-        const { classes, mongoFilters, openSaveQuery } = this.props;
+        const { classes, filters, openSaveQuery } = this.props;
 
-        let foundQuery = cfgQueries.findOne({'mongo': {$eq: JSON.stringify(mongoFilters)}});
+        let foundQuery = cfgQueries.findOne({'filters': {$eq: JSON.stringify(filters)}});
         if (foundQuery === undefined) {
             return (
                 <h4>Query not saved</h4>
@@ -49,7 +49,7 @@ const mapDispatch = dispatch => ({
 });
 
 const mapState = state => ({
-    mongoFilters: state.data.mongoFilters,
+    filters: state.data.filters,
     openSaveQuery: state.queries.openSaveQuery,
 });
 

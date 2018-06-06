@@ -27,8 +27,8 @@ export const buildMongoSelector = (filters) => {
      Codepen: https://codepen.io/anon/pen/dKyOXo?editors=0010
      */
     let mongoFilter = Object.keys(filters).map(idx => {
-        console.log('Building filter for group: ' + idx);
-        console.log('Values: ' + JSON.stringify(filters[idx]));
+        //console.log('Building filter for group: ' + idx);
+        //console.log('Values: ' + JSON.stringify(filters[idx]));
 
         let currentQuery = {};
         // If filter type if text

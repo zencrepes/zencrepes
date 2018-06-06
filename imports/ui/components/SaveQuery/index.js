@@ -38,7 +38,7 @@ class SaveQuery extends Component {
     };
 
     save = () => {
-        const { setOpenSaveQuery, filters, mongoFilters } = this.props;
+        const { setOpenSaveQuery, filters } = this.props;
         const { queryNameValue } = this.state;
 
         // Search within minmongo for a query with the same name
@@ -46,7 +46,6 @@ class SaveQuery extends Component {
         if (!this.doesQueryNameExists(event.target.value)) {
             const queryId = cfgQueries.insert({
                 name: queryNameValue,
-                mongo: JSON.stringify(mongoFilters),
                 filters: JSON.stringify(filters),
             });
 
@@ -129,7 +128,6 @@ SaveQuery.propTypes = {
 const mapState = state => ({
     openSaveQuery: state.queries.openSaveQuery,
     filters: state.data.filters,
-    mongoFilters: state.data.mongoFilters,
 });
 
 const mapDispatch = dispatch => ({

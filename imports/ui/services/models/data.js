@@ -226,7 +226,6 @@ export default {
         filters: {},
         results: [],
         tableSelection: [],
-        mongoFilters: null,
         loading: false,
     },
     reducers: {
@@ -237,6 +236,9 @@ export default {
         },
         removeFilter(state, payload) {
             return {...state, filters: removeFromFilters(payload, state.filters)}
+        },
+        updateFilters(state, payload) {
+            return {...state, filters: payload}
         },
         updateFacets(state, payload) {
             return { ...state, facets: payload };
@@ -250,9 +252,6 @@ export default {
         updateLoading(state, payload) {
             return { ...state, loading: payload };
         },
-        updateMongoFilters(state, payload) {
-            return { ...state, mongoFilters: payload };
-        }
     },
     effects: {
         //Add a filter, then refresh the data points
@@ -264,7 +263,6 @@ export default {
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoSelector(updatedFilters);
             await filterMongo(mongoFilter);
-            this.updateMongoFilters(mongoFilter);
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
@@ -293,7 +291,6 @@ export default {
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoSelector(updatedFilters);
             await filterMongo(mongoFilter);
-            this.updateMongoFilters(mongoFilter);
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
@@ -325,7 +322,6 @@ export default {
             let mongoFilter = await buildMongoSelector(rootState.data.filters);
 
             await filterMongo(mongoFilter);
-            this.updateMongoFilters(mongoFilter);
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
@@ -347,15 +343,12 @@ export default {
 
             this.updateLoading(false);
         },
-        async updateFromQuery(mongoFilter, rootState, history) {
-            console.log(mongoFilter);
-            console.log(rootState);
-            console.log(history);
+        async updateFromQuery(filter, rootState, history) {
+            this.updateFilters(filter);
+            let mongoFilter = buildMongoSelector(filter);
 
             this.updateLoading(true);
-
             await filterMongo(mongoFilter);
-            this.updateMongoFilters(mongoFilter);
 
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 return {...facet, data: getFacetAggregations(facet, mongoFilter)};
