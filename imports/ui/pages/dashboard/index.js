@@ -8,14 +8,30 @@ import AppMenu from '../../components/AppMenu/index.js';
 import EstimateCompletion from '../../components/Cards/EstimateCompletion/index.js';
 import WeeklyVelocity from '../../components/Cards/WeeklyVelocity/index.js';
 import WorkRepartition from '../../components/Cards/WorkRepartition/index.js';
+import OpenIssuesClosedSprint from '../../components/Cards/OpenIssuesClosedSprint/index.js';
 
+import ItemGrid from '../../components/Grid/ItemGrid.js';
 
+import StatsCard from '../../components/Cards/StatsCard/index.js';
 
+import {
+    ContentCopy,
+    Store,
+    InfoOutline,
+    Warning,
+    DateRange,
+    LocalOffer,
+    Update,
+    ArrowUpward,
+    AccessTime,
+    Accessibility
+} from "@material-ui/icons";
+
+import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
 import Issues, { cfgIssues } from '../../data/Issues.js';
-import Grid from 'material-ui/Grid';
 
 const styles = theme => ({
     root: {
@@ -52,12 +68,61 @@ class Dashboard extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={6} md={3}>
+                            <StatsCard
+                                icon={ContentCopy}
+                                iconColor="orange"
+                                title="Remaing Points"
+                                description="49/50"
+                                small="Pts"
+                                statIcon={Warning}
+                                statText="Using Query: QUERYNAME"
+                            />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={6} md={3}>
+                            <StatsCard
+                                icon={Store}
+                                iconColor="green"
+                                title="Completed Yesterday"
+                                description="5"
+                                small="Pts"
+                                statIcon={DateRange}
+                                statText="Last 24 Hours"
+                            />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={6} md={3}>
+                            <StatsCard
+                                icon={ContentCopy}
+                                iconColor="red"
+                                title="Completed this week"
+                                description="32"
+                                small="Pts"
+                                statIcon={LocalOffer}
+                                statText=""
+                            />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={6} md={3}>
+                            <StatsCard
+                                icon={ContentCopy}
+                                iconColor="blue"
+                                title="Days to Completion"
+                                description="8.3"
+                                small="Days"
+                                statIcon={Update}
+                                statText="Working days"
+                            />
+                        </ItemGrid>
+                    </Grid>
                     <GridList className={classes.gridList} cols={6}>
                         <GridListTile cols={2} rows={2}>
                             <EstimateCompletion />
                         </GridListTile>
                         <GridListTile cols={4} rows={2}>
                             <WorkRepartition />
+                        </GridListTile>
+                        <GridListTile cols={2} rows={2}>
+                            <OpenIssuesClosedSprint />
                         </GridListTile>
                         <GridListTile cols={3} rows={2}>
                             <WeeklyVelocity />
