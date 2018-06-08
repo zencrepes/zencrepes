@@ -13,6 +13,9 @@ import OpenIssuesClosedSprint from '../../components/Cards/OpenIssuesClosedSprin
 import ItemGrid from '../../components/Grid/ItemGrid.js';
 
 import StatsCard from '../../components/Cards/StatsCard/index.js';
+import VelocityWeek from '../../components/Cards/VelocityWeek/index.js';
+
+import QueryPicker from './QueryPicker.js';
 
 import {
     ContentCopy,
@@ -27,6 +30,7 @@ import {
     Accessibility
 } from "@material-ui/icons";
 
+import Toolbar from '@material-ui/core/Grid';
 import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -54,6 +58,12 @@ const styles = theme => ({
     subheader: {
         width: '100%',
     },
+    container: {
+        paddingRight: "15px",
+        paddingLeft: "15px",
+        marginRight: "auto",
+        marginLeft: "auto"
+    }
 });
 
 class Dashboard extends Component {
@@ -68,6 +78,9 @@ class Dashboard extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
+                    <Toolbar className={classes.container}>
+                        <QueryPicker />
+                    </Toolbar>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={3}>
                             <StatsCard
@@ -77,7 +90,7 @@ class Dashboard extends Component {
                                 description="49/50"
                                 small="Pts"
                                 statIcon={Warning}
-                                statText="Using Query: QUERYNAME"
+                                statText="Add small barchart showing points repartition per repo"
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>
@@ -88,18 +101,18 @@ class Dashboard extends Component {
                                 description="5"
                                 small="Pts"
                                 statIcon={DateRange}
-                                statText="Last 24 Hours"
+                                statText="Add small chart showing velocity on past 10 days"
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>
-                            <StatsCard
+                            <VelocityWeek
                                 icon={ContentCopy}
                                 iconColor="red"
                                 title="Completed this week"
                                 description="32"
                                 small="Pts"
                                 statIcon={LocalOffer}
-                                statText=""
+                                statText="Add small chart showing velocity past 10 weeks"
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>
@@ -110,13 +123,12 @@ class Dashboard extends Component {
                                 description="8.3"
                                 small="Days"
                                 statIcon={Update}
-                                statText="Working days"
+                                statText="Display Days to completion using multiple periods"
                             />
                         </ItemGrid>
                     </Grid>
                     <GridList className={classes.gridList} cols={6}>
                         <GridListTile cols={2} rows={2}>
-                            <EstimateCompletion />
                         </GridListTile>
                         <GridListTile cols={4} rows={2}>
                             <WorkRepartition />
