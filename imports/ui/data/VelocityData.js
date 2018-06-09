@@ -11,7 +11,6 @@ class VelocityData extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { loading, loadFlag, setLoadFlag, initStates} = this.props;
-
         if (loadFlag && loading === false) {
             console.log('Velocity - componentDidUpdate - Start loading');
             setLoadFlag(false);

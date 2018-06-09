@@ -13,7 +13,8 @@ import OpenIssuesClosedSprint from '../../components/Cards/OpenIssuesClosedSprin
 import ItemGrid from '../../components/Grid/ItemGrid.js';
 
 import StatsCard from '../../components/Cards/StatsCard/index.js';
-import VelocityWeek from '../../components/Cards/VelocityWeek/index.js';
+import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
+import VelocityDays from '../../components/Cards/VelocityDays/index.js';
 
 import QueryPicker from './QueryPicker.js';
 
@@ -94,25 +95,25 @@ class Dashboard extends Component {
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>
-                            <StatsCard
+                            <VelocityDays
                                 icon={Store}
                                 iconColor="green"
                                 title="Completed Yesterday"
                                 description="5"
                                 small="Pts"
                                 statIcon={DateRange}
-                                statText="Add small chart showing velocity on past 10 days"
+                                statText="Add small chart showing velocity on past 20 days"
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>
-                            <VelocityWeek
+                            <VelocityWeeks
                                 icon={ContentCopy}
                                 iconColor="red"
                                 title="Completed this week"
                                 description="32"
                                 small="Pts"
                                 statIcon={LocalOffer}
-                                statText="Add small chart showing velocity past 10 weeks"
+                                statText="Add small chart showing velocity past 16 weeks"
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>

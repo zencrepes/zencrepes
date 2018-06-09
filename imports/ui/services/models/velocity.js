@@ -39,7 +39,7 @@ export default {
             console.log(dataObject);
 
             this.setVelocity(dataObject);
-            this.setLoading(true);
+            this.setLoading(false);
         }
     }
 };
