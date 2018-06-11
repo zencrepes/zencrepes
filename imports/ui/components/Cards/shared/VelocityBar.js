@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from "react-redux";
 
-import { ResponsiveBar, ResponsiveLine } from '@nivo/bar'
+import { ResponsiveBar } from '@nivo/bar'
 
 import {getWeekYear} from "../../../utils/velocity/index";
 
@@ -29,6 +29,7 @@ class VelocityBar extends Component {
 
     render() {
         const { classes, data } = this.props;
+
         return (
             <div className={classes.root}>
                 <ResponsiveBar

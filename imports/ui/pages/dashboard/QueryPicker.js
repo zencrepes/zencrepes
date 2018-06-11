@@ -37,8 +37,8 @@ class QueryPicker extends Component {
         const { setRepartitionFilter, setRepartitionLoadFlag, setVelocityFilter, setVelocityLoadFlag } = this.props;
         let selectedQuery = cfgQueries.findOne({_id: event.target.value});
         if (selectedQuery !== undefined) {
-//            setRepartitionFilter(JSON.parse(selectedQuery.filters));
-//            setRepartitionLoadFlag(true);
+            setRepartitionFilter(JSON.parse(selectedQuery.filters));
+            setRepartitionLoadFlag(true);
             setVelocityFilter(JSON.parse(selectedQuery.filters));
             setVelocityLoadFlag(true);
         } else {
@@ -88,7 +88,6 @@ const mapDispatch = dispatch => ({
     setRepartitionLoadFlag: dispatch.repartition.setLoadFlag,
     setVelocityFilter: dispatch.velocity.setFilter,
     setVelocityLoadFlag: dispatch.velocity.setLoadFlag,
-
 });
 
 

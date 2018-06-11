@@ -15,6 +15,10 @@ import ItemGrid from '../../components/Grid/ItemGrid.js';
 import StatsCard from '../../components/Cards/StatsCard/index.js';
 import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 import VelocityDays from '../../components/Cards/VelocityDays/index.js';
+import RepartitionByAssignee from '../../components/Cards/RepartitionByAssignee/index.js';
+import TimeToCompletionAssignee from '../../components/Cards/TimeToCompletionAssignee/index.js';
+import MyIssues from '../../components/Cards/MyIssues/index.js';
+import OldestIssues from '../../components/Cards/OldestIssues/index.js';
 
 import QueryPicker from './QueryPicker.js';
 
@@ -128,12 +132,23 @@ class Dashboard extends Component {
                             />
                         </ItemGrid>
                     </Grid>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={12} md={6}>
+                            <TimeToCompletionAssignee headerColor="green" />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={6}>
+                            <RepartitionByAssignee headerColor="orange" />
+                        </ItemGrid>
+                    </Grid>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={12} md={6}>
+                            <MyIssues headerColor="orange" />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={6}>
+                            <OldestIssues headerColor="green" />
+                        </ItemGrid>
+                    </Grid>
                     <GridList className={classes.gridList} cols={6}>
-                        <GridListTile cols={2} rows={2}>
-                        </GridListTile>
-                        <GridListTile cols={4} rows={2}>
-                            <WorkRepartition />
-                        </GridListTile>
                         <GridListTile cols={2} rows={2}>
                             <OpenIssuesClosedSprint />
                         </GridListTile>

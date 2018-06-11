@@ -24,13 +24,24 @@ const ExpandButton = (props) => {
     } else {
         return null;
     }
-}
+};
+
+const SelectAllButton = (props) => {
+    if (props.selectAll && props.length > 5) {
+        return ( <Button color="primary" size="small" className={props.classes.button} onClick={props.onClick(false)}>Unselect All</Button>);
+    } else if (!props.selectAll && props.length > 5) {
+        return (<Button color="primary" size="small" className={props.classes.button} onClick={props.onClick(true)}>Select All</Button>);
+    } else {
+        return null;
+    }
+};
 
 class TermFacet extends Component {
     constructor (props) {
         super(props);
         this.state = {
             collapsed: true,
+            selectAll: false,
         };
     }
 
@@ -41,7 +52,7 @@ class TermFacet extends Component {
     render() {
         const { classes, facet, currentFilters } = this.props;
         const {header, data, group } = facet;
-        const { collapsed } = this.state;
+        const { collapsed, selectAll } = this.state;
 
         let valueChecked = {in:[]};
         if (currentFilters[group] !== undefined) {

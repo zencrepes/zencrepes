@@ -350,6 +350,8 @@ export default {
             this.updateLoading(true);
             await filterMongo(mongoFilter);
 
+            history.push('/search');
+
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 return {...facet, data: getFacetAggregations(facet, mongoFilter)};
             });
@@ -368,7 +370,6 @@ export default {
             this.updateTableSelection(selectedIssues);
 
             this.updateLoading(false);
-            history.push('/search');
 
         }
 

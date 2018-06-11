@@ -102,7 +102,7 @@ class VelocityDays extends Component {
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <div className={classes.cardStats}>
-                        Velocity over the past 20 weeks
+                        Velocity over the past 20 days
                     </div>
                 </CardActions>
             </Card>
