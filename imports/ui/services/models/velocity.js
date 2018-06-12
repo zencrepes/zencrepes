@@ -28,6 +28,7 @@ export default {
             let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
             let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
 
+
             let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
 
@@ -36,6 +37,7 @@ export default {
             dataObject = populateTicketsPerDay(dataObject);
             dataObject = populateTicketsPerWeek(dataObject, cfgIssues.find(openedIssuesFilter).count());
 
+            console.log(closedIssuesFilter);
             console.log(dataObject);
 
             this.setVelocity(dataObject);

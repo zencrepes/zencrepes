@@ -34,9 +34,13 @@ export const getWeekYear = (dateObj) => {
 * - cfgIssues: Minimongo instance
 */
 export const getFirstDay = (mongoFilter, cfgIssues) => {
-    let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
-    firstDay.setDate(firstDay.getDate() - 1);
-    return firstDay
+    if (cfgIssues.find(mongoFilter).count() > 0) {
+        let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
+        firstDay.setDate(firstDay.getDate() - 1);
+        return firstDay
+    } else {
+        return new Date() - 1;
+    }
 };
 
 /*
@@ -48,9 +52,17 @@ export const getFirstDay = (mongoFilter, cfgIssues) => {
 * - cfgIssues: Minimongo instance
 */
 export const getLastDay = (mongoFilter, cfgIssues) => {
-    let lastDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: -1 }, reactive: false, transform: null }).createdAt);
-    lastDay.setDate(lastDay.getDate() + 1);
-    return lastDay
+    if (cfgIssues.find(mongoFilter).count() > 0) {
+        let lastDay = formatDate(cfgIssues.findOne(mongoFilter, {
+            sort: {createdAt: -1},
+            reactive: false,
+            transform: null
+        }).createdAt);
+        lastDay.setDate(lastDay.getDate() + 1);
+        return lastDay
+    } else {
+        return new Date() + 1;
+    }
 };
 
 /*

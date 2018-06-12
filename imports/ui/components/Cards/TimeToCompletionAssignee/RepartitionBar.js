@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 
 import { ResponsiveBar } from '@nivo/bar'
 
-import ColorHash from 'color-hash';
+//import ColorHash from 'color-hash';
 
 
 //import {getWeekYear} from "../../../utils/velocity/index";

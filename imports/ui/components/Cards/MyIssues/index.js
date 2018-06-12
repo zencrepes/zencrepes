@@ -28,23 +28,26 @@ class MyIssues extends Component {
         const { filter } = this.props;
         console.log(filter);
         if (filter !== undefined) {
-            if (filter['assignees'] !== undefined) {delete filter['assignees'];}
-            //filter['assignees'] = {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, in: ['fgerthoffert'] };
-            let mongoSelector = buildMongoSelector(filter);
+            let myIssuesFilter = JSON.parse(JSON.stringify(filter));
+            if (myIssuesFilter['assignees'] !== undefined) {delete myIssuesFilter['assignees'];}
+            myIssuesFilter['assignees'] = {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, in: [Meteor.user().services.github.username] };
+            console.log('Building query for filter:');
+            console.log(myIssuesFilter);
+            let mongoSelector = buildMongoSelector(myIssuesFilter);
             console.log(mongoSelector);
-
-            return cfgIssues.find(
-                mongoSelector
-                , {
-                    sort: { updatedAt: 1}
-                    , fields: { id: 1, title: 1, url: 1, createdAt: 1, updatedAt: 1}
-                    , limit: 10
-                }
-            ).fetch()
-        } else {
-            return []
+            if (cfgIssues.find(mongoSelector).count() > 0) {
+                console.log(cfgIssues.find(mongoSelector).fetch());
+                return cfgIssues.find(
+                    mongoSelector
+                    , {
+                        sort: { createdAt: -1}
+                        , fields: { id: 1, title: 1, url: 1, createdAt: 1, updatedAt: 1}
+                        , limit: 10
+                    }
+                ).fetch()
+            }
         }
-        return true;
+        return [];
     }
 
     render() {

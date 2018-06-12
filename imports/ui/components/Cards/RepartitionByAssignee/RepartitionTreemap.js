@@ -11,9 +11,6 @@ import { connect } from "react-redux";
 
 import { ResponsiveTreeMap } from '@nivo/treemap'
 
-import ColorHash from 'color-hash';
-
-
 //import {getWeekYear} from "../../../utils/velocity/index";
 
 const styles = theme => ({
@@ -35,7 +32,7 @@ class RepartitionTreemap extends Component {
         let chartData = {
             name: 'assignees'
             , color: 'hsl(67, 70%, 50%)'
-            , children: repartition.map((v) => {
+            , children: repartition.filter(v => v.login !== 'UNASSIGNED').map((v) => {
                 return {name: v.login, count: v.count};
             })
         };
@@ -47,7 +44,6 @@ class RepartitionTreemap extends Component {
      */
     clickAssignee = (params) => {
         const { filter, updateFromQuery } = this.props;
-        console.log(params);
 
         let updatedQuery = {};
         if (params.data.name !== 'UNASSIGNED') {
@@ -97,15 +93,11 @@ class RepartitionTreemap extends Component {
             }};
         }
         updateFromQuery(updatedQuery, this.props.history);
-        //console.log(this.props);
-        //this.props.history.push('/search');
     };
 
 
     render() {
         const { classes } = this.props;
-
-
 
         return (
             <div className={classes.root}>

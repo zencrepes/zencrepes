@@ -19,6 +19,7 @@ import RepartitionByAssignee from '../../components/Cards/RepartitionByAssignee/
 import TimeToCompletionAssignee from '../../components/Cards/TimeToCompletionAssignee/index.js';
 import MyIssues from '../../components/Cards/MyIssues/index.js';
 import OldestIssues from '../../components/Cards/OldestIssues/index.js';
+import DaysToCompletion from '../../components/Cards/DaysToCompletion/index.js';
 
 import QueryPicker from './QueryPicker.js';
 
@@ -121,11 +122,11 @@ class Dashboard extends Component {
                             />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={3}>
-                            <StatsCard
+                            <DaysToCompletion
                                 icon={ContentCopy}
                                 iconColor="blue"
-                                title="Days to Completion"
-                                description="8.3"
+                                title="Days to Completion (4w)"
+                                description="8.3b"
                                 small="Days"
                                 statIcon={Update}
                                 statText="Display Days to completion using multiple periods"
