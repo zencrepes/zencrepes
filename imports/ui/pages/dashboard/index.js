@@ -36,6 +36,9 @@ import {
     Accessibility
 } from "@material-ui/icons";
 
+import { Broom, CodeBraces, Ticket } from 'mdi-material-ui';
+
+
 import Toolbar from '@material-ui/core/Grid';
 import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
@@ -93,7 +96,7 @@ class Dashboard extends Component {
                                 icon={ContentCopy}
                                 iconColor="orange"
                                 title="Remaing Points"
-                                description="49/50"
+                                description="49"
                                 small="Pts"
                                 statIcon={Warning}
                                 statText="Add small barchart showing points repartition per repo"
@@ -142,21 +145,56 @@ class Dashboard extends Component {
                         </ItemGrid>
                     </Grid>
                     <Grid container>
-                        <ItemGrid xs={12} sm={12} md={6}>
-                            <MyIssues headerColor="orange" />
+                        <ItemGrid xs={12} sm={6} md={3}>
+                            <StatsCard
+                                icon={Ticket}
+                                iconColor="orange"
+                                title="Issues Assigned to Me"
+                                description="10"
+                                small=""
+                                statIcon={Update}
+                                statText=""
+                            />
                         </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={6}>
+                        <ItemGrid xs={12} sm={12} md={3}>
+                            <StatsCard
+                                icon={CodeBraces}
+                                iconColor="blue"
+                                title="Open PR pending my review"
+                                description="5"
+                                small="PRs"
+                                statIcon={Update}
+                                statText="-"
+                            />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={3}>
+                            <StatsCard
+                                icon={CodeBraces}
+                                iconColor="green"
+                                title="My PR pending peer review"
+                                description="2"
+                                small="PRs"
+                                statIcon={Update}
+                                statText="-"
+                            />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={3}>
+                            <StatsCard
+                                icon={Broom}
+                                iconColor="red"
+                                title="Open Issues in closed sprints"
+                                description="50"
+                                small=""
+                                statIcon={Broom}
+                                statText="-"
+                            />
+                        </ItemGrid>
+                    </Grid>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={12} md={12}>
                             <OldestIssues headerColor="green" />
                         </ItemGrid>
                     </Grid>
-                    <GridList className={classes.gridList} cols={6}>
-                        <GridListTile cols={2} rows={2}>
-                            <OpenIssuesClosedSprint />
-                        </GridListTile>
-                        <GridListTile cols={3} rows={2}>
-                            <WeeklyVelocity />
-                        </GridListTile>
-                    </GridList>
                 </main>
             </div>
         );

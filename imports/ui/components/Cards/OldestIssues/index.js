@@ -76,7 +76,7 @@ class OldestIssues extends Component {
                         title: classes.cardTitle,
                         subheader: classes.cardSubtitle
                     }}
-                    title='20 Oldest Open Issues'
+                    title='10 Oldest Open Issues'
                 />
                 <CardContent>
                     <IssuesTable

@@ -61,6 +61,24 @@ class VelocityDays extends Component {
         }
     }
 
+    getLastDayCompleted(dataset) {
+        let idx = dataset.length - 1;
+        if (idx >= 0) {
+            return dataset[idx]['closedCount'];
+        } else {
+            return '-';
+        }
+    }
+
+    getLastDayTxtCompleted(dataset) {
+        let idx = dataset.length - 1;
+        if (idx >= 0) {
+            return new Date(dataset[idx]['date']).toLocaleDateString('en-US', { weekday: 'long' });
+        } else {
+            return '-';
+        }
+    }
+
     render() {
         const {
             classes,
@@ -85,14 +103,14 @@ class VelocityDays extends Component {
                 />
                 <CardContent className={classes.cardContent}>
                     <Typography component="p" className={classes.cardCategory}>
-                        {title}
+                        Completed {this.getLastDayTxtCompleted(dataset)}
                     </Typography>
                     <Typography
                         variant="headline"
                         component="h2"
                         className={classes.cardTitle}
                     >
-                        {description}{" "}
+                        {this.getLastDayCompleted(dataset)}{" "}
                         {small !== undefined ? (
                             <small className={classes.cardTitleSmall}>{small}</small>
                         ) : null}

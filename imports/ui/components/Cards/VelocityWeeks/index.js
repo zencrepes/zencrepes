@@ -60,6 +60,15 @@ class VelocityWeek extends Component {
         }
     }
 
+    getThisWeekCompleted(dataset) {
+        let idx = dataset.length - 1
+        if (idx >= 0) {
+            return dataset[idx]['closedCount'];
+        } else {
+            return '-';
+        }
+    }
+
 
     render() {
         const {
@@ -92,7 +101,7 @@ class VelocityWeek extends Component {
                         component="h2"
                         className={classes.cardTitle}
                     >
-                        {description}{" "}
+                        {this.getThisWeekCompleted(dataset)}{" "}
                         {small !== undefined ? (
                             <small className={classes.cardTitleSmall}>{small}</small>
                         ) : null}

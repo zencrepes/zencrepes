@@ -104,7 +104,7 @@ class DaysToCompletion extends Component {
                 />
                 <CardContent className={classes.cardContent}>
                     <Typography component="p" className={classes.cardCategory}>
-                        Days To Completion (4w)
+                        Days To Completion
                     </Typography>
                     <Typography
                         variant="headline"
@@ -120,7 +120,7 @@ class DaysToCompletion extends Component {
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <div className={classes.cardStats}>
-                        Calculated based on different rolling averages
+                        Default based on 4 weeks rolling averages
                     </div>
                 </CardActions>
             </Card>
