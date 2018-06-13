@@ -106,6 +106,8 @@ export default {
                 }
             });
 
+            console.log(assignees);
+
             this.setRepartition(assignees);
 
             this.setLoading(false);
