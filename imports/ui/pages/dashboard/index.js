@@ -133,10 +133,10 @@ class Dashboard extends Component {
                         </ItemGrid>
                     </Grid>
                     <Grid container>
-                        <ItemGrid xs={12} sm={12} md={6}>
+                        <ItemGrid xs={12} sm={12} md={4}>
                             <TimeToCompletionAssignee headerColor="green" />
                         </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={6}>
+                        <ItemGrid xs={12} sm={12} md={8}>
                             <RepartitionByAssignee headerColor="orange" />
                         </ItemGrid>
                     </Grid>

@@ -19,7 +19,7 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {getWeekYear} from "../../../utils/velocity";
 
-import RepartitionBar from './RepartitionBar.js';
+import RepartitionPie from './RepartitionPie.js';
 
 class TimeToCompletionAssignee extends Component {
     constructor (props) {
@@ -54,10 +54,10 @@ class TimeToCompletionAssignee extends Component {
                         title: classes.cardTitle,
                         subheader: classes.cardSubtitle
                     }}
-                    title='Days to completion by Assignee'
+                    title='Days to completion by Assignee (top 10)'
                 />
                 <CardContent>
-                    <RepartitionBar />
+                    <RepartitionPie />
                 </CardContent>
                 {footer !== undefined ? (
                     <CardActions className={classes.cardActions}>{footer}</CardActions>

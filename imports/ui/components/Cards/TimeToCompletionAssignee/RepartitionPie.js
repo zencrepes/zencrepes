@@ -10,6 +10,7 @@ import { withStyles } from 'material-ui/styles';
 import { connect } from "react-redux";
 
 import { ResponsiveBar } from '@nivo/bar'
+import { ResponsivePie } from '@nivo/pie'
 
 //import ColorHash from 'color-hash';
 
@@ -77,10 +78,16 @@ class RepartitionTreemap extends Component {
 
         dataset = dataset.map((vel) => {
             let effort = Math.round(this.getRange(vel.velocity), 1);
-            return {x: vel.login, y: effort};
+            //return {x: vel.login, y: effort};
+            return {id: vel.login, label: vel.login, value: effort};
+            /*
+                                        "id": "javascript",
+                            "label": "javascript",
+                            "value": 320
+             */
         });
 
-        return _.orderBy(dataset, ['y'], ['desc', 'asc']);
+        return _.orderBy(dataset, ['y'], ['desc', 'asc']).slice(0, 10);
     }
 
     /*
@@ -159,6 +166,65 @@ class RepartitionTreemap extends Component {
 
         return (
             <div className={classes.root}>
+                <ResponsivePie
+                    data={this.buildDataset()}
+                    margin={{
+                        "top": 0,
+                        "right": 200,
+                        "bottom": 0,
+                        "left": 0
+                    }}
+                    innerRadius={0.5}
+                    padAngle={0.7}
+                    cornerRadius={3}
+                    colors="d320"
+                    colorBy="id"
+                    borderWidth={1}
+                    borderColor="inherit:darker(0.2)"
+                    enableRadialLabels={false}
+                    radialLabelsSkipAngle={10}
+                    radialLabelsTextXOffset={6}
+                    radialLabelsTextColor="#333333"
+                    radialLabelsLinkOffset={0}
+                    radialLabelsLinkDiagonalLength={16}
+                    radialLabelsLinkHorizontalLength={24}
+                    radialLabelsLinkStrokeWidth={1}
+                    radialLabelsLinkColor="inherit"
+                    slicesLabelsSkipAngle={10}
+                    slicesLabelsTextColor="#333333"
+                    animate={true}
+                    motionStiffness={90}
+                    motionDamping={15}
+                    theme={{
+                        "tooltip": {
+                            "container": {
+                                "fontSize": "13px"
+                            }
+                        },
+                        "labels": {
+                            "textColor": "#555"
+                        }
+                    }}
+                    legends={[
+                        {
+                            "anchor": "right",
+                            "direction": "column",
+                            "translateY": 0,
+                            "translateX": 100,
+                            "itemWidth": 100,
+                            "itemHeight": 18,
+                            "symbolSize": 18,
+                            "symbolShape": "circle"
+                        }
+                    ]}
+                />
+            </div>
+        );
+    }
+}
+
+
+/*
                 <ResponsiveBar
                     data={this.buildDataset()}
                     keys={[
@@ -182,20 +248,6 @@ class RepartitionTreemap extends Component {
                     animate={true}
                     motionStiffness={90}
                     motionDamping={15}
-                    /*
-                    legends={[
-                        {
-                            "dataFrom": "keys",
-                            "anchor": "bottom-right",
-                            "direction": "column",
-                            "translateX": 120,
-                            "itemWidth": 100,
-                            "itemHeight": 20,
-                            "itemsSpacing": 2,
-                            "symbolSize": 20
-                        }
-                    ]}
-                    */
                     theme={{
                         "tooltip": {
                             "container": {
@@ -207,10 +259,9 @@ class RepartitionTreemap extends Component {
                         }
                     }}
                 />
-            </div>
-        );
-    }
-}
+                */
+
+
 
 RepartitionTreemap.propTypes = {
     classes: PropTypes.object.isRequired,
