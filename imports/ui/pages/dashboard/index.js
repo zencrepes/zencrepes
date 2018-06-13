@@ -5,10 +5,6 @@ import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
 
 import AppMenu from '../../components/AppMenu/index.js';
-import EstimateCompletion from '../../components/Cards/EstimateCompletion/index.js';
-import WeeklyVelocity from '../../components/Cards/WeeklyVelocity/index.js';
-import WorkRepartition from '../../components/Cards/WorkRepartition/index.js';
-import OpenIssuesClosedSprint from '../../components/Cards/OpenIssuesClosedSprint/index.js';
 
 import ItemGrid from '../../components/Grid/ItemGrid.js';
 

@@ -30,38 +30,38 @@ class DaysToCompletion extends Component {
     */
     getTimeToCompletion(dataset) {
         if (dataset !== undefined ) {
-            let filteredValues = dataset.filter(v => v.effortCountDays !== undefined)
+            let filteredValues = dataset.filter(v => v.issues.effort !== undefined)
 
             let rangeValues = [];
             effort = filteredValues.find(v => v.range === '4w');
             if (effort !== undefined) {
-                if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
 
             effort = filteredValues.find(v => v.range === '8w');
             if (effort !== undefined) {
-                if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
             effort = filteredValues.find(v => v.range === '12w');
             if (effort !== undefined) {
-                if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
             effort = filteredValues.find(v => v.range === 'all');
             if (effort !== undefined) {
-                if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
             if (rangeValues.length === 0) {
                 return '-';
             } else {
-                return Math.round(rangeValues[0]['effortCountDays'], 1);
+                return Math.round(rangeValues[0].issues.effort, 1);
             }
 
         } else {
@@ -71,9 +71,9 @@ class DaysToCompletion extends Component {
 
     getVelocityBar(dataset) {
         if (dataset !== undefined ) {
-            dataset = dataset.filter(v => v.effortCountDays !== Infinity);
+            dataset = dataset.filter(v => v.issues.effort !== Infinity);
             dataset = dataset.map((v) => {
-                return {x: v.range, y: v.effortCountDays}
+                return {x: v.range, y: v.issues.effort}
             });
             return dataset;
         } else {

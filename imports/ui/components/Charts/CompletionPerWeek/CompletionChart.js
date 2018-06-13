@@ -33,28 +33,28 @@ class CompletionChart extends Component {
     getCreatedTicketsByWeek() {
         const { ticketsPerWeek } = this.props;
         return ticketsPerWeek.map((value) => {
-            return [new Date(value.weekStart).getTime(), value.createdCount];
+            return [new Date(value.weekStart).getTime(), value.issues.velocity];
         });
     }
 
     getVelocityCreated() {
         const { ticketsPerWeek } = this.props;
         return ticketsPerWeek.map((value) => {
-            return [new Date(value.weekStart).getTime(), value.velocityCreatedCount];
+            return [new Date(value.weekStart).getTime(), value.issues.count];
         });
     }
 
     getClosedTicketsByWeek() {
         const { ticketsPerWeek } = this.props;
         return ticketsPerWeek.map((value) => {
-            return [new Date(value.weekStart).getTime(), value.closedCount];
+            return [new Date(value.weekStart).getTime(), value.issues.velocity];
         });
     }
 
     getVelocityClosed() {
         const { ticketsPerWeek } = this.props;
         return ticketsPerWeek.map((value) => {
-            return [new Date(value.weekStart).getTime(), value.velocityClosedCount];
+            return [new Date(value.weekStart).getTime(), value.issues.count];
         });
     }
 

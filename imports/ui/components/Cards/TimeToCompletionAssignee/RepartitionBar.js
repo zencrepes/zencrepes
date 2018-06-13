@@ -35,31 +35,31 @@ class RepartitionTreemap extends Component {
         Find effortCountDays closest to current date
      */
     getRange(values) {
-        let filteredValues = values.filter(v => v.effortCountDays !== undefined)
+        let filteredValues = values.filter(v => v.issues.effort !== undefined)
 
         let rangeValues = [];
         effort = filteredValues.find(v => v.range === '4w');
         if (effort !== undefined) {
-            if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+            if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                 rangeValues.push(effort);
             }
         }
 
         effort = filteredValues.find(v => v.range === '8w');
         if (effort !== undefined) {
-            if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+            if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                 rangeValues.push(effort);
             }
         }
         effort = filteredValues.find(v => v.range === '12w');
         if (effort !== undefined) {
-            if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+            if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                 rangeValues.push(effort);
             }
         }
         effort = filteredValues.find(v => v.range === 'all');
         if (effort !== undefined) {
-            if (effort['effortCountDays'] !== undefined && effort['effortCountDays'] !== Infinity) {
+            if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
                 rangeValues.push(effort);
             }
         }
@@ -67,7 +67,7 @@ class RepartitionTreemap extends Component {
         if (rangeValues.length === 0) {
             return 0;
         } else {
-            return rangeValues[0]['effortCountDays'];
+            return rangeValues[0].issues.effort;
         }
     }
 

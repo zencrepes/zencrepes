@@ -79,12 +79,24 @@ export const initObject = (firstDay, lastDay) => {
     while(currentDate < lastDay) {
         currentDate.setDate(currentDate.getDate() + 1);
         if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-            initObject['days'][currentDate.toJSON().slice(0, 10)] = {date: currentDate.toJSON(), closedCount: 0, closedPoints:0};
+            initObject['days'][currentDate.toJSON().slice(0, 10)] = {
+                date: currentDate.toJSON(),
+                issues: {count: 0},
+                points: {count: 0},
+                closedCount: 0,
+                closedPoints:0
+            };
         }
 
         let currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
         if(typeof initObject['weeks'][currentWeekYear] === 'undefined') {
-            initObject['weeks'][currentWeekYear] = {weekStart: currentDate.toJSON(), closedCount: 0, closedPoints:0};
+            initObject['weeks'][currentWeekYear] = {
+                weekStart: currentDate.toJSON(),
+                issues: {count: 0},
+                points: {count: 0},
+                closedCount: 0,
+                closedPoints:0
+            };
         }
     }
     return initObject;
@@ -100,7 +112,7 @@ export const initObject = (firstDay, lastDay) => {
 */
 const calculateAverageVelocity = (array, indexValue) => {
     return array
-        .map(values => values[indexValue])
+        .map(values => values[indexValue]['count'])
         .reduce((accumulator, currentValue, currentIndex, array) => {
             accumulator += currentValue;
             if (currentIndex === array.length-1) {
@@ -122,14 +134,14 @@ const calculateAverageVelocity = (array, indexValue) => {
 export const populateObject = (dataObject, issues) => {
     issues.forEach((issue) => {
         if (dataObject['days'][issue.closedAt.slice(0, 10)] !== undefined) {
-            dataObject['days'][issue.closedAt.slice(0, 10)]['closedCount']++;
+            dataObject['days'][issue.closedAt.slice(0, 10)]['issues']['count']++;
         }
 
         if (issue.closedAt !== null) {
             closedDate = formatDate(issue.closedAt);
             closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
             if (dataObject['weeks'][closedWeek] !== undefined) {
-                dataObject['weeks'][closedWeek]['closedCount']++;
+                dataObject['weeks'][closedWeek]['issues']['count']++;
             }
         }
     });
@@ -151,8 +163,8 @@ export const populateTicketsPerDay = (dataObject) => {
         else {startIdx = idx - 20;}
         if (idx !== 0) {
             let currentWindowIssues = ticketsPerDay.slice(startIdx, idx); // This limits the window or velocity calculation to 20 days (4 weeks).
-            ticketsPerDay[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
-            ticketsPerDay[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
+            ticketsPerDay[idx]['issues']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'issues');
+            ticketsPerDay[idx]['points']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'points');
         }
     });
     dataObject['days'] = ticketsPerDay;
@@ -175,47 +187,47 @@ export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
         else {startIdx = idx - 4;}
         if (idx !== 0) {
             let currentWindowIssues = ticketsPerWeek.slice(startIdx, idx);
-            ticketsPerWeek[idx]['velocityClosedCount'] = calculateAverageVelocity(currentWindowIssues, "closedCount");
-            ticketsPerWeek[idx]['velocityClosedPoints'] = calculateAverageVelocity(currentWindowIssues, "closedPoints");
+            ticketsPerWeek[idx]['issues']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'issues');
+            ticketsPerWeek[idx]['points']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'points');
         }
         if (idx == ticketsPerWeek.length-1) {
             //This is the last date of the sprint, calculate velocity on various timeframes
             let currentCompletion = { // All Time
                 'range': 'all',
-                'velocityClosedCount': calculateAverageVelocity(ticketsPerWeek, "closedCount"),
-                'velocityClosedPoints': calculateAverageVelocity(ticketsPerWeek, "closedPoints")
+                'issues': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'issues')},
+                'points': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'points')},
             }
-            currentCompletion['effortCountDays'] = Math.round(remaingIssuesCount / currentCompletion['velocityClosedCount'],0);
+            currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
             completionVelocities.push(currentCompletion);
 
             if (idx >= 4) { // 4 weeks
                 let currentWindowIssues = ticketsPerWeek.slice(idx-4, idx);
                 let currentCompletion = {
                     'range': '4w',
-                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
-                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                    'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
+                    'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
-                currentCompletion['effortCountDays'] = Math.round(remaingIssuesCount / currentCompletion['velocityClosedCount'],0);
+                currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
             if (idx >= 8) { // 8 weeks
                 let currentWindowIssues = ticketsPerWeek.slice(idx-8, idx);
                 let currentCompletion = {
                     'range': '8w',
-                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
-                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                    'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
+                    'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
-                currentCompletion['effortCountDays'] = Math.round(remaingIssuesCount / currentCompletion['velocityClosedCount'],0);
+                currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
             if (idx >= 12) { // 12 weeks
                 let currentWindowIssues = ticketsPerWeek.slice(idx-12, idx);
                 let currentCompletion = {
                     'range': '12w',
-                    'velocityClosedCount': calculateAverageVelocity(currentWindowIssues, "closedCount"),
-                    'velocityClosedPoints': calculateAverageVelocity(currentWindowIssues, "closedPoints")
+                    'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
+                    'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
-                currentCompletion['effortCountDays'] = Math.round(remaingIssuesCount / currentCompletion['velocityClosedCount'],0);
+                currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
         }

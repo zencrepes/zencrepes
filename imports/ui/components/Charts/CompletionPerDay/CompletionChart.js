@@ -33,28 +33,28 @@ class CompletionChart extends Component {
     getCreatedTickets() {
         const { ticketsPerDay } = this.props;
         return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.createdCount];
+            return [new Date(value.date).getTime(), value.issues.count];
         });
     }
 
     getCreatedVelocityTickets() {
         const { ticketsPerDay } = this.props;
         return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.velocityCreatedCount];
+            return [new Date(value.date).getTime(), value.issues.velocity];
         });
     }
 
     getClosedTickets() {
         const { ticketsPerDay } = this.props;
         return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.closedCount];
+            return [new Date(value.date).getTime(), value.issues.count];
         });
     }
 
     getClosedVelocityTickets() {
         const { ticketsPerDay } = this.props;
         return ticketsPerDay.map((value) => {
-            return [new Date(value.date).getTime(), value.velocityClosedCount];
+            return [new Date(value.date).getTime(), value.issues.velocity];
         });
     }
 

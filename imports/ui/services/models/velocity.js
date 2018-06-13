@@ -38,7 +38,9 @@ export default {
             dataObject = populateTicketsPerWeek(dataObject, cfgIssues.find(openedIssuesFilter).count());
 
             console.log(closedIssuesFilter);
+            console.log('+++++++++');
             console.log(dataObject);
+            console.log('+++++++++');
 
             this.setVelocity(dataObject);
             this.setLoading(false);

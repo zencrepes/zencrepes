@@ -27,7 +27,7 @@ class VelocityWeek extends Component {
     getVelocityLine(dataset) {
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.velocityClosedCount}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
             });
             return [{id: 'rolling', data: dataset}];
         } else {
@@ -38,7 +38,7 @@ class VelocityWeek extends Component {
     getVelocityBar(dataset) {
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.closedCount}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.count}
             });
             return dataset;
         } else {
@@ -63,7 +63,7 @@ class VelocityWeek extends Component {
     getThisWeekCompleted(dataset) {
         let idx = dataset.length - 1
         if (idx >= 0) {
-            return dataset[idx]['closedCount'];
+            return dataset[idx].issues.count;
         } else {
             return '-';
         }
