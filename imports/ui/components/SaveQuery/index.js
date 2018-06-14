@@ -84,7 +84,6 @@ class SaveQuery extends Component {
     render() {
         const { classes, openSaveQuery } = this.props;
         const { queryNameError, queryNameHelperText } = this.state;
-        console.log('QueryManager - render()');
         if (openSaveQuery) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openSaveQuery}>

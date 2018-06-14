@@ -30,7 +30,6 @@ class QueryManager extends Component {
 
     render() {
         const { classes, openQueryManager } = this.props;
-        console.log('QueryManager - render()');
         if (openQueryManager) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openQueryManager}>

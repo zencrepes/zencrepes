@@ -29,7 +29,7 @@ class QueryPicker extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {query: [{id: null, name: '{}'}]};
+        this.state = {query: ''};
     }
 
     handleChange = name => event => {
@@ -51,7 +51,6 @@ class QueryPicker extends Component {
 
     render() {
         const { classes, queriesList } = this.props;
-
         return (
             <div className={classes.root}>
                 <TextField
@@ -59,7 +58,7 @@ class QueryPicker extends Component {
                     select
                     label="Select"
                     className={classes.textField}
-                    value={this.state._id}
+                    value={this.state.query}
                     onChange={this.handleChange('query')}
                     SelectProps={{
                         MenuProps: {
