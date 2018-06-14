@@ -26,6 +26,7 @@ import Issues from './data/Issues.js';
 import Repos from './data/Repos.js';
 import VelocityData from './data/VelocityData.js';
 import RepartitionData from './data/RepartitionData.js';
+import RemainingData from './data/RemainingData.js';
 import QueryManager from './components/QueryManager/index.js';
 import SaveQuery from './components/SaveQuery/index.js';
 
@@ -50,6 +51,7 @@ class App extends Component {
                     <Repos />
                     <VelocityData />
                     <RepartitionData />
+                    <RemainingData />
                     <QueryManager />
                     <SaveQuery />
                     <Router>

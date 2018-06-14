@@ -236,4 +236,4 @@ export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
     dataObject['velocity'] = completionVelocities;
     return dataObject;
 //    return {ticketsPerWeek, completionVelocities};
-}
+};

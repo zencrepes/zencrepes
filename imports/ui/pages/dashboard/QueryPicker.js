@@ -34,13 +34,15 @@ class QueryPicker extends Component {
 
     handleChange = name => event => {
         console.log('Dashboard - QueryPicker - handleChange');
-        const { setRepartitionFilter, setRepartitionLoadFlag, setVelocityFilter, setVelocityLoadFlag } = this.props;
+        const { setRepartitionFilter, setRepartitionLoadFlag, setVelocityFilter, setVelocityLoadFlag, setRemainingFilter, setRemainingLoadFlag } = this.props;
         let selectedQuery = cfgQueries.findOne({_id: event.target.value});
         if (selectedQuery !== undefined) {
             setRepartitionFilter(JSON.parse(selectedQuery.filters));
             setRepartitionLoadFlag(true);
             setVelocityFilter(JSON.parse(selectedQuery.filters));
             setVelocityLoadFlag(true);
+            setRemainingFilter(JSON.parse(selectedQuery.filters));
+            setRemainingLoadFlag(true);
         } else {
             console.log('handleChange - UNABLE TO FIND QUERY');
         }
@@ -87,6 +89,8 @@ const mapDispatch = dispatch => ({
     setRepartitionLoadFlag: dispatch.repartition.setLoadFlag,
     setVelocityFilter: dispatch.velocity.setFilter,
     setVelocityLoadFlag: dispatch.velocity.setLoadFlag,
+    setRemainingFilter: dispatch.remaining.setFilter,
+    setRemainingLoadFlag: dispatch.remaining.setLoadFlag,
 });
 
 

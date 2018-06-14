@@ -9,6 +9,7 @@ import AppMenu from '../../components/AppMenu/index.js';
 import ItemGrid from '../../components/Grid/ItemGrid.js';
 
 import StatsCard from '../../components/Cards/StatsCard/index.js';
+import RemainingPoints from '../../components/Cards/RemainingPoints/index.js';
 import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 import VelocityDays from '../../components/Cards/VelocityDays/index.js';
 import RepartitionByAssignee from '../../components/Cards/RepartitionByAssignee/index.js';
@@ -88,7 +89,7 @@ class Dashboard extends Component {
                     </Toolbar>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={3}>
-                            <StatsCard
+                            <RemainingPoints
                                 icon={ContentCopy}
                                 iconColor="orange"
                                 title="Remaing Points"

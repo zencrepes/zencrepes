@@ -35,16 +35,16 @@ class VelocityLine extends Component {
                     data={data}
                     margin={{
                         "top": 10,
-                        "right": 20,
+                        "right": 5,
                         "bottom": 27,
-                        "left": 20
+                        "left": 5
                     }}
                     minY="auto"
                     stacked={true}
                     curve="natural"
                     enableGridX={false}
                     enableGridY={false}
-                    dotSize={2}
+                    dotSize={4}
                     dotColor="inherit:darker(0.3)"
                     dotBorderWidth={0}
                     dotBorderColor="#ffffff"
@@ -54,7 +54,10 @@ class VelocityLine extends Component {
                     animate={true}
                     motionStiffness={90}
                     motionDamping={15}
-                    enableStackTooltip={false}
+                    enableStackTooltip={true}
+                    axisLeft={null}
+                    axisBottom={null}
+                    isInteractive={true}
                     legends={[
                         {
                             "anchor": "bottom-right",

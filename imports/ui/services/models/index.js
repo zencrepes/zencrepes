@@ -5,4 +5,5 @@ export { default as githubRepos } from './githubRepos.js';
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';
 export { default as queries } from './queries.js';
+export { default as remaining } from './remaining.js';
 
