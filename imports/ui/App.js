@@ -19,9 +19,6 @@ import Authenticated from './components/Authenticated/Authenticated.js'
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
-import { cfgIssues, localCfgIssues } from './data/Issues.js';
-import { cfgSources, localCfgSources } from './data/Repositories.js';
-
 import Issues from './data/Issues.js';
 import Repos from './data/Repos.js';
 import VelocityData from './data/VelocityData.js';

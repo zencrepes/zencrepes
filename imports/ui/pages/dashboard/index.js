@@ -141,7 +141,14 @@ class Dashboard extends Component {
                             <RepartitionByAssignee headerColor="orange" />
                         </ItemGrid>
                     </Grid>
-                    <Grid container>
+                </main>
+            </div>
+        );
+    }
+}
+
+/*
+ <Grid container>
                         <ItemGrid xs={6} sm={4} md={2}>
                             <StatsCard
                                 icon={Ticket}
@@ -187,11 +194,7 @@ class Dashboard extends Component {
                             />
                         </ItemGrid>
                     </Grid>
-                </main>
-            </div>
-        );
-    }
-}
+ */
 
 Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
