@@ -15,11 +15,11 @@ import { ResponsiveTreeMap } from '@nivo/treemap'
 
 const styles = theme => ({
     root: {
-        height: '200px'
+        height: '150px'
     },
 });
 
-class RepartitionTreemap extends Component {
+class ReposTreemap extends Component {
     constructor(props) {
         super(props);
 
@@ -46,52 +46,27 @@ class RepartitionTreemap extends Component {
         const { filter, updateFromQuery } = this.props;
 
         let updatedQuery = {};
-        if (params.data.name !== 'UNASSIGNED') {
             //updatedQuery = {...filter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[params.value]}}}}};
-            updatedQuery = {...filter, ...{
-                state: {
-                    header: 'States',
-                    group: 'state',
-                    type: 'text',
-                    nested: false,
-                    in: ['OPEN'],
-                    nullSelected: false
-                }
-                ,
-                assignees: {
-                    header: 'Assignees',
-                    group: 'assignees',
-                    type: 'text',
-                    nested: 'login',
-                    nullName: 'UNASSIGNED',
-                    nullFilter: {'assignees.totalCount': {'$eq': 0}},
-                    in: [params.data.name],
-                    nullSelected: false
-                }
-            }};
-        } else {
-            updatedQuery = {...filter, ...{
-                state: {
-                    header: 'States',
-                    group: 'state',
-                    type: 'text',
-                    nested: false,
-                    in: ['OPEN'],
-                    nullSelected: false
-                }
-                ,
-                assignees: {
-                    header: 'Assignees',
-                    group: 'assignees',
-                    type: 'text',
-                    nested: 'login',
-                    nullName: 'UNASSIGNED',
-                    nullFilter: {'assignees.totalCount': {'$eq': 0}},
-                    in: ['UNASSIGNED'],
-                    nullSelected: false
-                }
-            }};
-        }
+            //            {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
+
+        updatedQuery = {...filter, ...{
+            state: {
+                header: 'States',
+                group: 'state',
+                type: 'text',
+                nested: false,
+                in: ['OPEN'],
+                nullSelected: false
+            }
+            ,
+            assignees: {
+                header: 'Repositories',
+                group: 'repo.name',
+                type: 'text',
+                nested: false,
+                in: [params.data.name]
+            }
+        }};
         updateFromQuery(updatedQuery, this.props.history);
     };
 
@@ -116,7 +91,7 @@ class RepartitionTreemap extends Component {
                     }}
                     label="name"
                     labelFormat=""
-                    labelSkipSize={40}
+                    labelSkipSize={30}
                     labelTextColor="inherit:darker(1.2)"
                     colors="d320"
                     colorBy="name"
@@ -131,7 +106,7 @@ class RepartitionTreemap extends Component {
     }
 }
 
-RepartitionTreemap.propTypes = {
+ReposTreemap.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -141,8 +116,8 @@ const mapDispatch = dispatch => ({
 
 
 const mapState = state => ({
-    repartition: state.repartition.repartition,
-    filter: state.repartition.filter,
+    repos: state.remaining.repos,
+    filter: state.remaining.filter,
 });
 
 
@@ -151,7 +126,7 @@ export default
     (
             withRouter
             (
-                withStyles(styles)(RepartitionTreemap)
+                withStyles(styles)(ReposTreemap)
             )
     );
 

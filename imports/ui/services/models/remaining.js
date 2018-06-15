@@ -50,6 +50,7 @@ export default {
                 });
             });
             this.setRepos(repos);
+            this.setCount(cfgIssues.find(openedIssuesFilter).count());
 
             this.setLoading(false);
         }

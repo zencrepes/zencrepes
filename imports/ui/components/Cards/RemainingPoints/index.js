@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 import statsCardStyle from './statsCardStyle.jsx';
 
-import VelocityBarHorizontal from '../shared/VelocityBarHorizontal.js';
+import ReposTreemap from './ReposTreemap.js';
 
 import {withRouter} from "react-router-dom";
 import {getWeekYear} from "../../../utils/velocity";
@@ -63,11 +63,11 @@ class RemainingPoints extends Component {
                             <small className={classes.cardTitleSmall}>{small}</small>
                         ) : null}
                     </Typography>
-                    <h1>Some content</h1>
+                    <ReposTreemap />
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <div className={classes.cardStats}>
-                        Default based on 4 weeks rolling averages
+                        Issues repartition by repository
                     </div>
                 </CardActions>
             </Card>

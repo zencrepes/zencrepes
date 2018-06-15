@@ -142,7 +142,7 @@ class Dashboard extends Component {
                         </ItemGrid>
                     </Grid>
                     <Grid container>
-                        <ItemGrid xs={12} sm={6} md={3}>
+                        <ItemGrid xs={6} sm={4} md={2}>
                             <StatsCard
                                 icon={Ticket}
                                 iconColor="orange"
@@ -153,7 +153,7 @@ class Dashboard extends Component {
                                 statText=""
                             />
                         </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={3}>
+                        <ItemGrid xs={6} sm={4} md={2}>
                             <StatsCard
                                 icon={CodeBraces}
                                 iconColor="blue"
@@ -164,7 +164,7 @@ class Dashboard extends Component {
                                 statText="-"
                             />
                         </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={3}>
+                        <ItemGrid xs={6} sm={4} md={2}>
                             <StatsCard
                                 icon={CodeBraces}
                                 iconColor="green"
@@ -175,7 +175,7 @@ class Dashboard extends Component {
                                 statText="-"
                             />
                         </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={3}>
+                        <ItemGrid xs={6} sm={4} md={2}>
                             <StatsCard
                                 icon={Broom}
                                 iconColor="red"
@@ -185,11 +185,6 @@ class Dashboard extends Component {
                                 statIcon={Broom}
                                 statText="-"
                             />
-                        </ItemGrid>
-                    </Grid>
-                    <Grid container>
-                        <ItemGrid xs={12} sm={12} md={12}>
-                            <OldestIssues headerColor="green" />
                         </ItemGrid>
                     </Grid>
                 </main>
