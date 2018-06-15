@@ -18,7 +18,7 @@ import MyIssues from '../../components/Cards/MyIssues/index.js';
 import OldestIssues from '../../components/Cards/OldestIssues/index.js';
 import DaysToCompletion from '../../components/Cards/DaysToCompletion/index.js';
 
-//import QueryPicker from './QueryPicker.js';
+
 import QuerySelect from '../../components/Query/Select/index.js';
 import DataLoader from './DataLoader.js';
 

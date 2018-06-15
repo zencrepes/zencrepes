@@ -5,106 +5,134 @@ import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
 
 import AppMenu from '../../components/AppMenu/index.js';
-import LeftDrawer from '../../components/LeftDrawer/index.js'
 
-import { cfgSources } from '../../data/Repositories.js';
+import ItemGrid from '../../components/Grid/ItemGrid.js';
 
-import NoRepos from '../../components/Dialogs/NoRepos.js';
+import StatsCard from '../../components/Cards/StatsCard/index.js';
+import RemainingPoints from '../../components/Cards/RemainingPoints/index.js';
+import OverallVelocityWeeks from '../../components/Cards/OverallVelocityWeeks/index.js';
+import OverallMemberVelocityWeeks from '../../components/Cards/OverallMemberVelocityWeeks/index.js';
+import RepartitionByAssignee from '../../components/Cards/RepartitionByAssignee/index.js';
+import TimeToCompletionAssignee from '../../components/Cards/TimeToCompletionAssignee/index.js';
+import MyIssues from '../../components/Cards/MyIssues/index.js';
+import OldestIssues from '../../components/Cards/OldestIssues/index.js';
+import DaysToCompletion from '../../components/Cards/DaysToCompletion/index.js';
+
+
+import QuerySelect from '../../components/Query/Select/index.js';
+import DataLoader from './DataLoader.js';
+
+import {
+    ContentCopy,
+    Store,
+    InfoOutline,
+    Warning,
+    DateRange,
+    LocalOffer,
+    Update,
+    ArrowUpward,
+    AccessTime,
+    Accessibility
+} from "@material-ui/icons";
+
+import { Broom, CodeBraces, Ticket } from 'mdi-material-ui';
+
+
+import Toolbar from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
 import Issues, { cfgIssues } from '../../data/Issues.js';
-import Grid from 'material-ui/Grid';
-import CompletionPerDay from '../../components/Charts/CompletionPerDay/index.js';
-import CompletionPerWeek from '../../components/Charts/CompletionPerWeek/index.js';
-import QueryView from '../../components/Query/View/index.js';
-import IssuesTable from '../../components/Table/index.js';
-import GitRequests from '../../components/Github/GitRequests.js';
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
         display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
     },
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
         paddingTop: 80,
         minWidth: 0, // So the Typography noWrap works
     },
-    toolbar: theme.mixins.toolbar,
+    gridList: {
+        width: '100%',
+        //height: 450,
+    },
+    subheader: {
+        width: '100%',
+    },
+    container: {
+        paddingRight: "15px",
+        paddingLeft: "15px",
+        marginRight: "auto",
+        marginLeft: "auto"
+    }
 });
 
 class Velocity extends Component {
     constructor(props) {
         super(props);
-        this.state = {sourcesInit: false};
-    }
-
-    componentDidMount() {
-        const { loadIssues, setLoadIssues } = this.props;
-        if (loadIssues === true || cfgIssues.find({}).count() === 0) {
-            setLoadIssues(false);
-            const issues = new Issues(this.props);
-            issues.load();
-        }
+        this.state = { };
     }
 
     render() {
         const { classes } = this.props;
-        if (cfgSources.find({'active': true}).count() > 0 ) {
-            return (
-                <div className={classes.root}>
-                    <AppMenu />
-                    <main className={classes.content}>
-                        <Grid container spacing={8}>
-                            <Grid item xs={12}>
-                                <QueryView />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <CompletionPerDay />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <CompletionPerWeek />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <GitRequests />
-                            </Grid>
-                        </Grid>
-                    </main>
-                </div>
-            );
-        } else {
-            return (
-                <div className={classes.root}>
-                    <AppMenu />
-                    <main className={classes.content}>
-                        <NoRepos />
-                    </main>
-                </div>
-            );
-        }
+        return (
+            <div className={classes.root}>
+                <DataLoader />
+                <AppMenu />
+                <main className={classes.content}>
+                    <Toolbar className={classes.container}>
+                        <QuerySelect />
+                    </Toolbar>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={12} md={12}>
+                            <OverallVelocityWeeks
+                                icon={ContentCopy}
+                                iconColor="red"
+                                title="Completed this week"
+                                description="32"
+                                small="Pts"
+                                statIcon={LocalOffer}
+                                statText="Add small chart showing velocity past 16 weeks"
+                            />
+                        </ItemGrid>
+                    </Grid>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={12} md={12}>
+                            <OverallMemberVelocityWeeks
+                                icon={ContentCopy}
+                                iconColor="red"
+                                title="Completed this week"
+                                description="32"
+                                small="Pts"
+                                statIcon={LocalOffer}
+                                statText="Add small chart showing velocity past 16 weeks"
+                            />
+                        </ItemGrid>
+                    </Grid>
+                </main>
+            </div>
+        );
     }
 }
 
 Velocity.propTypes = {
     classes: PropTypes.object.isRequired,
-    currentUser: PropTypes.object,
-    rateLimit: PropTypes.object,
-    updateChip: PropTypes.func,
+
 };
 
 const mapState = state => ({
-    loadIssues: state.github.loadIssues,
+
 });
 
 const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip,
-    incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
-    updateIssuesLoading: dispatch.github.updateIssuesLoading,
-    setLoadIssues: dispatch.github.setLoadIssues,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(Velocity)));
