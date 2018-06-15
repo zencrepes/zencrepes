@@ -5,21 +5,21 @@ import {buildMongoSelector} from "../../utils/mongo/index.js";
 
 export default {
     state: {
-        loadFlag: false,
-        loading: false,
+        loadFlag: false,    // Flag to indicate the data should be reloaded
+        loading: false,     // Data is currently loading
         velocity: {},
-        filter: {}
+        filters: {},
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
         setVelocity(state, payload) {return { ...state, velocity: payload };},
-        setFilter(state, payload) {return { ...state, filter: payload };},
+        setFilters(state, payload) {return { ...state, filters: payload };},
     },
     effects: {
         async initStates(payload, rootState) {
             console.log('Init state');
-            let mongoSelector = buildMongoSelector(rootState.velocity.filter);
+            let mongoSelector = buildMongoSelector(rootState.velocity.filters);
             this.setLoading(true);
 
             if (mongoSelector['state'] !== undefined) {

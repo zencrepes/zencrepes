@@ -17,7 +17,7 @@ const styles = theme => ({
     }
 });
 
-class QueryManager extends Component {
+class QueryManage extends Component {
     constructor (props) {
         super(props);
         this.state = {};
@@ -51,8 +51,10 @@ class QueryManager extends Component {
     };
 }
 
-QueryManager.propTypes = {
+QueryManage.propTypes = {
     classes: PropTypes.object.isRequired,
+    openQueryManager: PropTypes.bool.isRequired,
+    setOpenQueryManager: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -63,4 +65,4 @@ const mapDispatch = dispatch => ({
     setOpenQueryManager: dispatch.queries.setOpenQueryManager,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(QueryManager));
+export default connect(mapState, mapDispatch)(withStyles(styles)(QueryManage));

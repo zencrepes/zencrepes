@@ -18,7 +18,9 @@ import MyIssues from '../../components/Cards/MyIssues/index.js';
 import OldestIssues from '../../components/Cards/OldestIssues/index.js';
 import DaysToCompletion from '../../components/Cards/DaysToCompletion/index.js';
 
-import QueryPicker from './QueryPicker.js';
+//import QueryPicker from './QueryPicker.js';
+import QuerySelect from '../../components/Query/Select/index.js';
+import DataLoader from './DataLoader.js';
 
 import {
     ContentCopy,
@@ -82,10 +84,11 @@ class Dashboard extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
+                <DataLoader />
                 <AppMenu />
                 <main className={classes.content}>
                     <Toolbar className={classes.container}>
-                        <QueryPicker />
+                        <QuerySelect />
                     </Toolbar>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={3}>

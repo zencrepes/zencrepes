@@ -97,7 +97,7 @@ const mapDispatch = dispatch => ({
 });
 
 const mapState = state => ({
-    queryValues: state.data.filters,
+    queryValues: state.queries.filters,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(QueryFacets));

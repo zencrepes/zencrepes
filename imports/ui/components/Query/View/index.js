@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import QueryFacets from './QueryFacets.js';
 import QuerySaved from './QuerySaved.js';
 
-import {buildMongoSelector} from '../../utils/mongo/index.js';
+import {buildMongoSelector} from '../../../utils/mongo/index.js';
 
 const styles = theme => ({
     root: {
@@ -29,7 +29,7 @@ const styles = theme => ({
     },
 });
 
-class Query extends Component {
+class QueryView extends Component {
     constructor (props) {
         super(props);
         this.state = {};
@@ -76,14 +76,14 @@ class Query extends Component {
     }
 }
 
-Query.propTypes = {
+QueryView.propTypes = {
     classes: PropTypes.object.isRequired,
     filters: PropTypes.object.isRequired,
 };
 
 
 const mapState = state => ({
-    filters: state.data.filters,
+    filters: state.queries.filters,
 });
 
 const mapDispatch = dispatch => ({
@@ -91,4 +91,4 @@ const mapDispatch = dispatch => ({
     setOpenSaveQuery: dispatch.queries.setOpenSaveQuery,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Query));
+export default connect(mapState, mapDispatch)(withStyles(styles)(QueryView));

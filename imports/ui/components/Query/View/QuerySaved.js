@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Chip from 'material-ui/Chip';
 import { connect } from "react-redux";
 
-import { cfgQueries } from '../../data/Queries.js';
+import { cfgQueries } from '../../../data/Queries.js';
 
 const styles = theme => ({
     root: {
@@ -49,7 +48,7 @@ const mapDispatch = dispatch => ({
 });
 
 const mapState = state => ({
-    filters: state.data.filters,
+    filters: state.queries.filters,
     openSaveQuery: state.queries.openSaveQuery,
 });
 

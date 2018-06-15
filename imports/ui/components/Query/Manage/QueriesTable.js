@@ -3,12 +3,11 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
 import { connect } from "react-redux";
-import { GithubCircle } from 'mdi-material-ui'
-import { Link } from 'react-router-dom';
 
-import { cfgQueries } from '../../data/Queries.js';
+import { cfgQueries } from '../../../data/Queries.js';
+import {buildMongoSelector} from "../../../utils/mongo/index.js";
 
 import {
     // State or Local Processing Plugins
@@ -45,7 +44,7 @@ const styles = theme => ({
 });
 
 const RowDetail = ({ row }) => (
-    <div>{row.mongo}</div>
+    <div>{JSON.stringify(buildMongoSelector(JSON.parse(row.filters)))}</div>
 );
 
 class QueriesTable extends Component {
@@ -66,7 +65,6 @@ class QueriesTable extends Component {
         };
         this.changeCurrentPage = currentPage => this.setState({ currentPage });
         this.changePageSize = pageSize => this.setState({ pageSize });
-        //this.commitChanges = this.commitChanges.bind(this);
     }
 
     doesQueryNameExists = (name) => {
@@ -99,18 +97,7 @@ class QueriesTable extends Component {
                 cfgQueries.remove({_id: queriesList[idx]._id});
             }
         }
-        /*
-        let { rows } = this.state;
-        if (changed) {
-            rows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
-        }
-        if (deleted) {
-            const deletedSet = new Set(deleted);
-            rows = rows.filter(row => !deletedSet.has(row.id));
-        }
-        this.setState({ rows });
-        */
-    }
+    };
 
     render() {
         const { classes, queriesList } = this.props;

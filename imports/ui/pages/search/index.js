@@ -9,12 +9,14 @@ import LeftDrawer from '../../components/LeftDrawer/index.js'
 
 import { cfgSources } from '../../data/Repos.js';
 
+import SyncFilters from './SyncFilters.js';
+
 import NoRepos from '../../components/Dialogs/NoRepos.js';
 
 import Issues, { cfgIssues } from '../../data/Issues.js';
 import Grid from 'material-ui/Grid';
 import Facets from '../../components/Facets/index.js';
-import Query from '../../components/Query/index.js';
+import QueryView from '../../components/Query/View/index.js';
 import IssuesTable from '../../components/Table/index.js';
 import GitRequests from '../../components/Github/GitRequests.js';
 import LoadingIssues from '../../components/Loading/Issues/index.js';
@@ -67,11 +69,12 @@ class Search extends Component {
             return (
                 <div className={classes.root}>
                     <LoadingIssues />
+                    <SyncFilters />
                     <AppMenu />
                     <main className={classes.content}>
                         <Grid container spacing={8}>
                             <Grid item xs={12}>
-                                <Query />
+                                <QueryView />
                             </Grid>
                             <Grid item xs={4}>
                                 <Facets />

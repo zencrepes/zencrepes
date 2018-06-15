@@ -15,7 +15,7 @@ import Issues, { cfgIssues } from '../../data/Issues.js';
 import Grid from 'material-ui/Grid';
 import CompletionPerDay from '../../components/Charts/CompletionPerDay/index.js';
 import CompletionPerWeek from '../../components/Charts/CompletionPerWeek/index.js';
-import Query from '../../components/Query/index.js';
+import QueryView from '../../components/Query/View/index.js';
 import IssuesTable from '../../components/Table/index.js';
 import GitRequests from '../../components/Github/GitRequests.js';
 
@@ -61,7 +61,7 @@ class Velocity extends Component {
                     <main className={classes.content}>
                         <Grid container spacing={8}>
                             <Grid item xs={12}>
-                                <Query />
+                                <QueryView />
                             </Grid>
                             <Grid item xs={12}>
                                 <CompletionPerDay />

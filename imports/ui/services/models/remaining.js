@@ -11,7 +11,7 @@ export default {
     state: {
         loadFlag: false,
         loading: false,
-        filter: {},
+        filters: {},
         count: 0,
         points: 0,
         repos: [],
@@ -19,7 +19,7 @@ export default {
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
-        setFilter(state, payload) {return { ...state, filter: payload };},
+        setFilters(state, payload) {return { ...state, filters: payload };},
         setCount(state, payload) {return { ...state, count: payload };},
         setPoints(state, payload) {return { ...state, points: payload };},
         setRepos(state, payload) {return { ...state, repos: payload };},
@@ -27,7 +27,7 @@ export default {
     },
     effects: {
         async initStates(payload, rootState) {
-            let mongoSelector = buildMongoSelector(rootState.repartition.filter);
+            let mongoSelector = buildMongoSelector(rootState.repartition.filters);
             console.log('Repartition Mongo Selector: ' + JSON.stringify(mongoSelector));
 
             if (mongoSelector['state'] !== undefined) {

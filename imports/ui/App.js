@@ -21,11 +21,8 @@ import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
 import Issues from './data/Issues.js';
 import Repos from './data/Repos.js';
-import VelocityData from './data/VelocityData.js';
-import RepartitionData from './data/RepartitionData.js';
-import RemainingData from './data/RemainingData.js';
-import QueryManager from './components/QueryManager/index.js';
-import SaveQuery from './components/SaveQuery/index.js';
+import QueryManage from './components/Query/Manage/index.js';
+import QuerySave from './components/Query/Save/index.js';
 
 class App extends Component {
     constructor(props) {
@@ -46,11 +43,8 @@ class App extends Component {
                 <div>
                     <Issues />
                     <Repos />
-                    <VelocityData />
-                    <RepartitionData />
-                    <RemainingData />
-                    <QueryManager />
-                    <SaveQuery />
+                    <QueryManage />
+                    <QuerySave />
                     <Router>
                         {!props.loading ? (
                             <div className="App">

@@ -55,20 +55,20 @@ export default {
     state: {
         loadFlag: false,
         loading: false,
-        filter: {},
+        filters: {},
         repartition: [],
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
-        setFilter(state, payload) {return { ...state, filter: payload };},
+        setFilters(state, payload) {return { ...state, filters: payload };},
         setRepartition(state, payload) {return { ...state, repartition: payload };},
 
     },
     effects: {
         async initStates(payload, rootState) {
             //console.log('Repartition Filter: ' + JSON.stringify(rootState.repartition.filter));
-            let mongoSelector = buildMongoSelector(rootState.repartition.filter);
+            let mongoSelector = buildMongoSelector(rootState.repartition.filters);
             //console.log('Repartition Mongo Selector: ' + JSON.stringify(mongoSelector));
 
             //console.log(cfgIssues.find(rootState.repartition.mongoFilter).fetch());
