@@ -15,7 +15,7 @@ import {getWeekYear} from "../../../utils/velocity/index";
 
 const styles = theme => ({
     root: {
-        height: '200px'
+        height: '300px'
     },
 });
 
@@ -36,14 +36,15 @@ class VelocityLine extends Component {
                     margin={{
                         "top": 10,
                         "right": 5,
-                        "bottom": 27,
-                        "left": 5
+                        "bottom": 10,
+                        "left": 30
                     }}
                     minY="auto"
                     stacked={true}
                     curve="natural"
                     enableGridX={false}
                     enableGridY={true}
+                    colors="d320"
                     dotSize={4}
                     dotColor="inherit:darker(0.3)"
                     dotBorderWidth={0}
@@ -55,7 +56,6 @@ class VelocityLine extends Component {
                     motionStiffness={90}
                     motionDamping={15}
                     enableStackTooltip={true}
-                    axisLeft={null}
                     axisBottom={null}
                     isInteractive={true}
                     legends={[

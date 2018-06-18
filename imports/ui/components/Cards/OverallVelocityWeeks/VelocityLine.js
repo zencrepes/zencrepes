@@ -36,8 +36,8 @@ class VelocityLine extends Component {
                     margin={{
                         "top": 10,
                         "right": 5,
-                        "bottom": 27,
-                        "left": 5
+                        "bottom": 10,
+                        "left": 30
                     }}
                     minY="auto"
                     stacked={true}
@@ -55,7 +55,6 @@ class VelocityLine extends Component {
                     motionStiffness={90}
                     motionDamping={15}
                     enableStackTooltip={true}
-                    axisLeft={null}
                     axisBottom={null}
                     isInteractive={true}
                     legends={[

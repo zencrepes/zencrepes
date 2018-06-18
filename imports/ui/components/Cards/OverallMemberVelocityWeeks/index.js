@@ -1,4 +1,5 @@
 //https://github.com/creativetimofficial/material-dashboard-react/blob/master/src/components/Cards/StatsCard.jsx
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -25,38 +26,57 @@ class OverallMemberVelocityWeeks extends Component {
         this.state = {};
     }
 
+    /*
+     getVelocityLine(): Massage data to be displayed in the chart
+     TODO - This needs to be reworked and optimized, very dirty implementation
+     */
+
     getVelocityLine(repartition) {
+        console.log(repartition);
         if (repartition.length > 0 ) {
-            let earliestDate = null;
-            let latestDate = null;
+            //Create a blank array with all possible 'X' datapoints
+            let emptyDataset = [];
             repartition.forEach((assignee) => {
                 assignee.weeks.forEach((week) => {
-                    if (earliestDate === null) {earliestDate = new Date(week.weekStart);}
-                    if (latestDate === null) {latestDate = new Date(week.weekStart);}
-                    if (earliestDate > new Date(week.weekStart)) {earliestDate = new Date(week.weekStart);}
-                    if (latestDate < new Date(week.weekStart)) {latestDate = new Date(week.weekStart);}
-                })
+                    if(!_.find(emptyDataset, {x: week.weekStart})) {
+                        emptyDataset.push({
+                            x: week.weekStart,
+                            y: null,
+                        });
+                    }
+                });
             });
-            console.log('Earliest Date: ' + earliestDate.toString());
-            console.log('Latest Date: ' + latestDate.toString());
+            emptyDataset = _.sortBy(emptyDataset, 'x');
+            console.log(emptyDataset);
 
-            //Find earliest date
-            //Find latest date
-            //Build array of objects
             let dataset = [];
             repartition.forEach((assignee) => {
-                let assigneeData = assignee.weeks.map((v) => {
-                    //return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
-                    return {x: v.weekStart, y: v.issues.velocity}
+                let assigneeData = [];
+                emptyDataset.forEach((week) => {
+                    let currentValue = _.find(assignee.weeks, {weekStart: week.x});
+                    if(!currentValue) {
+                        assigneeData.push(week);
+                    } else {
+                        assigneeData.push({x: currentValue.weekStart, y: currentValue.issues.velocity});
+                    }
                 });
-                
 
-                dataset.push({id: assignee.login, data: assigneeData})
+//                let assigneeData = assignee.weeks.map((v) => {
+//                    //return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
+//                    return {x: v.weekStart, y: v.issues.velocity}
+//                });
+                //https://stackoverflow.com/questions/43872983/merge-object-arrays-without-duplicates-in-angular-2
+                assigneeData = assigneeData.filter(v => v.y !== undefined);
+                dataset.push({id: assignee.login, data: assigneeData});
+                //dataset.push({id: assignee.login, data: _.uniqBy([...assigneeData, ...emptyDataset], 'x')});
             });
+            console.log(dataset);
 /*            dataset = dataset.map((v) => {
                 return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
             });*/
             return dataset;
+//            return [{id: 'rolling', data: []}];
+
             //return [{id: 'rolling', data: dataset}];
         } else {
             return [{id: 'rolling', data: []}];

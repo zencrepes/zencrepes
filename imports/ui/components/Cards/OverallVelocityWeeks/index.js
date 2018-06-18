@@ -30,6 +30,7 @@ class OverallVelocityWeeks extends Component {
             dataset = dataset.map((v) => {
                 return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
             });
+            dataset = dataset.filter(v => v.y !== undefined);
             return [{id: 'rolling', data: dataset}];
         } else {
             return [{id: 'rolling', data: []}];

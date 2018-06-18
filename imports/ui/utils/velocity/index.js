@@ -88,10 +88,15 @@ export const initObject = (firstDay, lastDay) => {
             };
         }
 
-        let currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
+        //let currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
+        //http://lifelongprogrammer.blogspot.com/2014/06/js-get-first-last-day-of-current-week-month.html
+        // /let d = currentDate.getDay();
+        let currentWeekYear = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (currentDate.getDay() == 0?0:7)-currentDate.getDay() );
         if(typeof initObject['weeks'][currentWeekYear] === 'undefined') {
+            //console.log(currentWeekYear);
             initObject['weeks'][currentWeekYear] = {
-                weekStart: currentDate.toJSON(),
+                //weekStart: currentDate.toJSON(),
+                weekStart: currentWeekYear.toJSON(),
                 issues: {count: 0},
                 points: {count: 0},
                 closedCount: 0,
@@ -138,13 +143,17 @@ export const populateObject = (dataObject, issues) => {
         }
 
         if (issue.closedAt !== null) {
-            closedDate = formatDate(issue.closedAt);
-            closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
+            let closedDate = new Date(issue.closedAt);
+            let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedDate.getDate() + (closedDate.getDay() == 0?0:7)-closedDate.getDay() );
+            //closedDate = formatDate(issue.closedAt);
+            //closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
+            console.log(closedWeek);
             if (dataObject['weeks'][closedWeek] !== undefined) {
                 dataObject['weeks'][closedWeek]['issues']['count']++;
             }
         }
     });
+   //console.log(dataObject);
     return dataObject;
 };
 
