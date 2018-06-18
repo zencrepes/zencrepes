@@ -147,13 +147,11 @@ export const populateObject = (dataObject, issues) => {
             let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedDate.getDate() + (closedDate.getDay() == 0?0:7)-closedDate.getDay() );
             //closedDate = formatDate(issue.closedAt);
             //closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
-            console.log(closedWeek);
             if (dataObject['weeks'][closedWeek] !== undefined) {
                 dataObject['weeks'][closedWeek]['issues']['count']++;
             }
         }
     });
-   //console.log(dataObject);
     return dataObject;
 };
 

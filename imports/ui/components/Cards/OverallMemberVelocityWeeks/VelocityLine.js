@@ -34,7 +34,7 @@ class VelocityLine extends Component {
                 <ResponsiveLine
                     data={data}
                     margin={{
-                        "top": 10,
+                        "top": 20,
                         "right": 5,
                         "bottom": 10,
                         "left": 30

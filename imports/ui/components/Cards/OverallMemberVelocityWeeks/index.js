@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import regularCardStyle from './regularCardStyle.jsx';
 
 import VelocityLine from './VelocityLine.js';
+import HighchartsVelocity from '../shared/HighchartsVelocity.js';
 
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
@@ -30,7 +31,7 @@ class OverallMemberVelocityWeeks extends Component {
      getVelocityLine(): Massage data to be displayed in the chart
      TODO - This needs to be reworked and optimized, very dirty implementation
      */
-
+/*
     getVelocityLine(repartition) {
         console.log(repartition);
         if (repartition.length > 0 ) {
@@ -57,7 +58,7 @@ class OverallMemberVelocityWeeks extends Component {
                     if(!currentValue) {
                         assigneeData.push(week);
                     } else {
-                        assigneeData.push({x: currentValue.weekStart, y: currentValue.issues.velocity});
+                        assigneeData.push({x: currentValue.weekStart, y: Math.round(currentValue.issues.velocity, 1)});
                     }
                 });
 
@@ -66,14 +67,27 @@ class OverallMemberVelocityWeeks extends Component {
 //                    return {x: v.weekStart, y: v.issues.velocity}
 //                });
                 //https://stackoverflow.com/questions/43872983/merge-object-arrays-without-duplicates-in-angular-2
-                assigneeData = assigneeData.filter(v => v.y !== undefined);
+                assigneeData = assigneeData.map((v) => {
+                    if (v.y === undefined) {
+                        return {x:v.x, y: null};
+                    } else {
+                        if (v.y === null) {
+                            return v;
+                        } else if (isNaN(v.y)) {
+                            return {x:v.x, y: null};
+                        }
+                        else {
+                            return v;
+                        }
+                    }
+                });
                 dataset.push({id: assignee.login, data: assigneeData});
                 //dataset.push({id: assignee.login, data: _.uniqBy([...assigneeData, ...emptyDataset], 'x')});
             });
             console.log(dataset);
-/*            dataset = dataset.map((v) => {
+            dataset = dataset.map((v) => {
                 return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
-            });*/
+            });
             return dataset;
 //            return [{id: 'rolling', data: []}];
 
@@ -81,6 +95,24 @@ class OverallMemberVelocityWeeks extends Component {
         } else {
             return [{id: 'rolling', data: []}];
         }
+    }
+*/
+    /*
+     getVelocityHighcharts(): Massage data to be displayed in the chart
+     TODO - This needs to be reworked and optimized, very dirty implementation
+     */
+
+    getVelocityHighcharts(repartition) {
+        let dataset = [];
+        repartition.forEach((assignee) => {
+            let assigneeData = [];
+            assignee.weeks.forEach((week) => {
+                assigneeData.push([new Date(week.weekStart).getTime(), Math.round(week.issues.velocity, 1)]);
+            });
+            dataset.push({id: assignee.login, weeks: assigneeData});
+        });
+        console.log(dataset);
+        return dataset;
     }
 
     buildDataset() {
@@ -115,8 +147,8 @@ class OverallMemberVelocityWeeks extends Component {
 
 
         let dataset = this.buildDataset();
-        console.log(dataset);
-        console.log(this.getVelocityLine(dataset));
+        //console.log(dataset);
+        //console.log(this.getVelocityLine(dataset));
 
         return (
             <Card className={classes.card + plainCardClasses}>
@@ -133,7 +165,7 @@ class OverallMemberVelocityWeeks extends Component {
                     title='Overall weekly velocity throughout the entire period'
                 />
                 <CardContent>
-                    <VelocityLine data={this.getVelocityLine(dataset)} />
+                    <HighchartsVelocity data={this.getVelocityHighcharts(dataset)} />
                 </CardContent>
                 {footer !== undefined ? (
                     <CardActions className={classes.cardActions}>{footer}</CardActions>

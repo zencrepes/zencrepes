@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import regularCardStyle from './regularCardStyle.jsx';
 
 import VelocityLine from './VelocityLine.js';
+import HighchartsVelocity from '../shared/HighchartsVelocity.js';
 
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
@@ -31,10 +32,21 @@ class OverallVelocityWeeks extends Component {
                 return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
             });
             dataset = dataset.filter(v => v.y !== undefined);
+            //console.log(dataset);
             return [{id: 'rolling', data: dataset}];
+            //return [{id: 'rolling', data: []}];
         } else {
             return [{id: 'rolling', data: []}];
         }
+    }
+
+    getVelocityHighcharts(velocity) {
+        let dataset = [];
+        console.log(velocity);
+        velocity.forEach((v) => {
+            dataset.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
+        });
+        return [{id: 'overall', weeks: dataset}];
     }
 
     buildDataset() {
@@ -90,7 +102,8 @@ class OverallVelocityWeeks extends Component {
                     title='Overall weekly velocity throughout the entire period'
                 />
                 <CardContent>
-                    <VelocityLine data={this.getVelocityLine(dataset)} />
+                    <HighchartsVelocity data={this.getVelocityHighcharts(dataset)} />
+
                 </CardContent>
                 {footer !== undefined ? (
                     <CardActions className={classes.cardActions}>{footer}</CardActions>
@@ -102,6 +115,8 @@ class OverallVelocityWeeks extends Component {
 
 /*
  <RepartitionTreemap />
+ <VelocityLine data={this.getVelocityLine(dataset)} />
+
  */
 
 OverallVelocityWeeks.propTypes = {
