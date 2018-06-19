@@ -28,6 +28,7 @@ import GET_GITHUB_ORGS from '../../../graphql/getOrgs.graphql';
 
 import OrgRepoTree from '../../components/OrgRepoTree/index.js';
 import Access from './Access.js';
+import Metadata from './Metadata.js';
 import GitRequests from '../../components/Github/GitRequests.js';
 
 import LoadingIssues from '../../components/Loading/Issues/index.js';
@@ -84,6 +85,9 @@ class Settings extends Component {
                         </Grid>
                         <Grid item xs={6}>
                             <OrgRepoTree />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Metadata />
                         </Grid>
                         <Grid item xs={12}>
                             <GitRequests />

@@ -174,6 +174,7 @@ class Issues extends Component {
                 stats: getStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt),
                 comments: currentIssue.node.comments,
                 participants: currentIssue.node.participants,
+                number: currentIssue.node.number,
                 refreshed: true,
                 pinned: nodePinned,
             }
