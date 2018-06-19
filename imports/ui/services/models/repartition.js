@@ -78,8 +78,10 @@ export default {
             //Build an aggregate by assignee
             let assignees = getAssignees(cfgIssues.find(openedIssues(mongoSelector)).fetch());
             assignees = assignees.map((assignee) => {
+                //console.log('-----');
                 //console.log('Repartition - processing: ' + assignee.login);
-                let closedIssuesFilter = {'state':{$in:['CLOSED']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}};
+                //let closedIssuesFilter = {'state':{$in:['CLOSED']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}};
+                let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}}};
                 let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[assignee.login]}}}}};
                 //console.log(closedIssuesFilter);
                 //console.log(JSON.stringify(openedIssuesFilter));
@@ -87,6 +89,8 @@ export default {
                 if (cfgIssues.find(closedIssuesFilter).count() > 0) {
                     let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
                     let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
+                    //console.log(firstDay);
+                    //console.log(lastDay);
 
                     let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
                     dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate the object with count of days and weeks

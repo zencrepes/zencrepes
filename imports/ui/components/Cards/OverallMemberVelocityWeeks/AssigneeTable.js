@@ -69,9 +69,11 @@ class AssigneeTable extends Component {
      *
      */
     clickAssignee = (login) => {
-        const { filter, updateFromQuery } = this.props;
+        const { filters, updateFromQuery } = this.props;
 
-        let updatedQuery = {...filter, ...{
+        console.log(filters);
+
+        let updatedQuery = {...filters, ...{
             state: {
                 header: 'States',
                 group: 'state',
@@ -126,6 +128,46 @@ class AssigneeTable extends Component {
         }
     }
 
+    buildReferenceDataset(dataset) {
+        console.log(dataset);
+        if (dataset.length > 0) {
+            console.log(dataset);
+            let emptyDataset = [];
+
+            //Build an empty dataset containing all weeks from the overall set
+            console.log(dataset);
+            dataset.forEach((assignee) => {
+                assignee.weeks.forEach((week) => {
+                    if(!_.find(emptyDataset, {weekStart: week.weekStart})) {
+                        emptyDataset.push({
+                            weekStart: week.weekStart,
+                            issues: {count: 0, velocity:0},
+                            points: {count: 0, velocity:0}
+                        });
+                    }
+                });
+            });
+            emptyDataset = _.sortBy(emptyDataset, 'weekStart');
+
+            console.log(emptyDataset);
+
+            dataset.forEach((assignee) => {
+                let assigneeData = [];
+                emptyDataset.forEach((week) => {
+                    let currentValue = _.find(assignee.weeks, {weekStart: week.weekStart});
+                    if(!currentValue) {
+                        assigneeData.push(week);
+                    } else {
+                        assigneeData.push(currentValue);
+                    }
+                });
+                assigneeData = _.sortBy(assigneeData, 'weekStart');
+                assignee.weeks = assigneeData;
+            });
+        }
+        return dataset;
+    }
+
 /*
  https://whawker.github.io/react-jsx-highcharts/examples/Sparkline/index.html
 
@@ -152,7 +194,9 @@ class AssigneeTable extends Component {
 
         console.log(tableData);
         let dataset = tableData.filter(v => v.login !== 'UNASSIGNED');
-        dataset = tableData.filter(v => v.weeks !== undefined);
+        dataset = dataset.filter(v => v.weeks !== undefined);
+        dataset = this.buildReferenceDataset(dataset);
+        console.log(dataset);
         if (tableData.length > 0) {
             return (
                 <div className={classes.tableResponsive}>
@@ -216,7 +260,7 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     repartition: state.repartition.repartition,
-    filter: state.repartition.filter,
+    filters: state.repartition.filters,
 });
 
 export default

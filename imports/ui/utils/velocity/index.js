@@ -35,7 +35,7 @@ export const getWeekYear = (dateObj) => {
 */
 export const getFirstDay = (mongoFilter, cfgIssues) => {
     if (cfgIssues.find(mongoFilter).count() > 0) {
-        let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { createdAt: 1 }, reactive: false, transform: null }).createdAt);
+        let firstDay = formatDate(cfgIssues.findOne(mongoFilter, { sort: { closedAt: 1 }, reactive: false, transform: null }).closedAt);
         firstDay.setDate(firstDay.getDate() - 1);
         return firstDay
     } else {
@@ -57,7 +57,7 @@ export const getLastDay = (mongoFilter, cfgIssues) => {
             sort: {closedAt: -1},
             reactive: false,
             transform: null
-        }).createdAt);
+        }).closedAt);
         lastDay.setDate(lastDay.getDate() + 1);
         return lastDay
     } else {
