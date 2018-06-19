@@ -1,6 +1,6 @@
 import { cfgIssues } from '../../data/Issues.js';
 
-import { getFirstDay, getLastDay, initObject, populateObject, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
+import { getFirstDay, getLastDay, initObject, populateObject, populateOpen, populateClosed, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";
 
 const getAssignees = (issues) => {
@@ -26,7 +26,6 @@ const getAssignees = (issues) => {
         }
     });
     statesGroup = _.groupBy(allValues, 'login');
-
 
     // If the key is 'undefined', replace with default facet name
     if (statesGroup['undefined'] !== undefined) {
@@ -91,8 +90,10 @@ export default {
 
                     let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
                     dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate the object with count of days and weeks
+                    dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch());
+                    dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilter).fetch());
                     dataObject = populateTicketsPerDay(dataObject);
-                    dataObject = populateTicketsPerWeek(dataObject, cfgIssues.find(openedIssuesFilter).count());
+                    dataObject = populateTicketsPerWeek(dataObject);
                     //console.log(dataObject);
 
                     //1- Calculate velocity for this user. Velocity calculate over the entire dataset.

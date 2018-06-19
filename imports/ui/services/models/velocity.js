@@ -1,6 +1,6 @@
 import { cfgIssues } from '../../data/Issues.js';
 
-import { getFirstDay, getLastDay, initObject, populateObject, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
+import { getFirstDay, getLastDay, initObject, populateObject, populateOpen, populateClosed, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";
 
 export default {
@@ -34,8 +34,10 @@ export default {
 
             let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
             dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate the object with count of days and weeks
+            dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
+            dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
             dataObject = populateTicketsPerDay(dataObject);
-            dataObject = populateTicketsPerWeek(dataObject, cfgIssues.find(openedIssuesFilter).count());
+            dataObject = populateTicketsPerWeek(dataObject);
 
             console.log(closedIssuesFilter);
             console.log('+++++++++');

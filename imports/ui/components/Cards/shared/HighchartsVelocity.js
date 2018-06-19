@@ -13,7 +13,6 @@ import { ResponsiveLine } from '@nivo/line'
 
 import {getWeekYear} from "../../../utils/velocity/index";
 
-
 import Highcharts from 'highcharts/highstock';
 import {
     HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
@@ -32,7 +31,7 @@ class HighchartsVelocity extends Component {
         super(props);
 
         this.state = {
-            data1: [],
+            //series: [],
         };
     }
 
@@ -40,14 +39,15 @@ class HighchartsVelocity extends Component {
         return (
             <SplineSeries name={id} key={id} data={weeks} />
         )
-    }
+    };
 
     render() {
         const { classes, data } = this.props;
+        const { series } = this.state;
 
         const plotOptions =  {
             series: {
-                stacking: 'normal'
+                stacking: null
             }
         };
 

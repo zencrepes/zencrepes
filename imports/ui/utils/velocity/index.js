@@ -54,7 +54,7 @@ export const getFirstDay = (mongoFilter, cfgIssues) => {
 export const getLastDay = (mongoFilter, cfgIssues) => {
     if (cfgIssues.find(mongoFilter).count() > 0) {
         let lastDay = formatDate(cfgIssues.findOne(mongoFilter, {
-            sort: {createdAt: -1},
+            sort: {closedAt: -1},
             reactive: false,
             transform: null
         }).createdAt);
@@ -183,12 +183,14 @@ export const populateTicketsPerDay = (dataObject) => {
 * populateTicketsPerDay()
 *
 * Arguments:
-* - days:
+* - issues
 */
-export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
+export const populateTicketsPerWeek = (dataObject) => {
 //    console.log('populateTicketsPerWeek');
     let completionVelocities = [];
+    let remainingIssuesCount = dataObject.open.issues.length;
     let ticketsPerWeek = Object.values(dataObject['weeks']);
+    let defaultVelocity = 'all';
     ticketsPerWeek.map(function(value, idx) {
         if (idx <=4) {startIdx = 0;}
         else {startIdx = idx - 4;}
@@ -204,7 +206,7 @@ export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
                 'issues': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'issues')},
                 'points': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'points')},
             }
-            currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
+            currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
             completionVelocities.push(currentCompletion);
 
             if (idx >= 4) { // 4 weeks
@@ -214,8 +216,9 @@ export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
                     'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
-                currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
+                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
                 completionVelocities.push(currentCompletion);
+                defaultVelocity = '4w';
             }
             if (idx >= 8) { // 8 weeks
                 let currentWindowIssues = ticketsPerWeek.slice(idx-8, idx);
@@ -224,7 +227,7 @@ export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
                     'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
-                currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
+                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
             if (idx >= 12) { // 12 weeks
@@ -234,13 +237,38 @@ export const populateTicketsPerWeek = (dataObject, remaingIssuesCount) => {
                     'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
-                currentCompletion['issues']['effort'] = Math.round(remaingIssuesCount / currentCompletion['issues']['velocity'],3);
+                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
         }
     });
     dataObject['weeks'] = ticketsPerWeek;
     dataObject['velocity'] = completionVelocities;
+    dataObject['defaultVelocity'] = defaultVelocity;
     return dataObject;
 //    return {ticketsPerWeek, completionVelocities};
+};
+
+/*
+ *
+ * populateOpen()
+ *
+ * Arguments:
+ * - issues
+ */
+export const populateOpen = (dataObject, openIssues) => {
+    dataObject['open'] = {'issues': openIssues, 'points': null};
+    return dataObject;
+};
+
+/*
+ *
+ * populateClosed()
+ *
+ * Arguments:
+ * - issues
+ */
+export const populateClosed = (dataObject, closedIssues) => {
+    dataObject['closed'] = {'issues': closedIssues, 'points': null};
+    return dataObject;
 };

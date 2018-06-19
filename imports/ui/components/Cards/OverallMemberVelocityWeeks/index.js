@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import regularCardStyle from './regularCardStyle.jsx';
 
 import VelocityLine from './VelocityLine.js';
+import AssigneeTable from './AssigneeTable.js';
 import HighchartsVelocity from '../shared/HighchartsVelocity.js';
 
 import {withRouter} from "react-router-dom";
@@ -129,6 +130,15 @@ class OverallMemberVelocityWeeks extends Component {
         }
     }
 
+    getData() {
+        const { repartition } = this.props;
+        console.log(repartition);
+        if (repartition.length > 0) {
+            return [{title: 'abcd'}];
+        } else {
+            return [];
+        }
+    }
 
     render() {
         const {
@@ -144,9 +154,11 @@ class OverallMemberVelocityWeeks extends Component {
         const cardPlainHeaderClasses = cx({
             [" " + classes.cardPlainHeader]: plainCard
         });
+        const { repartition } = this.props;
 
 
         let dataset = this.buildDataset();
+        let tableData = this.getData();
         //console.log(dataset);
         //console.log(this.getVelocityLine(dataset));
 
@@ -157,7 +169,7 @@ class OverallMemberVelocityWeeks extends Component {
                         root:
                         classes.cardHeader +
                         " " +
-                        classes[headerColor + "CardHeader"] +
+                        classes['green' + "CardHeader"] +
                         cardPlainHeaderClasses,
                         title: classes.cardTitle,
                         subheader: classes.cardSubtitle
@@ -165,7 +177,10 @@ class OverallMemberVelocityWeeks extends Component {
                     title='Overall weekly velocity throughout the entire period'
                 />
                 <CardContent>
-                    <HighchartsVelocity data={this.getVelocityHighcharts(dataset)} />
+                    <AssigneeTable
+                        tableHeaderColor="warning"
+                        tableData={repartition}
+                    />
                 </CardContent>
                 {footer !== undefined ? (
                     <CardActions className={classes.cardActions}>{footer}</CardActions>
@@ -177,6 +192,8 @@ class OverallMemberVelocityWeeks extends Component {
 
 /*
  <RepartitionTreemap />
+ <HighchartsVelocity data={this.getVelocityHighcharts(dataset)} />
+
  */
 
 OverallMemberVelocityWeeks.propTypes = {

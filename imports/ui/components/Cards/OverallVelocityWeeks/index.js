@@ -46,7 +46,11 @@ class OverallVelocityWeeks extends Component {
         velocity.forEach((v) => {
             dataset.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
         });
-        return [{id: 'overall', weeks: dataset}];
+        if (dataset.length === 0) {
+            return [];
+        } else {
+            return [{id: 'overall', weeks: dataset}];
+        }
     }
 
     buildDataset() {
@@ -94,7 +98,7 @@ class OverallVelocityWeeks extends Component {
                         root:
                         classes.cardHeader +
                         " " +
-                        classes[headerColor + "CardHeader"] +
+                        classes['blue' + "CardHeader"] +
                         cardPlainHeaderClasses,
                         title: classes.cardTitle,
                         subheader: classes.cardSubtitle
@@ -103,7 +107,6 @@ class OverallVelocityWeeks extends Component {
                 />
                 <CardContent>
                     <HighchartsVelocity data={this.getVelocityHighcharts(dataset)} />
-
                 </CardContent>
                 {footer !== undefined ? (
                     <CardActions className={classes.cardActions}>{footer}</CardActions>
@@ -116,6 +119,7 @@ class OverallVelocityWeeks extends Component {
 /*
  <RepartitionTreemap />
  <VelocityLine data={this.getVelocityLine(dataset)} />
+
 
  */
 
