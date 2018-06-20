@@ -58,19 +58,42 @@ const loadZenhub = (token) => {
     let repositories = cfgSources.find({"org.name":{"$in":["Kids First Data Resource Center","Overture"]}}).fetch();
     repositories
         .filter(v => v.databaseId !== undefined)
-        .forEach((repo) => {
-            let issuesCount = axios({
+        .forEach(async (repo) => {
+            let response = await axios({
                 method:'get',
                 url: 'https://api.zenhub.io/p1/repositories/' + repo.databaseId + '/board',
                 responseType:'json',
                 headers: {'X-Authentication-Token': token},
-            }).then(function(response) {
-                let issues = response.data.pipelines
-                    .map(pipeline => pipeline.issues)
-                    .reduce((a, b) => [...a, ...b], []);
+            });
+            let boardIssues = response.data.pipelines
+                .map(pipeline => pipeline.issues)
+                .reduce((a, b) => [...a, ...b], []);
 
+            console.log(boardIssues);
+            if (boardIssues.length > 0) {
+                //Get issues, in this repo, with points === null;
+                let issues = cfgIssues.find({'repo.databaseId': repo.databaseId, point: null, number: { "$nin": [ null, "" ] }}).fetch();
+                //let issues = [cfgIssues.findOne({'repo.databaseId': repo.databaseId, point: null, number: { "$nin": [ null, "" ] }})];
                 console.log(issues);
-                return issues.length;
+                issues.forEach(async (issue) => {
+                    if (issue !== undefined) {
+                        let response = await axios({
+                            method:'get',
+                            url: 'https://api.zenhub.io/p1/repositories/' + repo.databaseId + '/issues/' + issue.number,
+                            responseType:'json',
+                            headers: {'X-Authentication-Token': token},
+                        });
+
+                        if (response.data.estimate !== undefined) {
+                            cfgIssues.update({id: issue.id}, {$set:{'points':response.data.estimate.value}});
+                            console.log('Updated ' + response.data.estimate.value + ' points to: ' + issue.title);
+                        }
+                    }
+                });
+            } else {
+                console.log('Repo does not contain any issue, skipping');
+            }
+            //    return issues.length;
                 //activeRepositories.push(repo);
                 /*
                 console.log(response);
@@ -83,10 +106,10 @@ const loadZenhub = (token) => {
                 //    loadZenhubPoints(issue);
                 //});
                 */
-            }).catch(function (error) {
-                console.log(error);
-                return 0;
-            });
+            //}).catch(function (error) {
+            //    console.log(error);
+            //    return 0;
+            //});
 
 
         });

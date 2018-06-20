@@ -15,6 +15,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
         name
         url
         id
+        databaseId
         issues(first: $increment, after: $repo_cursor) {
           totalCount
           edges {
