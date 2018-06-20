@@ -177,6 +177,7 @@ class Issues extends Component {
                 comments: currentIssue.node.comments,
                 participants: currentIssue.node.participants,
                 databaseId: currentIssue.node.databaseId,
+                number: currentIssue.node.number,
                 refreshed: true,
                 pinned: nodePinned,
                 points: nodePoints,

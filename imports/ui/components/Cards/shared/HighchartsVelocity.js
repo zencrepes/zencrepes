@@ -35,9 +35,9 @@ class HighchartsVelocity extends Component {
         };
     }
 
-    renderSeries({ id, weeks }) {
+    renderSeries({ id, name, weeks }) {
         return (
-            <SplineSeries name={id} key={id} data={weeks} />
+            <SplineSeries name={name} key={id} data={weeks} />
         )
     };
 
@@ -76,8 +76,8 @@ class HighchartsVelocity extends Component {
                             <XAxis.Title>Time</XAxis.Title>
                         </XAxis>
 
-                        <YAxis id="tickets">
-                            <YAxis.Title>Tickets Count</YAxis.Title>
+                        <YAxis id="count">
+                            <YAxis.Title>Count</YAxis.Title>
                             {data.map(this.renderSeries)}
                         </YAxis>
 

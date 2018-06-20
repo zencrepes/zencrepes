@@ -261,7 +261,7 @@ export const populateTicketsPerWeek = (dataObject) => {
 export const populateOpen = (dataObject, openIssues) => {
     let remainingPoints = openIssues
         .filter(issue => issue.points !== null)
-        .map(issue => issue.points + issue.points)
+        .map(issue => issue.points)
         .reduce((acc, points) => acc + points, 0);
     dataObject['open'] = {'issues': openIssues, 'points': remainingPoints};
     return dataObject;
@@ -277,7 +277,7 @@ export const populateOpen = (dataObject, openIssues) => {
 export const populateClosed = (dataObject, closedIssues) => {
     let completedPoints = closedIssues
         .filter(issue => issue.points !== null)
-        .map(issue => issue.points + issue.points)
+        .map(issue => issue.points)
         .reduce((acc, points) => acc + points, 0);
     dataObject['closed'] = {'issues': closedIssues, 'points': completedPoints};
     return dataObject;

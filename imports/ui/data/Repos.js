@@ -127,6 +127,7 @@ class Repos extends Component {
                 name: currentRepo.node.name,
                 url: currentRepo.node.url,
                 issues_count: currentRepo.node.issues.totalCount,
+                databaseId: currentRepo.node.databaseId,
                 org: OrgObj,
                 active: nodeActive,
             }

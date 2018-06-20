@@ -115,6 +115,7 @@ class IssuesTable extends Component {
                 { name: 'labels', title: 'Labels' },
                 { name: 'assignees', title: 'Assignees' },
                 { name: 'state', title: 'State' },
+                { name: 'points', title: 'Points' },
                 { name: 'createdAt', title: 'Created' },
                 { name: 'updatedAt', title: 'Updated' },
                 { name: 'closedAt', title: 'Closed' },

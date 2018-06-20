@@ -41,15 +41,20 @@ class OverallVelocityWeeks extends Component {
     }
 
     getVelocityHighcharts(velocity) {
-        let dataset = [];
+        let issuesCount = [];
+        let storyPoints = [];
         console.log(velocity);
         velocity.forEach((v) => {
-            dataset.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
+            issuesCount.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
+            storyPoints.push([new Date(v.weekStart).getTime(), Math.round(v.points.velocity, 1)]);
         });
-        if (dataset.length === 0) {
+        if (issuesCount.length === 0) {
             return [];
         } else {
-            return [{id: 'overall', weeks: dataset}];
+            return [
+                {id: 'issues', name: 'Issues', weeks: issuesCount},
+                {id: 'points', name: 'Story Points', weeks: storyPoints}
+            ];
         }
     }
 

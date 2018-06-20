@@ -17,6 +17,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             name
             url
             id
+            databaseId
             issues(first: 1) {
               totalCount
             }

@@ -25,6 +25,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
               updatedAt
               closedAt
               databaseId
+              number
               url
               title
               state
