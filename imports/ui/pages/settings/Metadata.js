@@ -59,13 +59,18 @@ const loadZenhub = (token) => {
     repositories
         .filter(v => v.databaseId !== undefined)
         .forEach((repo) => {
-            axios({
+            let issuesCount = axios({
                 method:'get',
                 url: 'https://api.zenhub.io/p1/repositories/' + repo.databaseId + '/board',
                 responseType:'json',
                 headers: {'X-Authentication-Token': token},
             }).then(function(response) {
-                console.log(response);
+                let issues = response.data.pipelines
+                    .map(pipeline => pipeline.issues)
+                    .reduce((a, b) => [...a, ...b], []);
+
+                console.log(issues);
+                return issues.length;
                 //activeRepositories.push(repo);
                 /*
                 console.log(response);
@@ -80,7 +85,9 @@ const loadZenhub = (token) => {
                 */
             }).catch(function (error) {
                 console.log(error);
+                return 0;
             });
+
 
         });
 };
