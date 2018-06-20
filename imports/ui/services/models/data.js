@@ -214,6 +214,7 @@ export default {
             {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
             {header: 'Authors', group: 'author.login', type: 'text', nested: false, data: [] },
             {header: 'Labels', group: 'labels', type: 'text', nested: 'name', nullName: 'NO LABEL', nullFilter: {'labels.totalCount': { $eq : 0 }},data: []},
+            //{header: 'Points', group: 'points', type: 'text', nested: false, data: [] },
             {header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, data: [] },
             {header: 'Milestones', group: 'milestone.title', type: 'text', nested: false, nullName: 'NO MILESTONE', nullFilter: {'milestone': { $eq : null }},data: []} ,
             {header: 'Milestones States', group: 'milestone.state', type: 'text', nested: false, data: [] },

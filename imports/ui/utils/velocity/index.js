@@ -83,8 +83,6 @@ export const initObject = (firstDay, lastDay) => {
                 date: currentDate.toJSON(),
                 issues: {count: 0},
                 points: {count: 0},
-                closedCount: 0,
-                closedPoints:0
             };
         }
 
@@ -99,8 +97,6 @@ export const initObject = (firstDay, lastDay) => {
                 weekStart: currentWeekYear.toJSON(),
                 issues: {count: 0},
                 points: {count: 0},
-                closedCount: 0,
-                closedPoints:0
             };
         }
     }
@@ -140,6 +136,9 @@ export const populateObject = (dataObject, issues) => {
     issues.forEach((issue) => {
         if (dataObject['days'][issue.closedAt.slice(0, 10)] !== undefined) {
             dataObject['days'][issue.closedAt.slice(0, 10)]['issues']['count']++;
+            if (issue.points !== null) {
+                dataObject['days'][issue.closedAt.slice(0, 10)]['points']['count'] += issue.points;
+            }
         }
 
         if (issue.closedAt !== null) {
@@ -149,6 +148,9 @@ export const populateObject = (dataObject, issues) => {
             //closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
             if (dataObject['weeks'][closedWeek] !== undefined) {
                 dataObject['weeks'][closedWeek]['issues']['count']++;
+                if (issue.points !== null) {
+                    dataObject['weeks'][closedWeek]['points']['count'] += issue.points;
+                }
             }
         }
     });
@@ -257,7 +259,11 @@ export const populateTicketsPerWeek = (dataObject) => {
  * - issues
  */
 export const populateOpen = (dataObject, openIssues) => {
-    dataObject['open'] = {'issues': openIssues, 'points': null};
+    let points = openIssues
+        .filter(issue => issue.points !== null)
+        .map(issue => issue.points + issue.poinst)
+        .reduce((acc, points) => acc + points, 0);
+    dataObject['open'] = {'issues': openIssues, 'points': points};
     return dataObject;
 };
 

@@ -152,8 +152,10 @@ class Issues extends Component {
             }
             */
             let nodePinned = false;
+            let nodePoints = null;
             if (existNode !== undefined) {
                 nodePinned = existNode.pinned;
+                nodePoints = existNode.points;
             }
 
             let issueObj = {
@@ -174,10 +176,11 @@ class Issues extends Component {
                 stats: getStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt),
                 comments: currentIssue.node.comments,
                 participants: currentIssue.node.participants,
-                number: currentIssue.node.number,
+                databaseId: currentIssue.node.databaseId,
                 refreshed: true,
                 pinned: nodePinned,
-            }
+                points: nodePoints,
+            };
             await cfgIssues.upsert({
                 id: issueObj.id
             }, {
