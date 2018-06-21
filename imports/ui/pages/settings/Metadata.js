@@ -61,6 +61,8 @@ function timeOut(ms) {
 const loadZenhub = (token) => {
     console.log('loadZenhub()');
 
+    //let issues = [];
+    let callCount = 0;
     let repositories = cfgSources.find({"org.name":{"$in":["Kids First Data Resource Center","Overture"]}}).fetch();
     repositories
         .filter(v => v.databaseId !== undefined)
@@ -71,6 +73,7 @@ const loadZenhub = (token) => {
                 responseType:'json',
                 headers: {'X-Authentication-Token': token},
             });
+            callCount++;
             let boardIssues = response.data.pipelines
                 .map(pipeline => pipeline.issues)
                 .reduce((a, b) => [...a, ...b], []);
@@ -78,10 +81,19 @@ const loadZenhub = (token) => {
             console.log(boardIssues);
             if (boardIssues.length > 0) {
                 //Get issues, in this repo, with points === null;
+                //issues.push(cfgIssues.find({'repo.databaseId': repo.databaseId, point: null, number: { "$nin": [ null, "" ] }}).fetch());
                 let issues = cfgIssues.find({'repo.databaseId': repo.databaseId, point: null, number: { "$nin": [ null, "" ] }}).fetch();
                 //let issues = [cfgIssues.findOne({'repo.databaseId': repo.databaseId, point: null, number: { "$nin": [ null, "" ] }})];
                 console.log(issues);
+
                 issues.forEach(async (issue) => {
+                    callCount++;
+                    console.log(issue);
+                    if (callCount > 50) {
+                        console.log('Going to wait for 60 seconds');
+                        await timeOut(60000); // Pause for 60 seconds due to ZenHub rate limit
+                        callCount = 0;
+                    }
                     if (issue !== undefined) {
                         let response = await axios({
                             method:'get',
@@ -89,14 +101,13 @@ const loadZenhub = (token) => {
                             responseType:'json',
                             headers: {'X-Authentication-Token': token},
                         });
-
                         if (response.data.estimate !== undefined) {
                             cfgIssues.update({id: issue.id}, {$set:{'points':response.data.estimate.value}});
                             console.log('Updated ' + response.data.estimate.value + ' points to: ' + issue.title);
                         }
                     }
-                    await timeOut(1000);
                 });
+
             } else {
                 console.log('Repo does not contain any issue, skipping');
             }
@@ -120,6 +131,32 @@ const loadZenhub = (token) => {
 
 
         });
+    /*
+    if (issues.length > 0) {
+        issues.reduce((a, b) => [...a, ...b], []);
+        console.log(issues);
+        issues.forEach(async (issue) => {
+            console.log(issue);
+            if (callCount > 95) {
+                await timeOut(60000); // Pause for 60 seconds due to ZenHub rate limit
+                callCount = 0;
+            }
+            if (issue !== undefined) {
+                callCount++;
+                let response = await axios({
+                    method:'get',
+                    url: 'https://api.zenhub.io/p1/repositories/' + repo.databaseId + '/issues/' + issue.number,
+                    responseType:'json',
+                    headers: {'X-Authentication-Token': token},
+                });
+                if (response.data.estimate !== undefined) {
+                    cfgIssues.update({id: issue.id}, {$set:{'points':response.data.estimate.value}});
+                    console.log('Updated ' + response.data.estimate.value + ' points to: ' + issue.title);
+                }
+            }
+        });
+    }
+    console.log('DONE');*/
 };
 
 const loadWaffle = () => {
