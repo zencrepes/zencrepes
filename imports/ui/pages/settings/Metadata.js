@@ -52,6 +52,12 @@ const loadZenhubPoints = (issue, repo) => {
      */
 };
 
+function timeOut(ms) {
+    return new Promise((fulfill) => {
+        setTimeout(fulfill, ms);
+    });
+}
+
 const loadZenhub = (token) => {
     console.log('loadZenhub()');
 
@@ -89,6 +95,7 @@ const loadZenhub = (token) => {
                             console.log('Updated ' + response.data.estimate.value + ' points to: ' + issue.title);
                         }
                     }
+                    await timeOut(1000);
                 });
             } else {
                 console.log('Repo does not contain any issue, skipping');
