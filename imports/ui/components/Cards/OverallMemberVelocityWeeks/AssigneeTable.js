@@ -107,10 +107,10 @@ class AssigneeTable extends Component {
         return data.slice(startPos, endPos);
     }
 
-    massageDataForHighchart(data) {
+    massageDataForHighchart(data, type) {
         let dataset = [];
         data.forEach((v) => {
-            dataset.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
+            dataset.push([new Date(v.weekStart).getTime(), Math.round(v[type].velocity, 1)]);
         });
         return dataset
     }
@@ -120,7 +120,8 @@ class AssigneeTable extends Component {
             let dataset = this.getDataSet(assignee.weeks, count);
             return (
                 <HighchartsSparkline>
-                    <AreaSeries data={this.massageDataForHighchart(dataset)} />
+                    <AreaSeries data={this.massageDataForHighchart(dataset, 'issues')} />
+                    <AreaSeries data={this.massageDataForHighchart(dataset, 'points')} />
                 </HighchartsSparkline>
             );
         } else {
