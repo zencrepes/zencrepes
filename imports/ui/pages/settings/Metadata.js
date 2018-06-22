@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
 import { withTracker } from 'meteor/react-meteor-data';
 import axios from 'axios';
+import { connect } from "react-redux";
 
 import Button from '@material-ui/core/Button';
 
@@ -195,26 +196,32 @@ class Metadata extends Component {
 
     updateToken = name => event => {
         console.log('updateToken');
+
+        const { setToken } = this.props;
+        setToken(event.target.value);
         //Search for existing query name
+        /*
         this.setState({
             ['tokenValue']: event.target.value,
-        });
+        });*/
 
     };
 
 
     loadMetadata = () => {
-        const { tokenValue } = this.state;
         console.log('loadMetadata()');
+
+        const { zenhubInitStates } = this.props;
+
+        zenhubInitStates();
         //loadWaffle();
-        if (tokenValue !== '') {
-            loadZenhub(tokenValue);
-        }
+        //if (tokenValue !== '') {
+        //    loadZenhub(tokenValue);
+        //}
     };
 
     render() {
-        const { classes } = this.props;
-        const { tokenValue, tokenError, tokenHelperText } = this.state;
+        const { classes, token } = this.props;
 
         return (
             <div>
@@ -224,12 +231,13 @@ class Metadata extends Component {
                 <TextField
                     id="full-width"
                     label="Query Name"
-                    error={tokenError}
+                    error={false}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={token}
                     className={classes.textField}
-                    helperText={tokenHelperText}
+                    helperText='Please enter your zenhub token'
                     fullWidth
                     margin="normal"
                     onChange={this.updateToken()}
@@ -239,4 +247,16 @@ class Metadata extends Component {
     }
 }
 
-export default withStyles(styles)(Metadata);
+const mapState = state => ({
+    token: state.zenhub.token,
+
+});
+
+const mapDispatch = dispatch => ({
+    zenhubInitStates: dispatch.zenhub.initStates,
+    setToken: dispatch.zenhub.setToken,
+
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(Metadata));
+
