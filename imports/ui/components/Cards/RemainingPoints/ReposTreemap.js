@@ -28,17 +28,23 @@ class ReposTreemap extends Component {
     }
 
     buildDataset() {
-        const {repos} = this.props;
+        const {repos, defaultPoints} = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'count';}
         let chartData = {
             name: 'repositories'
             , color: 'hsl(67, 70%, 50%)'
             , children: repos.map((v) => {
-                return {name: v.name, count: v.count};
+                return {name: v.name, count: v[metric]};
             })
         };
         return chartData;
     }
 
+    labelFormat = (params) => {
+        console.log(params);
+        return 'abc'
+    }
     /* clickAssignee() - If a table cell is clicked, redirect the user to the search page with the parameters allowing to see the open issues
      *
      */
@@ -59,7 +65,7 @@ class ReposTreemap extends Component {
                 nullSelected: false
             }
             ,
-            assignees: {
+            'repo.name': {
                 header: 'Repositories',
                 group: 'repo.name',
                 type: 'text',
@@ -89,9 +95,10 @@ class ReposTreemap extends Component {
                         "bottom": 0,
                         "left": 0
                     }}
-                    label="name"
-                    labelFormat=""
-                    labelSkipSize={30}
+                    //label="name"
+                    label={(e) => _.truncate(e.name, {length: 15, omission: '...'})}
+                    labelFormat=''
+                    labelSkipSize={40}
                     labelTextColor="inherit:darker(1.2)"
                     colors="d320"
                     colorBy="name"
@@ -118,6 +125,7 @@ const mapDispatch = dispatch => ({
 const mapState = state => ({
     repos: state.remaining.repos,
     filter: state.remaining.filter,
+    defaultPoints: state.remaining.defaultPoints,
 });
 
 

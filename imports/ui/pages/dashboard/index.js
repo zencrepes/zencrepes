@@ -21,6 +21,7 @@ import DaysToCompletion from '../../components/Cards/DaysToCompletion/index.js';
 
 import QuerySelect from '../../components/Query/Select/index.js';
 import DataLoader from './DataLoader.js';
+import PointSwitch from './PointsSwitch.js';
 
 import {
     ContentCopy,
@@ -89,6 +90,7 @@ class Dashboard extends Component {
                 <main className={classes.content}>
                     <Toolbar className={classes.container}>
                         <QuerySelect />
+                        <PointSwitch />
                     </Toolbar>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={3}>

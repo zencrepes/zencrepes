@@ -9,12 +9,14 @@ export default {
         loading: false,     // Data is currently loading
         velocity: {},
         filters: {},
+        defaultPoints: true,
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
         setVelocity(state, payload) {return { ...state, velocity: payload };},
         setFilters(state, payload) {return { ...state, filters: payload };},
+        setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
     },
     effects: {
         async initStates(payload, rootState) {

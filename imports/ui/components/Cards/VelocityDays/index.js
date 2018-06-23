@@ -18,6 +18,13 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {getWeekYear} from "../../../utils/velocity";
 
+import Highcharts from 'highcharts/highcharts';
+import {
+    HighchartsChart, Chart, withHighcharts, XAxis, YAxis, Title, Subtitle, Legend, LineSeries
+} from 'react-jsx-highcharts';
+
+import tableStyle from "../OverallMemberVelocityWeeks/tableStyle";
+
 class VelocityDays extends Component {
     constructor (props) {
         super(props);
@@ -25,6 +32,7 @@ class VelocityDays extends Component {
     }
 
     getVelocityLine(dataset) {
+        console.log(dataset);
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
                 return {x: new Date(v.date).getDate().toString(), y: v.issues.velocity}
@@ -79,6 +87,16 @@ class VelocityDays extends Component {
         }
     }
 
+    massageDataForHighchart(data, type) {
+        console.log(data);
+        let dataset = [];
+        data.forEach((v) => {
+            dataset.push([new Date(v.date).getTime(), Math.round(v[type].velocity, 1)]);
+        });
+        console.log(dataset);
+        return dataset
+    }
+
     render() {
         const {
             classes,
@@ -116,6 +134,18 @@ class VelocityDays extends Component {
                         ) : null}
                     </Typography>
                     <VelocityBar data={this.getVelocityBar(dataset)} />
+                    <HighchartsChart>
+                        <Chart />
+                        <XAxis>
+                            <XAxis.Title>Time</XAxis.Title>
+                        </XAxis>
+
+                        <YAxis>
+                            <YAxis.Title>Number of employees</YAxis.Title>
+                            <LineSeries name="Installation" data={this.massageDataForHighchart(dataset, 'issues')} />
+                            <LineSeries name="Manufacturing" data={this.massageDataForHighchart(dataset, 'points')} />
+                        </YAxis>
+                    </HighchartsChart>
                     <VelocityLine data={this.getVelocityLine(dataset)} />
                 </CardContent>
                 <CardActions className={classes.cardActions}>
@@ -138,6 +168,12 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     velocity: state.velocity.velocity,
+    defaultPoints: state.velocity.defaultPoints,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(statsCardStyle)(VelocityDays));
+export default
+    connect(mapState, mapDispatch)(
+        withStyles(statsCardStyle)(
+            withHighcharts(VelocityDays, Highcharts)
+        )
+    );

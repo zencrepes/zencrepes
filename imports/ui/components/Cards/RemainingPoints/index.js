@@ -15,18 +15,36 @@ import statsCardStyle from './statsCardStyle.jsx';
 
 import ReposTreemap from './ReposTreemap.js';
 
-import {withRouter} from "react-router-dom";
-import {getWeekYear} from "../../../utils/velocity";
-
 class RemainingPoints extends Component {
     constructor (props) {
         super(props);
         this.state = {};
     }
 
-    getRemainingPoints() {
-        console.log('getRemainingPoints');
-    }
+    getDefaultRemaining() {
+        const { defaultPoints, remainingCount, remainingPoints } = this.props;
+        if (defaultPoints) {
+            return remainingPoints;
+        } else {
+            return remainingCount;
+        }
+    };
+
+    getDefaultRemainingTxt() {
+        const { defaultPoints } = this.props;
+        if (defaultPoints) {
+            return 'Points';
+        } else {
+            return 'Issues';
+        }
+    };
+
+    handleChange = name => event => {
+        const { setDefaultPoints } = this.props;
+        setDefaultPoints(event.target.checked);
+    };
+
+
 
     render() {
         const {
@@ -38,7 +56,7 @@ class RemainingPoints extends Component {
             statText,
             statIconColor,
             iconColor } = this.props;
-        const { velocity, remainingCount } = this.props;
+        const { velocity, remainingCount, remainingPoints, defaultPoints } = this.props;
 
         return (
             <Card className={classes.card}>
@@ -51,14 +69,14 @@ class RemainingPoints extends Component {
                 />
                 <CardContent className={classes.cardContent}>
                     <Typography component="p" className={classes.cardCategory}>
-                        Remaining Points
+                        Remaining {this.getDefaultRemainingTxt()}
                     </Typography>
                     <Typography
                         variant="headline"
                         component="h2"
                         className={classes.cardTitle}
                     >
-                        {remainingCount}{" "}
+                        {this.getDefaultRemaining()}{" "}
                         {small !== undefined ? (
                             <small className={classes.cardTitleSmall}>{small}</small>
                         ) : null}
@@ -67,7 +85,7 @@ class RemainingPoints extends Component {
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <div className={classes.cardStats}>
-                        Issues repartition by repository
+                        Work repartition by repository
                     </div>
                 </CardActions>
             </Card>
@@ -80,12 +98,16 @@ RemainingPoints.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
+    setDefaultPoints: dispatch.remaining.setDefaultPoints,
+
 });
 
 
 const mapState = state => ({
     velocity: state.velocity.velocity,
     remainingCount: state.remaining.count,
+    remainingPoints: state.remaining.points,
+    defaultPoints: state.remaining.defaultPoints,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(statsCardStyle)(RemainingPoints));

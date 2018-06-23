@@ -43,6 +43,9 @@ const statsCardStyle = {
         height: "36px",
         fill: "#fff"
     },
+    highchart: {
+        height: "150px",
+    },
     cardAvatar: {
         margin: "8px"
     },

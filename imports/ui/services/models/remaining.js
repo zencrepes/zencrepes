@@ -5,7 +5,25 @@ import { cfgIssues } from '../../data/Issues.js';
 import { getFirstDay, getLastDay, initObject, populateObject, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";
 
-
+/**
+ * getPointsForRepo() Return the number of points for a specific repository
+ *
+ * Arguments:
+ * - facet: Current facet being processed
+ * - updatedFilters: List of selected filters
+ */
+const getPointsForRepo = (repoName, filter, cfgIssues) => {
+    if (filter['repo.name'] !== undefined) {
+        delete filter['repo.name'];
+    }
+    filter['repo.name'] = {"$in":[repoName]};
+    return cfgIssues
+        .find(filter)
+        .fetch()
+        .filter(i => i.points !== null )
+        .map(i => i.points)
+        .reduce((acc, points) => acc + points, 0);
+};
 
 export default {
     state: {
@@ -15,6 +33,7 @@ export default {
         count: 0,
         points: 0,
         repos: [],
+        defaultPoints: true,
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
@@ -23,7 +42,7 @@ export default {
         setCount(state, payload) {return { ...state, count: payload };},
         setPoints(state, payload) {return { ...state, points: payload };},
         setRepos(state, payload) {return { ...state, repos: payload };},
-
+        setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
     },
     effects: {
         async initStates(payload, rootState) {
@@ -46,11 +65,13 @@ export default {
                     count: statesGroup[key].length,
                     name: key,
                     issues: statesGroup[key],
-                    points: 0
+                    points: getPointsForRepo(key, openedIssuesFilter, cfgIssues)
                 });
             });
+            console.log(repos);
             this.setRepos(repos);
             this.setCount(cfgIssues.find(openedIssuesFilter).count());
+            this.setPoints(repos.map(r => r.points).reduce((acc, points) => acc + points, 0));
 
             this.setLoading(false);
         }

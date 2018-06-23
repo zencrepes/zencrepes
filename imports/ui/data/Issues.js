@@ -130,17 +130,21 @@ class Issues extends Component {
 
         });
         this.props.updateChip(data.data.rateLimit);
-        lastCursor = await this.ingestIssues(data);
-        queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
-        console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
-        if (queryIncrement > 0) {
-            await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
+        if (data.data.viewer.organization.repository !== null) {
+            lastCursor = await this.ingestIssues(data);
+            console.log(data.data.viewer.organization.repository);
+            queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
+            console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+            if (queryIncrement > 0) {
+                await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
+            }
         }
     }
 
     ingestIssues = async (data) => {
         let lastCursor = null;
         console.log(data.data.viewer.organization.repository);
+
         for (let [key, currentIssue] of Object.entries(data.data.viewer.organization.repository.issues.edges)){
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
