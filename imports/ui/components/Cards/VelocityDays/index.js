@@ -14,14 +14,10 @@ import statsCardStyle from './statsCardStyle.jsx';
 
 import VelocityBar from '../shared/VelocityBar.js';
 import VelocityLine from '../shared/VelocityLine.js';
+
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {getWeekYear} from "../../../utils/velocity";
-
-import Highcharts from 'highcharts/highcharts';
-import {
-    HighchartsChart, Chart, withHighcharts, XAxis, YAxis, Title, Subtitle, Legend, LineSeries
-} from 'react-jsx-highcharts';
 
 import tableStyle from "../OverallMemberVelocityWeeks/tableStyle";
 
@@ -32,10 +28,14 @@ class VelocityDays extends Component {
     }
 
     getVelocityLine(dataset) {
+        const { defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'count';}
+
         console.log(dataset);
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: new Date(v.date).getDate().toString(), y: v.issues.velocity}
+                return {x: new Date(v.date).getDate().toString(), y: v[metric].velocity}
             });
             console.log(dataset);
             return [{id: 'rolling', data: dataset}];
@@ -45,9 +45,14 @@ class VelocityDays extends Component {
     }
 
     getVelocityBar(dataset) {
+        const { defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'count';}
+
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: new Date(v.date).getDate().toString(), y: v.issues.count}
+                console.log(v);
+                return {x: new Date(v.date).getDate().toString(), y: v[metric].count}
             });
             return dataset;
         } else {
@@ -87,16 +92,6 @@ class VelocityDays extends Component {
         }
     }
 
-    massageDataForHighchart(data, type) {
-        console.log(data);
-        let dataset = [];
-        data.forEach((v) => {
-            dataset.push([new Date(v.date).getTime(), Math.round(v[type].velocity, 1)]);
-        });
-        console.log(dataset);
-        return dataset
-    }
-
     render() {
         const {
             classes,
@@ -134,18 +129,6 @@ class VelocityDays extends Component {
                         ) : null}
                     </Typography>
                     <VelocityBar data={this.getVelocityBar(dataset)} />
-                    <HighchartsChart>
-                        <Chart />
-                        <XAxis>
-                            <XAxis.Title>Time</XAxis.Title>
-                        </XAxis>
-
-                        <YAxis>
-                            <YAxis.Title>Number of employees</YAxis.Title>
-                            <LineSeries name="Installation" data={this.massageDataForHighchart(dataset, 'issues')} />
-                            <LineSeries name="Manufacturing" data={this.massageDataForHighchart(dataset, 'points')} />
-                        </YAxis>
-                    </HighchartsChart>
                     <VelocityLine data={this.getVelocityLine(dataset)} />
                 </CardContent>
                 <CardActions className={classes.cardActions}>
@@ -154,6 +137,7 @@ class VelocityDays extends Component {
                     </div>
                 </CardActions>
             </Card>
+
         )
     };
 }
@@ -174,6 +158,6 @@ const mapState = state => ({
 export default
     connect(mapState, mapDispatch)(
         withStyles(statsCardStyle)(
-            withHighcharts(VelocityDays, Highcharts)
+            VelocityDays
         )
     );
