@@ -213,8 +213,9 @@ class Metadata extends Component {
 
         const { zenhubInitStates } = this.props;
 
+        loadWaffle();
+
         zenhubInitStates();
-        //loadWaffle();
         //if (tokenValue !== '') {
         //    loadZenhub(tokenValue);
         //}

@@ -29,39 +29,45 @@ class DaysToCompletion extends Component {
     Find effortCountDays closest to current date
     */
     getTimeToCompletion(dataset) {
+        const { defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
+        console.log(dataset);
+
         if (dataset !== undefined ) {
-            let filteredValues = dataset.filter(v => v.issues.effort !== undefined)
+            let filteredValues = dataset.filter(v => v[metric].effort !== undefined)
 
             let rangeValues = [];
             effort = filteredValues.find(v => v.range === '4w');
             if (effort !== undefined) {
-                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
+                if (effort[metric].effort !== undefined && effort[metric].effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
 
             effort = filteredValues.find(v => v.range === '8w');
             if (effort !== undefined) {
-                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
+                if (effort[metric].effort !== undefined && effort[metric].effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
             effort = filteredValues.find(v => v.range === '12w');
             if (effort !== undefined) {
-                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
+                if (effort[metric].effort !== undefined && effort[metric].effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
             effort = filteredValues.find(v => v.range === 'all');
             if (effort !== undefined) {
-                if (effort.issues.effort !== undefined && effort.issues.effort !== Infinity) {
+                if (effort[metric].effort !== undefined && effort[metric].effort !== Infinity) {
                     rangeValues.push(effort);
                 }
             }
             if (rangeValues.length === 0) {
                 return '-';
             } else {
-                return Math.round(rangeValues[0].issues.effort, 1);
+                return Math.round(rangeValues[0][metric].effort, 1);
             }
 
         } else {
@@ -70,10 +76,14 @@ class DaysToCompletion extends Component {
     }
 
     getVelocityBar(dataset) {
+        const { defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
         if (dataset !== undefined ) {
-            dataset = dataset.filter(v => v.issues.effort !== Infinity);
+            dataset = dataset.filter(v => v[metric].effort !== Infinity);
             dataset = dataset.map((v) => {
-                return {x: v.range, y: v.issues.effort}
+                return {x: v.range, y: v[metric].effort}
             });
             return dataset;
         } else {
@@ -138,6 +148,7 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     velocity: state.velocity.velocity,
+    defaultPoints: state.velocity.defaultPoints,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(statsCardStyle)(DaysToCompletion));

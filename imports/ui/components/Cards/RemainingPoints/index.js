@@ -38,6 +38,14 @@ class RemainingPoints extends Component {
             return 'Issues';
         }
     };
+    getDefaultRemainingTxtShrt() {
+        const { defaultPoints } = this.props;
+        if (defaultPoints) {
+            return 'Pts';
+        } else {
+            return 'Tkts';
+        }
+    };
 
     handleChange = name => event => {
         const { setDefaultPoints } = this.props;
@@ -77,9 +85,8 @@ class RemainingPoints extends Component {
                         className={classes.cardTitle}
                     >
                         {this.getDefaultRemaining()}{" "}
-                        {small !== undefined ? (
-                            <small className={classes.cardTitleSmall}>{small}</small>
-                        ) : null}
+                        <small className={classes.cardTitleSmall}>{this.getDefaultRemainingTxtShrt()}</small>
+
                     </Typography>
                     <ReposTreemap />
                 </CardContent>

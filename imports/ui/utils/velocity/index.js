@@ -89,7 +89,11 @@ export const initObject = (firstDay, lastDay) => {
         //let currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
         //http://lifelongprogrammer.blogspot.com/2014/06/js-get-first-last-day-of-current-week-month.html
         // /let d = currentDate.getDay();
-        let currentWeekYear = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (currentDate.getDay() == 0?0:7)-currentDate.getDay() );
+//        let currentWeekYear = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (currentDate.getDay() == 0?0:7)-currentDate.getDay() );
+        let currentMonthDay = currentDate.getDate();
+        if (currentDate.getDay() !== 0) {currentMonthDay = currentMonthDay - currentDate.getDay();}
+        let currentWeekYear = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentMonthDay );
+
         if(typeof initObject['weeks'][currentWeekYear] === 'undefined') {
             //console.log(currentWeekYear);
             initObject['weeks'][currentWeekYear] = {
@@ -140,13 +144,18 @@ export const populateObject = (dataObject, issues) => {
                 dataObject['days'][issue.closedAt.slice(0, 10)]['points']['count'] += issue.points;
             }
         }
-
         if (issue.closedAt !== null) {
             let closedDate = new Date(issue.closedAt);
-            let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedDate.getDate() + (closedDate.getDay() == 0?0:7)-closedDate.getDay() );
+            let closedMonthDay = closedDate.getDate();
+            if (closedDate.getDay() !== 0) {closedMonthDay = closedMonthDay - closedDate.getDay();}
+            //let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedDate.getDate() + (closedDate.getDay() == 0?0:7)-closedDate.getDay() ); //TODO - This is incorrect
+            let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedMonthDay );
             //closedDate = formatDate(issue.closedAt);
             //closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
             if (dataObject['weeks'][closedWeek] !== undefined) {
+                console.log(issue.closedAt);
+                console.log(closedWeek);
+                console.log('----');
                 dataObject['weeks'][closedWeek]['issues']['count']++;
                 if (issue.points !== null) {
                     dataObject['weeks'][closedWeek]['points']['count'] += issue.points;
@@ -191,6 +200,11 @@ export const populateTicketsPerWeek = (dataObject) => {
 //    console.log('populateTicketsPerWeek');
     let completionVelocities = [];
     let remainingIssuesCount = dataObject.open.issues.length;
+    let remainingPoints = dataObject.open.issues
+        .filter(issue => issue.points !== null)
+        .map(issue => issue.points)
+        .reduce((acc, points) => acc + points, 0);
+
     let ticketsPerWeek = Object.values(dataObject['weeks']);
     let defaultVelocity = 'all';
     ticketsPerWeek.map(function(value, idx) {
@@ -209,6 +223,7 @@ export const populateTicketsPerWeek = (dataObject) => {
                 'points': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'points')},
             }
             currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
+            currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
             completionVelocities.push(currentCompletion);
 
             if (idx >= 4) { // 4 weeks
@@ -219,6 +234,7 @@ export const populateTicketsPerWeek = (dataObject) => {
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
                 currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
+                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
                 completionVelocities.push(currentCompletion);
                 defaultVelocity = '4w';
             }
@@ -230,6 +246,7 @@ export const populateTicketsPerWeek = (dataObject) => {
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
                 currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
+                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
             if (idx >= 12) { // 12 weeks
@@ -240,6 +257,7 @@ export const populateTicketsPerWeek = (dataObject) => {
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
                 }
                 currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
+                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
                 completionVelocities.push(currentCompletion);
             }
         }

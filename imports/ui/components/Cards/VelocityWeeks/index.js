@@ -25,9 +25,13 @@ class VelocityWeek extends Component {
     }
 
     getVelocityLine(dataset) {
+        const { defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.velocity}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v[metric].velocity}
             });
             return [{id: 'rolling', data: dataset}];
         } else {
@@ -36,9 +40,13 @@ class VelocityWeek extends Component {
     }
 
     getVelocityBar(dataset) {
+        const { defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.issues.count}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v[metric].velocity}
             });
             return dataset;
         } else {
@@ -61,7 +69,7 @@ class VelocityWeek extends Component {
     }
 
     getThisWeekCompleted(dataset) {
-        let idx = dataset.length - 1
+        let idx = dataset.length - 1;
         if (idx >= 0) {
             return dataset[idx].issues.count;
         } else {
@@ -69,6 +77,14 @@ class VelocityWeek extends Component {
         }
     }
 
+    getDefaultRemainingTxtShrt() {
+        const { defaultPoints } = this.props;
+        if (defaultPoints) {
+            return 'Pts';
+        } else {
+            return 'Tkts';
+        }
+    };
 
     render() {
         const {
@@ -102,9 +118,7 @@ class VelocityWeek extends Component {
                         className={classes.cardTitle}
                     >
                         {this.getThisWeekCompleted(dataset)}{" "}
-                        {small !== undefined ? (
-                            <small className={classes.cardTitleSmall}>{small}</small>
-                        ) : null}
+                        <small className={classes.cardTitleSmall}>{this.getDefaultRemainingTxtShrt()}</small>
                     </Typography>
                     <VelocityBar data={this.getVelocityBar(dataset)}/>
                     <VelocityLine data={this.getVelocityLine(dataset)} />
@@ -129,6 +143,8 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     velocity: state.velocity.velocity,
+    defaultPoints: state.velocity.defaultPoints,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(statsCardStyle)(VelocityWeek));

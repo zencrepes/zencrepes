@@ -30,12 +30,16 @@ export default {
             let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
             let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
 
+            let closedIssuesFilterNoSprint = JSON.parse(JSON.stringify(closedIssuesFilter));
+            if (closedIssuesFilterNoSprint['milestone.state'] !== undefined) {
+                delete closedIssuesFilterNoSprint['milestone.state'];
+            }
 
             let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
 
             let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
-            dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate the object with count of days and weeks
+            dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate the object with count of days and weeks
             dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
             dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
             dataObject = populateTicketsPerDay(dataObject);

@@ -30,14 +30,12 @@ class VelocityDays extends Component {
     getVelocityLine(dataset) {
         const { defaultPoints } = this.props;
         let metric = 'points';
-        if (!defaultPoints) {metric = 'count';}
+        if (!defaultPoints) {metric = 'issues';}
 
-        console.log(dataset);
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
                 return {x: new Date(v.date).getDate().toString(), y: v[metric].velocity}
             });
-            console.log(dataset);
             return [{id: 'rolling', data: dataset}];
         } else {
             return [{id: 'rolling', data: []}];
@@ -47,11 +45,10 @@ class VelocityDays extends Component {
     getVelocityBar(dataset) {
         const { defaultPoints } = this.props;
         let metric = 'points';
-        if (!defaultPoints) {metric = 'count';}
+        if (!defaultPoints) {metric = 'issues';}
 
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                console.log(v);
                 return {x: new Date(v.date).getDate().toString(), y: v[metric].count}
             });
             return dataset;
@@ -92,6 +89,15 @@ class VelocityDays extends Component {
         }
     }
 
+    getDefaultRemainingTxtShrt() {
+        const { defaultPoints } = this.props;
+        if (defaultPoints) {
+            return 'Pts';
+        } else {
+            return 'Tkts';
+        }
+    };
+
     render() {
         const {
             classes,
@@ -124,9 +130,7 @@ class VelocityDays extends Component {
                         className={classes.cardTitle}
                     >
                         {this.getLastDayCompleted(dataset)}{" "}
-                        {small !== undefined ? (
-                            <small className={classes.cardTitleSmall}>{small}</small>
-                        ) : null}
+                        <small className={classes.cardTitleSmall}>{this.getDefaultRemainingTxtShrt()}</small>
                     </Typography>
                     <VelocityBar data={this.getVelocityBar(dataset)} />
                     <VelocityLine data={this.getVelocityLine(dataset)} />
