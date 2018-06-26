@@ -20,6 +20,7 @@ import DaysToCompletion from '../../components/Cards/DaysToCompletion/index.js';
 
 
 import QuerySelect from '../../components/Query/Select/index.js';
+import SprintsSelect from '../../components/Sprints/Select/index.js';
 import DataLoader from './DataLoader.js';
 import PointSwitch from './PointsSwitch.js';
 
@@ -90,6 +91,7 @@ class Dashboard extends Component {
                 <main className={classes.content}>
                     <Toolbar className={classes.container}>
                         <QuerySelect />
+                        <SprintsSelect />
                         <PointSwitch />
                     </Toolbar>
                     <Grid container>

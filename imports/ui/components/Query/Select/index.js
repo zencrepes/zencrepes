@@ -64,7 +64,7 @@ class QuerySelect extends Component {
                 <TextField
                     id="select-query"
                     select
-                    label="Select"
+                    label="Select a Query"
                     className={classes.textField}
                     value={this.state.query}
                     onChange={this.handleChange('query')}

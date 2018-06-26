@@ -79,7 +79,6 @@ class RepartitionTreemap extends Component {
         let dataset = repartition.filter(v => v.velocity !== undefined);
 
         dataset = dataset.map((vel) => {
-            console.log(vel);
             let effortRange = vel.velocity.find(v => v.range === vel.defaultVelocity);
 
             let metric = 'points';
