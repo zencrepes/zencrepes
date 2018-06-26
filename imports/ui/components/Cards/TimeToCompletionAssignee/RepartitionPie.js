@@ -35,6 +35,7 @@ class RepartitionTreemap extends Component {
         TODO - Make it better, very very badly coded
         Find effortCountDays closest to current date
      */
+/*
     getRange(values) {
         let filteredValues = values.filter(v => v.issues.effort !== undefined)
 
@@ -71,20 +72,24 @@ class RepartitionTreemap extends Component {
             return rangeValues[0].issues.effort;
         }
     }
+    */
 
     buildDataset() {
-        const {repartition} = this.props;
+        const {repartition, defaultPoints} = this.props;
         let dataset = repartition.filter(v => v.velocity !== undefined);
 
         dataset = dataset.map((vel) => {
-            let effort = Math.round(this.getRange(vel.velocity), 1);
+            console.log(vel);
+            let effortRange = vel.velocity.find(v => v.range === vel.defaultVelocity);
+
+            let metric = 'points';
+            if (!defaultPoints) {metric = 'issues';}
+
+            //let effort = Math.round(this.getRange(vel.velocity), 1);
+            let effort = Math.round(effortRange[metric].effort, 1);
+            if (effort === NaN || effort === Infinity) {effort = 0;}
             //return {x: vel.login, y: effort};
             return {id: vel.login, label: vel.login, value: effort};
-            /*
-                                        "id": "javascript",
-                            "label": "javascript",
-                            "value": 320
-             */
         });
 
         return _.orderBy(dataset, ['y'], ['desc', 'asc']).slice(0, 10);
@@ -275,6 +280,8 @@ const mapDispatch = dispatch => ({
 const mapState = state => ({
     repartition: state.repartition.repartition,
     filter: state.repartition.filter,
+    defaultPoints: state.repartition.defaultPoints,
+
 });
 
 

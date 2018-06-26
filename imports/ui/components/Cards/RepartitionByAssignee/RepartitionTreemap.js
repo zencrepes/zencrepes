@@ -28,12 +28,16 @@ class RepartitionTreemap extends Component {
     }
 
     buildDataset() {
-        const {repartition} = this.props;
+        const {repartition, defaultPoints} = this.props;
         let chartData = {
             name: 'assignees'
             , color: 'hsl(67, 70%, 50%)'
-            , children: repartition.filter(v => v.login !== 'UNASSIGNED').map((v) => {
-                return {name: v.login, count: v.count};
+            , children: repartition.filter(v => (v.login !== 'UNASSIGNED' && v.open !== undefined) ).map((v) => {
+                if (!defaultPoints) {
+                    return {name: v.login, count: v.open.issues.length};
+                } else {
+                    return {name: v.login, count: v.open.points};
+                }
             })
         };
         return chartData;
@@ -143,6 +147,7 @@ const mapDispatch = dispatch => ({
 const mapState = state => ({
     repartition: state.repartition.repartition,
     filter: state.repartition.filter,
+    defaultPoints: state.repartition.defaultPoints,
 });
 
 

@@ -56,12 +56,15 @@ export default {
         loading: false,
         filters: {},
         repartition: [],
+        defaultPoints: true,
+
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
         setFilters(state, payload) {return { ...state, filters: payload };},
         setRepartition(state, payload) {return { ...state, repartition: payload };},
+        setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
 
     },
     effects: {
@@ -111,10 +114,7 @@ export default {
                 }
             });
 
-            console.log(assignees);
-
             this.setRepartition(assignees);
-
             this.setLoading(false);
         }
     }

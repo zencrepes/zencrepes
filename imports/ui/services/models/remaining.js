@@ -57,6 +57,8 @@ export default {
             //console.log(cfgIssues.find(rootState.repartition.mongoFilter).fetch());
             this.setLoading(true);
 
+            this.setCount(cfgIssues.find(openedIssuesFilter).count());
+
             //console.log('Start Loading');
             let repos = [];
             statesGroup = _.groupBy(cfgIssues.find(openedIssuesFilter).fetch(), 'repo.name');
@@ -70,7 +72,6 @@ export default {
             });
             console.log(repos);
             this.setRepos(repos);
-            this.setCount(cfgIssues.find(openedIssuesFilter).count());
             this.setPoints(repos.map(r => r.points).reduce((acc, points) => acc + points, 0));
 
             this.setLoading(false);

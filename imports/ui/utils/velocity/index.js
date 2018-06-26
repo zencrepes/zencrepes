@@ -150,12 +150,7 @@ export const populateObject = (dataObject, issues) => {
             if (closedDate.getDay() !== 0) {closedMonthDay = closedMonthDay - closedDate.getDay();}
             //let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedDate.getDate() + (closedDate.getDay() == 0?0:7)-closedDate.getDay() ); //TODO - This is incorrect
             let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedMonthDay );
-            //closedDate = formatDate(issue.closedAt);
-            //closedWeek = closedDate.getFullYear()*100 + getWeekYear(closedDate);
             if (dataObject['weeks'][closedWeek] !== undefined) {
-                console.log(issue.closedAt);
-                console.log(closedWeek);
-                console.log('----');
                 dataObject['weeks'][closedWeek]['issues']['count']++;
                 if (issue.points !== null) {
                     dataObject['weeks'][closedWeek]['points']['count'] += issue.points;

@@ -18,9 +18,10 @@ class PointsSwitch extends Component {
     }
 
     handleChange = name => event => {
-        const { setRemainingDefaultPoints, setVelocityDefaultPoints } = this.props;
+        const { setRemainingDefaultPoints, setVelocityDefaultPoints, setRepartitionDefaultPoints } = this.props;
         setRemainingDefaultPoints(event.target.checked);
         setVelocityDefaultPoints(event.target.checked);
+        setRepartitionDefaultPoints(event.target.checked);
     };
 
     render() {
@@ -47,6 +48,7 @@ PointsSwitch.propTypes = {
 const mapDispatch = dispatch => ({
     setRemainingDefaultPoints: dispatch.remaining.setDefaultPoints,
     setVelocityDefaultPoints: dispatch.velocity.setDefaultPoints,
+    setRepartitionDefaultPoints: dispatch.repartition.setDefaultPoints,
 });
 
 

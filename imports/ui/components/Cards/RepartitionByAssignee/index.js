@@ -54,7 +54,7 @@ class RepartitionByAssignee extends Component {
                         title: classes.cardTitle,
                         subheader: classes.cardSubtitle
                     }}
-                    title='Repartition of Open tickets by Assignee'
+                    title='Repartition of Open issues by Assignee'
                 />
                 <CardContent>
                     <RepartitionTreemap />
