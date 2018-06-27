@@ -39,16 +39,6 @@ class QuerySelect extends Component {
         let selectedQuery = cfgQueries.findOne({_id: event.target.value});
         if (selectedQuery !== undefined) {
             setFilters(JSON.parse(selectedQuery.filters));
-
-            /*
-            //TODO- To be removed
-            setRepartitionFilter(JSON.parse(selectedQuery.filters));
-            setRepartitionLoadFlag(true);
-            setVelocityFilter(JSON.parse(selectedQuery.filters));
-            setVelocityLoadFlag(true);
-            setRemainingFilter(JSON.parse(selectedQuery.filters));
-            setRemainingLoadFlag(true);
-            */
         } else {
             console.log('handleChange - UNABLE TO FIND QUERY');
         }
