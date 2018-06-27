@@ -89,6 +89,11 @@ export default {
                 //console.log(closedIssuesFilter);
                 //console.log(JSON.stringify(openedIssuesFilter));
 
+                //For calculating velocity on closed issues, and if assignees are set, not relying on sprint
+                if (closedIssuesFilter['milestone.title'] !== undefined && closedIssuesFilter['assignees.edges'] !== undefined) {
+                    delete closedIssuesFilter['milestone.title'];
+                }
+
                 if (cfgIssues.find(closedIssuesFilter).count() > 0) {
                     let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
                     let lastDay = getLastDay(closedIssuesFilter, cfgIssues);

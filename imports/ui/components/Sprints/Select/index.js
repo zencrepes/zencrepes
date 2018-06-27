@@ -86,12 +86,7 @@ class SprintsSelect extends Component {
                 nullFilter: {'assignees.totalCount': {$eq: 0}},
                 data: []
             },
-        }
-        //Current Filters: {"org.name":{"header":"Organizations","group":"org.name","type":"text","nested":false,"in":["Kids First Data Resource Center","Overture"],"nullSelected":false}}
-
-//        console.log(JSON.stringify(query));
-//        console.log(JSON.stringify(buildMongoSelector(query)));
-
+        };
         setFilters(query); 
     };
 
@@ -103,7 +98,7 @@ class SprintsSelect extends Component {
                 <TextField
                     id="select-query"
                     select
-                    label="Select a Sprint"
+                    label="Select an open Sprint"
                     className={classes.textField}
                     value={this.state.sprint}
                     onChange={this.handleChange('query')}

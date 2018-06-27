@@ -30,6 +30,11 @@ export default {
             let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
             let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
 
+            //For calculating velocity on closed issues, and if assignees are set, not relying on sprint
+            if (closedIssuesFilter['milestone.title'] !== undefined && closedIssuesFilter['assignees.edges'] !== undefined) {
+                delete closedIssuesFilter['milestone.title'];
+            }
+
             let closedIssuesFilterNoSprint = JSON.parse(JSON.stringify(closedIssuesFilter));
             if (closedIssuesFilterNoSprint['milestone.state'] !== undefined) {
                 delete closedIssuesFilterNoSprint['milestone.state'];
