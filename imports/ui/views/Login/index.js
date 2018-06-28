@@ -24,7 +24,7 @@ import CardFooter from "../../components/Card/CardFooter.js";
 
 import loginPageStyle from "../../assets/jss/material-kit-react/views/loginPage.jsx";
 
-import OAuthLoginButtons from './OAuthLoginButtons.js';
+import GitHubLogin from './GitHubLogin.js';
 
 //import background from "../../assets/img/newyork.jpg";
 
@@ -67,11 +67,8 @@ class Login extends Component {
                                 <Card className={classes[this.state.cardAnimaton]}>
                                     <form className={classes.form}>
                                         <CardHeader color="primary" className={classes.cardHeader}>
-                                            <h4>Login</h4>
                                             <div className={classes.socialLine}>
-                                                <OAuthLoginButtons
-                                                    services={['github']}
-                                                />
+                                                <GitHubLogin />
                                             </div>
                                         </CardHeader>
                                         <p className={classes.divider}>A project management tool over GitHub issues</p>
