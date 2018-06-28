@@ -7,7 +7,8 @@ import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types'
 import autoBind from 'react-autobind';
 
-import Login from './pages/login/index.js';
+//import Login from './pages/login/index.js';
+import Login from './views/Login/index.js';
 import Dashboard from './pages/dashboard/index.js';
 import Settings from './pages/settings/index.js';
 import Search from './pages/search/index.js';
