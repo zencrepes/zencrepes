@@ -6,11 +6,6 @@ https://github.com/creativetimofficial/material-kit-react/blob/master/src/views/
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import InputAdornment from "@material-ui/core/InputAdornment";
-// @material-ui/icons
-import Email from "@material-ui/icons/Email";
-import LockOutline from "@material-ui/icons/LockOutline";
-import People from "@material-ui/icons/People";
 import Button from '@material-ui/core/Button';
 
 // core components
