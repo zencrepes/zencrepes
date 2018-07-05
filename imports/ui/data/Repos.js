@@ -127,10 +127,11 @@ class Repos extends Component {
                 name: currentRepo.node.name,
                 url: currentRepo.node.url,
                 issues_count: currentRepo.node.issues.totalCount,
+                labels: currentRepo.node.labels,
                 databaseId: currentRepo.node.databaseId,
                 org: OrgObj,
                 active: nodeActive,
-            }
+            };
             await cfgSources.upsert({
                 id: repoObj.id
             }, {

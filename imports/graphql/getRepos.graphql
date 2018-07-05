@@ -21,6 +21,9 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             issues(first: 1) {
               totalCount
             }
+            labels(first: 1) {
+              totalCount
+            }
           }
         }
       }

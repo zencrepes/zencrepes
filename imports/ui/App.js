@@ -21,6 +21,7 @@ import Authenticated from './components/Authenticated/Authenticated.js'
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
 import Issues from './data/Issues.js';
+import Labels from './data/Labels.js';
 import Repos from './data/Repos.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
@@ -43,6 +44,7 @@ class App extends Component {
             <ApolloProviderGithub>
                 <div>
                     <Issues />
+                    <Labels />
                     <Repos />
                     <QueryManage />
                     <QuerySave />

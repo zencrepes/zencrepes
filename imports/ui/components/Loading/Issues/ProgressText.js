@@ -27,6 +27,7 @@ class ProgressText extends React.Component {
                 Orgs (Total / Selected / Loaded): {this.props.totalOrgs} / {this.props.selectedOrgs} / {this.props.loadedOrgs} <br />
                 Repos (Total / Selected / Loaded): {this.props.totalRepos} / {this.props.selectedRepos} / {this.props.loadedRepos} <br />
                 Issues (Total / Selected / Loaded): {this.props.totalIssues} / {this.props.selectedIssues} / {this.props.loadedIssues} <br />
+                Labels (Total / Selected / Loaded): {this.props.totalLabels} / {this.props.selectedLabels} / {this.props.loadedLabels} <br />
             </DialogContentText>
         );
     }
@@ -44,12 +45,15 @@ const mapState = state => ({
     totalOrgs: state.github.totalOrgs,
     totalRepos: state.github.totalRepos,
     totalIssues: state.github.totalIssues,
+    totalLabels: state.github.totalLabels,
     selectedOrgs: state.github.selectedOrgs,
     selectedRepos: state.github.selectedRepos,
     selectedIssues: state.github.selectedIssues,
+    selectedLabels: state.github.selectedLabels,
     loadedOrgs: state.github.loadedOrgs,
     loadedRepos: state.github.loadedRepos,
     loadedIssues: state.github.loadedIssues,
+    loadedLabels: state.github.loadedLabels,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ProgressText));

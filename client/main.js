@@ -15,6 +15,7 @@ import App from '../imports/ui/App.js';
 import { localCfgIssues } from '../imports/ui/data/Issues.js';
 import { localCfgSources } from '../imports/ui/data/Repositories.js';
 import { localCfgQueries } from '../imports/ui/data/Queries.js';
+import { localCfgLabels } from '../imports/ui/data/Labels.js';
 
 // generate Redux store
 const store = init({
@@ -29,6 +30,7 @@ Meteor.startup(() => {
     localCfgSources.refresh();
     localCfgIssues.refresh();
     localCfgQueries.refresh();
+    localCfgLabels.refresh();
     Meteor.setTimeout(() => {
         render(
             <Provider store={store}>

@@ -27,15 +27,16 @@ class LoadingIssues extends Component {
     cancelLoad = () => {
         console.log('cancelLoad');
         this.props.updateIssuesLoading(false);
+        this.props.updateLabelsLoading(false);
     };
 
     render() {
-        const { classes, issuesLoading } = this.props;
+        const { classes, issuesLoading, labelsLoading } = this.props;
         console.log('LoadingIssues - render()');
-        if (issuesLoading) {
+        if (issuesLoading || labelsLoading) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={issuesLoading}>
-                    <DialogTitle id="simple-dialog-title">Importing issues from GitHub</DialogTitle>
+                    <DialogTitle id="simple-dialog-title">Importing issues & labels from GitHub</DialogTitle>
                     <DialogContent>
                         <ProgressText />
                     </DialogContent>
@@ -60,10 +61,12 @@ LoadingIssues.propTypes = {
 
 const mapState = state => ({
     issuesLoading: state.github.issuesLoading,
+    labelsLoading: state.github.labelsLoading,
 });
 
 const mapDispatch = dispatch => ({
     updateIssuesLoading: dispatch.github.updateIssuesLoading,
+    updateLabelsLoading: dispatch.github.updateLabelsLoading,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadingIssues));

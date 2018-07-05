@@ -4,18 +4,25 @@ export default {
         totalOrgs: 0,
         totalRepos: 0,
         totalIssues: 0,
+        totalLabels: 0,
         selectedOrgs: 0,
         selectedRepos: 0,
         selectedIssues: 0,
+        selectedLabels: 0,
         loadedOrgs: 0,
         loadedRepos: 0,
         loadedIssues: 0,
         loadedIssuesBuffer: 0, // Only used for the progress bar buffer value
+        loadedLabels: 0,
+        loadedLabelsBuffer: 0, // Only used for the progress bar buffer value
+
 
         unfilteredIssues: 0,
         totalLoading: false,
         issuesLoading: false,           // Boolean to indicate issues are currently loading
         loadIssues: false,              // Boolean to trigger issue load
+        labelsLoading: false,           // Boolean to indicate issues are currently loading
+        loadLabels: false,              // Boolean to trigger issue load
     },
     reducers: {
         //Total are the overall items available to a user
@@ -24,6 +31,9 @@ export default {
         },
         setTotalIssues(state, payload) {
             return { ...state, totalIssues: payload };
+        },
+        setTotalLabels(state, payload) {
+            return { ...state, totalLabels: payload };
         },
         setTotalOrgs(state, payload) {
             return { ...state, totalOrgs: payload };
@@ -48,6 +58,12 @@ export default {
         incrementSelectedIssues(state, payload) {
             return { ...state, selectedIssues: state.selectedIssues + payload };
         },
+        setSelectedLabels(state, payload) {
+            return { ...state, selectedLabels: payload };
+        },
+        incrementSelectedLabels(state, payload) {
+            return { ...state, selectedLabels: state.selectedLabels + payload };
+        },
 
         //Loaded are the total items actually loaded from GitHub
         setLoadedOrgs(state, payload) {
@@ -71,6 +87,18 @@ export default {
         setLoadedIssuesBuffer(state, payload) {
             return { ...state, loadedIssuesBuffer: payload };
         },
+        incrementLoadedLabels(state, payload) {
+            return { ...state, loadedLabels: state.loadedLabels + payload };
+        },
+        incrementLoadedLabelsBuffer(state, payload) {
+            return { ...state, loadedLabelsBuffer: state.loadedLabelsBuffer + payload };
+        },
+        setLoadedLabels(state, payload) {
+            return { ...state, loadedLabels: payload };
+        },
+        setLoadedLabelsBuffer(state, payload) {
+            return { ...state, loadedLabelsBuffer: payload };
+        },
 
         incrementTotalOrgs(state, payload) {
             return { ...state, totalOrgs: state.totalOrgs + payload };
@@ -84,6 +112,9 @@ export default {
         incrementUnfilteredIssues(state, payload) {
             return { ...state, totalIssues: state.unfilteredIssues + payload };
         },
+        incrementTotalLabels(state, payload) {
+            return { ...state, totalLabels: state.totalLabels + payload };
+        },
         updateTotalLoading(state, payload) {
             return { ...state, totalLoading: payload };
         },
@@ -96,6 +127,16 @@ export default {
         setIssuesLoading(state, payload) {
             return { ...state, issuesLoading: payload };
         },
+        updateLabelsLoading(state, payload) {
+            return { ...state, issuesLoading: payload };
+        },
+        setLoadLabels(state, payload) {
+            return { ...state, loadLabels: payload };
+        },
+        setLabelsLoading(state, payload) {
+            return { ...state, issuesLoading: payload };
+        },
+
         setLoadRepositories(state, payload) {
             return { ...state, loadRepositories: payload };
         },

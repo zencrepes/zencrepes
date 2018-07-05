@@ -94,14 +94,15 @@ class OrgRepoTree extends Component {
     }
 
     resetCounts = () => {
-        const { setSelectedOrgs, setSelectedRepos, setSelectedIssues} = this.props;
+        const { setSelectedOrgs, setSelectedRepos, setSelectedIssues, setSelectedLabels} = this.props;
         setSelectedOrgs(0);
         setSelectedRepos(0);
         setSelectedIssues(0);
+        setSelectedLabels(0);
     }
 
     save() {
-        const { setLoadIssues, setSelectedOrgs, incrementSelectedRepos, incrementSelectedIssues } = this.props;
+        const { setLoadIssues, setSelectedOrgs, incrementSelectedRepos, incrementSelectedIssues, incrementSelectedLabels } = this.props;
 
         this.resetCounts();
         let selectedOrgs = {};
@@ -114,6 +115,7 @@ class OrgRepoTree extends Component {
                 cfgSources.update({id: node.id}, {$set:{'active':true}});
                 incrementSelectedRepos(1);
                 incrementSelectedIssues(node.issues_count);
+                incrementSelectedLabels(node.labels.totalCount);
                 selectedOrgs[node.org.id] = true;
             }
         });
@@ -124,8 +126,9 @@ class OrgRepoTree extends Component {
 
     loadIssues() {
         console.log('loadIssues');
-        const { setLoadIssues } = this.props;
+        const { setLoadIssues, setLoadLabels } = this.props;
         setLoadIssues(true);
+        setLoadLabels(true);
     }
 
     loadRepos() {
@@ -201,7 +204,7 @@ class OrgRepoTree extends Component {
                     <CardContent>
                         <Button variant="raised" size="small" color="primary" onClick={() => this.loadRepos()}>Refresh Repos</Button>
                         <Button variant="raised" size="small" color="primary" onClick={() => this.save()}>Save Selection</Button>
-                        <Button variant="raised" size="small" color="primary" onClick={() => this.loadIssues()}>Load Issues</Button>
+                        <Button variant="raised" size="small" color="primary" onClick={() => this.loadIssues()}>Load Issues & Labels</Button>
                         <Tree value={this.state.data} selectionMode="checkbox" selectionChange={this.onCheckboxSelectionChange.bind(this)} ></Tree>
                     </CardContent>
                 </Card>
@@ -230,7 +233,9 @@ class OrgRepoTree extends Component {
 const mapState = state => ({
     totalLoading: state.github.totalLoading,
     loadIssues: state.github.loadIssues,
+    loadLabels: state.github.loadLabels,
     issuesLoading: state.github.issuesLoading,
+    labelsLoading: state.github.labelsLoading,
 
     reposLoadingFlag: state.githubRepos.reposLoadingFlag
 });
@@ -238,13 +243,18 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
     setLoadIssues: dispatch.github.setLoadIssues,
+    setLoadLabels: dispatch.github.setLoadLabels,
     incrementUnfilteredIssues: dispatch.github.incrementUnfilteredIssues,
     updateIssuesLoading: dispatch.github.updateIssuesLoading,
+    incrementUnfilteredLabels: dispatch.github.incrementUnfilteredLabels,
+    updateLabelsLoading: dispatch.github.updateLabelsLoading,
     incrementSelectedRepos: dispatch.github.incrementSelectedRepos,
     incrementSelectedIssues: dispatch.github.incrementSelectedIssues,
+    incrementSelectedLabels: dispatch.github.incrementSelectedLabels,
     setSelectedOrgs: dispatch.github.setSelectedOrgs,
     setSelectedRepos: dispatch.github.setSelectedRepos,
     setSelectedIssues: dispatch.github.setSelectedIssues,
+    setSelectedLabels: dispatch.github.setSelectedLabels,
 
     setReposLoadFlag: dispatch.githubRepos.setReposLoadFlag,
 
