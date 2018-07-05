@@ -134,7 +134,7 @@ export default {
             return { ...state, loadLabels: payload };
         },
         setLabelsLoading(state, payload) {
-            return { ...state, issuesLoading: payload };
+            return { ...state, labelsLoading: payload };
         },
 
         setLoadRepositories(state, payload) {

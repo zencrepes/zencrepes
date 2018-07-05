@@ -21,15 +21,18 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
           edges {
             cursor
             node {
-             id
-             url
-             color
-             name
-             description
-             color
-             isDefault
-             createdAt
-             updatedAt
+               id
+               url
+               color
+               name
+               description
+               color
+               isDefault
+               createdAt
+               updatedAt
+               issues(first: 1) {
+                 totalCount
+               }
             }
           }
         }

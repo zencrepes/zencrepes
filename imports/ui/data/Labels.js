@@ -89,9 +89,9 @@ class Labels extends Component {
             query: GET_GITHUB_LABELS,
             variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
             fetchPolicy: 'no-cache',
-
         });
         this.props.updateChip(data.data.rateLimit);
+        console.log(data);
         if (data.data.viewer.organization.repository !== null) {
             lastCursor = await this.ingestLabels(data);
             console.log(data.data.viewer.organization.repository);
