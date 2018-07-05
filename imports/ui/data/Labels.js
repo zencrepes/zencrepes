@@ -132,6 +132,7 @@ class Labels extends Component {
                 },
                 createdAt: currentLabel.node.createdAt,
                 updatedAt: currentLabel.node.updatedAt,
+                issues: currentLabel.node.issues,
                 refreshed: true,
             };
             await cfgLabels.upsert({
