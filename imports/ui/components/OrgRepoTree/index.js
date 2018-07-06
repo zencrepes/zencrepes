@@ -19,7 +19,7 @@ import 'primereact/resources/primereact.min.css';
 
 import { CheckboxBlankOutline, CheckboxMarkedOutline } from 'mdi-material-ui';
 
-import { cfgSources } from '../../data/Repos.js';
+import { cfgSources } from '../../data/Orgs.js';
 import { cfgIssues } from '../../data/Issues.js';
 import _ from 'lodash';
 import Issues from "../../data/Issues";
@@ -126,9 +126,9 @@ class OrgRepoTree extends Component {
 
     loadIssues() {
         console.log('loadIssues');
-        const { setLoadIssues, setLoadLabels } = this.props;
-        setLoadIssues(true);
-        setLoadLabels(true);
+        const { setIssuesLoadFlag, setLabelsLoadFlag } = this.props;
+        setIssuesLoadFlag(true);
+        setLabelsLoadFlag(true);
     }
 
     loadRepos() {
@@ -257,6 +257,8 @@ const mapDispatch = dispatch => ({
     setSelectedLabels: dispatch.github.setSelectedLabels,
 
     setReposLoadFlag: dispatch.githubRepos.setReposLoadFlag,
+    setIssuesLoadFlag: dispatch.githubIssues.setLoadFlag,
+    setLabelsLoadFlag: dispatch.githubLabels.setLoadFlag,
 
 
 });

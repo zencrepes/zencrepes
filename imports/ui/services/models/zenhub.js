@@ -1,5 +1,5 @@
 import { cfgIssues } from '../../data/Issues.js';
-import { cfgSources } from '../../data/Repos.js';
+import { cfgSources } from '../../data/Orgs.js';
 import axios from 'axios';
 
 //https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep

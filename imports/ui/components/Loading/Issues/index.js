@@ -26,8 +26,8 @@ class LoadingIssues extends Component {
 
     cancelLoad = () => {
         console.log('cancelLoad');
-        this.props.updateIssuesLoading(false);
-        this.props.updateLabelsLoading(false);
+        this.props.setIssuesLoading(false);
+        this.props.setLabelsLoading(false);
     };
 
     render() {
@@ -60,13 +60,13 @@ LoadingIssues.propTypes = {
 };
 
 const mapState = state => ({
-    issuesLoading: state.github.issuesLoading,
-    labelsLoading: state.github.labelsLoading,
+    issuesLoading: state.githubIssues.loading,
+    labelsLoading: state.githubLabels.loading,
 });
 
 const mapDispatch = dispatch => ({
-    updateIssuesLoading: dispatch.github.updateIssuesLoading,
-    updateLabelsLoading: dispatch.github.updateLabelsLoading,
+    setIssuesLoading: dispatch.githubIssues.setLoading,
+    setLabelsLoading: dispatch.githubLabels.setLoading,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadingIssues));

@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import AppMenu from '../../components/AppMenu/index.js';
 import LeftDrawer from '../../components/LeftDrawer/index.js'
 
-import { cfgSources } from '../../data/Repos.js';
+import { cfgSources } from '../../data/Orgs.js';
 
 import SyncFilters from './SyncFilters.js';
 

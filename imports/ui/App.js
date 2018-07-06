@@ -13,6 +13,7 @@ import Dashboard from './pages/dashboard/index.js';
 import Settings from './pages/settings/index.js';
 import Search from './pages/search/index.js';
 import Velocity from './pages/velocity/index.js';
+import Labels from './pages/labels/index.js';
 import Index from './Index.js';
 
 import Public from './components/Public/Public.js'
@@ -20,8 +21,9 @@ import Authenticated from './components/Authenticated/Authenticated.js'
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
-import Issues from './data/Issues.js';
-import Labels from './data/Labels.js';
+//import Issues from './data/Issues.js';
+//import Labels from './data/Labels.js';
+import Orgs from './data/Orgs.js';
 import Repos from './data/Repos.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
@@ -43,9 +45,8 @@ class App extends Component {
         return (
             <ApolloProviderGithub>
                 <div>
-                    <Issues />
-                    <Labels />
                     <Repos />
+                    <Orgs />
                     <QueryManage />
                     <QuerySave />
                     <Router>
@@ -58,6 +59,7 @@ class App extends Component {
                                     <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                 </Switch>
                             </div>
                         ) : ''}

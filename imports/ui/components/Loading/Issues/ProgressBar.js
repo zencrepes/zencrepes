@@ -17,49 +17,35 @@ class ProgressBar extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            //completed: 0,
-            //buffer: 0,
-        };
-    }
-/*
-    componentDidMount() {
-        this.timer = setInterval(this.progress, 500);
+        this.state = {};
     }
 
-    componentWillUnmount() {
-        clearInterval(this.timer);
-    }
-
-    timer = null;
-
-    progress = () => {
-        const { completed } = this.state;
-        if (completed > 100) {
-            this.setState({ completed: 0, buffer: 10 });
-        } else {
-            const diff = Math.random() * 10;
-            const diff2 = Math.random() * 10;
-            this.setState({ completed: completed + diff, buffer: completed + diff + diff2 });
-        }
-    };
-*/
-    getValue = () => {
-        const { selectedIssues, loadedIssues } = this.props;
-        return Math.round((loadedIssues*100/selectedIssues),0);
+    getIssuesValue = () => {
+        const { issuesTotalCount, issuesLoadedCount } = this.props;
+        return Math.round((issuesLoadedCount*100/issuesTotalCount),0);
     };
 
-    getBuffer = () => {
-        const { classes, selectedIssues, loadedIssues, loadedIssuesBuffer } = this.props;
-        return Math.round((loadedIssuesBuffer*100/selectedIssues),0);
+    getIssuesBuffer = () => {
+        const { issuesTotalCount, issuesLoadedCountBuffer } = this.props;
+        return Math.round((issuesLoadedCountBuffer*100/issuesTotalCount),0);
+    };
+
+    getLabelsValue = () => {
+        const { labelsTotalCount, labelsLoadedCount } = this.props;
+        return Math.round((labelsLoadedCount*100/labelsTotalCount),0);
+    };
+
+    getLabelsBuffer = () => {
+        const { labelsTotalCount, labelsLoadedCountBuffer } = this.props;
+        return Math.round((labelsLoadedCountBuffer*100/labelsTotalCount),0);
     };
 
     render() {
-        const { classes, selectedIssues, loadedIssues, loadedIssuesBuffer } = this.props;
-        //const { completed, buffer } = this.state;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <LinearProgress color="secondary" variant="buffer" value={this.getValue()} valueBuffer={this.getBuffer()} />
+                <LinearProgress color="primary" variant="buffer" value={this.getIssuesValue()} valueBuffer={this.getIssuesBuffer()} />
+                <LinearProgress color="secondary" variant="buffer" value={this.getLabelsValue()} valueBuffer={this.getLabelsBuffer()} />
             </div>
         );
     }
@@ -74,9 +60,14 @@ const mapDispatch = dispatch => ({
 });
 
 const mapState = state => ({
-    selectedIssues: state.github.selectedIssues,
-    loadedIssues: state.github.loadedIssues,
-    loadedIssuesBuffer: state.github.loadedIssuesBuffer,
+    issuesTotalCount: state.githubIssues.totalCount,
+    issuesLoadedCount: state.githubIssues.loadedCount,
+    issuesLoadedCountBuffer: state.githubIssues.loadedCountBuffer,
+
+    labelsTotalCount: state.githubLabels.totalCount,
+    labelsLoadedCount: state.githubLabels.loadedCount,
+    labelsLoadedCountBuffer: state.githubLabels.loadedCountBuffer,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ProgressBar));

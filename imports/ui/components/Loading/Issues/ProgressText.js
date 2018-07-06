@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -24,10 +23,8 @@ class ProgressText extends React.Component {
         const { classes } = this.props;
         return (
             <DialogContentText id="alert-dialog-description">
-                Orgs (Total / Selected / Loaded): {this.props.totalOrgs} / {this.props.selectedOrgs} / {this.props.loadedOrgs} <br />
-                Repos (Total / Selected / Loaded): {this.props.totalRepos} / {this.props.selectedRepos} / {this.props.loadedRepos} <br />
-                Issues (Total / Selected / Loaded): {this.props.totalIssues} / {this.props.selectedIssues} / {this.props.loadedIssues} <br />
-                Labels (Total / Selected / Loaded): {this.props.totalLabels} / {this.props.selectedLabels} / {this.props.loadedLabels} <br />
+                Issues (Total / Loaded): {this.props.issuesTotalCount} / {this.props.issuesLoadedCount} <br />
+                Labels (Total / Loaded): {this.props.labelsTotalCount} / {this.props.labelsLoadedCount} <br />
             </DialogContentText>
         );
     }
@@ -54,6 +51,11 @@ const mapState = state => ({
     loadedRepos: state.github.loadedRepos,
     loadedIssues: state.github.loadedIssues,
     loadedLabels: state.github.loadedLabels,
+
+    issuesLoadedCount: state.githubIssues.loadedCount,
+    labelsLoadedCount: state.githubLabels.loadedCount,
+    issuesTotalCount: state.githubIssues.totalCount,
+    labelsTotalCount: state.githubLabels.totalCount,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ProgressText));

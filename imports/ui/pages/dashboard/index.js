@@ -154,55 +154,6 @@ class Dashboard extends Component {
     }
 }
 
-/*
- <Grid container>
-                        <ItemGrid xs={6} sm={4} md={2}>
-                            <StatsCard
-                                icon={Ticket}
-                                iconColor="orange"
-                                title="Issues Assigned to Me"
-                                description="10"
-                                small=""
-                                statIcon={Update}
-                                statText=""
-                            />
-                        </ItemGrid>
-                        <ItemGrid xs={6} sm={4} md={2}>
-                            <StatsCard
-                                icon={CodeBraces}
-                                iconColor="blue"
-                                title="Open PR pending my review"
-                                description="5"
-                                small="PRs"
-                                statIcon={Update}
-                                statText="-"
-                            />
-                        </ItemGrid>
-                        <ItemGrid xs={6} sm={4} md={2}>
-                            <StatsCard
-                                icon={CodeBraces}
-                                iconColor="green"
-                                title="My PR pending peer review"
-                                description="2"
-                                small="PRs"
-                                statIcon={Update}
-                                statText="-"
-                            />
-                        </ItemGrid>
-                        <ItemGrid xs={6} sm={4} md={2}>
-                            <StatsCard
-                                icon={Broom}
-                                iconColor="red"
-                                title="Open Issues in closed sprints"
-                                description="50"
-                                small=""
-                                statIcon={Broom}
-                                statText="-"
-                            />
-                        </ItemGrid>
-                    </Grid>
- */
-
 Dashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 
