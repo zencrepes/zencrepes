@@ -16,6 +16,10 @@ export const cfgLabels = new Mongo.Collection('cfgLabels', {connection: null});
 export const localCfgLabels = new PersistentMinimongo2(cfgLabels, 'GAV-Labels');
 window.labels = cfgLabels;
 
+//https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 //cfgSources is a minimongo instance holding all repositories.
 import {cfgSources} from "./Orgs.js";
 
@@ -99,9 +103,9 @@ class Repos extends Component {
     };
 
     loadReposContent = async () => {
-        const { setIssuesLoading, incrementIssuesLoadedCountBuffer, setLabelsLoading, setIssuesTotalCount, setLabelsTotalCount} = this.props;
-        setIssuesLoading(true);  // Set to true to indicate issues are actually loading.
-        setLabelsLoading(true);  // Set to true to indicate labels are actually loading.
+        const { setIssuesLoading, incrementIssuesLoadedCountBuffer, setLabelsLoading, setIssuesTotalCount, setLabelsTotalCount, incrementLabelsLoadedCountBuffer} = this.props;
+        await setIssuesLoading(true);  // Set to true to indicate issues are actually loading.
+        await setLabelsLoading(true);  // Set to true to indicate labels are actually loading.
 
         //First action is to calculate the number of expected issues and labels to be loaded
         let issuesTotalCount = cfgSources.find({active: true}).fetch()
@@ -123,7 +127,7 @@ class Repos extends Component {
                 await cfgIssues.remove({'repo.id': repo.id});
                 await cfgLabels.remove({'repo.id': repo.id});
             } else {
-                console.log('Data import: ' + repo.name + ' - Is active and has ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
+                console.log('Processing repo: ' + repo.name + ' - Is active and has ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
 
                 //If repo is active, load all issues attached to this repo (if any)
                 if (repo.issues.totalCount > 0) {
@@ -138,14 +142,28 @@ class Repos extends Component {
                     if (repo.issues.totalCount < 100) {
                         queryIncrement = repo.issues.totalCount;
                     }
-                    console.log('Query Increment: ' + queryIncrement);
+                    console.log('Issues import: ' + repo.name + ' - Query increment: ' + queryIncrement);
 
                     if (this.props.issuesLoading)
-                        console.log('load issues pagination');
                         await this.getIssuesPagination(null, queryIncrement, repo);
 
+
+                }
+                if (repo.labels.totalCount > 0) {
+                    //First, marked all existing issues are non-refreshed
+                    let updatedDocs = cfgLabels.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
+
+                    //Increment the issues buffer, used for showing a progress bar buffer value
+                    incrementLabelsLoadedCountBuffer(repo.labels.totalCount);
+
+                    //Load as many issues as possible
+                    let queryIncrement = 100;
+                    if (repo.labels.totalCount < 100) {
+                        queryIncrement = repo.labels.totalCount;
+                    }
+                    console.log('Labels import: ' + repo.name + ' - Query increment: ' + queryIncrement);
+
                     if (this.props.labelsLoading)
-                        console.log('load labels pagination');
                         await this.getLabelsPagination(null, queryIncrement, repo);
                 }
             }

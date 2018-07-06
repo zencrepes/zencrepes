@@ -7,7 +7,7 @@ export default {
         totalCount: 0,          // Total number of items that should be loaded
     },
     reducers: {
-        setLoading(state, payload) {return { ...state, loading: payload };},
+        setLoading(state, payload) {console.log('set loading'); console.log(payload);return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
         setLoadedCountBuffer(state, payload) {return { ...state, loadedCountBuffer: payload };},
