@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
@@ -9,6 +11,12 @@ import AppMenu from '../../components/AppMenu/index.js';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import { cfgLabels } from '../../data/Labels.js';
 
@@ -34,47 +42,104 @@ const styles = theme => ({
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
     },
+    card: {
+        minWidth: 275,
+        margin: 10,
+    },
+    bullet: {
+        display: 'inline-block',
+        margin: '0 2px',
+        transform: 'scale(0.8)',
+    },
+    title: {
+        marginBottom: 16,
+        fontSize: 14,
+    },
+    pos: {
+        marginBottom: 12,
+    },
 });
 
 class Labels extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            labels: []
+        };
     }
 
-    getCards() {
-        console.log('getCards');
-
+    componentDidMount() {
+        console.log('componentDidMount');
         let uniqueLabels = _.groupBy(cfgLabels.find({}).fetch(), 'name');
-        console.log(uniqueLabels);
 
         let labels = [];
         Object.keys(uniqueLabels).map(idx => {
+            let colorElements = _.groupBy(uniqueLabels[idx], 'color');
+            let colors = Object.keys(colorElements).map(idx => {return {
+                items: colorElements[idx],
+                count: colorElements[idx].length,
+                name: colorElements[idx][0].color,
+            }});
+
+            let descriptionsElements = _.groupBy(uniqueLabels[idx], 'description');
+            let descriptions = Object.keys(descriptionsElements).map(idx => {return {
+                items: descriptionsElements[idx],
+                count: descriptionsElements[idx].length,
+                name: descriptionsElements[idx][0].description,
+            }});
+
+            let orgElements = _.groupBy(uniqueLabels[idx], 'org.id');
+            let orgs = Object.keys(orgElements).map(idx => {return {
+                items: orgElements[idx],
+                count: orgElements[idx].length,
+                name: orgElements[idx][0].org.name,
+            }});
+
+            //orgs: _.uniqBy(uniqueLabels[idx].map(label => label.org), 'id'),
+            //_.uniq(uniqueLabels[idx].map(label => label.color)),
+
             labels.push({
                 name: idx,
+                count: uniqueLabels[idx].length,
                 labels: uniqueLabels[idx],
-                repos: uniqueLabels[idx].map((label) => {
-                    return label.repo;
-                }),
-                //issuesCount: uniqueLabels[idx].issues.totalCount
+                colors: colors,
+                orgs: orgs,
+                descriptions: descriptions,
             });
         });
-
-        return labels;
+        labels = _.sortBy(labels, [function(o) {return o.labels.length;}]);
+        labels = labels.reverse();
+        this.setState({labels: labels});
     }
 
     render() {
         const { classes } = this.props;
-        console.log(cfgLabels);
+        const { labels } = this.state;
+        console.log(labels);
         return (
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
                     <GridList cellHeight={180} className={classes.gridList} cols={4}>
-                        {this.getCards().map(label => (
-                            <GridListTile key={label.name}>
-                                <h4>{label.name}</h4>
-                            </GridListTile>
+                        {labels.map(label => (
+                            <Card className={classes.card} key={label.name}>
+                                <CardContent>
+                                    <Typography variant="headline" component="h2">
+                                        {label.name}
+                                    </Typography>
+                                    <Typography className={classes.pos} color="textSecondary">
+                                        Used in {label.count} repositories
+                                    </Typography>
+                                    <Typography component="p">
+                                        <b><i>Consistency score: </i></b> <br />
+                                        Different colors: {label.colors.length} <br />
+                                        Different descriptions: {label.descriptions.length} <br />
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">Learn More</Button>
+                                </CardActions>
+                            </Card>
                         ))}
                     </GridList>
                 </main>
