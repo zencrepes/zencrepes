@@ -65,7 +65,7 @@ const buildMongoFilter = (filters) => {
         if (filters[idx].length > 0) {
             mongoFilter[idx] = { $in : filterValues };
         }
-    })
+    });
 //    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
 //    console.log('Number of matched issues: ' + cfgIssues.find(mongoFilter).count());
     return mongoFilter
