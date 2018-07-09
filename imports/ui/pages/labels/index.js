@@ -8,6 +8,10 @@ import { connect } from "react-redux";
 
 import AppMenu from '../../components/AppMenu/index.js';
 
+//import { Palette } from 'mdi-material-ui';
+import SquareIcon from 'mdi-react/SquareIcon';
+
+
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -17,6 +21,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 
 import { cfgLabels } from '../../data/Labels.js';
 
@@ -34,10 +40,6 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
         paddingTop: 80,
         minWidth: 0, // So the Typography noWrap works
-    },
-    gridList: {
-        width: 1000,
-        height: 450,
     },
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
@@ -78,8 +80,10 @@ class Labels extends Component {
             let colors = Object.keys(colorElements).map(idx => {return {
                 items: colorElements[idx],
                 count: colorElements[idx].length,
-                name: colorElements[idx][0].color,
+                name: "#" + colorElements[idx][0].color,
             }});
+            colors = _.sortBy(colors, [function(o) {return o.count;}]);
+            colors = colors.reverse();
 
             let descriptionsElements = _.groupBy(uniqueLabels[idx], 'description');
             let descriptions = Object.keys(descriptionsElements).map(idx => {return {
@@ -87,6 +91,8 @@ class Labels extends Component {
                 count: descriptionsElements[idx].length,
                 name: descriptionsElements[idx][0].description,
             }});
+            descriptions = _.sortBy(descriptions, [function(o) {return o.count;}]);
+            descriptions = descriptions.reverse();
 
             let orgElements = _.groupBy(uniqueLabels[idx], 'org.id');
             let orgs = Object.keys(orgElements).map(idx => {return {
@@ -120,20 +126,28 @@ class Labels extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
-                    <GridList cellHeight={180} className={classes.gridList} cols={4}>
+                    <GridList cellHeight={180} className={classes.gridList} cols={8}>
                         {labels.map(label => (
                             <Card className={classes.card} key={label.name}>
                                 <CardContent>
                                     <Typography variant="headline" component="h2">
                                         {label.name}
                                     </Typography>
+                                    {label.count > 1 &&
+                                        <Typography className={classes.pos} color="textSecondary">
+                                                Used in {label.count} repositories
+                                        </Typography>
+                                    }
+                                    {label.count === 1 &&
                                     <Typography className={classes.pos} color="textSecondary">
-                                        Used in {label.count} repositories
+                                        Used in {label.labels[0].repo.name}
                                     </Typography>
+                                    }
+                                    {label.colors.map(color => (
+                                        <SquareIcon key={color.name} color={color.name} />
+                                    ))}
                                     <Typography component="p">
-                                        <b><i>Consistency score: </i></b> <br />
-                                        Different colors: {label.colors.length} <br />
-                                        Different descriptions: {label.descriptions.length} <br />
+                                        {label.descriptions[0].name}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
