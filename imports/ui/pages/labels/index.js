@@ -161,6 +161,38 @@ class Labels extends Component {
         );
     }
 }
+/*
+ <GridList cellHeight={180} className={classes.gridList} cols={8}>
+ {labels.map(label => (
+ <Card className={classes.card} key={label.name}>
+ <CardContent>
+ <Typography variant="headline" component="h2">
+ {label.name}
+ </Typography>
+ {label.count > 1 &&
+ <Typography className={classes.pos} color="textSecondary">
+ Used in {label.count} repositories
+ </Typography>
+ }
+ {label.count === 1 &&
+ <Typography className={classes.pos} color="textSecondary">
+ Used in {label.labels[0].repo.name}
+ </Typography>
+ }
+ {label.colors.map(color => (
+ <SquareIcon key={color.name} color={color.name} />
+ ))}
+ <Typography component="p">
+ {label.descriptions[0].name}
+ </Typography>
+ </CardContent>
+ <CardActions>
+ <Button size="small">Learn More</Button>
+ </CardActions>
+ </Card>
+ ))}
+ </GridList>
+ */
 
 Labels.propTypes = {
     classes: PropTypes.object.isRequired,
