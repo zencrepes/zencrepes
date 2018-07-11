@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { connect } from "react-redux";
-import { GithubCircle } from 'mdi-material-ui'
-import { Link } from 'react-router-dom';
+
+import SquareIcon from 'mdi-react/SquareIcon';
 
 import {
     // State or Local Processing Plugins
@@ -26,8 +26,6 @@ import {
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
-import { cfgIssues } from '../../data/Issues.js';
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -38,66 +36,52 @@ const styles = theme => ({
     },
 });
 
-const LinkFormatter = ({ value }) => {
-    //console.log(value);
-    return (
-        <Link to={value}>
-            <GithubCircle />
-        </Link>
-    )
-}
-
-const LinkTypeProvider = props => (
-    <DataTypeProvider
-        formatterComponent={LinkFormatter}
-        {...props}
-    />
-);
-
-const DateFormatter = ({ value }) => {
-    if (value !== null) {return value.slice(0, 10);}
-    else {return '-';}
+const ColorsFormatter = ({ value }) => {
+    return value.map(color => (
+        <SquareIcon key={color.name} color={color.name} />
+    ))
 };
 
-const DateTypeProvider = props => (
+const ColorsTypeProvider = props => (
     <DataTypeProvider
-        formatterComponent={DateFormatter}
+        formatterComponent={ColorsFormatter}
         {...props}
     />
 );
 
-const LabelsFormatter = ({ value }) => {
-    if (value.totalCount > 0) {
-        return Array.prototype.map.call(value.edges, s => s.node.name).toString()
+const DescriptionsFormatter = ({ value }) => {
+    return value[0].name;
+};
+
+const DescriptionsTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={DescriptionsFormatter}
+        {...props}
+    />
+);
+
+const ReposFormatter = ({ value }) => {
+    if (value.length > 1) {
+        return value.length;
     } else {
-        return '-';
+        return value[0].repo.name;
     }
 };
 
-const LabelsTypeProvider = props => (
+const ReposTypeProvider = props => (
     <DataTypeProvider
-        formatterComponent={LabelsFormatter}
+        formatterComponent={ReposFormatter}
         {...props}
     />
 );
 
-const AssigneesFormatter = ({ value }) => {
-    if (value.totalCount > 0) {
-        return Array.prototype.map.call(value.edges, s => {
-            if (s.node.name === null) {
-                return s.node.login;
-            } else {
-                return s.node.name;
-            }
-        }).toString()
-    } else {
-        return '-';
-    }
+const IssuesFormatter = ({ value }) => {
+    return value.map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
 };
 
-const AssigneesTypeProvider = props => (
+const IssuesTypeProvider = props => (
     <DataTypeProvider
-        formatterComponent={AssigneesFormatter}
+        formatterComponent={IssuesFormatter}
         {...props}
     />
 );
@@ -108,31 +92,22 @@ class LabelsTable extends Component {
 
         this.state = {
             columns: [
-                { name: 'title', title: 'Title' },
-                { name: 'org', title: 'Organizartion', getCellValue: row => (row.org ? row.org.name : undefined)},
-                { name: 'repo', title: 'Repo', getCellValue: row => (row.repo ? row.repo.name : undefined)},
-                { name: 'author', title: 'Author', getCellValue: row => (row.author ? row.author.login : undefined)},
-                { name: 'labels', title: 'Labels' },
-                { name: 'assignees', title: 'Assignees' },
-                { name: 'state', title: 'State' },
-                { name: 'points', title: 'Points' },
-                { name: 'createdAt', title: 'Created' },
-                { name: 'updatedAt', title: 'Updated' },
-                { name: 'closedAt', title: 'Closed' },
-                { name: 'url', title: '' },
+                { name: 'name', title: 'Label' },
+                { name: 'repos', title: 'Repos Count', getCellValue: row => row.labels },
+                { name: 'issues', title: 'Issues Count', getCellValue: row => row.labels },
+                { name: 'colors', title: 'Colors' },
+                { name: 'descriptions', title: 'Description' },
             ],
             tableColumnExtensions: [
-                { columnName: 'createdAt', width: 90 },
-                { columnName: 'updatedAt', width: 90 },
-                { columnName: 'closedAt', width: 90 },
-                { columnName: 'state', width: 90 },
-                { columnName: 'url', width: 40 },
+                { columnName: 'name', width: 200 },
+                { columnName: 'repos', width: 150 },
+                { columnName: 'issues', width: 90 },
+                { columnName: 'colors', width: 150 },
             ],
-            linkColumns: ['url'],
-            dateColumns: ['createdAt', 'updatedAt', 'closedAt'],
-            labelsColumns: ['labels'],
-            assigneesColumns: ['assignees'],
-            hiddenColumnNames: ['updatedAt'],
+            colorsColumns: ['colors'],
+            descriptionsColumns: ['descriptions'],
+            reposColumns: ['repos'],
+            issuesColumns: ['issues'],
             currentPage: 0,
             pageSize: 50,
             pageSizes: [20, 50, 100],
@@ -147,67 +122,40 @@ class LabelsTable extends Component {
 
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log('Component did update');
-        // Updated selection
-    }
-
-    changeSelection = async (selection) => {
-        const { filtersResults, updateTableSelection } = this.props;
-        updateTableSelection(selection);
-//        this.setState({ selection });
-        await cfgIssues.update({}, { $set: { pinned: false } }, {multi: true});
-        selection.forEach((idx) => {
-            cfgIssues.update({_id: filtersResults[idx]._id}, {$set: { pinned: true }});
-        })
-    }
-
     render() {
-        const { classes, issuesLoading, filtersResults, tableSelection } = this.props;
-        const { columns, linkColumns, labelsColumns, assigneesColumns, pageSize, pageSizes, currentPage, dateColumns, hiddenColumnNames, tableColumnExtensions} = this.state;
+        const { classes, labelsdata } = this.props;
+        const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent>
-                        <span>Total rows selected: {tableSelection.length}</span>
                         <Grid
-                            rows={filtersResults}
+                            rows={labelsdata}
                             columns={columns}
                         >
-                            <SelectionState
-                                selection={tableSelection}
-                                onSelectionChange={this.changeSelection}
-                            />
                             <PagingState
                                 currentPage={currentPage}
                                 onCurrentPageChange={this.changeCurrentPage}
                                 pageSize={pageSize}
                                 onPageSizeChange={this.changePageSize}
                             />
-                            <IntegratedSelection />
+                            <ColorsTypeProvider
+                                for={colorsColumns}
+                            />
+                            <DescriptionsTypeProvider
+                                for={descriptionsColumns}
+                            />
+                            <ReposTypeProvider
+                                for={reposColumns}
+                            />
+                            <IssuesTypeProvider
+                                for={issuesColumns}
+                            />
                             <IntegratedPaging />
-                            <DateTypeProvider
-                                for={dateColumns}
-                            />
-                            <LabelsTypeProvider
-                                for={labelsColumns}
-                            />
-                            <AssigneesTypeProvider
-                                for={assigneesColumns}
-                            />
-                            <LinkTypeProvider
-                                for={linkColumns}
-                            />
                             <Table columnExtensions={tableColumnExtensions} />
                             <TableHeaderRow />
-                            <TableSelection showSelectAll />
-                            <TableColumnVisibility
-                                hiddenColumnNames={hiddenColumnNames}
-                                onHiddenColumnNamesChange={this.hiddenColumnNamesChange}
-                            />
                             <Toolbar />
-                            <ColumnChooser />
                             <PagingPanel
                                 pageSizes={pageSizes}
                             />
@@ -224,6 +172,7 @@ LabelsTable.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
+
 });
 
 
