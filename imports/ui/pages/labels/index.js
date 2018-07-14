@@ -8,22 +8,6 @@ import { connect } from "react-redux";
 
 import AppMenu from '../../components/AppMenu/index.js';
 
-//import { Palette } from 'mdi-material-ui';
-import SquareIcon from 'mdi-react/SquareIcon';
-
-
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-
 import { cfgLabels } from '../../data/Labels.js';
 
 import LabelsTable from './LabelsTable';
@@ -134,38 +118,6 @@ class Labels extends Component {
         );
     }
 }
-/*
- <GridList cellHeight={180} className={classes.gridList} cols={8}>
- {labels.map(label => (
- <Card className={classes.card} key={label.name}>
- <CardContent>
- <Typography variant="headline" component="h2">
- {label.name}
- </Typography>
- {label.count > 1 &&
- <Typography className={classes.pos} color="textSecondary">
- Used in {label.count} repositories
- </Typography>
- }
- {label.count === 1 &&
- <Typography className={classes.pos} color="textSecondary">
- Used in {label.labels[0].repo.name}
- </Typography>
- }
- {label.colors.map(color => (
- <SquareIcon key={color.name} color={color.name} />
- ))}
- <Typography component="p">
- {label.descriptions[0].name}
- </Typography>
- </CardContent>
- <CardActions>
- <Button size="small">Learn More</Button>
- </CardActions>
- </Card>
- ))}
- </GridList>
- */
 
 Labels.propTypes = {
     classes: PropTypes.object.isRequired,
