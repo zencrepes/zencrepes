@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { connect } from "react-redux";
 
-import SquareIcon from 'mdi-react/SquareIcon';
+import {ColorsTypeProvider, DescriptionsTypeProvider, LinkTypeProvider, EditLabelTypeProvider} from './utils/formatters.js';
 
 import {
     // State or Local Processing Plugins
@@ -36,49 +36,34 @@ const styles = theme => ({
     },
 });
 
-const ColorsFormatter = ({ value }) => {
-    return <SquareIcon color={value} />
-};
-
-const ColorsTypeProvider = props => (
-    <DataTypeProvider
-        formatterComponent={ColorsFormatter}
-        {...props}
-    />
-);
-
-const DescriptionsFormatter = ({ value }) => {
-    return value;
-};
-
-const DescriptionsTypeProvider = props => (
-    <DataTypeProvider
-        formatterComponent={DescriptionsFormatter}
-        {...props}
-    />
-);
-
-class LabelsTable extends Component {
+class TableLabels extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             columns: [
+                { name: 'edit', title: 'Edit', getCellValue: row => row.name },
                 { name: 'name', title: 'Label' },
-                { name: 'org', title: 'Org', getCellValue: row => row.repo.login},
+                { name: 'org', title: 'Org', getCellValue: row => row.org.login},
                 { name: 'repo', title: 'Repo', getCellValue: row => row.repo.name},
                 { name: 'issues', title: 'Issues Count', getCellValue: row => row.issues.totalCount},
                 { name: 'color', title: 'Color', getCellValue: row => '#' + row.color},
                 { name: 'description', title: 'Description' },
+                { name: 'url', title: '' },
             ],
             tableColumnExtensions: [
+                { columnName: 'edit', width: 60 },
                 { columnName: 'name', width: 200 },
                 { columnName: 'repo', width: 150 },
-                { columnName: 'org', width: 90 },
+                { columnName: 'org', width: 150 },
                 { columnName: 'color', width: 150 },
+                { columnName: 'issues', width: 90 },
+                { columnName: 'url', width: 40 },
             ],
             colorsColumns: ['color'],
             descriptionsColumns: ['description'],
+            linkColumns: ['url'],
+            editLabelColumns: ['edit'],
             currentPage: 0,
             pageSize: 50,
             pageSizes: [20, 50, 100],
@@ -95,7 +80,7 @@ class LabelsTable extends Component {
 
     render() {
         const { classes, labelsdata } = this.props;
-        const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, tableColumnExtensions} = this.state;
+        const { columns, pageSize, pageSizes, currentPage, editLabelColumns, colorsColumns, descriptionsColumns, linkColumns, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
@@ -117,6 +102,12 @@ class LabelsTable extends Component {
                             <DescriptionsTypeProvider
                                 for={descriptionsColumns}
                             />
+                            <LinkTypeProvider
+                                for={linkColumns}
+                            />
+                            <EditLabelTypeProvider
+                                for={editLabelColumns}
+                            />
                             <IntegratedPaging />
                             <Table columnExtensions={tableColumnExtensions} />
                             <TableHeaderRow />
@@ -132,7 +123,7 @@ class LabelsTable extends Component {
     }
 }
 
-LabelsTable.propTypes = {
+TableLabels.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -146,4 +137,4 @@ const mapState = state => ({
 });
 
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LabelsTable));
+export default connect(mapState, mapDispatch)(withStyles(styles)(TableLabels));

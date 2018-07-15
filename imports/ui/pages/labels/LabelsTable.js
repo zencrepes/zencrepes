@@ -4,8 +4,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+
+import Button from '@material-ui/core/Button';
 
 import SquareIcon from 'mdi-react/SquareIcon';
+import PencilIcon from 'mdi-react/PencilIcon';
 
 import {
     // State or Local Processing Plugins
@@ -86,12 +90,24 @@ const IssuesTypeProvider = props => (
     />
 );
 
+const EditLabelFormatter = ({ value }) => {
+    return <Link to={"/labels/list/" + value}><PencilIcon /></Link>;
+};
+
+const EditLabelTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={EditLabelFormatter}
+        {...props}
+    />
+);
+
 class LabelsTable extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             columns: [
+                { name: 'edit', title: 'Edit', getCellValue: row => row.name },
                 { name: 'name', title: 'Label' },
                 { name: 'repos', title: 'Repos Count', getCellValue: row => row.labels },
                 { name: 'issues', title: 'Issues Count', getCellValue: row => row.labels },
@@ -99,6 +115,7 @@ class LabelsTable extends Component {
                 { name: 'descriptions', title: 'Description' },
             ],
             tableColumnExtensions: [
+                { columnName: 'edit', width: 60 },
                 { columnName: 'name', width: 200 },
                 { columnName: 'repos', width: 150 },
                 { columnName: 'issues', width: 90 },
@@ -108,6 +125,7 @@ class LabelsTable extends Component {
             descriptionsColumns: ['descriptions'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
+            editLabelColumns: ['edit'],
             currentPage: 0,
             pageSize: 50,
             pageSizes: [20, 50, 100],
@@ -124,7 +142,7 @@ class LabelsTable extends Component {
 
     render() {
         const { classes, labelsdata } = this.props;
-        const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, tableColumnExtensions} = this.state;
+        const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
@@ -151,6 +169,9 @@ class LabelsTable extends Component {
                             />
                             <IssuesTypeProvider
                                 for={issuesColumns}
+                            />
+                            <EditLabelTypeProvider
+                                for={editLabelColumns}
                             />
                             <IntegratedPaging />
                             <Table columnExtensions={tableColumnExtensions} />

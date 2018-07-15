@@ -5,9 +5,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+
+import Button from '@material-ui/core/Button';
 
 import AppMenu from '../../components/AppMenu/index.js';
-import LabelsTable from './Entity/LabelsTable.js';
+import TableLabels from '../../components/Tables/Labels.js';
 
 import { cfgLabels } from '../../data/Labels.js';
 
@@ -102,7 +105,9 @@ class LabelEntity extends Component {
                 <AppMenu />
                 <main className={classes.content}>
                     <h1>Configure Label: {this.props.match.params.id}</h1>
-                    <LabelsTable labelsdata={labels} />
+                    <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
+                    <Button className={classes.button}>Bulk Change</Button>
+                    <TableLabels labelsdata={labels} />
                 </main>
             </div>
         );
