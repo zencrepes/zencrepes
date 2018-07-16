@@ -42,6 +42,7 @@ class TableLabels extends Component {
 
         this.state = {
             columns: [
+                //{ name: 'edit', title: 'Edit', getCellValue: row => row.name },
                 { name: 'edit', title: 'Edit', getCellValue: row => row.name },
                 { name: 'name', title: 'Label' },
                 { name: 'org', title: 'Org', getCellValue: row => row.org.login},

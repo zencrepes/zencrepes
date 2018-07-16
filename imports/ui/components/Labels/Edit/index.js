@@ -9,6 +9,9 @@ import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
+import { cfgLabels } from '../../../data/Labels.js';
+import { cfgSources } from '../../../data/Orgs.js';
+
 
 const styles = theme => ({
     root: {
@@ -21,12 +24,18 @@ class LabelsEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            enabledRepos : [],
         };
     }
 
     componentDidMount() {
         console.log('componentDidMount');
+        console.log(this.props);
+//        let label = this.props.match.params.name;
+//        let id = this.props.match.params.id;
+        //if () {
+
+        //}
 
     }
 
@@ -35,7 +44,7 @@ class LabelsEdit extends Component {
         const { labels, colors, descriptions, orgs } = this.state;
         return (
             <div className={classes.root}>
-                <h1>Edit Single label</h1>
+
             </div>
         );
     }

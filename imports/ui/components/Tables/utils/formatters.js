@@ -51,8 +51,8 @@ export const LinkTypeProvider = props => (
     />
 );
 
-const EditLabelFormatter = ({ value }) => {
-    return <Link to={"/labels/edit/" + value}><PencilIcon /></Link>;
+const EditLabelFormatter = (value) => {
+    return <Link to={"/labels/edit/" + value.row.name + "/" + value.row.id}><PencilIcon /></Link>;
 };
 
 export const EditLabelTypeProvider = props => (

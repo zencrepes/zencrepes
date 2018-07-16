@@ -91,7 +91,7 @@ const IssuesTypeProvider = props => (
 );
 
 const EditLabelFormatter = ({ value }) => {
-    return <Link to={"/labels/list/" + value}><PencilIcon /></Link>;
+    return <Link to={"/labels/view/" + value}><PencilIcon /></Link>;
 };
 
 const EditLabelTypeProvider = props => (

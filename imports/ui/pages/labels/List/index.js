@@ -3,14 +3,13 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { withApollo } from 'react-apollo';
-import { connect } from "react-redux";
+import { withTracker } from 'meteor/react-meteor-data';
 
-import AppMenu from '../../components/AppMenu/index.js';
+import AppMenu from '../../../components/AppMenu/index.js';
 
-import { cfgLabels } from '../../data/Labels.js';
+import { cfgLabels } from '../../../data/Labels.js';
 
-import LabelsTable from './LabelsTable';
+import LabelsTable from './LabelsTable.js';
 
 
 const styles = theme => ({
@@ -48,7 +47,7 @@ const styles = theme => ({
     },
 });
 
-class Labels extends Component {
+class LabelsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,7 +57,8 @@ class Labels extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        let uniqueLabels = _.groupBy(cfgLabels.find({}).fetch(), 'name');
+        const { srcLabels } = this.props;
+        let uniqueLabels = _.groupBy(srcLabels, 'name');
 
         let labels = [];
         Object.keys(uniqueLabels).map(idx => {
@@ -87,9 +87,6 @@ class Labels extends Component {
                 name: orgElements[idx][0].org.name,
             }});
 
-            //orgs: _.uniqBy(uniqueLabels[idx].map(label => label.org), 'id'),
-            //_.uniq(uniqueLabels[idx].map(label => label.color)),
-
             labels.push({
                 name: idx,
                 count: uniqueLabels[idx].length,
@@ -107,7 +104,7 @@ class Labels extends Component {
     render() {
         const { classes } = this.props;
         const { labels } = this.state;
-        console.log(labels);
+        //console.log(labels);
         return (
             <div className={classes.root}>
                 <AppMenu />
@@ -119,17 +116,13 @@ class Labels extends Component {
     }
 }
 
-Labels.propTypes = {
+LabelsList.propTypes = {
     classes: PropTypes.object.isRequired,
-
 };
 
-const mapState = state => ({
 
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(Labels)));
+export default withTracker(() => {
+    return {
+        srcLabels: cfgLabels.find({}).fetch(),
+    };
+})(withStyles(styles)(LabelsList));

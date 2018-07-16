@@ -9,10 +9,10 @@ import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 
-import AppMenu from '../../components/AppMenu/index.js';
-import TableLabels from '../../components/Tables/Labels.js';
+import AppMenu from '../../../components/AppMenu/index.js';
+import TableLabels from '../../../components/Tables/Labels.js';
 
-import { cfgLabels } from '../../data/Labels.js';
+import { cfgLabels } from '../../../data/Labels.js';
 
 const styles = theme => ({
     root: {
@@ -49,7 +49,7 @@ const styles = theme => ({
     },
 });
 
-class LabelEntity extends Component {
+class LabelsView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -62,7 +62,7 @@ class LabelEntity extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        let label = this.props.match.params.id;
+        let label = this.props.match.params.name;
         let similarLabels = cfgLabels.find({'name': label}).fetch();
 
         let colorElements = _.groupBy(similarLabels, 'color');
@@ -104,7 +104,7 @@ class LabelEntity extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
-                    <h1>Configure Label: {this.props.match.params.id}</h1>
+                    <h1>Configure Label: {this.props.match.params.name}</h1>
                     <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
                     <Button className={classes.button}>Bulk Change</Button>
                     <TableLabels labelsdata={labels} />
@@ -114,7 +114,7 @@ class LabelEntity extends Component {
     }
 }
 
-LabelEntity.propTypes = {
+LabelsView.propTypes = {
     classes: PropTypes.object.isRequired,
 
 };
@@ -127,4 +127,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(LabelEntity)));
+export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(LabelsView)));

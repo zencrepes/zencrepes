@@ -22,20 +22,22 @@ const store = init({
     models
 });
 
+//TODO - To be removed, for debugging
 window.store = store;
 
 Meteor.startup(() => {
-    // TODO - This definitely need to be replaced by a better logic
-    // Used to give enough time for minimongo to refresh from local storage before proceeding with app load
-    localCfgSources.refresh();
-    localCfgIssues.refresh();
-    localCfgQueries.refresh();
-    localCfgLabels.refresh();
-    Meteor.setTimeout(() => {
-        render(
-            <Provider store={store}>
-                <App />
-            </Provider>
-            , document.getElementById('render-target'));
-    }, 4000);
+
+    // Reload minimongo data from local storage
+    localCfgSources.refresh(true, () => {store.dispatch.startup.setLoadedSources(true);});
+    localCfgIssues.refresh(true, () => {store.dispatch.startup.setLoadedIssues(true);});
+    localCfgQueries.refresh(true, () => {store.dispatch.startup.setLoadedQueries(true);});
+    localCfgLabels.refresh(true, () => {store.dispatch.startup.setLoadedLabels(true);});
+
+    render(
+        <Provider store={store}>
+            <App />
+        </Provider>
+        , document.getElementById('render-target')
+    );
+
 });

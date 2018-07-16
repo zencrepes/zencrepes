@@ -14,7 +14,7 @@ import 'react-dropdown-tree-select/dist/styles.css';
 
 import { withApollo } from 'react-apollo';
 
-import Sources from '../../data/Sources.js';
+//import Sources from '../../data/Sources.js';
 
 import Grid from 'material-ui/Grid';
 

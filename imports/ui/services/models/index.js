@@ -9,4 +9,5 @@ export { default as repartition } from './repartition.js';
 export { default as queries } from './queries.js';
 export { default as remaining } from './remaining.js';
 export { default as zenhub } from './zenhub.js';
+export { default as startup } from './startup.js';
 

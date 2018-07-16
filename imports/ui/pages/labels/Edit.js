@@ -61,6 +61,7 @@ class LabelsEditPage extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
+        console.log(this.props);
 
     }
 
@@ -70,6 +71,9 @@ class LabelsEditPage extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <main className={classes.content}>
+                    <h1>Edit Label: {this.props.match.params.name}</h1>
+                    <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
+                    <Link to={"/labels/list/" + this.props.match.params.name}><Button className={classes.button}>Back Configuration</Button></Link>
                     <LabelsEdit />
                 </main>
             </div>

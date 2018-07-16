@@ -12,7 +12,7 @@ export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 window.issues = cfgIssues;
 
 //cfgSources is a minimongo instance holding all repositories.
-import {cfgSources} from "./Repositories.js";
+import {cfgSources} from "./Orgs.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 

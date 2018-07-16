@@ -12,7 +12,7 @@ export const localCfgLabels = new PersistentMinimongo2(cfgLabels, 'GAV-Labels');
 window.labels = cfgLabels;
 
 //cfgSources is a minimongo instance holding all repositories.
-import {cfgSources} from "./Repositories.js";
+import {cfgSources} from "./Orgs.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 
