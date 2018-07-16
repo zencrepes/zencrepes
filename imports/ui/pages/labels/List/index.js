@@ -10,6 +10,7 @@ import AppMenu from '../../../components/AppMenu/index.js';
 import { cfgLabels } from '../../../data/Labels.js';
 
 import LabelsTable from './LabelsTable.js';
+import {connect} from "react-redux";
 
 
 const styles = theme => ({
@@ -57,8 +58,7 @@ class LabelsList extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        const { srcLabels } = this.props;
-        let uniqueLabels = _.groupBy(srcLabels, 'name');
+        let uniqueLabels = _.groupBy(cfgLabels.find({}).fetch(), 'name');
 
         let labels = [];
         Object.keys(uniqueLabels).map(idx => {
@@ -120,9 +120,4 @@ LabelsList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-
-export default withTracker(() => {
-    return {
-        srcLabels: cfgLabels.find({}).fetch(),
-    };
-})(withStyles(styles)(LabelsList));
+export default withStyles(styles)(LabelsList);
