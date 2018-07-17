@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 
 import SquareIcon from 'mdi-react/SquareIcon';
 import PencilIcon from 'mdi-react/PencilIcon';
+import EyeIcon from 'mdi-react/EyeIcon';
 
 import {
     // State or Local Processing Plugins
@@ -91,7 +92,7 @@ const IssuesTypeProvider = props => (
 );
 
 const EditLabelFormatter = ({ value }) => {
-    return <Link to={"/labels/view/" + value}><PencilIcon /></Link>;
+    return <Link to={"/labels/view/" + value}><EyeIcon /></Link>;
 };
 
 const EditLabelTypeProvider = props => (

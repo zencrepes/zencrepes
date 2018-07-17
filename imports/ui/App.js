@@ -15,7 +15,7 @@ import Search from './pages/search/index.js';
 import Velocity from './pages/velocity/index.js';
 import LabelsList from './pages/labels/List/index.js';
 import LabelsView from './pages/labels/View/index.js';
-import LabelsEditPage from './pages/labels/Edit.js';
+import LabelsEdit from './pages/labels/Edit/index.js';
 import Index from './Index.js';
 
 import Public from './components/Public/Public.js'
@@ -79,7 +79,7 @@ class App extends Component {
                                         <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels" component={LabelsList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/view/:name" component={LabelsView} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelsEditPage} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelsEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     </Switch>
                                 </div>
                             ) : ''}
