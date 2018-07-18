@@ -10,4 +10,5 @@ export { default as queries } from './queries.js';
 export { default as remaining } from './remaining.js';
 export { default as zenhub } from './zenhub.js';
 export { default as startup } from './startup.js';
+export { default as labelsconfiguration } from './labelsconfiguration.js';
 

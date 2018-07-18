@@ -106,7 +106,7 @@ class LabelsView extends Component {
                 <main className={classes.content}>
                     <h1>Configure Label: {this.props.match.params.name}</h1>
                     <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
-                    <Button className={classes.button}>Bulk Change</Button>
+                    <Link to={"/labels/edit/" + this.props.match.params.name + "/all"}><Button className={classes.button}>Bulk Change</Button></Link>
                     <TableLabels labelsdata={labels} />
                 </main>
             </div>

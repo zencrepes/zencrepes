@@ -32,6 +32,8 @@ import { cfgLabels } from '../../../data/Labels.js';
 import { cfgSources } from '../../../data/Orgs.js';
 import {ContentCopy, Update, Warning} from "@material-ui/icons/index";
 
+import EditSelection from './Selection/index.js';
+
 const styles = theme => ({
     root: {
         display: 'flex',
@@ -85,8 +87,20 @@ class LabelsEdit extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        console.log(this.props);
+        const { initSelectedRepos, initAvailableRepos } = this.props;
+        //When mounting the component, initializing content of the available and selected labels list
 
+        if (this.props.match.params.id !== 'all') {
+            let selectedRepos = [cfgLabels.findOne({id: this.props.match.params.id}).repo];
+        } else {
+            selectedRepos = cfgLabels.find({name: this.props.match.params.name}).map(label => label.repo);
+        }
+        initSelectedRepos(selectedRepos);
+
+        var availableRepos = _.differenceBy(cfgSources.find({}).fetch(), selectedRepos, 'id');
+        initAvailableRepos(availableRepos);
+
+        console.log(this.props);
     }
 
     handleChange = event => {
@@ -120,54 +134,7 @@ class LabelsEdit extends Component {
                     <Link to={"/labels/view/" + this.props.match.params.name}><Button className={classes.button}>Back Configuration</Button></Link>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={6}>
-                            <Grid container>
-                                <ItemGrid xs={5} sm={5} md={5}>
-                                    <h3>Available Repos</h3>
-                                    <TextField
-                                        label="Search"
-                                        id="simple-start-adornment"
-                                        className={classNames(classes.margin, classes.textField)}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start"><MagnifyIcon /></InputAdornment>,
-                                        }}
-                                    />
-                                    <List className={classes.listroot}>
-                                        {cfgSources.find({}).fetch().map(value => (
-                                            <ListItem
-                                                key={value.id}
-                                                role={undefined}
-                                                dense
-                                                button
-                                                onClick={this.handleToggle(value.id)}
-                                                className={classes.listItem}
-                                            >
-                                                <ListItemText primary={value.name} />
-                                            </ListItem>
-                                        ))}
-                                    </List>
-
-                                </ItemGrid>
-                                <ItemGrid xs={2} sm={2} md={2}>
-                                    <h3>Actions</h3>
-                                    <Button variant="outlined" color="primary" className={classes.button}>
-                                        ADD
-                                    </Button>
-                                    <Button variant="outlined" color="primary" className={classes.button}>
-                                        REMOVE
-                                    </Button>
-                                </ItemGrid>
-                                <ItemGrid xs={5} sm={5} md={5}>
-                                    <h3>Selected Repos</h3>
-                                    <TextField
-                                        label="Search"
-                                        id="simple-start-adornment"
-                                        className={classNames(classes.margin, classes.textField)}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start"><MagnifyIcon /></InputAdornment>,
-                                        }}
-                                    />
-                                </ItemGrid>
-                            </Grid>
+                            <EditSelection />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={6}>
                             <h2>Actions</h2>
@@ -189,7 +156,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-
+    initAvailableRepos: dispatch.labelsconfiguration.initAvailableRepos,
+    initSelectedRepos: dispatch.labelsconfiguration.initSelectedRepos,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(LabelsEdit)));
