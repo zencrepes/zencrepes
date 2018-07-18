@@ -50,7 +50,7 @@ class ListSelected extends Component {
     handleToggle = value => () => {
         const { setToggledSelectedRepos, toggledSelectedRepos } = this.props;
 
-        const currentIndex = toggledSelectedRepos.indexOf(value);
+        const currentIndex = toggledSelectedRepos.findIndex((repo) => {return repo.id === value.id});
         const newSelected = [...toggledSelectedRepos];
 
         if (currentIndex === -1) {
@@ -59,14 +59,11 @@ class ListSelected extends Component {
             newSelected.splice(currentIndex, 1);
         }
         setToggledSelectedRepos(newSelected);
-
     };
     
 
     render() {
         const { classes, filteredSelectedRepos, toggledSelectedRepos } = this.props;
-        //const { selected } = this.state;
-        console.log(toggledSelectedRepos);
         return (
             <List className={classes.listroot}>
                 {filteredSelectedRepos.map(repo => (
@@ -75,7 +72,7 @@ class ListSelected extends Component {
                         role={undefined}
                         dense
                         button
-                        onClick={this.handleToggle(repo.id)}
+                        onClick={this.handleToggle(repo)}
                         className={classes.listItem}
                     >
                         <ListItemText primary={repo.name} />

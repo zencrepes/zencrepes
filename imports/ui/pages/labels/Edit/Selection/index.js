@@ -47,6 +47,18 @@ class EditSelection extends Component {
         };
     }
 
+    addToSelected() {
+        const { addToSelected } = this.props;
+        console.log('addToSelection');
+        addToSelected();
+    }
+
+    removeFromSelected() {
+        const { addToAvailable } = this.props;
+        console.log('removeFromSelected');
+        addToAvailable();
+    }
+
     render() {
         const { classes } = this.props;
         return (
@@ -58,10 +70,10 @@ class EditSelection extends Component {
                 </ItemGrid>
                 <ItemGrid xs={2} sm={2} md={2}>
                     <h3>Actions</h3>
-                    <Button variant="outlined" color="primary" className={classes.button}>
+                    <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.addToSelected()}>
                         ADD TO SELECTION
                     </Button>
-                    <Button variant="outlined" color="primary" className={classes.button}>
+                    <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.removeFromSelected()}>
                         REMOVE FROM SELECTION
                     </Button>
                 </ItemGrid>
@@ -85,7 +97,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-
+    addToAvailable: dispatch.labelsconfiguration.addToAvailable,
+    addToSelected: dispatch.labelsconfiguration.addToSelected
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(EditSelection));

@@ -48,41 +48,35 @@ class ListAvailable extends Component {
         };
     }
 
-    handleChange = event => {
-        this.setState({ name: event.target.value });
-    };
-
     handleToggle = value => () => {
-        const { checked } = this.state;
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+        const { setToggledAvailableRepos, toggledAvailableRepos } = this.props;
+
+        const currentIndex = toggledAvailableRepos.findIndex((repo) => {return repo.id === value.id});
+        const newAvailable = [...toggledAvailableRepos];
 
         if (currentIndex === -1) {
-            newChecked.push(value);
+            newAvailable.push(value);
         } else {
-            newChecked.splice(currentIndex, 1);
+            newAvailable.splice(currentIndex, 1);
         }
-
-        this.setState({
-            checked: newChecked,
-        });
+        setToggledAvailableRepos(newAvailable);
     };
     
 
     render() {
-        const { classes, filteredAvailableRepos } = this.props;
+        const { classes, filteredAvailableRepos, toggledAvailableRepos } = this.props;
         return (
             <List className={classes.listroot}>
-                {filteredAvailableRepos.map(value => (
+                {filteredAvailableRepos.map(repo => (
                     <ListItem
-                        key={value.id}
+                        key={repo.id}
                         role={undefined}
                         dense
                         button
-                        onClick={this.handleToggle(value.id)}
+                        onClick={this.handleToggle(repo)}
                         className={classes.listItem}
                     >
-                        <ListItemText primary={value.name} />
+                        <ListItemText primary={repo.name} />
                     </ListItem>
                 ))}
             </List>
@@ -97,11 +91,11 @@ ListAvailable.propTypes = {
 
 const mapState = state => ({
     filteredAvailableRepos: state.labelsconfiguration.filteredAvailableRepos,
-
+    toggledAvailableRepos: state.labelsconfiguration.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({
-
+    setToggledAvailableRepos: dispatch.labelsconfiguration.setToggledAvailableRepos
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ListAvailable));
