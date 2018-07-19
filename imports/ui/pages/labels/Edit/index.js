@@ -90,8 +90,9 @@ class LabelsEdit extends Component {
         const { initSelectedRepos, initAvailableRepos } = this.props;
         //When mounting the component, initializing content of the available and selected labels list
 
+        let selectedRepos = [];
         if (this.props.match.params.id !== 'all') {
-            let selectedRepos = [cfgLabels.findOne({id: this.props.match.params.id}).repo];
+            selectedRepos = [cfgLabels.findOne({id: this.props.match.params.id}).repo];
         } else {
             selectedRepos = cfgLabels.find({name: this.props.match.params.name}).map(label => label.repo);
         }

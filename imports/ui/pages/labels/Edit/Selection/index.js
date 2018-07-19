@@ -25,6 +25,8 @@ import Button from '@material-ui/core/Button';
 
 
 import MagnifyIcon from 'mdi-react/MagnifyIcon';
+import ArrowLeftBoxIcon from 'mdi-react/ArrowLeftBoxIcon';
+import ArrowRightBoxIcon from 'mdi-react/ArrowRightBoxIcon';
 
 import ItemGrid from '../../../../components/Grid/ItemGrid.js';
 import { cfgLabels } from '../../../../data/Labels.js';
@@ -71,10 +73,10 @@ class EditSelection extends Component {
                 <ItemGrid xs={2} sm={2} md={2}>
                     <h3>Actions</h3>
                     <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.addToSelected()}>
-                        ADD TO SELECTION
+                        <ArrowRightBoxIcon />
                     </Button>
                     <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.removeFromSelected()}>
-                        REMOVE FROM SELECTION
+                        <ArrowLeftBoxIcon />
                     </Button>
                 </ItemGrid>
                 <ItemGrid xs={5} sm={5} md={5}>

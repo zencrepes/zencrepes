@@ -25,18 +25,22 @@ import Button from '@material-ui/core/Button';
 
 
 import MagnifyIcon from 'mdi-react/MagnifyIcon';
+import CheckIcon from 'mdi-react/CheckIcon';
 
 import ItemGrid from '../../../../components/Grid/ItemGrid.js';
 import { cfgLabels } from '../../../../data/Labels.js';
 import { cfgSources } from '../../../../data/Orgs.js';
 
 const styles = theme => ({
-    listroot: {
+    root: {
         width: '100%',
         maxWidth: 360,
         position: 'relative',
         overflow: 'auto',
         maxHeight: 300,
+    },
+    listSelected: {
+        backgroudColor: '#00000',
     },
 });
 
@@ -66,7 +70,7 @@ class ListAvailable extends Component {
     render() {
         const { classes, filteredAvailableRepos, toggledAvailableRepos } = this.props;
         return (
-            <List className={classes.listroot}>
+            <List className={classes.root}>
                 {filteredAvailableRepos.map(repo => (
                     <ListItem
                         key={repo.id}
@@ -74,7 +78,7 @@ class ListAvailable extends Component {
                         dense
                         button
                         onClick={this.handleToggle(repo)}
-                        className={classes.listItem}
+                        className={classes.focusVisible}
                     >
                         <ListItemText primary={repo.name} />
                     </ListItem>
