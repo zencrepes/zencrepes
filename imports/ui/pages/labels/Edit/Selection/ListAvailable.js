@@ -69,7 +69,6 @@ class ListAvailable extends Component {
 
     render() {
         const { classes, filteredAvailableRepos, toggledAvailableRepos } = this.props;
-        console.log(classes.focusVisible);
         return (
             <List className={classes.root}>
                 {filteredAvailableRepos.map(repo => (

@@ -13,7 +13,7 @@ import { ResponsivePie } from '@nivo/pie'
 
 const styles = theme => ({
     root: {
-
+        height: '150px'
     },
 
 });
@@ -28,29 +28,36 @@ class SelectedColors extends Component {
 
     buildDataset() {
         const { selectedRepos } = this.props;
-        console.log(selectedRepos);
-        /*
-        let dataset = repartition.filter(v => v.velocity !== undefined);
 
-        dataset = dataset.map((vel) => {
-            let effortRange = vel.velocity.find(v => v.range === vel.defaultVelocity);
-
-            let metric = 'points';
-            if (!defaultPoints) {metric = 'issues';}
-
-            //let effort = Math.round(this.getRange(vel.velocity), 1);
-            let effort = Math.round(effortRange[metric].effort, 1);
-            if (effort === NaN || effort === Infinity) {effort = 0;}
-            //return {x: vel.login, y: effort};
-            return {id: vel.login, label: vel.login, value: effort};
+        //let colorElements = _.groupBy(selectedRepos.filter(r => r.label !== undefined).map(repo => repo.label), 'color');
+        let colorElements = _.groupBy(selectedRepos, 'label.color');
+        let colors = Object.keys(colorElements).map(idx => {
+            let name = "#" + idx;
+            let color = "#" + idx;
+            if (idx === 'undefined') {
+                name = 'No color set';
+                color = 'hsl(331, 70%, 50%)';
+            }
+            return {
+                items: colorElements[idx],
+                count: colorElements[idx].length,
+                name: name,
+                color: color,
+            }
         });
+        colors = _.sortBy(colors, [function(o) {return o.count;}]);
+        colors = colors.reverse();
 
-        return _.orderBy(dataset, ['y'], ['desc', 'asc']).slice(0, 10);
-        */
-        return [];
-    }
+        return colors.map((c) => {
+            return {id: c.name, label: c.name, value: c.count, color: c.color};
+        })
+    };
+
+
+
     render() {
-        const { classes } = this.props;
+        const { classes, setNewColor } = this.props;
+        console.log(this.buildDataset());
         return (
             <div className={classes.root}>
                 <ResponsivePie
@@ -64,8 +71,9 @@ class SelectedColors extends Component {
                     innerRadius={0.5}
                     padAngle={0.7}
                     cornerRadius={3}
-                    colors="d320"
-                    colorBy="id"
+                    colors="nivo"
+                    colorBy={function(e){return e.color}}
+                    onClick={function(c){setNewColor(c.color);}}
                     borderWidth={1}
                     borderColor="inherit:darker(0.2)"
                     enableRadialLabels={false}
@@ -121,6 +129,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
+    setNewColor: dispatch.labelsconfiguration.setNewColor,
 
 });
 

@@ -11,6 +11,15 @@ export default {
         filteredSelectedRepos: [],
         toggledSelectedRepos: [],
         selectedFilter: '',
+
+        updateName: false,
+        updateDescription: false,
+        updateColor: false,
+
+        newName: '',
+        newDescription: '',
+        newColor: '',
+
     },
     reducers: {
         setAvailableRepos(state, payload) {return { ...state, availableRepos: payload };},
@@ -22,6 +31,13 @@ export default {
         setFilteredSelectedRepos(state, payload) {return { ...state, filteredSelectedRepos: payload };},
         setToggledSelectedRepos(state, payload) {return { ...state, toggledSelectedRepos: payload };},
         setSelectedFilter(state, payload) {return { ...state, selectedFilter: payload };},
+
+        setUpdateName(state, payload) {return { ...state, updateName: payload };},
+        setUpdateDescription(state, payload) {return { ...state, updateDescription: payload };},
+        setUpdateColor(state, payload) {return { ...state, updateColor: payload };},
+        setNewName(state, payload) {return { ...state, newName: payload };},
+        setNewDescription(state, payload) {return { ...state, newDescription: payload };},
+        setNewColor(state, payload) {return { ...state, newColor: payload };},
 
     },
 
@@ -91,6 +107,10 @@ export default {
             this.setToggledAvailableRepos([]);
             this.setToggledSelectedRepos([]);
 
+        },
+
+        async saveLabels(payload, rootState) {
+            console.log('saveLabels');
         },
     }
 };

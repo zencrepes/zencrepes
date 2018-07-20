@@ -88,9 +88,9 @@ class BoolFacet extends Component {
     render() {
         const { classes, facet, currentFilters } = this.props;
         // Since it's just 3 values, doing manual implementation
-        yesContent = this.getYes(currentFilters, facet);
-        noContent = this.getNo(currentFilters, facet);
-        anyContent = this.getAny(currentFilters, facet);
+        let yesContent = this.getYes(currentFilters, facet);
+        let noContent = this.getNo(currentFilters, facet);
+        let anyContent = this.getAny(currentFilters, facet);
         return (
             <div className={classes.root}>
                 <FacetTitle title={facet.header} />

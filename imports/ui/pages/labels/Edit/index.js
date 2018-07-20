@@ -34,6 +34,8 @@ import {ContentCopy, Update, Warning} from "@material-ui/icons/index";
 
 import EditSelection from './Selection/index.js';
 import EditActions from './Actions/index.js';
+import SelectedColors from './Stats/SelectedColors.js';
+import SelectedDescriptions from './Stats/SelectedDescriptions.js';
 
 const styles = theme => ({
     root: {
@@ -139,6 +141,14 @@ class LabelsEdit extends Component {
                     <h1>Edit Label: {this.props.match.params.name}</h1>
                     <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
                     <Link to={"/labels/view/" + this.props.match.params.name}><Button className={classes.button}>Back Configuration</Button></Link>
+                    <Grid container>
+                        <ItemGrid xs={12} sm={6} md={5}>
+                            <SelectedColors />
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={6} md={7}>
+                            <SelectedDescriptions />
+                        </ItemGrid>
+                    </Grid>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={6}>
                             <EditSelection />
