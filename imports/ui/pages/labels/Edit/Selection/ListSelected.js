@@ -67,6 +67,10 @@ class ListSelected extends Component {
 
     render() {
         const { classes, filteredSelectedRepos, toggledSelectedRepos } = this.props;
+        //filteredSelectedRepos.map(repo => {
+        //    console.log(repo);
+        //    console.log(repo.org.login + "/" + repo.name);
+        //});
         return (
             <List className={classes.root}>
                 {filteredSelectedRepos.map(repo => (

@@ -182,7 +182,7 @@ class OrgRepoTree extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         console.log('getDerivedStateFromProps');
         if (prevState.totalLoading === true && nextProps.totalLoading === false && cfgSources.find({}).count() > 0) {
-            return { ...this.state, data: loadData() };
+            return { ...prevState, data: loadData() };
         } else {
             return null;
         }

@@ -97,12 +97,17 @@ class LabelsEdit extends Component {
         } else {
             selectedRepos = cfgLabels.find({name: this.props.match.params.name}).map(label => label.repo);
         }
+        //Add Label details in selectedRepos
+        selectedRepos = selectedRepos.map((repo) => {
+            return {...repo, label: cfgLabels.findOne({name: this.props.match.params.name, 'repo.id': repo.id})};
+        });
         initSelectedRepos(selectedRepos);
 
-        var availableRepos = _.differenceBy(cfgSources.find({}).fetch(), selectedRepos, 'id');
+        let availableRepos = _.differenceBy(cfgSources.find({}).fetch(), selectedRepos, 'id');
+        availableRepos = availableRepos.map((repo) => {
+            return {...repo, label: cfgLabels.findOne({name: this.props.match.params.name, 'repo.id': repo.id})};
+        });
         initAvailableRepos(availableRepos);
-
-        console.log(this.props);
     }
 
     handleChange = event => {

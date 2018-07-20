@@ -75,8 +75,8 @@ class Orgs extends Component {
             fetchPolicy: 'no-cache',
         })
         updateChip(data.data.rateLimit);
-        lastCursor = await this.loadOrganizations(data);
-        queryIncrement = calculateQueryIncrement(this.githubOrgs.length, data.data.viewer.organizations.totalCount);
+        let lastCursor = await this.loadOrganizations(data);
+        let queryIncrement = calculateQueryIncrement(this.githubOrgs.length, data.data.viewer.organizations.totalCount);
         if (queryIncrement > 0) {
             await this.getOrgsPagination(lastCursor, queryIncrement);
         }
@@ -101,9 +101,9 @@ class Orgs extends Component {
             fetchPolicy: 'no-cache',
         });
         updateChip(data.data.rateLimit);
-        lastCursor = await this.loadRepositories(data, OrgObj);
+        let lastCursor = await this.loadRepositories(data, OrgObj);
         console.log('ORG OBJ: ' + OrgObj.id);
-        queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
+        let queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
         console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
         console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
         console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);

@@ -184,8 +184,8 @@ class Repos extends Component {
 
         this.props.updateChip(data.data.rateLimit);
         if (data.data.viewer.organization.repository !== null) {
-            lastCursor = await this.ingestIssues(data);
-            queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
+            let lastCursor = await this.ingestIssues(data);
+            let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
             console.log('Loading issues for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
             if (queryIncrement > 0) {
                 await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
@@ -264,9 +264,9 @@ class Repos extends Component {
         this.props.updateChip(data.data.rateLimit);
         console.log(data);
         if (data.data.viewer.organization.repository !== null) {
-            lastCursor = await this.ingestLabels(data);
+            let lastCursor = await this.ingestLabels(data);
             console.log(data.data.viewer.organization.repository);
-            queryIncrement = calculateQueryIncrement(cfgLabels.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.labels.totalCount);
+            let queryIncrement = calculateQueryIncrement(cfgLabels.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.labels.totalCount);
             console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
             if (queryIncrement > 0) {
                 await this.getLabelsPagination(lastCursor, queryIncrement, RepoObj);
