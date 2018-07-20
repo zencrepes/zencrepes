@@ -83,11 +83,11 @@ class LabelsView extends Component {
         descriptions = _.sortBy(descriptions, [function(o) {return o.count;}]);
         descriptions = descriptions.reverse();
 
-        let orgElements = _.groupBy(similarLabels, 'org.id');
+        let orgElements = _.groupBy(similarLabels, 'rep.org.id');
         let orgs = Object.keys(orgElements).map(idx => {return {
             items: orgElements[idx],
             count: orgElements[idx].length,
-            name: orgElements[idx][0].org.name,
+            name: orgElements[idx][0].repo.org.name,
         }});
 
         this.setState({labels: similarLabels, colors: colors, descriptions: descriptions, orgs: orgs});

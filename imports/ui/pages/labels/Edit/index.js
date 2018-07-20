@@ -33,6 +33,7 @@ import { cfgSources } from '../../../data/Orgs.js';
 import {ContentCopy, Update, Warning} from "@material-ui/icons/index";
 
 import EditSelection from './Selection/index.js';
+import EditActions from './Actions/index.js';
 
 const styles = theme => ({
     root: {
@@ -138,7 +139,7 @@ class LabelsEdit extends Component {
                             <EditSelection />
                         </ItemGrid>
                         <ItemGrid xs={12} sm={6} md={6}>
-                            <h2>Actions</h2>
+                            <EditActions />
                         </ItemGrid>
                     </Grid>
                 </main>

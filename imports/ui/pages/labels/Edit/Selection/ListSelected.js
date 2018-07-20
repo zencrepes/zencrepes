@@ -31,12 +31,15 @@ import { cfgLabels } from '../../../../data/Labels.js';
 import { cfgSources } from '../../../../data/Orgs.js';
 
 const styles = theme => ({
-    listroot: {
+    root: {
         width: '100%',
         maxWidth: 360,
         position: 'relative',
         overflow: 'auto',
         maxHeight: 300,
+    },
+    highlight: {
+        background: 'rgba(0, 0, 0, 0.07)',
     },
 });
 
@@ -65,7 +68,7 @@ class ListSelected extends Component {
     render() {
         const { classes, filteredSelectedRepos, toggledSelectedRepos } = this.props;
         return (
-            <List className={classes.listroot}>
+            <List className={classes.root}>
                 {filteredSelectedRepos.map(repo => (
                     <ListItem
                         key={repo.id}
@@ -73,9 +76,11 @@ class ListSelected extends Component {
                         dense
                         button
                         onClick={this.handleToggle(repo)}
-                        className={classes.listItem}
+                        className={classNames(classes.root, {
+                            [classes.highlight]: toggledSelectedRepos.findIndex((r) => {return r.id === repo.id}) !== -1,
+                        })}
                     >
-                        <ListItemText primary={repo.name} />
+                        <ListItemText primary={repo.org.login + "/" + repo.name} />
                     </ListItem>
                 ))}
             </List>

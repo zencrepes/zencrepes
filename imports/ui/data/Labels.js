@@ -118,17 +118,17 @@ class Labels extends Component {
                 name: currentLabel.node.name,
                 description: currentLabel.node.description,
                 isDefault: currentLabel.node.isDefault,
-                org: {
-                    'login': data.data.viewer.organization.login,
-                    'id': data.data.viewer.organization.id,
-                    'name': data.data.viewer.organization.name,
-                    'url': data.data.viewer.organization.url
-                },
                 repo: {
-                    'name': data.data.viewer.organization.repository.name,
-                    'databaseId': data.data.viewer.organization.repository.databaseId,
-                    'id': data.data.viewer.organization.repository.id,
-                    'url': data.data.viewer.organization.repository.url
+                    name: data.data.viewer.organization.repository.name,
+                    databaseId: data.data.viewer.organization.repository.databaseId,
+                    id: data.data.viewer.organization.repository.id,
+                    url: data.data.viewer.organization.repository.url,
+                    org: {
+                        login: data.data.viewer.organization.login,
+                        id: data.data.viewer.organization.id,
+                        name: data.data.viewer.organization.name,
+                        url: data.data.viewer.organization.url
+                    },
                 },
                 createdAt: currentLabel.node.createdAt,
                 updatedAt: currentLabel.node.updatedAt,

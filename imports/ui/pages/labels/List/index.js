@@ -80,11 +80,11 @@ class LabelsList extends Component {
             descriptions = _.sortBy(descriptions, [function(o) {return o.count;}]);
             descriptions = descriptions.reverse();
 
-            let orgElements = _.groupBy(uniqueLabels[idx], 'org.id');
+            let orgElements = _.groupBy(uniqueLabels[idx], 'repo.org.id');
             let orgs = Object.keys(orgElements).map(idx => {return {
                 items: orgElements[idx],
                 count: orgElements[idx].length,
-                name: orgElements[idx][0].org.name,
+                name: orgElements[idx][0].repo.org.name,
             }});
 
             labels.push({

@@ -39,8 +39,8 @@ const styles = theme => ({
         overflow: 'auto',
         maxHeight: 300,
     },
-    listSelected: {
-        backgroudColor: '#00000',
+    highlight: {
+        background: 'rgba(0, 0, 0, 0.07)',
     },
 });
 
@@ -69,6 +69,7 @@ class ListAvailable extends Component {
 
     render() {
         const { classes, filteredAvailableRepos, toggledAvailableRepos } = this.props;
+        console.log(classes.focusVisible);
         return (
             <List className={classes.root}>
                 {filteredAvailableRepos.map(repo => (
@@ -78,9 +79,11 @@ class ListAvailable extends Component {
                         dense
                         button
                         onClick={this.handleToggle(repo)}
-                        className={classes.focusVisible}
+                        className={classNames(classes.root, {
+                            [classes.highlight]: toggledAvailableRepos.findIndex((r) => {return r.id === repo.id}) !== -1,
+                        })}
                     >
-                        <ListItemText primary={repo.name} />
+                        <ListItemText primary={repo.org.login + "/" + repo.name} />
                     </ListItem>
                 ))}
             </List>

@@ -44,7 +44,7 @@ class TableLabels extends Component {
             columns: [
                 //{ name: 'edit', title: 'Edit', getCellValue: row => row.name },
                 { name: 'edit', title: 'Edit', getCellValue: row => row.name },
-                { name: 'org', title: 'Org', getCellValue: row => row.org.login},
+                { name: 'org', title: 'Org', getCellValue: row => row.repo.org.login},
                 { name: 'repo', title: 'Repo', getCellValue: row => row.repo.name},
                 { name: 'issues', title: 'Issues Count', getCellValue: row => row.issues.totalCount},
                 { name: 'color', title: 'Color', getCellValue: row => '#' + row.color},
