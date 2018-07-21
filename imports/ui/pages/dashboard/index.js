@@ -45,7 +45,7 @@ import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
-import Issues, { cfgIssues } from '../../data/Issues.js';
+import Issues, { cfgIssues } from '../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

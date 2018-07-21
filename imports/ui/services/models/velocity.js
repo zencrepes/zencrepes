@@ -1,4 +1,4 @@
-import { cfgIssues } from '../../data/Issues.js';
+import { cfgIssues } from '../../data/Minimongo.js';
 
 import { getFirstDay, getLastDay, initObject, populateObject, populateOpen, populateClosed, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";

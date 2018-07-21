@@ -26,7 +26,7 @@ import {
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
-import { cfgIssues } from '../../data/Issues.js';
+import { cfgIssues } from '../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

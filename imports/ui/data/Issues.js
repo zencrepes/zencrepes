@@ -7,12 +7,14 @@ import { withApollo } from 'react-apollo';
 //cfgIssues is the minimongo instance holding all issues imported from GitHub
 
 import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
+/*
 export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
 export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 window.issues = cfgIssues;
-
+*/
 //cfgSources is a minimongo instance holding all repositories.
-import {cfgSources} from "./Orgs.js";
+import { cfgIssues } from './Minimongo.js';
+import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 

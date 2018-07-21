@@ -28,8 +28,8 @@ import MagnifyIcon from 'mdi-react/MagnifyIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 
 import ItemGrid from '../../../../components/Grid/ItemGrid.js';
-import { cfgLabels } from '../../../../data/Labels.js';
-import { cfgSources } from '../../../../data/Orgs.js';
+import { cfgLabels } from '../../../../data/Minimongo.js';
+import { cfgSources } from '../../../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

@@ -11,10 +11,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
-import {cfgLabels} from "../../data/Labels.js";
-import {cfgQueries} from "../../data/Queries.js";
-import {cfgSources} from "../../data/Orgs.js";
-import {cfgIssues} from "../../data/Issues.js";
+import { cfgLabels } from "../../data/Minimongo.js";
+import { cfgQueries } from "../../data/Minimongo.js";
+import { cfgSources } from "../../data/Minimongo.js";
+import { cfgIssues } from "../../data/Minimongo.js";
 
 const styles = theme => ({
     root: {

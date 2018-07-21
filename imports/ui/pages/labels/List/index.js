@@ -7,7 +7,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import AppMenu from '../../../components/AppMenu/index.js';
 
-import { cfgLabels } from '../../../data/Labels.js';
+import { cfgLabels } from '../../../data/Minimongo.js';
 
 import LabelsTable from './LabelsTable.js';
 import {connect} from "react-redux";

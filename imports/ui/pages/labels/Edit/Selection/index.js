@@ -29,8 +29,8 @@ import ArrowLeftBoxIcon from 'mdi-react/ArrowLeftBoxIcon';
 import ArrowRightBoxIcon from 'mdi-react/ArrowRightBoxIcon';
 
 import ItemGrid from '../../../../components/Grid/ItemGrid.js';
-import { cfgLabels } from '../../../../data/Labels.js';
-import { cfgSources } from '../../../../data/Orgs.js';
+import { cfgLabels } from '../../../../data/Minimongo.js';
+import { cfgSources } from '../../../../data/Minimongo.js';
 
 import ListAvailable from './ListAvailable.js';
 import SearchAvailable from './SearchAvailable.js';

@@ -6,7 +6,7 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import { connect } from "react-redux";
 
-import { cfgQueries } from '../../../data/Queries.js';
+import { cfgQueries } from '../../../data/Minimongo.js';
 import {buildMongoSelector} from "../../../utils/mongo/index.js";
 
 import {

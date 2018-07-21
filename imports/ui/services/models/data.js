@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 
-import {cfgIssues} from "../../data/Issues.js";
+import { cfgIssues } from "../../data/Minimongo.js";
 import {buildMongoSelector} from "../../utils/mongo/index.js";
 
 //Add the payload to current filters

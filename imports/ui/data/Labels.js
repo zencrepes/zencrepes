@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
+import { cfgLabels } from './Minimongo.js';
+
+/*
 //cfgIssues is the minimongo instance holding all issues imported from GitHub
 
 import GET_GITHUB_LABELS from '../../graphql/getLabels.graphql';
@@ -173,3 +176,4 @@ const mapDispatch = dispatch => ({
 
 export default connect(mapState, mapDispatch)(withApollo(Labels));
 
+*/

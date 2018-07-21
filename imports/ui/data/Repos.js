@@ -7,21 +7,27 @@ import { withApollo } from 'react-apollo';
 //cfgIssues is the minimongo instance holding all issues imported from GitHub
 
 import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
+/*
 export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
 export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 window.issues = cfgIssues;
+*/
 
 import GET_GITHUB_LABELS from '../../graphql/getLabels.graphql';
+/*
 export const cfgLabels = new Mongo.Collection('cfgLabels', {connection: null});
 export const localCfgLabels = new PersistentMinimongo2(cfgLabels, 'GAV-Labels');
 window.labels = cfgLabels;
+*/
+
+import { cfgIssues } from './Minimongo.js';
+import { cfgLabels } from './Minimongo.js';
 
 //https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
 const sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 //cfgSources is a minimongo instance holding all repositories.
-import {cfgSources} from "./Orgs.js";
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 

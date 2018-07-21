@@ -11,7 +11,7 @@ import RangeFacet from './Range/index.js';
 import TermFacet from './Term/index.js';
 import BoolFacet from './Bool/index.js';
 
-import {cfgIssues} from '../../data/Issues.js';
+import {cfgIssues} from '../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

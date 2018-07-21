@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { cfgIssues } from '../../data/Issues.js';
+import { cfgIssues } from '../../data/Minimongo.js';
 
 import { getFirstDay, getLastDay, initObject, populateObject, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";

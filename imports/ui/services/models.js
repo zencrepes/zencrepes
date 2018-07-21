@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { dispatch } from '@rematch/core';
 
-import { cfgIssues } from '../data/Issues.js';
+import { cfgIssues } from '../data/Minimongo.js';
 
 // https://rematch.gitbooks.io/rematch/#examples
 export const chip = {

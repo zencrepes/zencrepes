@@ -9,9 +9,12 @@ import Promise from 'bluebird';
 import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
 import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
 
+/*
 export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
 export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
 window.repos = cfgSources;
+*/
+import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 

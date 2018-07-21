@@ -7,8 +7,8 @@ import { connect } from "react-redux";
 
 import Button from '@material-ui/core/Button';
 
-import { cfgIssues } from '../../data/Issues.js';
-import {cfgSources} from "../../data/Orgs.js";
+import { cfgIssues } from '../../data/Minimongo.js';
+import { cfgSources } from "../../data/Minimongo.js";
 
 import TextField from '@material-ui/core/TextField';
 

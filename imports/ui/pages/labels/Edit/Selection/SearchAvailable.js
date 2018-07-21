@@ -27,8 +27,8 @@ import Button from '@material-ui/core/Button';
 import MagnifyIcon from 'mdi-react/MagnifyIcon';
 
 import ItemGrid from '../../../../components/Grid/ItemGrid.js';
-import { cfgLabels } from '../../../../data/Labels.js';
-import { cfgSources } from '../../../../data/Orgs.js';
+import { cfgLabels } from '../../../../data/Minimongo.js';
+import { cfgSources } from '../../../../data/Minimongo.js';
 
 const styles = theme => ({
 

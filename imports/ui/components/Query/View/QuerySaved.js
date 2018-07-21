@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from "react-redux";
 
-import { cfgQueries } from '../../../data/Queries.js';
+import { cfgQueries } from '../../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

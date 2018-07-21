@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import AppMenu from '../../../components/AppMenu/index.js';
 import TableLabels from '../../../components/Tables/Labels.js';
 
-import { cfgLabels } from '../../../data/Labels.js';
+import { cfgLabels } from '../../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

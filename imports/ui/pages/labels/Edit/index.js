@@ -28,8 +28,8 @@ import MagnifyIcon from 'mdi-react/MagnifyIcon';
 
 import AppMenu from '../../../components/AppMenu/index.js';
 import ItemGrid from '../../../components/Grid/ItemGrid.js';
-import { cfgLabels } from '../../../data/Labels.js';
-import { cfgSources } from '../../../data/Orgs.js';
+import { cfgLabels } from '../../../data/Minimongo.js';
+import { cfgSources } from '../../../data/Minimongo.js';
 import {ContentCopy, Update, Warning} from "@material-ui/icons/index";
 
 import EditSelection from './Selection/index.js';

@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
-import { cfgQueries } from '../../data/Queries.js';
+import { cfgQueries } from '../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

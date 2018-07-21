@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
 import {buildMongoSelector} from '../../../utils/mongo/index.js';
-import { cfgIssues } from '../../../data/Issues.js';
+import { cfgIssues } from '../../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {

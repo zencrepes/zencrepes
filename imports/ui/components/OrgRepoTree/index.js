@@ -19,8 +19,8 @@ import 'primereact/resources/primereact.min.css';
 
 import { CheckboxBlankOutline, CheckboxMarkedOutline } from 'mdi-material-ui';
 
-import { cfgSources } from '../../data/Orgs.js';
-import { cfgIssues } from '../../data/Issues.js';
+import { cfgSources } from '../../data/Minimongo.js';
+import { cfgIssues } from '../../data/Minimongo.js';
 import _ from 'lodash';
 import Issues from "../../data/Issues";
 

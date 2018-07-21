@@ -15,7 +15,7 @@ import regularCardStyle from './regularCardStyle.jsx';
 
 import IssuesTable from '../shared/IssuesTable.js';
 
-import { cfgIssues } from '../../../data/Issues.js';
+import { cfgIssues } from '../../../data/Minimongo.js';
 import {buildMongoSelector} from '../../../utils/mongo/index.js';
 
 class MyIssues extends Component {

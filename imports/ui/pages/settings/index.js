@@ -34,7 +34,7 @@ import GitRequests from '../../components/Github/GitRequests.js';
 import LoadingIssues from '../../components/Loading/Issues/index.js';
 import LoadingRepos from '../../components/Loading/Repos/index.js';
 
-import { cfgSources } from '../../data/Orgs.js';
+import { cfgSources } from '../../data/Minimongo.js';
 
 
 const styles = theme => ({

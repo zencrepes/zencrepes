@@ -22,6 +22,7 @@ import Public from './components/Public/Public.js'
 import Authenticated from './components/Authenticated/Authenticated.js'
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
+import {withStyles} from "material-ui/styles/index";
 
 //import Issues from './data/Issues.js';
 //import Labels from './data/Labels.js';
@@ -30,12 +31,11 @@ import Repos from './data/Repos.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
 import Startup from './components/Startup/index.js';
-import {cfgQueries} from "./data/Queries";
+import { cfgQueries } from "./data/Minimongo.js";
 import {connect} from "react-redux";
-import {cfgIssues} from "./data/Issues";
-import {cfgSources} from "./data/Orgs";
-import {withStyles} from "material-ui/styles/index";
-import {cfgLabels} from "./data/Labels";
+import { cfgIssues } from "./data/Minimongo.js";
+import { cfgSources } from "./data/Minimongo.js";
+import { cfgLabels } from "./data/Minimongo.js";
 
 class App extends Component {
     constructor(props) {

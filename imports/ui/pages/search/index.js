@@ -7,13 +7,13 @@ import { connect } from "react-redux";
 import AppMenu from '../../components/AppMenu/index.js';
 import LeftDrawer from '../../components/LeftDrawer/index.js'
 
-import { cfgSources } from '../../data/Orgs.js';
+import { cfgSources } from '../../data/Minimongo.js';
 
 import SyncFilters from './SyncFilters.js';
 
 import NoRepos from '../../components/Dialogs/NoRepos.js';
 
-import Issues, { cfgIssues } from '../../data/Issues.js';
+import Issues, { cfgIssues } from '../../data/Minimongo.js';
 import Grid from 'material-ui/Grid';
 import Facets from '../../components/Facets/index.js';
 import QueryView from '../../components/Query/View/index.js';
