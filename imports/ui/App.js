@@ -28,6 +28,7 @@ import {withStyles} from "material-ui/styles/index";
 //import Labels from './data/Labels.js';
 import Orgs from './data/Orgs.js';
 import Repos from './data/Repos.js';
+import Labels from './data/Labels.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
 import Startup from './components/Startup/index.js';
@@ -65,6 +66,7 @@ class App extends Component {
                     <div>
                         <Repos />
                         <Orgs />
+                        <Labels />
                         <QueryManage />
                         <QuerySave />
                         <Router>

@@ -41,7 +41,7 @@ class SelectedDescriptions extends Component {
         this.state = {
             columns: [
                 { name: 'count', title: 'Occurences'},
-                { name: 'value', title: 'Value'},
+                { name: 'value', title: 'Description(s)'},
             ],
             tableColumnExtensions: [
                 { columnName: 'count', width: 100 },

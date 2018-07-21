@@ -31,8 +31,8 @@ class EditActions extends Component {
     }
 
     clickSaveLabels() {
-        const { saveLabels } = this.props;
-        saveLabels();
+        const { setLoadFlag } = this.props;
+        setLoadFlag(true);
     }
 
     render() {
@@ -66,7 +66,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    saveLabels: dispatch.labelsconfiguration.saveLabels
+    //saveLabels: dispatch.labelsconfiguration.saveLabels
+    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(EditActions));

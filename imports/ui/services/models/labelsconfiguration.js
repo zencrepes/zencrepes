@@ -2,6 +2,9 @@ import _ from 'lodash';
 
 export default {
     state: {
+        loadFlag: false,        // Flag to indicate the data should be processed
+        loading: false,         // Data is currently processing
+
         availableRepos: [],         // Full unfiltered list of repos
         filteredAvailableRepos: [], // List of repo displayed to the user, it might be filtered
         toggledAvailableRepos: [],  // List of repo the user has manually selected for removal or addition
@@ -12,16 +15,20 @@ export default {
         toggledSelectedRepos: [],
         selectedFilter: '',
 
-        updateName: false,
-        updateDescription: false,
-        updateColor: false,
+        updateName: false,          // Flag to indicate if the name should be updated
+        updateDescription: false,   // Flag to indicate if the description should be updated
+        updateColor: false,         // Flag to indicate if the color should be updated
 
-        newName: '',
-        newDescription: '',
-        newColor: '',
+        newName: '',                // Name to update to
+        newDescription: '',         // Description to update to
+        newColor: '',               // Color to update to
+
 
     },
     reducers: {
+        setLoading(state, payload) {return { ...state, loading: payload };},
+        setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+
         setAvailableRepos(state, payload) {return { ...state, availableRepos: payload };},
         setFilteredAvailableRepos(state, payload) {return { ...state, filteredAvailableRepos: payload };},
         setToggledAvailableRepos(state, payload) {return { ...state, toggledAvailableRepos: payload };},

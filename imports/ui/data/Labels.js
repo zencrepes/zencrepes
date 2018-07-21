@@ -6,6 +6,105 @@ import { withApollo } from 'react-apollo';
 
 import { cfgLabels } from './Minimongo.js';
 
+import GitHubApi from '@octokit/rest';
+
+class Labels extends Component {
+    constructor (props) {
+        super(props);
+
+        this.octokit = new GitHubApi();
+        this.octokit.authenticate({
+            type: 'oauth',
+            token: Meteor.user().services.github.accessToken
+        });
+
+        this.state = {
+
+        };
+    }
+
+    componentDidMount() {
+        console.log('Labels - Initialized');
+
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { setLoadFlag, loadFlag, loading} = this.props;
+
+        if (loadFlag && loading === false) {
+            setLoadFlag(false); // Right away set loadLabels to false
+            this.loadLabels(); // Logic to load Labels
+        }
+
+    };
+
+    loadLabels = async () => {
+        const { setLoading, selectedRepos} = this.props;
+        setLoading(true);  // Set labelsLoading to true to indicate labels are actually updating.
+
+        for (let repo of selectedRepos) {
+            console.log('Processing: ' + repo.name);
+
+            if (repo.label === undefined) {
+                console.log('Label does not exist, creating');
+                console.log(repo.org.login);
+                console.log(repo.id);
+                const resultread = await this.octokit.issues.getLabels({owner: repo.org.login, repo: repo.name})
+                console.log(resultread);
+
+                const result = await this.octokit.issues.createLabel({
+                    owner: repo.org.login,
+                    repo: repo.name,
+                    name: 'test',
+                    color: 'ffffff',
+                    description: 'this is a test description'
+                });
+                console.log(result);
+
+
+            } else {
+                console.log('Label does exist, updating');
+            }
+
+            /*
+            let response = await axios({
+                method: 'get',
+                url: 'https://api.zenhub.io/p1/repositories/' + repo.databaseId + '/board',
+                responseType:'json',
+                headers: {'X-Authentication-Token': token},
+            });
+            */
+
+        }
+
+        console.log('Update completed: ' + selectedRepos.length + ' labels process');
+        setLoading(false);
+    };
+
+    render() {
+        return null;
+    }
+}
+
+Labels.propTypes = {
+
+};
+
+const mapState = state => ({
+    loadFlag: state.labelsconfiguration.loadFlag,
+    loading: state.labelsconfiguration.loading,
+
+    selectedRepos: state.labelsconfiguration.selectedRepos
+});
+
+const mapDispatch = dispatch => ({
+    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag,
+    setLoading: dispatch.labelsconfiguration.setLoading,
+
+    updateChip: dispatch.chip.updateChip,
+});
+
+export default connect(mapState, mapDispatch)(withApollo(Labels));
 /*
 //cfgIssues is the minimongo instance holding all issues imported from GitHub
 
