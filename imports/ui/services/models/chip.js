@@ -12,6 +12,8 @@ export default {
                 newChip = state;
             }
             return newChip;
-        }
+        },
+        setRemaining(state, payload) {return { ...state, remaining: payload };},
+
     }
 };

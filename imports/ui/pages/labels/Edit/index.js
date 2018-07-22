@@ -30,6 +30,10 @@ import AppMenu from '../../../components/AppMenu/index.js';
 import ItemGrid from '../../../components/Grid/ItemGrid.js';
 import { cfgLabels } from '../../../data/Minimongo.js';
 import { cfgSources } from '../../../data/Minimongo.js';
+import Labels from '../../../data/Labels.js';
+
+import GitRequests from '../../../components/Github/GitRequests.js';
+
 import {ContentCopy, Update, Warning} from "@material-ui/icons/index";
 
 import EditSelection from './Selection/index.js';
@@ -90,7 +94,7 @@ class LabelsEdit extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        const { initSelectedRepos, initAvailableRepos } = this.props;
+        const { initSelectedRepos, initAvailableRepos, setSelectedName } = this.props;
         //When mounting the component, initializing content of the available and selected labels list
 
         let selectedRepos = [];
@@ -110,6 +114,8 @@ class LabelsEdit extends Component {
             return {...repo, label: cfgLabels.findOne({name: this.props.match.params.name, 'repo.id': repo.id})};
         });
         initAvailableRepos(availableRepos);
+
+        setSelectedName(this.props.match.params.name);
     }
 
     handleChange = event => {
@@ -137,6 +143,7 @@ class LabelsEdit extends Component {
         return (
             <div className={classes.root}>
                 <AppMenu />
+                <Labels />
                 <main className={classes.content}>
                     <h1>Edit Label: {this.props.match.params.name}</h1>
                     <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
@@ -157,6 +164,11 @@ class LabelsEdit extends Component {
                             <EditActions />
                         </ItemGrid>
                     </Grid>
+                    <Grid>
+                        <Grid item xs={12}>
+                            <GitRequests />
+                        </Grid>
+                    </Grid>
                 </main>
             </div>
         );
@@ -175,6 +187,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     initAvailableRepos: dispatch.labelsconfiguration.initAvailableRepos,
     initSelectedRepos: dispatch.labelsconfiguration.initSelectedRepos,
+    setSelectedName: dispatch.labelsconfiguration.setSelectedName,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(withApollo(LabelsEdit)));

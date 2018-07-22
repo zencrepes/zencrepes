@@ -22,12 +22,19 @@ class SelectedColors extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            colors: [],
         };
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        let updatedColors = this.buildDataset();
+        if (!_.isEqual(updatedColors, prevState.colors)) {
+            this.setState({colors: updatedColors});
+        }
+    }
+
     buildDataset() {
-        const { selectedRepos } = this.props;
+        const { selectedRepos, setNewColor } = this.props;
 
         //let colorElements = _.groupBy(selectedRepos.filter(r => r.label !== undefined).map(repo => repo.label), 'color');
         let colorElements = _.groupBy(selectedRepos, 'label.color');
@@ -48,20 +55,21 @@ class SelectedColors extends Component {
         colors = _.sortBy(colors, [function(o) {return o.count;}]);
         colors = colors.reverse();
 
+        setNewColor(colors[0].color);
+
         return colors.map((c) => {
             return {id: c.name, label: c.name, value: c.count, color: c.color};
         })
     };
 
-
-
     render() {
         const { classes, setNewColor } = this.props;
-        console.log(this.buildDataset());
+        const { colors } = this.state;
+        //console.log(this.buildDataset());
         return (
             <div className={classes.root}>
                 <ResponsivePie
-                    data={this.buildDataset()}
+                    data={colors}
                     margin={{
                         "top": 0,
                         "right": 200,

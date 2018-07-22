@@ -27,13 +27,7 @@ class LabelColor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            displayColorPicker: false,
-            color: {
-                r: '241',
-                g: '112',
-                b: '19',
-                a: '1',
-            },
+            displayColorPicker: false
         };
     }
 

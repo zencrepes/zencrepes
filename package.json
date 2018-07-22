@@ -16,6 +16,7 @@
     "@nivo/line": "^0.40.0",
     "@nivo/pie": "^0.42.1",
     "@nivo/treemap": "^0.42.1",
+    "@octokit/rest": "^15.9.4",
     "@rematch/core": "^0.6.0",
     "ag-grid": "^17.1.1",
     "ag-grid-react": "^17.1.0",

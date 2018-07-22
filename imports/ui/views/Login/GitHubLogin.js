@@ -40,7 +40,7 @@ class GitHubLogin extends Component {
     handleLogin = (callback) => {
         const options = {
             github: {
-                requestPermissions: ['user:email','read:org'],
+                requestPermissions: ['user:email','read:org','repo'],
                 loginStyle: 'popup',
             }
         }['github'];

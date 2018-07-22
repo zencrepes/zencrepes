@@ -5,6 +5,8 @@ export default {
         loadFlag: false,        // Flag to indicate the data should be processed
         loading: false,         // Data is currently processing
 
+        selectedName: '',       // Label name currently selected
+
         availableRepos: [],         // Full unfiltered list of repos
         filteredAvailableRepos: [], // List of repo displayed to the user, it might be filtered
         toggledAvailableRepos: [],  // List of repo the user has manually selected for removal or addition
@@ -28,6 +30,8 @@ export default {
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+
+        setSelectedName(state, payload) {return { ...state, selectedName: payload };},
 
         setAvailableRepos(state, payload) {return { ...state, availableRepos: payload };},
         setFilteredAvailableRepos(state, payload) {return { ...state, filteredAvailableRepos: payload };},
