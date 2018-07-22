@@ -53,6 +53,10 @@ class Labels extends Component {
                     labelName = selectedName;
                 }
                 let labelColor = newColor;
+                let labelDescription = newDescription;
+                if (updateDescription === false) {
+                    labelDescription = '';
+                }
 
                 const result = await this.octokit.issues.createLabel({
                     owner: repo.org.login,
