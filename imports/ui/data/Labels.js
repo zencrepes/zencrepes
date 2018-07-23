@@ -52,7 +52,7 @@ class Labels extends Component {
                 if (updateName === false) {
                     labelName = selectedName;
                 }
-                let labelColor = newColor;
+                let labelColor = newColor.replace('#', '');
                 let labelDescription = newDescription;
                 if (updateDescription === false) {
                     labelDescription = '';
@@ -62,16 +62,55 @@ class Labels extends Component {
                     owner: repo.org.login,
                     repo: repo.name,
                     name: labelName,
-                    color: 'ffffff',
-                    description: 'this is a test description'
+                    color: labelColor,
+                    description: labelDescription
                 });
-                console.log(result);
-                setChipRemaining(result.headers.x-ratelimit-remaining);
-                //updateChip
-                //updateChip(data.data.rateLimit);
 
             } else {
                 console.log('Label does exist, updating');
+
+                updateObj = {
+                    owner: repo.org.login,
+                    repo: repo.name,
+                    name: selectedName,
+                };
+                if (updateName !== false) {
+                    updateObj['name'] = newName;
+                }
+                if (updateColor !== false) {
+                    updateObj['color'] = newColor;
+                }
+                if (updateDescription !== false) {
+                    updateObj['name'] = newDescription;
+                }
+
+                const result = await octokit.issues.updateLabel({updateObj})
+            }
+            
+            if (result !== undefined) {
+                setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                console.log(result);
+
+                let labelObj = {
+                    id: result.data.node_id,
+                    url: result.data.url,
+                    color: result.data.color,
+                    name: result.data.name,
+                    description: result.data.description,
+                    isDefault: result.data.default,
+                    repo: repo,
+                    issues: 0,
+                    refreshed: true,
+                };
+                await cfgLabels.upsert({
+                    id: labelObj.id
+                }, {
+                    $set: labelObj
+                });
+
+                //updateChip
+                //updateChip(data.data.rateLimit);
+
             }
 
             /*

@@ -26,7 +26,8 @@ export const ColorsTypeProvider = props => (
 );
 
 const DescriptionsFormatter = ({ value }) => {
-    return value;
+    if (value === undefined) {return '';}
+    else {return value;}
 };
 
 export const DescriptionsTypeProvider = props => (
