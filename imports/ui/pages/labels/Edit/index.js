@@ -33,6 +33,8 @@ import { cfgSources } from '../../../data/Minimongo.js';
 import Labels from '../../../data/Labels.js';
 
 import GitRequests from '../../../components/Github/GitRequests.js';
+import UpdatingLabels from '../../../components/Loading/Labels/index.js';
+
 
 import {ContentCopy, Update, Warning} from "@material-ui/icons/index";
 
@@ -144,6 +146,7 @@ class LabelsEdit extends Component {
             <div className={classes.root}>
                 <AppMenu />
                 <Labels />
+                <UpdatingLabels />
                 <main className={classes.content}>
                     <h1>Edit Label: {this.props.match.params.name}</h1>
                     <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>

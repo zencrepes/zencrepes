@@ -2,10 +2,14 @@ import _ from 'lodash';
 
 export default {
     state: {
-        loadFlag: false,        // Flag to indicate the data should be processed
-        loading: false,         // Data is currently processing
+        loadFlag: false,            // Flag to indicate the data should be processed
+        loading: false,             // Data is currently processing
+        loadingText: '',            // Text to be displayed in the dialog while loading
 
-        selectedName: '',       // Label name currently selected
+        action: null,               // Action to be performed
+
+        selectedName: '',           // Label name currently selected
+        deleteWarning: false,       // Display the delete warning
 
         availableRepos: [],         // Full unfiltered list of repos
         filteredAvailableRepos: [], // List of repo displayed to the user, it might be filtered
@@ -25,13 +29,16 @@ export default {
         newDescription: '',         // Description to update to
         newColor: '',               // Color to update to
 
-
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+        setLoadingText(state, payload) {return { ...state, loadingText: payload };},
+
+        setAction(state, payload) {return { ...state, action: payload };},
 
         setSelectedName(state, payload) {return { ...state, selectedName: payload };},
+        setDeleteWarning(state, payload) {return { ...state, deleteWarning: payload };},
 
         setAvailableRepos(state, payload) {return { ...state, availableRepos: payload };},
         setFilteredAvailableRepos(state, payload) {return { ...state, filteredAvailableRepos: payload };},
@@ -120,8 +127,14 @@ export default {
 
         },
 
-        async saveLabels(payload, rootState) {
-            console.log('saveLabels');
+        async resetValues(payload, rootState) {
+            console.log('resetValues');
+            this.setUpdateName(false);
+            this.setUpdateDescription(false);
+            this.setUpdateColor(false);
+            this.setNewName('');
+            this.setNewDescription('');
+            this.setNewColor('');
         },
     }
 };

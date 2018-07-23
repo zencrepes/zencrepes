@@ -40,81 +40,91 @@ class Labels extends Component {
     };
 
     loadLabels = async () => {
-        const { setLoading, selectedName, selectedRepos, setChipRemaining, updateName, updateDescription, updateColor, newName, newDescription, newColor} = this.props;
+        const { setLoading, setLoadingText, setAction, action, selectedName, selectedRepos, setChipRemaining, updateName, updateDescription, updateColor, newName, newDescription, newColor, resetValues} = this.props;
         setLoading(true);  // Set labelsLoading to true to indicate labels are actually updating.
 
         for (let repo of selectedRepos) {
             console.log('Processing: ' + repo.name);
-            let result = false;
-            if (repo.label === undefined) {
-                console.log('Label does not exist in this repo, creating');
+            setLoadingText(repo.name);
+            if (action === 'update') {
+                let result = false;
+                if (repo.label === undefined) {
+                    console.log('Label does not exist in this repo, creating');
 
-                let labelName = newName;
-                if (updateName === false) {
-                    labelName = selectedName;
-                }
-                let labelColor = newColor.replace('#', '');
-                let labelDescription = newDescription;
-                if (updateDescription === false) {
-                    labelDescription = '';
-                }
+                    let labelName = newName;
+                    if (updateName === false) {
+                        labelName = selectedName;
+                    }
+                    let labelColor = newColor.replace('#', '');
+                    let labelDescription = newDescription;
+                    if (updateDescription === false) {
+                        labelDescription = '';
+                    }
 
-                result = await this.octokit.issues.createLabel({
-                    owner: repo.org.login,
-                    repo: repo.name,
-                    name: labelName,
-                    color: labelColor,
-                    description: labelDescription
-                });
+                    result = await this.octokit.issues.createLabel({
+                        owner: repo.org.login,
+                        repo: repo.name,
+                        name: labelName,
+                        color: labelColor,
+                        description: labelDescription
+                    });
 
-            } else {
-                console.log('Label does exist, updating label: ' + selectedName);
-
-                let updateObj = {
-                    owner: repo.org.login,
-                    repo: repo.name,
-                    current_name: selectedName,
-                };
-                if (updateName !== false && repo.label.name !== newName) {
-                    updateObj['name'] = newName;
-                }
-                if (updateColor !== false && repo.label.color !== newColor.replace('#', '')) {
-                    updateObj['color'] = newColor.replace('#', '');
-                }
-                if (updateDescription !== false && repo.label.description !== newDescription) {
-                    updateObj['description'] = newDescription;
-                }
-
-                if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
-                    console.log('Nothing to be changed, not sending a request to Github');
                 } else {
-                    console.log(updateObj);
-                    result = await this.octokit.issues.updateLabel(updateObj);
-                }
-            }
-            if (result !== false) {
-                setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                console.log(result);
+                    console.log('Label does exist, updating label: ' + selectedName);
 
-                let labelObj = {
-                    id: result.data.node_id,
-                    url: result.data.url,
-                    color: result.data.color,
-                    name: result.data.name,
-                    description: result.data.description,
-                    isDefault: result.data.default,
-                    repo: repo,
-                    refreshed: true,
-                };
-                await cfgLabels.upsert({
-                    id: labelObj.id
-                }, {
-                    $set: labelObj
-                });
+                    let updateObj = {
+                        owner: repo.org.login,
+                        repo: repo.name,
+                        current_name: selectedName,
+                    };
+                    if (updateName !== false && repo.label.name !== newName) {
+                        updateObj['name'] = newName;
+                    }
+                    if (updateColor !== false && repo.label.color !== newColor.replace('#', '')) {
+                        updateObj['color'] = newColor.replace('#', '');
+                    }
+                    if (updateDescription !== false && repo.label.description !== newDescription) {
+                        updateObj['description'] = newDescription;
+                    }
+
+                    if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
+                        console.log('Nothing to be changed, not sending a request to Github');
+                    } else {
+                        console.log(updateObj);
+                        result = await this.octokit.issues.updateLabel(updateObj);
+                    }
+                }
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    console.log(result);
+                    let labelObj = {
+                        id: result.data.node_id,
+                        url: result.data.url,
+                        color: result.data.color,
+                        name: result.data.name,
+                        isDefault: result.data.default,
+                        repo: repo,
+                        refreshed: true,
+                    };
+                    if (updateDescription !== false && repo.label.description !== newDescription) {
+                        labelObj['description'] = newDescription;
+                    }
+                    await cfgLabels.upsert({
+                        id: labelObj.id
+                    }, {
+                        $set: labelObj
+                    });
+                }
+            } else if (action === 'delete') {
+                console.log('Request to delete label');
+                const result = await this.octokit.issues.deleteLabel({owner: repo.org.login, repo: repo.name, name: selectedName});
+                cfgLabels.remove({id:repo.label.id});
             }
         }
         console.log('Update completed: ' + selectedRepos.length + ' labels processed');
         setLoading(false);
+        setAction(null); // Reset the action flag
+        resetValues();
         this.props.history.push('/labels');
     };
 
@@ -130,6 +140,8 @@ Labels.propTypes = {
 const mapState = state => ({
     loadFlag: state.labelsconfiguration.loadFlag,
     loading: state.labelsconfiguration.loading,
+
+    action: state.labelsconfiguration.action,
 
     selectedName: state.labelsconfiguration.selectedName,
     selectedRepos: state.labelsconfiguration.selectedRepos,
@@ -147,6 +159,11 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsconfiguration.setLoadFlag,
     setLoading: dispatch.labelsconfiguration.setLoading,
+    setLoadingText: dispatch.labelsconfiguration.setLoadingText,
+
+    setAction: dispatch.labelsconfiguration.setAction,
+
+    resetValues: dispatch.labelsconfiguration.resetValues,
 
     setChipRemaining: dispatch.chip.setRemaining,
 });

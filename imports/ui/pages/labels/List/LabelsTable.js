@@ -82,7 +82,6 @@ const ReposTypeProvider = props => (
 );
 
 const IssuesFormatter = ({ value }) => {
-    console.log(value);
     return value.map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
 };
 

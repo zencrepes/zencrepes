@@ -13,10 +13,18 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from '@material-ui/core/Dialog';
+
 
 import LabelColor from './Color.js';
 import LabelName from './Name.js';
 import LabelDescription from './Description.js';
+import DeleteWarning from './DeleteWarning.js';
 
 const styles = theme => ({
 
@@ -26,19 +34,27 @@ class EditActions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            deleteWarning: false,
         };
     }
 
     clickSaveLabels() {
-        const { setLoadFlag } = this.props;
+        const { setLoadFlag, setAction } = this.props;
         setLoadFlag(true);
-    }
+        setAction('update');
+    };
+
+    clickDeleteLabels() {
+        console.log('clickDeleteLabels');
+        const { setDeleteWarning } = this.props;
+        setDeleteWarning(true);
+    };
 
     render() {
         const { classes } = this.props;
         return (
             <div>
+                <DeleteWarning />
                 <h2>Actions</h2>
                 <List component="nav">
                     <LabelName />
@@ -49,6 +65,9 @@ class EditActions extends Component {
                     <Divider />
                     <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.clickSaveLabels()}>
                         Save
+                    </Button>
+                    <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.clickDeleteLabels()}>
+                        Delete Label
                     </Button>
                 </List>
             </div>
@@ -67,7 +86,10 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     //saveLabels: dispatch.labelsconfiguration.saveLabels
-    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag
+    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag,
+    setDeleteWarning: dispatch.labelsconfiguration.setDeleteWarning,
+    setAction: dispatch.labelsconfiguration.setAction
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(EditActions));
