@@ -30,7 +30,7 @@ class Orgs extends Component {
 
     componentDidMount() {
         console.log('FectchIssues - Initialized');
-    }
+    };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { setReposLoadFlag, reposLoadFlag } = this.props;
@@ -40,7 +40,7 @@ class Orgs extends Component {
             this.resetCounts();         // Reset all counts since those will be refresh by loadIssues
             this.load();           // Logic to load Issues
         }
-    }
+    };
 
     resetCounts = () => {
         const { setLoadedOrgs, setLoadedRepos} = this.props;
@@ -76,7 +76,8 @@ class Orgs extends Component {
             query: GET_GITHUB_ORGS,
             variables: {repo_cursor: cursor, increment: increment},
             fetchPolicy: 'no-cache',
-        })
+            //errorPolicy: 'ignore,'
+        });
         updateChip(data.data.rateLimit);
         let lastCursor = await this.loadOrganizations(data);
         let queryIncrement = calculateQueryIncrement(this.githubOrgs.length, data.data.viewer.organizations.totalCount);

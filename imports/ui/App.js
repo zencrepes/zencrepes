@@ -9,6 +9,7 @@ import autoBind from 'react-autobind';
 
 //import Login from './pages/login/index.js';
 import Login from './views/Login/index.js';
+import Wizard from './views/Wizard/index.js';
 import Dashboard from './pages/dashboard/index.js';
 import Settings from './pages/settings/index.js';
 import Search from './pages/search/index.js';
@@ -53,7 +54,7 @@ class App extends Component {
         console.log(props);
 
         const {loadedIssues, loadedSources, loadedLabels, loadedQueries} = this.props;
-        if (!loadedIssues || !loadedSources || !loadedLabels || !loadedQueries) {
+        if ((!loadedIssues || !loadedSources || !loadedLabels || !loadedQueries) && Meteor.user() !== null) {
             return (
                 <div>
                     <Startup />
@@ -73,6 +74,7 @@ class App extends Component {
                                     <Switch>
                                         <Route exact name="index" path="/" component={Index} />
                                         <Public path="/login" component={Login} {...props} {...state} />
+                                        <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
