@@ -55,7 +55,8 @@ const ColorsTypeProvider = props => (
 );
 
 const DescriptionsFormatter = ({ value }) => {
-    return value[0].name;
+    if (value[0].name === undefined) {return '';}
+    else {return value[0].name;}
 };
 
 const DescriptionsTypeProvider = props => (
@@ -81,6 +82,7 @@ const ReposTypeProvider = props => (
 );
 
 const IssuesFormatter = ({ value }) => {
+    console.log(value);
     return value.map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
 };
 

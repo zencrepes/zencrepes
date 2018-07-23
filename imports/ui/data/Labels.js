@@ -3,6 +3,7 @@ import { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
+import { withRouter } from 'react-router-dom';
 
 import { cfgLabels } from './Minimongo.js';
 
@@ -44,7 +45,7 @@ class Labels extends Component {
 
         for (let repo of selectedRepos) {
             console.log('Processing: ' + repo.name);
-
+            let result = false;
             if (repo.label === undefined) {
                 console.log('Label does not exist in this repo, creating');
 
@@ -58,7 +59,7 @@ class Labels extends Component {
                     labelDescription = '';
                 }
 
-                const result = await this.octokit.issues.createLabel({
+                result = await this.octokit.issues.createLabel({
                     owner: repo.org.login,
                     repo: repo.name,
                     name: labelName,
@@ -67,27 +68,31 @@ class Labels extends Component {
                 });
 
             } else {
-                console.log('Label does exist, updating');
+                console.log('Label does exist, updating label: ' + selectedName);
 
-                updateObj = {
+                let updateObj = {
                     owner: repo.org.login,
                     repo: repo.name,
-                    name: selectedName,
+                    current_name: selectedName,
                 };
-                if (updateName !== false) {
+                if (updateName !== false && repo.label.name !== newName) {
                     updateObj['name'] = newName;
                 }
-                if (updateColor !== false) {
-                    updateObj['color'] = newColor;
+                if (updateColor !== false && repo.label.color !== newColor.replace('#', '')) {
+                    updateObj['color'] = newColor.replace('#', '');
                 }
-                if (updateDescription !== false) {
-                    updateObj['name'] = newDescription;
+                if (updateDescription !== false && repo.label.description !== newDescription) {
+                    updateObj['description'] = newDescription;
                 }
 
-                const result = await octokit.issues.updateLabel({updateObj})
+                if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
+                    console.log('Nothing to be changed, not sending a request to Github');
+                } else {
+                    console.log(updateObj);
+                    result = await this.octokit.issues.updateLabel(updateObj);
+                }
             }
-            
-            if (result !== undefined) {
+            if (result !== false) {
                 setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                 console.log(result);
 
@@ -99,7 +104,6 @@ class Labels extends Component {
                     description: result.data.description,
                     isDefault: result.data.default,
                     repo: repo,
-                    issues: 0,
                     refreshed: true,
                 };
                 await cfgLabels.upsert({
@@ -107,28 +111,11 @@ class Labels extends Component {
                 }, {
                     $set: labelObj
                 });
-
-                //updateChip
-                //updateChip(data.data.rateLimit);
-
             }
-
-            /*
-            let response = await axios({
-                method: 'get',
-                url: 'https://api.zenhub.io/p1/repositories/' + repo.databaseId + '/board',
-                responseType:'json',
-                headers: {'X-Authentication-Token': token},
-            });
-
-
-
-            */
-
         }
-
-        console.log('Update completed: ' + selectedRepos.length + ' labels process');
+        console.log('Update completed: ' + selectedRepos.length + ' labels processed');
         setLoading(false);
+        this.props.history.push('/labels');
     };
 
     render() {
@@ -164,4 +151,4 @@ const mapDispatch = dispatch => ({
     setChipRemaining: dispatch.chip.setRemaining,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(Labels));
+export default connect(mapState, mapDispatch)(withRouter(Labels));

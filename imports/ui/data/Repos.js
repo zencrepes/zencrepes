@@ -22,6 +22,7 @@ window.labels = cfgLabels;
 
 import { cfgIssues } from './Minimongo.js';
 import { cfgLabels } from './Minimongo.js';
+import { cfgSources } from './Minimongo.js';
 
 //https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
 const sleep = (ms) => {
