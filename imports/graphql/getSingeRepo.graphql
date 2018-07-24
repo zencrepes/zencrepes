@@ -1,0 +1,25 @@
+query ($org_name: String!, $repo_name: String!){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  repository(owner:$org_name, name:$repo_name) {
+    name
+    url
+    id
+    databaseId
+    owner{
+      id
+      login
+      url
+    }
+    issues(first: 1) {
+      totalCount
+    }
+    labels(first: 1) {
+      totalCount
+    }
+  }
+}

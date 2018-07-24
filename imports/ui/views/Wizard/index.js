@@ -30,7 +30,7 @@ function getStepContent(step) {
         case 0:
             return 'Organizations and Repositories';
         case 1:
-            return 'What is an ad group anyways?';
+            return 'Manually add repositories';
         case 2:
             return 'This is the bit I really care about!';
         default:

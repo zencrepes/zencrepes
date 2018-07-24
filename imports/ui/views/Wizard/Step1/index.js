@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import ItemGrid from '../../../components/Grid/ItemGrid.js';
 
@@ -37,6 +38,9 @@ class Step1 extends Component {
         } else {
             return (
                 <div>
+                    <Typography component="p">
+                        Automatically importing from GitHub organization you are affiliated with or from previously configured repositories
+                    </Typography>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={6}>
                             <Treeview />
