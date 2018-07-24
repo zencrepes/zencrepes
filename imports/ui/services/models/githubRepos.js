@@ -4,8 +4,8 @@ export default {
         loadedOrgs: 0,              // Number of orgs loaded
         loadedRepos: 0,             // Number of repositories loaded
 
-        reposLoadingFlag: false,       // Boolean to indicate issues are currently loading
-        reposLoadFlag: false,    // Boolean to trigger issue load
+        reposLoadingFlag: false,    // Boolean to indicate issues are currently loading
+        reposLoadFlag: false,       // Boolean to trigger issue load
 
     },
     reducers: {

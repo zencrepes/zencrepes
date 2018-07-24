@@ -76,8 +76,9 @@ class Orgs extends Component {
             query: GET_GITHUB_ORGS,
             variables: {repo_cursor: cursor, increment: increment},
             fetchPolicy: 'no-cache',
-            //errorPolicy: 'ignore,'
+            errorPolicy: 'ignore,'
         });
+        console.log(data);
         updateChip(data.data.rateLimit);
         let lastCursor = await this.loadOrganizations(data);
         let queryIncrement = calculateQueryIncrement(this.githubOrgs.length, data.data.viewer.organizations.totalCount);
@@ -98,22 +99,23 @@ class Orgs extends Component {
     getReposPagination = async (cursor, increment, OrgObj) => {
         const { client, updateChip } = this.props;
 
-        //console.log('---')
-        let data = await client.query({
-            query: GET_GITHUB_REPOS,
-            variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
-            fetchPolicy: 'no-cache',
-        });
-        updateChip(data.data.rateLimit);
-        let lastCursor = await this.loadRepositories(data, OrgObj);
-        console.log('ORG OBJ: ' + OrgObj.id);
-        let queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
-        console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
-        console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
-        console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
-        console.log('Query increment: ' + queryIncrement);
-        if (queryIncrement > 0) {
-            await this.getReposPagination(lastCursor, queryIncrement, OrgObj);
+        if (OrgObj !== null) {
+            let data = await client.query({
+                query: GET_GITHUB_REPOS,
+                variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
+                fetchPolicy: 'no-cache',
+            });
+            updateChip(data.data.rateLimit);
+            let lastCursor = await this.loadRepositories(data, OrgObj);
+            console.log('ORG OBJ: ' + OrgObj.id);
+            let queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
+            console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
+            console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
+            console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
+            console.log('Query increment: ' + queryIncrement);
+            if (queryIncrement > 0) {
+                await this.getReposPagination(lastCursor, queryIncrement, OrgObj);
+            }
         }
     };
 
@@ -130,7 +132,6 @@ class Orgs extends Component {
                 id: currentRepo.node.id,
                 name: currentRepo.node.name,
                 url: currentRepo.node.url,
-                issues_count: currentRepo.node.issues.totalCount, // TODO - OUTDATED
                 issues: currentRepo.node.issues,
                 labels: currentRepo.node.labels,
                 databaseId: currentRepo.node.databaseId,
