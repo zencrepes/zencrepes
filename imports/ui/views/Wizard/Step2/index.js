@@ -3,6 +3,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import OrgName from './OrgName.js';
 
+import ScanOrg  from "../../../data/ScanOrg.js";
+
+
 const styles = theme => ({
     root: {
     },
@@ -20,6 +23,7 @@ class Step2 extends Component {
         const { classes } = this.props;
         return (
             <div>
+                <ScanOrg/>
                 <OrgName/>
             </div>
         );

@@ -22,29 +22,33 @@ class OrgName extends Component {
         super(props);
 
         this.state = {
-            name: ''
         };
     }
 
     handleChange = name => event => {
-        this.setState({
-            [name]: event.target.value,
-        });
+        const { setName } = this.props;
+        setName(event.target.value);
+
+    };
+
+    handleScanOrg = () => {
+        const { setLoadFlag } = this.props;
+        setLoadFlag(true);
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, name } = this.props;
         return (
             <div >
                 <TextField
                     id="orgName"
                     label="GitHub Organization"
                     className={classes.textField}
-                    value={this.state.name}
+                    value={name}
                     onChange={this.handleChange('name')}
                     margin="normal"
                 />
-                <Button color="primary" className={classes.button}>
+                <Button color="primary" className={classes.button} onClick={this.handleScanOrg}>
                     Scan Org
                 </Button>
             </div>
@@ -57,11 +61,14 @@ OrgName.propTypes = {
 };
 
 const mapState = state => ({
+    loadFlag: state.githubScanOrg.loadFlag,
+    name: state.githubScanOrg.name,
 
 });
 
 const mapDispatch = dispatch => ({
-
+    setLoadFlag: dispatch.githubScanOrg.setLoadFlag,
+    setName: dispatch.githubScanOrg.setName,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(OrgName));

@@ -1,0 +1,35 @@
+query ($repo_cursor: String, $increment: Int, $org_name: String!){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  organization(login: $org_name) {
+    id
+    login
+    repositories(first: $increment, after: $repo_cursor) {
+      totalCount
+      edges {
+        cursor
+        node {
+          name
+          url
+          id
+          databaseId
+          owner {
+            id
+            login
+            url
+          }
+          issues(first: 1) {
+            totalCount
+          }
+          labels(first: 1) {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}

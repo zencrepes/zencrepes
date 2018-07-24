@@ -5,6 +5,9 @@ import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
+import { cfgSources } from "../../../data/Minimongo.js";
 
 import ItemGrid from '../../../components/Grid/ItemGrid.js';
 
@@ -28,8 +31,17 @@ class Step1 extends Component {
     componentDidMount() {
         console.log('componentDidMount');
         const { setLoadFlag } = this.props;
+        if (cfgSources.find({}).count() === 0) {
+            setLoadFlag(true);
+        }
+    }
+
+    reloadRepos = () => {
+        console.log('componentDidMount');
+        const { setLoadFlag } = this.props;
         setLoadFlag(true);
     }
+
 
     render() {
         const { classes, loading } = this.props;
@@ -41,6 +53,9 @@ class Step1 extends Component {
                     <Typography component="p">
                         Automatically importing from GitHub organization you are affiliated with or from previously configured repositories
                     </Typography>
+                    <Button color="primary" className={classes.button} onClick={this.reloadRepos}>
+                        Reload Repos
+                    </Button>
                     <Grid container>
                         <ItemGrid xs={12} sm={6} md={6}>
                             <Treeview />

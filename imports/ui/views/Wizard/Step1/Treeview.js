@@ -65,7 +65,6 @@ class Treeview extends Component {
                     nodes={this.state.nodes}
                     checked={this.state.checked}
                     expanded={this.state.expanded}
-                    //onCheck={checked => this.setState({ checked })}
                     onCheck={this.checkNode}
                     onExpand={expanded => this.setState({ expanded })}
                 />
