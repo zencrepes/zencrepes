@@ -77,7 +77,6 @@ Step1.propTypes = {
 
 const mapState = state => ({
     loading: state.githubRepos.reposLoadingFlag,
-
 });
 
 const mapDispatch = dispatch => ({

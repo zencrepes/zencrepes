@@ -55,8 +55,8 @@ class ScanOrg extends Component {
             errorPolicy: 'ignore',
         });
         console.log(data);
+        updateChip(data.data.rateLimit);
         if (data.data.organization !== null) {
-            updateChip(data.data.rateLimit);
             let lastCursor = await this.loadRepositories(data);
             let queryIncrement = calculateQueryIncrement(this.repositories.length, data.data.organization.repositories.totalCount);
             console.log(this.repositories);
