@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { cfgSources } from "../../../data/Minimongo.js";
 
@@ -41,7 +42,7 @@ class ScanOrgs extends Component {
     };
 
     render() {
-        const { classes, loading, loadedOrgs, loadedRepos } = this.props;
+        const { classes, loading, loadError, loadSuccess, loadedOrgs, loadedRepos } = this.props;
         if (loading) {
             return (
                 <div className={classes.loading}>
@@ -57,6 +58,14 @@ class ScanOrgs extends Component {
                     <Button color="primary" className={classes.button} onClick={this.reloadRepos}>
                         Scan All
                     </Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
+                        open={loadSuccess}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">Found {loadedRepos} repositories in {loadedOrgs} GitHub organizations</span>}
+                    />
                 </div>
             );
         }
@@ -69,6 +78,8 @@ ScanOrgs.propTypes = {
 
 const mapState = state => ({
     loading: state.githubFetchOrgs.loading,
+    loadError: state.githubFetchOrgRepos.loadError,
+    loadSuccess: state.githubFetchOrgRepos.loadSuccess,
     loadedOrgs: state.githubFetchOrgs.loadedOrgs,
     loadedRepos: state.githubFetchOrgs.loadedRepos,
 });

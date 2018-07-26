@@ -20,6 +20,8 @@ class FetchOrgs extends Component {
     constructor (props) {
         super(props);
         this.githubOrgs = [];
+        this.totalReposCount = 0;
+        this.orgReposCount = {};
         this.state = {};
     }
 
@@ -38,31 +40,38 @@ class FetchOrgs extends Component {
     };
 
     resetCounts = () => {
-        const { setLoadedOrgs, setLoadedRepos} = this.props;
+        const { setLoadedOrgs, setLoadedRepos, setLoadSuccess} = this.props;
         this.githubOrgs = [];
         setLoadedOrgs(0);
         setLoadedRepos(0);
+        setLoadSuccess(false);
+        this.totalReposCount = 0;
     };
 
     load = async () => {
-        const { setLoading } = this.props;
+        const { setLoading, setLoadSuccess } = this.props;
 
         setLoading(true);  // Set setLoading to true to indicate repositories are actually loading.
-
         console.log('Initiate Organizations load');
         await this.getOrgsPagination(null, 10);
         console.log('Oranization loaded: ' + this.githubOrgs.length);
 
 
         console.log('Initiate Repositories load');
-        await Promise.map(this.githubOrgs, async (orgObj): Promise<number> => {
-            console.log('Loading Org');
-            console.log(orgObj);
-            await this.getReposPagination(null, 5, orgObj);
+        await Promise.map(this.githubOrgs, async (OrgObj): Promise<number> => {
+            if (OrgObj !== null) {
+                console.log('Loading Org');
+                console.log(OrgObj);
+                this.orgReposCount[OrgObj.id] = 0;
+                await this.getReposPagination(null, 5, OrgObj);
+            }
         });
-        console.log('Repositories loaded: ' + cfgSources.find({}).count());
+        console.log('Repositories loaded: ' + this.totalReposCount);
 
         setLoading(false);
+        if (this.totalReposCount > 0) {
+            setLoadSuccess(true);
+        }
     };
 
     getOrgsPagination = async (cursor, increment) => {
@@ -106,9 +115,9 @@ class FetchOrgs extends Component {
             updateChip(data.data.rateLimit);
             let lastCursor = await this.loadRepositories(data, OrgObj);
             console.log('ORG OBJ: ' + OrgObj.id);
-            let queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': OrgObj.id}).count(), data.data.viewer.organization.repositories.totalCount);
+            let queryIncrement = calculateQueryIncrement(this.orgReposCount[OrgObj.id], data.data.viewer.organization.repositories.totalCount);
             console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
-            console.log('Current count: ' + cfgSources.find({'org.id': OrgObj.id}).count());
+            console.log('Current count: ' + this.orgReposCount[OrgObj.id]);
             console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
             console.log('Query increment: ' + queryIncrement);
             if (queryIncrement > 0) {
@@ -146,8 +155,10 @@ class FetchOrgs extends Component {
             lastCursor = currentRepo.cursor
         }
         setIncrementLoadedRepos(Object.entries(data.data.viewer.organization.repositories.edges).length);
+        this.orgReposCount[OrgObj.id] = this.orgReposCount[OrgObj.id] + Object.entries(data.data.viewer.organization.repositories.edges).length;
+        this.totalReposCount = this.totalReposCount + Object.entries(data.data.viewer.organization.repositories.edges).length;
         return lastCursor;
-    }
+    };
 
     render() {
         return null;
@@ -167,6 +178,8 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
     setLoading: dispatch.githubFetchOrgs.setLoading,
+    setLoadError: dispatch.githubFetchOrgs.setLoadError,
+    setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
     setLoadedOrgs: dispatch.githubFetchOrgs.setLoadedOrgs,
     setLoadedRepos: dispatch.githubFetchOrgs.setLoadedRepos,
     setIncrementLoadedOrgs: dispatch.githubFetchOrgs.setIncrementLoadedOrgs,
