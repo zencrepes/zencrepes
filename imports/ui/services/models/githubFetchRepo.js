@@ -4,17 +4,18 @@ export default {
         loading: false,         // Data is currently loading
         loadError: false,       // Is there an error during load
 
-        name: '',               // Org Name
-        repositories: []        // Repositories
+        orgName: '',            // Org Name
+        repoName: '',           // Repo Name
+        repoData: {}            // Repository data
     },
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
         setLoadError(state, payload) {return { ...state, loadError: payload };},
 
-        setName(state, payload) {return { ...state, name: payload };},
-        setRepositories(state, payload) {return { ...state, repositories: payload };},
-
+        setOrgName(state, payload) {return { ...state, orgName: payload };},
+        setRepoName(state, payload) {return { ...state, repoName: payload };},
+        setRepoData(state, payload) {return { ...state, repoData: payload };},
     },
     effects: {
 

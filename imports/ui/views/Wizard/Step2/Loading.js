@@ -26,7 +26,7 @@ class Loading extends Component {
             <div className={classes.root}>
                 <LinearProgress />
                 <Typography component="p">
-                    Details about a particular repository from GitHub ...
+                    Fetching organizations and repositories from GitHub ...
                 </Typography>
             </div>
         );
@@ -38,8 +38,7 @@ Loading.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubScanRepo.loading,
-
+    loading: state.githubFetchOrgs.loading,
 });
 
 const mapDispatch = dispatch => ({

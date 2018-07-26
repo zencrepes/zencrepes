@@ -27,7 +27,6 @@ import {withStyles} from "material-ui/styles/index";
 
 //import Issues from './data/Issues.js';
 //import Labels from './data/Labels.js';
-import Orgs from './data/Orgs.js';
 import Repos from './data/Repos.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
@@ -65,7 +64,6 @@ class App extends Component {
                 <ApolloProviderGithub>
                     <div>
                         <Repos />
-                        <Orgs />
                         <QueryManage />
                         <QuerySave />
                         <Router>

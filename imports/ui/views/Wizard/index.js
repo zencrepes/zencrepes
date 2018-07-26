@@ -28,9 +28,9 @@ const styles = theme => ({
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return 'Organizations and Repositories';
+            return 'Welcome';
         case 1:
-            return 'Manually add repositories';
+            return 'Import Repositories';
         case 2:
             return 'This is the bit I really care about!';
         default:

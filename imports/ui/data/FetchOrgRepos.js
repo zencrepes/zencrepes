@@ -8,11 +8,6 @@ import Promise from 'bluebird';
 
 import GET_GITHUB_REPOS from '../../graphql/getReposExternal.graphql';
 
-/*
-export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
-export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
-window.repos = cfgSources;
-*/
 import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
@@ -20,10 +15,9 @@ import calculateQueryIncrement from './calculateQueryIncrement.js';
 /*
 Load data about Github Orgs
  */
-class ScanOrg extends Component {
+class FetchOrgRepos extends Component {
     constructor (props) {
         super(props);
-        this.repositories = [];
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,17 +30,18 @@ class ScanOrg extends Component {
     };
 
     load = async () => {
-        const { setLoading, name, setRepositories } = this.props;
+        const { setLoading, name, setAvailableRepos, setLoadedRepos} = this.props;
 
         setLoading(true);  // Set loading to true to indicate content is actually loading.
+        setAvailableRepos(0);
+        setLoadedRepos(0);
         console.log('Getting repositories from Organization: ' + name);
         await this.getReposPagination(null, 10);
-        setRepositories(this.repositories);
         setLoading(false);
     };
 
     getReposPagination = async (cursor, increment) => {
-        const { client, updateChip, name } = this.props;
+        const { client, updateChip, name, setLoadError, setAvailableRepos } = this.props;
 
         let data = await client.query({
             query: GET_GITHUB_REPOS,
@@ -57,22 +52,32 @@ class ScanOrg extends Component {
         console.log(data);
         updateChip(data.data.rateLimit);
         if (data.data.organization !== null) {
+            setLoadError(false);
+            setAvailableRepos(data.data.organization.repositories.totalCount);
             let lastCursor = await this.loadRepositories(data);
-            let queryIncrement = calculateQueryIncrement(this.repositories.length, data.data.organization.repositories.totalCount);
-            console.log(this.repositories);
-            console.log('Current count: ' + this.repositories.length);
+            let queryIncrement = calculateQueryIncrement(cfgSources.find({'org.id': data.data.organization.id}).count(), data.data.organization.repositories.totalCount);
+            console.log(cfgSources.find({'org.id': data.data.organization.id}));
+            console.log('Current count: ' + cfgSources.find({'org.id': data.data.organization.id}));
             console.log('Total count: ' + data.data.organization.repositories.totalCount);
             console.log('Query increment: ' + queryIncrement);
             if (queryIncrement > 0) {
                 await this.getReposPagination(lastCursor, queryIncrement);
             }
+        } else {
+            setLoadError(true);
         }
     };
 
     loadRepositories = async (data) => {
+        const { incrementLoadedRepos } = this.props;
         let lastCursor = null;
         for (let [key, currentRepo] of Object.entries(data.data.organization.repositories.edges)) {
             console.log('Inserting: ' + currentRepo.node.name);
+            let existNode = cfgSources.findOne({id: currentRepo.node.id});
+            let nodeActive = false;
+            if (existNode !== undefined) {
+                nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
+            }
             let repoObj = {
                 id: currentRepo.node.id,
                 name: currentRepo.node.name,
@@ -85,11 +90,17 @@ class ScanOrg extends Component {
                     name: data.data.organization.name,
                     id: data.data.organization.id,
                     url: data.data.organization.url,
-                }
+                },
+                active: nodeActive,
             };
-            this.repositories.push(repoObj);
+            await cfgSources.upsert({
+                id: repoObj.id
+            }, {
+                $set: repoObj
+            });
             lastCursor = currentRepo.cursor
         }
+        incrementLoadedRepos(Object.entries(data.data.organization.repositories.edges).length);
         return lastCursor;
     };
 
@@ -98,24 +109,27 @@ class ScanOrg extends Component {
     }
 }
 
-ScanOrg.propTypes = {
+FetchOrgRepos.propTypes = {
 
 };
 
 const mapState = state => ({
-    loadFlag: state.githubScanOrg.loadFlag,
-    loading: state.githubScanOrg.loading,
+    loadFlag: state.githubFetchOrgRepos.loadFlag,
+    loading: state.githubFetchOrgRepos.loading,
 
-    name: state.githubScanOrg.name,
+    name: state.githubFetchOrgRepos.name,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubScanOrg.setLoadFlag,
-    setLoading: dispatch.githubScanOrg.setLoading,
+    setLoadFlag: dispatch.githubFetchOrgRepos.setLoadFlag,
+    setLoading: dispatch.githubFetchOrgRepos.setLoading,
+    setLoadError: dispatch.githubFetchOrgRepos.setLoadError,
 
-    setRepositories: dispatch.githubScanOrg.setRepositories,
+    setAvailableRepos: dispatch.githubFetchOrgRepos.setAvailableRepos,
+    setLoadedRepos: dispatch.githubFetchOrgRepos.setLoadedRepos,
+    incrementLoadedRepos: dispatch.githubFetchOrgRepos.incrementLoadedRepos,
 
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(ScanOrg));
+export default connect(mapState, mapDispatch)(withApollo(FetchOrgRepos));

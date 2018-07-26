@@ -1,6 +1,6 @@
 export default {
     state: {
-        steps: ['GitHub Repositories', 'Import more', 'Agile'],
+        steps: ['Welcome !', 'Import Repositories', 'Agile'],
         activeStep: 0,
 
     },

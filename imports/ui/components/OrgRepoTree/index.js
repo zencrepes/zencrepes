@@ -189,8 +189,8 @@ class OrgRepoTree extends Component {
     }
 
     render() {
-        const { classes, reposLoadingFlag, totalOrgs, totalRepos, totalIssues } = this.props;
-        if (reposLoadingFlag) {
+        const { classes, loading, totalOrgs, totalRepos, totalIssues } = this.props;
+        if (loading) {
             return (
                 <Card className={classes.card}>
                     <CardContent>
@@ -237,7 +237,7 @@ const mapState = state => ({
     issuesLoading: state.github.issuesLoading,
     labelsLoading: state.github.labelsLoading,
 
-    reposLoadingFlag: state.githubRepos.reposLoadingFlag
+    loading: state.githubRepos.loading
 });
 
 const mapDispatch = dispatch => ({

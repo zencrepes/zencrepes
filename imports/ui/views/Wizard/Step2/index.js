@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
+
 import Grid from '@material-ui/core/Grid';
+
+import FetchOrgRepos  from '../../../data/FetchOrgRepos.js';
+import FetchRepo  from '../../../data/FetchRepo.js';
+import FetchOrgs  from '../../../data/FetchOrgs.js';
 
 import ItemGrid from '../../../components/Grid/ItemGrid.js';
 
-import ScanOrg  from '../../../data/ScanOrg.js';
-import ScanRepo  from '../../../data/ScanRepo.js';
+import Treeview from './Treeview.js';
+import Stats from './Stats.js';
 
-import Org from './Org/index.js';
-import Repo from './Repo/index.js';
-
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-
+import ScanOrgs from './ScanOrgs.js';
+import ScanOrgRepos from './ScanOrgRepos.js';
+import ScanRepo from './ScanRepo.js';
 
 const styles = theme => ({
     root: {
@@ -32,22 +35,23 @@ class Step2 extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <ScanOrg/>
-                <ScanRepo/>
+                <FetchOrgs/>
+                <FetchOrgRepos/>
+                <FetchRepo/>
                 <Grid container>
                     <ItemGrid xs={12} sm={6} md={6}>
-                        <Org/>
-                        <Repo/>
+                        <h3>1/ Scan for available repositories</h3>
+                        <ScanOrgs />
+                        <ScanOrgRepos />
+                        <ScanRepo />
                     </ItemGrid>
                     <ItemGrid xs={12} sm={6} md={6}>
-                        <Typography component="p">
-                            There are a few reason why loading might return an empty set of results. The most common is simply that you don't have permission to access this Organization's repository
-                        </Typography>
-                        <Typography component="p">
-                            The other reason might be that the organization has enabled OAuth App access restrictions, meaning that data access to third-parties is limited. For more information on these restrictions, including how to whitelist this app, visit https://help.github.com/articles/restricting-access-to-your-organization-s-data/
-                        </Typography>
+                        <h3>2/ Select repositories</h3>
+                        <Stats />
+                        <Treeview />
                     </ItemGrid>
                 </Grid>
+
             </div>
         );
     }
@@ -57,12 +61,4 @@ Step2.propTypes = {
     classes: PropTypes.object,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(Step2));
+export default withStyles(styles)(Step2);

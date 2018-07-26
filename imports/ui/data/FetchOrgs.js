@@ -9,11 +9,6 @@ import Promise from 'bluebird';
 import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
 import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
 
-/*
-export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
-export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
-window.repos = cfgSources;
-*/
 import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
@@ -21,7 +16,7 @@ import calculateQueryIncrement from './calculateQueryIncrement.js';
 /*
 Load data about Github Orgs
  */
-class Orgs extends Component {
+class FetchOrgs extends Component {
     constructor (props) {
         super(props);
         this.githubOrgs = [];
@@ -33,10 +28,10 @@ class Orgs extends Component {
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { setReposLoadFlag, reposLoadFlag } = this.props;
-        if (reposLoadFlag) {
+        const { setLoadFlag, loadFlag } = this.props;
+        if (loadFlag) {
             console.log('Repos - Initiating load');
-            setReposLoadFlag(false); // Right away set loadRepositories to false
+            setLoadFlag(false); // Right away set loadRepositories to false
             this.resetCounts();         // Reset all counts since those will be refresh by loadIssues
             this.load();           // Logic to load Issues
         }
@@ -50,9 +45,9 @@ class Orgs extends Component {
     };
 
     load = async () => {
-        const { setReposLoadingFlag } = this.props;
+        const { setLoading } = this.props;
 
-        setReposLoadingFlag(true);  // Set setReposLoadingFlag to true to indicate repositories are actually loading.
+        setLoading(true);  // Set setLoading to true to indicate repositories are actually loading.
 
         console.log('Initiate Organizations load');
         await this.getOrgsPagination(null, 10);
@@ -67,7 +62,7 @@ class Orgs extends Component {
         });
         console.log('Repositories loaded: ' + cfgSources.find({}).count());
 
-        setReposLoadingFlag(false);
+        setLoading(false);
     };
 
     getOrgsPagination = async (cursor, increment) => {
@@ -88,11 +83,14 @@ class Orgs extends Component {
     };
 
     loadOrganizations = async (data) => {
+        const { setIncrementLoadedOrgs } = this.props;
+
         let lastCursor = null;
         for (let [key, currentOrg] of Object.entries(data.data.viewer.organizations.edges)){
             this.githubOrgs.push(currentOrg.node);
             lastCursor = currentOrg.cursor;
         }
+        setIncrementLoadedOrgs(Object.entries(data.data.viewer.organizations.edges).length);
         return lastCursor;
     };
 
@@ -120,6 +118,8 @@ class Orgs extends Component {
     };
 
     loadRepositories = async (data, OrgObj) => {
+        const { setIncrementLoadedRepos } = this.props;
+
         let lastCursor = null;
         for (let [key, currentRepo] of Object.entries(data.data.viewer.organization.repositories.edges)){
             console.log('Inserting: ' + currentRepo.node.name);
@@ -145,6 +145,7 @@ class Orgs extends Component {
             });
             lastCursor = currentRepo.cursor
         }
+        setIncrementLoadedRepos(Object.entries(data.data.viewer.organization.repositories.edges).length);
         return lastCursor;
     }
 
@@ -153,23 +154,25 @@ class Orgs extends Component {
     }
 }
 
-Orgs.propTypes = {
+FetchOrgs.propTypes = {
 
 };
 
 const mapState = state => ({
-    reposLoadingFlag: state.githubRepos.reposLoadingFlag,
-    reposLoadFlag: state.githubRepos.reposLoadFlag,
+    loading: state.githubFetchOrgs.loading,
+    loadFlag: state.githubFetchOrgs.loadFlag,
 
 });
 
 const mapDispatch = dispatch => ({
-    setReposLoadFlag: dispatch.githubRepos.setReposLoadFlag,
-    setReposLoadingFlag: dispatch.githubRepos.setReposLoadingFlag,
-    setLoadedOrgs: dispatch.githubRepos.setLoadedOrgs,
-    setLoadedRepos: dispatch.githubRepos.setLoadedRepos,
+    setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
+    setLoading: dispatch.githubFetchOrgs.setLoading,
+    setLoadedOrgs: dispatch.githubFetchOrgs.setLoadedOrgs,
+    setLoadedRepos: dispatch.githubFetchOrgs.setLoadedRepos,
+    setIncrementLoadedOrgs: dispatch.githubFetchOrgs.setIncrementLoadedOrgs,
+    setIncrementLoadedRepos: dispatch.githubFetchOrgs.setIncrementLoadedRepos,
 
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(Orgs));
+export default connect(mapState, mapDispatch)(withApollo(FetchOrgs));

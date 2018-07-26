@@ -11,7 +11,7 @@ import { cfgSources } from './Minimongo.js';
 /*
 Load data about Github Orgs
  */
-class ScanRepo extends Component {
+class FetchRepo extends Component {
     constructor (props) {
         super(props);
         this.repositories = [];
@@ -74,26 +74,26 @@ class ScanRepo extends Component {
     }
 }
 
-ScanRepo.propTypes = {
+FetchRepo.propTypes = {
 
 };
 
 const mapState = state => ({
-    loadFlag: state.githubScanRepo.loadFlag,
-    loading: state.githubScanRepo.loading,
+    loadFlag: state.githubFetchRepo.loadFlag,
+    loading: state.githubFetchRepo.loading,
 
-    orgName: state.githubScanRepo.orgName,
-    repoName: state.githubScanRepo.repoName,
+    orgName: state.githubFetchRepo.orgName,
+    repoName: state.githubFetchRepo.repoName,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubScanRepo.setLoadFlag,
-    setLoading: dispatch.githubScanRepo.setLoading,
-    setLoadError: dispatch.githubScanRepo.setLoadError,
+    setLoadFlag: dispatch.githubFetchRepo.setLoadFlag,
+    setLoading: dispatch.githubFetchRepo.setLoading,
+    setLoadError: dispatch.githubFetchRepo.setLoadError,
 
-    setRepoData: dispatch.githubScanRepo.setRepoData,
+    setRepoData: dispatch.githubFetchRepo.setRepoData,
 
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(ScanRepo));
+export default connect(mapState, mapDispatch)(withApollo(FetchRepo));

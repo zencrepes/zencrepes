@@ -26,15 +26,15 @@ class LoadingRepos extends Component {
 
     cancelLoad = () => {
         console.log('cancelLoad');
-        this.props.setReposLoadFlag(false);
+        this.props.setLoadFlag(false);
     };
 
     render() {
-        const { classes, reposLoadingFlag } = this.props;
+        const { classes, loading } = this.props;
         console.log('LoadingRepos - render()');
-        if (reposLoadingFlag) {
+        if (loading) {
             return (
-                <Dialog aria-labelledby="simple-dialog-title" open={reposLoadingFlag}>
+                <Dialog aria-labelledby="simple-dialog-title" open={loading}>
                     <DialogTitle id="simple-dialog-title">Importing Organizations and Repositories from GitHub</DialogTitle>
                     <DialogContent>
                         <ProgressText />
@@ -60,11 +60,11 @@ LoadingRepos.propTypes = {
 };
 
 const mapState = state => ({
-    reposLoadingFlag: state.githubRepos.reposLoadingFlag,
+    loading: state.githubRepos.loading,
 });
 
 const mapDispatch = dispatch => ({
-    setReposLoadFlag: dispatch.githubRepos.setReposLoadFlag,
+    setLoadFlag: dispatch.githubRepos.setLoadFlag,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadingRepos));
