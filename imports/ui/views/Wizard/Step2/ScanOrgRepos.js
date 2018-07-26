@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = theme => ({
     textField: {
@@ -27,6 +28,16 @@ class ScanOrgRepos extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { loadSuccess, setLoadSuccess } = this.props;
+        if (prevProps.loadSuccess === false && loadSuccess === true) {
+            //Set timer to actually set back success to false (and remove snackbar)
+            setTimeout(() => {
+                setLoadSuccess(false);
+            }, 2000);
+        }
+    };
+
     handleChange = name => event => {
         const { setName } = this.props;
         setName(event.target.value);
@@ -38,7 +49,7 @@ class ScanOrgRepos extends Component {
     };
 
     render() {
-        const { classes, loading, loadError, name, availableRepos, loadedRepos } = this.props;
+        const { classes, loading, loadError, loadSuccess, name, availableRepos, loadedRepos } = this.props;
         if (loading) {
             return (
                 <div className={classes.loading}>
@@ -64,6 +75,14 @@ class ScanOrgRepos extends Component {
                     <Button color="primary" className={classes.button} onClick={this.handleScanOrg}>
                         Scan Org
                     </Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
+                        open={loadSuccess}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">Found {loadedRepos} repositories from {name}</span>}
+                    />
                 </div>
             );
         }
@@ -76,17 +95,18 @@ ScanOrgRepos.propTypes = {
 
 const mapState = state => ({
     loadFlag: state.githubFetchOrgRepos.loadFlag,
-    name: state.githubFetchOrgRepos.name,
     loading: state.githubFetchOrgRepos.loading,
     loadError: state.githubFetchOrgRepos.loadError,
+    loadSuccess: state.githubFetchOrgRepos.loadSuccess,
     availableRepos: state.githubFetchOrgRepos.availableRepos,
     loadedRepos: state.githubFetchOrgRepos.loadedRepos,
-
+    name: state.githubFetchOrgRepos.name,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchOrgRepos.setLoadFlag,
     setName: dispatch.githubFetchOrgRepos.setName,
+    setLoadSuccess: dispatch.githubFetchOrgRepos.setLoadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ScanOrgRepos));

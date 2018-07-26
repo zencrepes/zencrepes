@@ -41,6 +41,7 @@ class FetchRepo extends Component {
         });
 
         updateChip(data.data.rateLimit);
+        console.log(data);
         if (data.data.repository === null) {
             setLoadError(true);
         } else {
