@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = theme => ({
     textField: {
@@ -28,6 +29,18 @@ class ScanRepo extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { loadSuccess, setLoadSuccess, setOrgName, setRepoName } = this.props;
+        if (prevProps.loadSuccess === false && loadSuccess === true) {
+            //Set timer to actually set back success to false (and remove snackbar)
+            setTimeout(() => {
+                setLoadSuccess(false);
+                setOrgName('');
+                setRepoName('');
+            }, 2000);
+        }
+    };
+
     changeOrgName = name => event => {
         const { setOrgName } = this.props;
         setOrgName(event.target.value);
@@ -44,7 +57,7 @@ class ScanRepo extends Component {
     };
 
     render() {
-        const { classes, orgName, repoName, loading, loadError } = this.props;
+        const { classes, orgName, repoName, loading, loadError, loadSuccess } = this.props;
         if (loading) {
             return (
                 <div className={classes.loading}>
@@ -80,6 +93,14 @@ class ScanRepo extends Component {
                     <Button color="primary" className={classes.button} onClick={this.handleScanRepo}>
                         Scan Repo
                     </Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
+                        open={loadSuccess}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">Loaded {repoName} from {orgName}</span>}
+                    />
                 </div>
             );
         }
@@ -94,12 +115,14 @@ const mapState = state => ({
     loadFlag: state.githubFetchRepo.loadFlag,
     loading: state.githubFetchRepo.loading,
     loadError: state.githubFetchRepo.loadError,
+    loadSuccess: state.githubFetchRepo.loadSuccess,
     orgName: state.githubFetchRepo.orgName,
     repoName: state.githubFetchRepo.repoName,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchRepo.setLoadFlag,
+    setLoadSuccess: dispatch.githubFetchRepo.setLoadSuccess,
     setOrgName: dispatch.githubFetchRepo.setOrgName,
     setRepoName: dispatch.githubFetchRepo.setRepoName,
 });

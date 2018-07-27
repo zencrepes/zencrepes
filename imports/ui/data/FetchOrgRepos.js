@@ -31,20 +31,26 @@ class FetchOrgRepos extends Component {
     };
 
     load = async () => {
-        const { setLoading, name, setLoadSuccess, setAvailableRepos, setLoadedRepos} = this.props;
+        const { setLoading, name, setLoadSuccess, setLoadError, setAvailableRepos, setLoadedRepos} = this.props;
 
         setLoading(true);  // Set loading to true to indicate content is actually loading.
         setAvailableRepos(0);
         setLoadedRepos(0);
         setLoadSuccess(false);
+        setLoadError(false);
         this.reposCount = 0;
         console.log('Getting repositories from Organization: ' + name);
         await this.getReposPagination(null, 10);
         setLoading(false);
+        if (this.reposCount === 0) {
+            setLoadError(true);
+        } else {
+            setLoadSuccess(true);
+        }
     };
 
     getReposPagination = async (cursor, increment) => {
-        const { client, updateChip, name, setLoadError, setLoadSuccess, setAvailableRepos } = this.props;
+        const { client, updateChip, name, setAvailableRepos } = this.props;
 
         let data = await client.query({
             query: GET_GITHUB_REPOS,
@@ -55,8 +61,6 @@ class FetchOrgRepos extends Component {
         console.log(data);
         updateChip(data.data.rateLimit);
         if (data.data.organization !== null) {
-            setLoadError(false);
-            setLoadSuccess(true);
             setAvailableRepos(data.data.organization.repositories.totalCount);
             let lastCursor = await this.loadRepositories(data);
             let queryIncrement = calculateQueryIncrement(this.reposCount, data.data.organization.repositories.totalCount);
@@ -67,8 +71,6 @@ class FetchOrgRepos extends Component {
             if (queryIncrement > 0) {
                 await this.getReposPagination(lastCursor, queryIncrement);
             }
-        } else {
-            setLoadError(true);
         }
     };
 
@@ -82,21 +84,14 @@ class FetchOrgRepos extends Component {
             if (existNode !== undefined) {
                 nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
             }
-            let repoObj = {
-                id: currentRepo.node.id,
-                name: currentRepo.node.name,
-                url: currentRepo.node.url,
-                issues: currentRepo.node.issues,
-                labels: currentRepo.node.labels,
-                databaseId: currentRepo.node.databaseId,
-                org: {
-                    login: data.data.organization.login,
-                    name: data.data.organization.name,
-                    id: data.data.organization.id,
-                    url: data.data.organization.url,
-                },
-                active: nodeActive,
+            let repoObj = currentRepo.node;
+            repoObj['org'] = {
+                login: data.data.organization.login,
+                name: data.data.organization.name,
+                id: data.data.organization.id,
+                url: data.data.organization.url,
             };
+            repoObj['active'] = nodeActive;
             await cfgSources.upsert({
                 id: repoObj.id
             }, {

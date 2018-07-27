@@ -137,16 +137,10 @@ class FetchOrgs extends Component {
             if (existNode !== undefined) {
                 nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
             }
-            let repoObj = {
-                id: currentRepo.node.id,
-                name: currentRepo.node.name,
-                url: currentRepo.node.url,
-                issues: currentRepo.node.issues,
-                labels: currentRepo.node.labels,
-                databaseId: currentRepo.node.databaseId,
-                org: OrgObj,
-                active: nodeActive,
-            };
+            let repoObj = currentRepo.node;
+            repoObj['org'] = OrgObj;
+            repoObj['active'] = nodeActive;
+
             await cfgSources.upsert({
                 id: repoObj.id
             }, {

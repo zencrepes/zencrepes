@@ -10,6 +10,9 @@ query ($org_name: String!, $repo_name: String!){
     url
     id
     databaseId
+    diskUsage
+    forkCount
+    isPrivate
     owner{
       id
       login
@@ -19,6 +22,15 @@ query ($org_name: String!, $repo_name: String!){
       totalCount
     }
     labels(first: 1) {
+      totalCount
+    }
+    milestones(first: 1) {
+      totalCount
+    }
+    pullRequests(first: 1) {
+      totalCount
+    }
+    releases(first: 1) {
       totalCount
     }
   }

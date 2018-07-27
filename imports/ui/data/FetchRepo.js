@@ -21,16 +21,17 @@ class FetchRepo extends Component {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('ScanOrg - Initiating load');
-            setLoadFlag(false); // Right away set loadRepositories to false
-            this.load();           // Logic to load Issues
+            setLoadFlag(false);     // Right away set loadRepositories to false
+            this.load();            // Logic to load Issues
         }
     };
 
     load = async () => {
-        const { client, updateChip, setLoading, setLoadError, orgName, repoName, setRepoData } = this.props;
+        const { client, updateChip, setLoading, setLoadError, setLoadSuccess, orgName, repoName, setRepoData } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
+        setLoadSuccess(false);
         console.log('Getting data about Organization: ' + name + ' - Repository: ' + repoName);
 
         let data = await client.query({
@@ -45,27 +46,22 @@ class FetchRepo extends Component {
         if (data.data.repository === null) {
             setLoadError(true);
         } else {
-            let repoObj = {
-                id: data.data.repository.id,
-                name: data.data.repository.name,
-                url: data.data.repository.url,
-                issues: data.data.repository.issues,
-                labels: data.data.repository.labels,
-                databaseId: data.data.repository.databaseId,
-                org: {
-                    login: data.data.repository.owner.login,
-                    name: data.data.repository.owner.login,
-                    id: data.data.repository.owner.id,
-                    url: data.data.repository.owner.url,
-                },
-                active: true,
+
+            let repoObj = data.data.repository;
+            repoObj['org'] = {
+                login: data.data.repository.owner.login,
+                name: data.data.repository.owner.login,
+                id: data.data.repository.owner.id,
+                url: data.data.repository.owner.url,
             };
+            repoObj['active'] = true;
             setRepoData(repoObj);
             await cfgSources.upsert({
                 id: repoObj.id
             }, {
                 $set: repoObj
             });
+            setLoadSuccess(true);
         }
         setLoading(false);
     };
@@ -91,6 +87,7 @@ const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchRepo.setLoadFlag,
     setLoading: dispatch.githubFetchRepo.setLoading,
     setLoadError: dispatch.githubFetchRepo.setLoadError,
+    setLoadSuccess: dispatch.githubFetchRepo.setLoadSuccess,
 
     setRepoData: dispatch.githubFetchRepo.setRepoData,
 

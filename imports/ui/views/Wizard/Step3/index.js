@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
+import Typography from '@material-ui/core/Typography';
+
+import Grid from '@material-ui/core/Grid';
+import ItemGrid from '../../../components/Grid/ItemGrid.js';
+
+import Selects from './Selects.js';
+import LoadContent from './LoadContent.js';
 
 const styles = theme => ({
     root: {
@@ -12,14 +19,54 @@ class Step3 extends Component {
         super(props);
 
         this.state = {
+            load_issues: true,
+            load_labels: true,
+            load_milestones: false,
+            load_pullrequests: false,
+            load_releases: false,
         };
     }
+
+    componentDidMount() {
+        for (let key in this.state) {
+            // if the key exists in localStorage
+            if (localStorage.hasOwnProperty(key)) {
+                // get the key's value from localStorage
+                let value = localStorage.getItem(key);
+
+                // parse the localStorage string and setState
+                try {
+                    value = JSON.parse(value);
+                    this.setState({ [key]: value });
+                } catch (e) {
+                    // handle empty string
+                    this.setState({ [key]: value });
+                }
+            }
+        }
+    };
+
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+        localStorage.setItem(name, event.target.checked);
+    };
 
     render() {
         const { classes } = this.props;
         return (
             <div>
                 <h2>Step 3</h2>
+                <Typography component="p">
+                    Aside facilitating planning, this tool was also created to facilitate cross-repos and cross-orgs consistency. To do so it needs to load a bunch of data.
+                </Typography>
+                <Grid container>
+                    <ItemGrid xs={12} sm={6} md={6}>
+                        <Selects/>
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={6}>
+                        <LoadContent />
+                    </ItemGrid>
+                </Grid>
             </div>
         );
     }

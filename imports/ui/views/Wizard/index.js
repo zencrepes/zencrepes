@@ -10,6 +10,7 @@ import WizardStepper from './WizardStepper.js';
 import Step1 from './Step1/index.js';
 import Step2 from './Step2/index.js';
 import Step3 from './Step3/index.js';
+import Step4 from './Step4/index.js';
 import PropTypes from "prop-types";
 
 const styles = theme => ({

@@ -29,11 +29,12 @@ class ScanOrgRepos extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess } = this.props;
+        const { loadSuccess, setLoadSuccess, setName } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
             setTimeout(() => {
                 setLoadSuccess(false);
+                setName('');
             }, 2000);
         }
     };
@@ -68,7 +69,7 @@ class ScanOrgRepos extends Component {
                         label="GitHub Organization"
                         className={classes.textField}
                         value={name}
-                        helperText={loadError && "Unable to fetch data from Org"}
+                        helperText={loadError && "Unable to fetch data from organiation"}
                         onChange={this.handleChange('name')}
                         margin="normal"
                     />

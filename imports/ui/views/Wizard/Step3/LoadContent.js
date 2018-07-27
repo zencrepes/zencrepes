@@ -10,7 +10,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import { cfgSources } from "../../../data/Minimongo.js";
+import ProgressBar from '../../../components/Loading/Issues/ProgressBar.js';
+import ProgressText from '../../../components/Loading/Issues/ProgressText.js';
 
 const styles = theme => ({
     root: {
@@ -20,7 +21,7 @@ const styles = theme => ({
     },
 });
 
-class ScanOrgs extends Component {
+class LoadContent extends Component {
     constructor(props) {
         super(props);
 
@@ -28,13 +29,18 @@ class ScanOrgs extends Component {
         };
     }
 
-    componentDidMount() {
-        console.log('componentDidMount');
-        const { setLoadFlag } = this.props;
-        if (cfgSources.find({}).count() === 0) {
-            setLoadFlag(true);
-        }
-    }
+    loadIssues = () => {
+        console.log('loadIssues');
+        const { setIssuesLoadFlag, setLabelsLoadFlag } = this.props;
+        setIssuesLoadFlag(true);
+        setLabelsLoadFlag(true);
+    };
+
+    cancelLoad = () => {
+        console.log('cancelLoad');
+        this.props.setIssuesLoading(false);
+        this.props.setLabelsLoading(false);
+    };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { loadSuccess, setLoadSuccess } = this.props;
@@ -46,27 +52,23 @@ class ScanOrgs extends Component {
         }
     };
 
-    reloadRepos = () => {
-        const { setLoadFlag } = this.props;
-        setLoadFlag(true);
-    };
-
     render() {
-        const { classes, loading, loadError, loadSuccess, loadedOrgs, loadedRepos } = this.props;
-        if (loading) {
+        const { classes, issuesLoading, labelsLoading, loadError, loadSuccess, loadedOrgs, loadedRepos } = this.props;
+        if (issuesLoading || labelsLoading) {
             return (
                 <div className={classes.loading}>
-                    <LinearProgress />
-                    <Typography component="p">
-                        Fetched {loadedOrgs} Organizations and {loadedRepos} Repositories from GitHub ...
-                    </Typography>
+                    <ProgressBar />
+                    <ProgressText />
+                    <Button onClick={this.cancelLoad} color="primary" autoFocus>
+                        Cancel Load
+                    </Button>
                 </div>
             );
         } else {
             return (
                 <div className={classes.root}>
-                    <Button color="primary" className={classes.button} onClick={this.reloadRepos}>
-                        Scan All
+                    <Button color="primary" className={classes.button} onClick={this.loadIssues}>
+                        BIG LOAD BUTTON
                     </Button>
                     <Snackbar
                         anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
@@ -82,12 +84,13 @@ class ScanOrgs extends Component {
     }
 }
 
-ScanOrgs.propTypes = {
+LoadContent.propTypes = {
     classes: PropTypes.object,
 };
 
 const mapState = state => ({
-    loading: state.githubFetchOrgs.loading,
+    issuesLoading: state.githubIssues.loading,
+    labelsLoading: state.githubLabels.loading,
     loadError: state.githubFetchOrgs.loadError,
     loadSuccess: state.githubFetchOrgs.loadSuccess,
     loadedOrgs: state.githubFetchOrgs.loadedOrgs,
@@ -95,8 +98,13 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
+    setIssuesLoadFlag: dispatch.githubIssues.setLoadFlag,
+    setLabelsLoadFlag: dispatch.githubLabels.setLoadFlag,
+
+    setIssuesLoading: dispatch.githubIssues.setLoading,
+    setLabelsLoading: dispatch.githubLabels.setLoading,
+
     setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(ScanOrgs));
+export default connect(mapState, mapDispatch)(withStyles(styles)(LoadContent));
