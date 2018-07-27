@@ -23,7 +23,7 @@ query ($org_name: String!, $repo_name: String!){
       edges {
         node {
           id
-          updated_at
+          updatedAt
         }
       }
     }
