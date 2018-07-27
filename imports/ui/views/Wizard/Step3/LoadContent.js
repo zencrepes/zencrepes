@@ -31,15 +31,18 @@ class LoadContent extends Component {
 
     loadIssues = () => {
         console.log('loadIssues');
-        const { setIssuesLoadFlag, setLabelsLoadFlag } = this.props;
-        setIssuesLoadFlag(true);
-        setLabelsLoadFlag(true);
+        const { setLoadFlag } = this.props;
+        console.log(localStorage.getItem('load_issues'));
+        console.log(localStorage.getItem('load_labels'));
+        setLoadFlag({
+            issues: localStorage.getItem('load_issues'),
+            labels: localStorage.getItem('load_labels')
+        });
     };
 
     cancelLoad = () => {
         console.log('cancelLoad');
-        this.props.setIssuesLoading(false);
-        this.props.setLabelsLoading(false);
+        this.props.setLoading(false);
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -98,11 +101,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setIssuesLoadFlag: dispatch.githubIssues.setLoadFlag,
-    setLabelsLoadFlag: dispatch.githubLabels.setLoadFlag,
-
-    setIssuesLoading: dispatch.githubIssues.setLoading,
-    setLabelsLoading: dispatch.githubLabels.setLoading,
+    setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
+    setLoading: dispatch.githubFetchReposContent.setLoading,
 
     setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
 });

@@ -43,6 +43,8 @@ class Selects extends Component {
                     // handle empty string
                     this.setState({ [key]: value });
                 }
+            } else {
+                localStorage.setItem(key, this.state[key]);
             }
         }
     };

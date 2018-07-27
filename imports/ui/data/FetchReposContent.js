@@ -4,67 +4,17 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-//cfgIssues is the minimongo instance holding all issues imported from GitHub
-
 import GET_GITHUB_ISSUES from '../../graphql/getIssues.graphql';
-/*
-export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
-export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
-window.issues = cfgIssues;
-*/
-
 import GET_GITHUB_LABELS from '../../graphql/getLabels.graphql';
-/*
-export const cfgLabels = new Mongo.Collection('cfgLabels', {connection: null});
-export const localCfgLabels = new PersistentMinimongo2(cfgLabels, 'GAV-Labels');
-window.labels = cfgLabels;
-*/
 
 import { cfgIssues } from './Minimongo.js';
 import { cfgLabels } from './Minimongo.js';
 import { cfgSources } from './Minimongo.js';
 
-//https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
-const sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-};
-//cfgSources is a minimongo instance holding all repositories.
-
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+import getIssuesStats from './getIssuesStats.js';
 
-//Get various stats around issue timing
-function getIssuesStats(createdAt, updatedAt, closedAt) {
-    //This issue has been opened for X days
-    let openedDuring = null;
-    if (createdAt !== null && closedAt !== null) {
-        openedDuring = Math.round((new Date(closedAt) - new Date(createdAt)) / (1000 * 3600 * 24), 0);
-    }
-
-    //This issue was first opened X days ago
-    let createdSince = null;
-    if (createdAt !== null) {
-        createdSince = Math.round((new Date() - new Date(createdAt)) / (1000 * 3600 * 24), 0);
-    }
-    //This issue was closed X days ago
-    let closedSince = null;
-    if (closedAt !== null) {
-        closedSince = Math.round((new Date() - new Date(closedAt)) / (1000 * 3600 * 24), 0);
-    }
-    //This issue was last updated X days ago
-    let updatedSince = null;
-    if (updatedAt !== null) {
-        updatedSince = Math.round((new Date() - new Date(updatedAt)) / (1000 * 3600 * 24), 0);
-    }
-    let stats = {
-        openedDuring: openedDuring,
-        createdSince: createdSince,
-        closedSince: closedSince,
-        updatedSince: updatedSince,
-    };
-    return stats;
-}
-
-class Repos extends Component {
+class FetchReposContent extends Component {
     constructor (props) {
         super(props);
         this.state = {};
@@ -72,25 +22,24 @@ class Repos extends Component {
         this.loadLabels = false;
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { setIssuesLoadFlag, issuesLoading, issuesLoadFlag, setLabelsLoadFlag, labelsLoading, labelsLoadFlag} = this.props;
+    componentDidUpdate = (prevProps, prevState, snapshot) => {
+        const { setLoadFlag, loadFlag, loading} = this.props;
 
-        this.loadIssues = false; //TODO - this is incorrect
-        if (issuesLoadFlag && issuesLoading === false) {
-            setIssuesLoadFlag(false); // Right away set loadIssues to false
-            this.loadIssues = true;
-            this.resetIssuesCounts(); // Reset all counts since those will be refresh by loadIssues
-        }
+        if (loadFlag !== false && loading === false) {
+            if (loadFlag['issues']) {
+                console.log('loading issues');
+                this.loadIssues = true;
+                this.resetIssuesCounts();
+            } else {this.loadIssues = false;}
 
-        this.loadLabels = false;
-        if (labelsLoadFlag && labelsLoading === false) {
-            setLabelsLoadFlag(false); // Right away set loadIssues to false
-            this.loadLabels = true;
-            this.resetLabelsCounts(); // Reset all counts since those will be refresh by loadIssues
-        }
+            if (loadFlag['labels']) {
+                this.loadLabels = true;
+                this.resetLabelsCounts();
+            } else {this.loadLabels = false;}
 
-        if (this.loadIssues || this.loadLabels) {
-            this.loadReposContent(); // Logic to load Issues
+            setLoadFlag(false);
+
+            this.loadReposContent();
         }
     };
 
@@ -107,9 +56,8 @@ class Repos extends Component {
     };
 
     loadReposContent = async () => {
-        const { setIssuesLoading, incrementIssuesLoadedCountBuffer, setLabelsLoading, setIssuesTotalCount, setLabelsTotalCount, incrementLabelsLoadedCountBuffer} = this.props;
-        await setIssuesLoading(true);  // Set to true to indicate issues are actually loading.
-        await setLabelsLoading(true);  // Set to true to indicate labels are actually loading.
+        const { setLoading, incrementIssuesLoadedCountBuffer, setIssuesTotalCount, setLabelsTotalCount, incrementLabelsLoadedCountBuffer} = this.props;
+        await setLoading(true);  // Set to true to indicate issues are actually loading.
         await cfgIssues.update({}, { $set: { active: false } }, {multi: true}); // Set all issues inactive, at the end of the process, all inactive issues will be deleted
 
         //First action is to calculate the number of expected issues and labels to be loaded
@@ -122,8 +70,6 @@ class Repos extends Component {
             .map(repo => repo.labels.totalCount)
             .reduce((acc, count) => acc + count, 0);
         setLabelsTotalCount(labelsTotalCount);
-
-        //window.issues.findOne({}, {sort: {updatedAt: -1}});
 
         for (let repo of cfgSources.find({}).fetch()) {
             if (repo.active === false) {
@@ -152,17 +98,15 @@ class Repos extends Component {
                     console.log('Importing issues from: ' + repo.name + ' - Query increment: ' + queryIncrement);
                     //window.issues.findOne({}, {sort: {updatedAt: -1}});
                     let lastUpdatedIssue = cfgIssues.findOne({'repo.id': repo.id}, {sort: {updatedAt: -1}});
+                    let lastUpdateDate = '1990-12-12T00:00:00Z';
                     if (lastUpdatedIssue !== undefined) {
-                        let lastUpdateDate = lastUpdatedIssue.updatedAt;
-                        console.log('Will load issues until: ' + lastUpdatedIssue.updatedAt);
+                        lastUpdateDate = lastUpdatedIssue.updatedAt;
+                        console.log('Will load issues more recent than: ' + lastUpdatedIssue.updatedAt);
                     }
-                    console.log(lastUpdatedIssue);
-                    console.log(this.props.issuesLoading);
-                    console.log(this.loadIssues);
 
-                    if (this.props.issuesLoading && this.loadIssues)
-                        await this.getIssuesPagination(null, queryIncrement, repo);
-
+                    if (this.loadIssues) // TODO - This is incorrect, need to be broken down by repository
+                        console.log('Load Issues');
+                        await this.getIssuesPagination(null, queryIncrement, repo, lastUpdateDate);
 
                 }
                 if (repo.labels.totalCount > 0) {
@@ -179,7 +123,8 @@ class Repos extends Component {
                     }
                     console.log('Labels import: ' + repo.name + ' - Query increment: ' + queryIncrement);
 
-                    if (this.props.labelsLoading && this.loadLabels)
+                    if (this.loadLabels)
+                        console.log('Load Labels');
                         await this.getLabelsPagination(null, queryIncrement, repo);
                 }
             }
@@ -187,31 +132,32 @@ class Repos extends Component {
         console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels loaded');
 
         await cfgIssues.remove({active: false});
-        setIssuesLoading(false);  // Set to true to indicate issues are done loading.
-        setLabelsLoading(false);  // Set to true to indicate labels are done loading.
+        setLoading(false);  // Set to true to indicate issues are done loading.
     };
 
-    getIssuesPagination = async (cursor, increment, RepoObj) => {
+    getIssuesPagination = async (cursor, increment, RepoObj, lastUpdateDate) => {
         const { client } = this.props;
-        let data = await client.query({
-            query: GET_GITHUB_ISSUES,
-            variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
-            fetchPolicy: 'no-cache',
-        });
-        console.log(data);
-        console.log(RepoObj);
-        this.props.updateChip(data.data.rateLimit);
-        if (data.data.repository !== null) {
-            let lastCursor = await this.ingestIssues(data, RepoObj);
-            let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
-            console.log('Loading issues for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
-            if (queryIncrement > 0) {
-                await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
+        if (this.props.loading && this.loadIssues) {
+            let data = await client.query({
+                query: GET_GITHUB_ISSUES,
+                variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
+                fetchPolicy: 'no-cache',
+            });
+            console.log(data);
+            console.log(RepoObj);
+            this.props.updateChip(data.data.rateLimit);
+            if (data.data.repository !== null) {
+                let lastCursor = await this.ingestIssues(data, RepoObj, lastUpdateDate);
+                let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
+                console.log('Loading issues for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+                if (queryIncrement > 0) {
+                    await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj, lastUpdateDate);
+                }
             }
         }
     };
 
-    ingestIssues = async (data, RepoObj) => {
+    ingestIssues = async (data, RepoObj, lastUpdateDate) => {
         let lastCursor = null;
         console.log(data);
         console.log(data.data.repository);
@@ -240,28 +186,44 @@ class Repos extends Component {
                 $set: issueObj
             });
             this.props.incrementIssuesLoadedCount(1);
+            if (new Date(currentIssue.node.updatedAt) < new Date(lastUpdateDate)) {
+                this.loadIssues = false;
+            }
             //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentIssue.cursor
+        }
+        if (this.loadIssues === false) {
+            console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
         return lastCursor;
     };
 
     getLabelsPagination = async (cursor, increment, RepoObj) => {
         const { client } = this.props;
-        let data = await client.query({
-            query: GET_GITHUB_LABELS,
-            variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
-            fetchPolicy: 'no-cache',
-        });
-        this.props.updateChip(data.data.rateLimit);
-        console.log(data);
-        if (data.data.repository !== null) {
-            let lastCursor = await this.ingestLabels(data, RepoObj);
-            console.log(data.data.repository);
-            let queryIncrement = calculateQueryIncrement(cfgLabels.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.labels.totalCount);
-            console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
-            if (queryIncrement > 0) {
-                await this.getLabelsPagination(lastCursor, queryIncrement, RepoObj);
+        if (this.props.loading) {
+            let data = await client.query({
+                query: GET_GITHUB_LABELS,
+                variables: {
+                    repo_cursor: cursor,
+                    increment: increment,
+                    org_name: RepoObj.org.login,
+                    repo_name: RepoObj.name
+                },
+                fetchPolicy: 'no-cache',
+            });
+            this.props.updateChip(data.data.rateLimit);
+            console.log(data);
+            if (data.data.repository !== null) {
+                let lastCursor = await this.ingestLabels(data, RepoObj);
+                console.log(data.data.repository);
+                let queryIncrement = calculateQueryIncrement(cfgLabels.find({
+                    'repo.id': RepoObj.id,
+                    'refreshed': true
+                }).count(), data.data.repository.labels.totalCount);
+                console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+                if (queryIncrement > 0) {
+                    await this.getLabelsPagination(lastCursor, queryIncrement, RepoObj);
+                }
             }
         }
     };
@@ -289,41 +251,39 @@ class Repos extends Component {
         return lastCursor;
     };
 
+
     render() {
         return null;
     }
 }
 
-Repos.propTypes = {
+FetchReposContent.propTypes = {
 
 };
 
 const mapState = state => ({
-    issuesLoading: state.githubIssues.loading,
-    issuesLoadFlag: state.githubIssues.loadFlag,
+    loadFlag: state.githubFetchReposContent.loadFlag,
+    loading: state.githubFetchReposContent.loading,
 
-    labelsLoading: state.githubLabels.loading,
-    labelsLoadFlag: state.githubLabels.loadFlag,
 });
 
 const mapDispatch = dispatch => ({
-    setIssuesLoading: dispatch.githubIssues.setLoading,
-    setIssuesLoadFlag: dispatch.githubIssues.setLoadFlag,
+    setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
+    setLoading: dispatch.githubFetchReposContent.setLoading,
+
+    updateChip: dispatch.chip.updateChip,
+
     setIssuesTotalCount: dispatch.githubIssues.setTotalCount,
     setIssuesLoadedCount: dispatch.githubIssues.setLoadedCount,
     setIssuesLoadedCountBuffer: dispatch.githubIssues.setLoadedCountBuffer,
     incrementIssuesLoadedCount: dispatch.githubIssues.incrementLoadedCount,
     incrementIssuesLoadedCountBuffer: dispatch.githubIssues.incrementLoadedCountBuffer,
 
-    setLabelsLoading: dispatch.githubLabels.setLoading,
-    setLabelsLoadFlag: dispatch.githubLabels.setLoadFlag,
     setLabelsTotalCount: dispatch.githubLabels.setTotalCount,
     setLabelsLoadedCount: dispatch.githubLabels.setLoadedCount,
     setLabelsLoadedCountBuffer: dispatch.githubLabels.setLoadedCountBuffer,
     incrementLabelsLoadedCount: dispatch.githubLabels.incrementLoadedCount,
     incrementLabelsLoadedCountBuffer: dispatch.githubLabels.incrementLoadedCountBuffer,
-
-    updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(Repos));
+export default connect(mapState, mapDispatch)(withApollo(FetchReposContent));
