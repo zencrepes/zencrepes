@@ -24,20 +24,23 @@ class FetchReposContent extends Component {
 
     componentDidUpdate = (prevProps, prevState, snapshot) => {
         const { setLoadFlag, loadFlag, loading} = this.props;
-
+        console.log(loadFlag);
         if (loadFlag !== false && loading === false) {
-            if (loadFlag['issues']) {
+            if (loadFlag['issues'] === 'true') {
                 console.log('loading issues');
                 this.loadIssues = true;
                 this.resetIssuesCounts();
             } else {this.loadIssues = false;}
 
-            if (loadFlag['labels']) {
+            if (loadFlag['labels'] === 'true') {
                 this.loadLabels = true;
                 this.resetLabelsCounts();
             } else {this.loadLabels = false;}
 
             setLoadFlag(false);
+
+            console.log(this.loadIssues);
+            console.log(this.loadLabels);
 
             this.loadReposContent();
         }
@@ -60,6 +63,9 @@ class FetchReposContent extends Component {
         await setLoading(true);  // Set to true to indicate issues are actually loading.
         await cfgIssues.update({}, { $set: { active: false } }, {multi: true}); // Set all issues inactive, at the end of the process, all inactive issues will be deleted
 
+        console.log(this.loadIssues);
+        console.log(this.loadLabels);
+
         //First action is to calculate the number of expected issues and labels to be loaded
         let issuesTotalCount = cfgSources.find({active: true}).fetch()
             .map(repo => repo.issues.totalCount)
@@ -72,18 +78,18 @@ class FetchReposContent extends Component {
         setLabelsTotalCount(labelsTotalCount);
 
         for (let repo of cfgSources.find({}).fetch()) {
-            if (repo.active === false) {
+            if (repo.active === false && (cfgIssues.find({'repo.id': repo.id}).count() > 0 || cfgLabels.find({'repo.id': repo.id}).count() > 0)) {
                 //If repo is inactive, delete any issues attached to this repo (if any)
                 //let attachedIssues = cfgIssues.find({'repo.id': repo.id}).count();
-                //console.log('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + attachedIssues + ' attached issues');
+                console.log('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgIssues.find({'repo.id': repo.id}).count() + ' issues and ' + cfgLabels.find({'repo.id': repo.id}).count() + ' labels');
                 //console.log(cfgIssues.find({'repo.id': repo.id}).fetch());
                 await cfgIssues.remove({'repo.id': repo.id});
                 await cfgLabels.remove({'repo.id': repo.id});
-            } else {
-                console.log('Processing repo: ' + repo.name + ' - Is active and has ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
+            } else if (repo.active === true) {
+                console.log('Processing repo: ' + repo.name + ' - Is active, has ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
 
                 //If repo is active, load all issues attached to this repo (if any)
-                if (repo.issues.totalCount > 0) {
+                if (repo.issues.totalCount > 0 && this.loadIssues) {
                     //First, marked all existing issues are non-refreshed
                     let updatedDocs = cfgIssues.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
 
@@ -103,13 +109,10 @@ class FetchReposContent extends Component {
                         lastUpdateDate = lastUpdatedIssue.updatedAt;
                         console.log('Will load issues more recent than: ' + lastUpdatedIssue.updatedAt);
                     }
-
-                    if (this.loadIssues) // TODO - This is incorrect, need to be broken down by repository
-                        console.log('Load Issues');
-                        await this.getIssuesPagination(null, queryIncrement, repo, lastUpdateDate);
+                    await this.getIssuesPagination(null, queryIncrement, repo, lastUpdateDate);
 
                 }
-                if (repo.labels.totalCount > 0) {
+                if (repo.labels.totalCount > 0 && this.loadLabels) {
                     //First, marked all existing issues are non-refreshed
                     let updatedDocs = cfgLabels.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
 
@@ -122,14 +125,13 @@ class FetchReposContent extends Component {
                         queryIncrement = repo.labels.totalCount;
                     }
                     console.log('Labels import: ' + repo.name + ' - Query increment: ' + queryIncrement);
+                    await this.getLabelsPagination(null, queryIncrement, repo);
 
-                    if (this.loadLabels)
-                        console.log('Load Labels');
-                        await this.getLabelsPagination(null, queryIncrement, repo);
+
                 }
             }
         }
-        console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels loaded');
+        console.log('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels in memory');
 
         await cfgIssues.remove({active: false});
         setLoading(false);  // Set to true to indicate issues are done loading.
@@ -137,7 +139,7 @@ class FetchReposContent extends Component {
 
     getIssuesPagination = async (cursor, increment, RepoObj, lastUpdateDate) => {
         const { client } = this.props;
-        if (this.props.loading && this.loadIssues) {
+        if (this.props.loading) {
             let data = await client.query({
                 query: GET_GITHUB_ISSUES,
                 variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
@@ -150,7 +152,7 @@ class FetchReposContent extends Component {
                 let lastCursor = await this.ingestIssues(data, RepoObj, lastUpdateDate);
                 let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
                 console.log('Loading issues for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
-                if (queryIncrement > 0) {
+                if (queryIncrement > 0 && lastCursor !== null) {
                     await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj, lastUpdateDate);
                 }
             }
@@ -186,13 +188,13 @@ class FetchReposContent extends Component {
                 $set: issueObj
             });
             this.props.incrementIssuesLoadedCount(1);
+            lastCursor = currentIssue.cursor;
+
             if (new Date(currentIssue.node.updatedAt) < new Date(lastUpdateDate)) {
-                this.loadIssues = false;
+                lastCursor = null;
             }
-            //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
-            lastCursor = currentIssue.cursor
         }
-        if (this.loadIssues === false) {
+        if (lastCursor === null) {
             console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
         return lastCursor;
