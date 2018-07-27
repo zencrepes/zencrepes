@@ -23,7 +23,6 @@ class Step1 extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <h2>Step 1</h2>
                 <Typography component="p">
                     Some introductions
                 </Typography>

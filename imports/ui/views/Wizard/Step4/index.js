@@ -19,7 +19,7 @@ class Step4 extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <h2>Step 4</h2>
+                <h2>Some explanations</h2>
 
             </div>
         );

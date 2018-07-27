@@ -137,7 +137,7 @@ class FetchOrgs extends Component {
             if (existNode !== undefined) {
                 nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
             }
-            let repoObj = currentRepo.node;
+            let repoObj = JSON.parse(JSON.stringify(currentRepo.node)); //TODO - Replace this with something better to copy object ?
             repoObj['org'] = OrgObj;
             repoObj['active'] = nodeActive;
 

@@ -47,7 +47,7 @@ class FetchRepo extends Component {
             setLoadError(true);
         } else {
 
-            let repoObj = data.data.repository;
+            let repoObj = JSON.parse(JSON.stringify(data.data.repository)); //TODO - Replace this with something better to copy object ?
             repoObj['org'] = {
                 login: data.data.repository.owner.login,
                 name: data.data.repository.owner.login,

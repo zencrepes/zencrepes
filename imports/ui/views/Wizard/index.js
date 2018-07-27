@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import GitRequests from '../../components/Github/GitRequests.js';
+
 import WizardStepper from './WizardStepper.js';
 
 import Step1 from './Step1/index.js';
@@ -25,19 +27,6 @@ const styles = theme => ({
         marginBottom: theme.spacing.unit,
     },
 });
-
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return 'Welcome';
-        case 1:
-            return 'Import Repositories';
-        case 2:
-            return 'This is the bit I really care about!';
-        default:
-            return 'Unknown step';
-    }
-}
 
 class Wizard extends Component {
     constructor(props) {
@@ -80,11 +69,11 @@ class Wizard extends Component {
                         </div>
                     ) : (
                         <div>
-                            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
                             {{
                                 0: <Step1 />,
                                 1: <Step2 />,
                                 2: <Step3 />,
+                                3: <Step4 />,
                             }[activeStep]}
                             <div>
                                 <Button
@@ -106,6 +95,7 @@ class Wizard extends Component {
                         </div>
                     )}
                 </div>
+                <GitRequests />
             </div>
         );
     }

@@ -5,36 +5,28 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
     remaining
     resetAt
   }
-  viewer {
-    organization(login: $org_name) {
-      login
-      id
-      name
-      url
-      repository(name: $repo_name) {
-        name
-        url
-        id
-        databaseId
-        labels(first: $increment, after: $repo_cursor) {
-          totalCount
-          edges {
-            cursor
-            node {
-               id
-               url
-               color
-               name
-               description
-               color
-               isDefault
-               createdAt
-               updatedAt
-               issues(first: 1) {
-                 totalCount
-               }
-            }
-          }
+  repository(owner:$org_name, name:$repo_name) {
+    name
+    url
+    id
+    databaseId
+    labels(first: $increment, after: $repo_cursor) {
+      totalCount
+      edges {
+        cursor
+        node {
+           id
+           url
+           color
+           name
+           description
+           color
+           isDefault
+           createdAt
+           updatedAt
+           issues(first: 1) {
+             totalCount
+           }
         }
       }
     }

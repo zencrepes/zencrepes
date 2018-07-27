@@ -113,6 +113,7 @@ class Repos extends Component {
         const { setIssuesLoading, incrementIssuesLoadedCountBuffer, setLabelsLoading, setIssuesTotalCount, setLabelsTotalCount, incrementLabelsLoadedCountBuffer} = this.props;
         await setIssuesLoading(true);  // Set to true to indicate issues are actually loading.
         await setLabelsLoading(true);  // Set to true to indicate labels are actually loading.
+        await cfgIssues.update({}, { $set: { active: false } }, {multi: true}); // Set all issues inactive, at the end of the process, all inactive issues will be deleted
 
         //First action is to calculate the number of expected issues and labels to be loaded
         let issuesTotalCount = cfgSources.find({active: true}).fetch()
@@ -177,6 +178,7 @@ class Repos extends Component {
         }
         console.log('Load completed: ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels loaded');
 
+        await cfgIssues.remove({active: false});
         setIssuesLoading(false);  // Set to true to indicate issues are done loading.
         setLabelsLoading(false);  // Set to true to indicate labels are done loading.
     };
@@ -188,11 +190,12 @@ class Repos extends Component {
             variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
             fetchPolicy: 'no-cache',
         });
-
+        console.log(data);
+        console.log(RepoObj);
         this.props.updateChip(data.data.rateLimit);
-        if (data.data.viewer.organization.repository !== null) {
-            let lastCursor = await this.ingestIssues(data);
-            let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.issues.totalCount);
+        if (data.data.repository !== null) {
+            let lastCursor = await this.ingestIssues(data, RepoObj);
+            let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
             console.log('Loading issues for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
             if (queryIncrement > 0) {
                 await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj);
@@ -200,11 +203,12 @@ class Repos extends Component {
         }
     };
 
-    ingestIssues = async (data) => {
+    ingestIssues = async (data, RepoObj) => {
         let lastCursor = null;
-        console.log(data.data.viewer.organization.repository);
+        console.log(data);
+        console.log(data.data.repository);
 
-        for (let [key, currentIssue] of Object.entries(data.data.viewer.organization.repository.issues.edges)){
+        for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
 
@@ -214,41 +218,14 @@ class Repos extends Component {
                 nodePinned = existNode.pinned;
                 nodePoints = existNode.points;
             }
-
-            let issueObj = {
-                id: currentIssue.node.id,
-                title: currentIssue.node.title,
-                url: currentIssue.node.url,
-                author: currentIssue.node.author,
-                org: {
-                    'login': data.data.viewer.organization.login,
-                    'id': data.data.viewer.organization.id,
-                    'name': data.data.viewer.organization.name,
-                    'url': data.data.viewer.organization.url
-                },
-                repo: {
-                    'name': data.data.viewer.organization.repository.name,
-                    'databaseId': data.data.viewer.organization.repository.databaseId,
-                    'id': data.data.viewer.organization.repository.id,
-                    'url': data.data.viewer.organization.repository.url
-                },
-                labels: currentIssue.node.labels,
-                repo_id: data.data.viewer.organization.repository.id,
-                state: currentIssue.node.state,
-                milestone: currentIssue.node.milestone,
-                assignees: currentIssue.node.assignees,
-                createdAt: currentIssue.node.createdAt,
-                updatedAt: currentIssue.node.updatedAt,
-                closedAt: currentIssue.node.closedAt,
-                stats: getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt),
-                comments: currentIssue.node.comments,
-                participants: currentIssue.node.participants,
-                databaseId: currentIssue.node.databaseId,
-                number: currentIssue.node.number,
-                refreshed: true,
-                pinned: nodePinned,
-                points: nodePoints,
-            };
+            let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
+            issueObj['repo'] = RepoObj;
+            issueObj['org'] = RepoObj.org;
+            issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
+            issueObj['refreshed'] = true;
+            issueObj['pinned'] = nodePinned;
+            issueObj['points'] = nodePoints;
+            issueObj['active'] = true;
             await cfgIssues.upsert({
                 id: issueObj.id
             }, {
@@ -270,10 +247,10 @@ class Repos extends Component {
         });
         this.props.updateChip(data.data.rateLimit);
         console.log(data);
-        if (data.data.viewer.organization.repository !== null) {
-            let lastCursor = await this.ingestLabels(data);
-            console.log(data.data.viewer.organization.repository);
-            let queryIncrement = calculateQueryIncrement(cfgLabels.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.viewer.organization.repository.labels.totalCount);
+        if (data.data.repository !== null) {
+            let lastCursor = await this.ingestLabels(data, RepoObj);
+            console.log(data.data.repository);
+            let queryIncrement = calculateQueryIncrement(cfgLabels.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.labels.totalCount);
             console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
             if (queryIncrement > 0) {
                 await this.getLabelsPagination(lastCursor, queryIncrement, RepoObj);
@@ -281,38 +258,17 @@ class Repos extends Component {
         }
     };
 
-    ingestLabels = async (data) => {
+    ingestLabels = async (data, RepoObj) => {
         let lastCursor = null;
-        console.log(data.data.viewer.organization.repository);
+        console.log(data.data.repository);
 
-        for (let [key, currentLabel] of Object.entries(data.data.viewer.organization.repository.labels.edges)){
+        for (let [key, currentLabel] of Object.entries(data.data.repository.labels.edges)){
             console.log('Loading label: ' + currentLabel.node.name);
             //let existNode = cfgLabels.findOne({id: currentLabel.node.id});
 
-            let labelObj = {
-                id: currentLabel.node.id,
-                url: currentLabel.node.url,
-                color: currentLabel.node.color,
-                name: currentLabel.node.name,
-                description: currentLabel.node.description,
-                isDefault: currentLabel.node.isDefault,
-                repo: {
-                    name: data.data.viewer.organization.repository.name,
-                    databaseId: data.data.viewer.organization.repository.databaseId,
-                    id: data.data.viewer.organization.repository.id,
-                    url: data.data.viewer.organization.repository.url,
-                    org: {
-                        login: data.data.viewer.organization.login,
-                        id: data.data.viewer.organization.id,
-                        name: data.data.viewer.organization.name,
-                        url: data.data.viewer.organization.url
-                    },
-                },
-                createdAt: currentLabel.node.createdAt,
-                updatedAt: currentLabel.node.updatedAt,
-                issues: currentLabel.node.issues,
-                refreshed: true,
-            };
+            let labelObj = JSON.parse(JSON.stringify(currentLabel.node)); //TODO - Replace this with something better to copy object ?
+            labelObj['repo'] = RepoObj;
+            labelObj['refreshed'] = true;
             await cfgLabels.upsert({
                 id: labelObj.id
             }, {
