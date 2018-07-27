@@ -10,7 +10,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
     url
     id
     databaseId
-    issues(first: $increment, after: $repo_cursor) {
+    issues(first: $increment, after: $repo_cursor, orderBy: {field: UPDATED_AT, direction: DESC}) {
       totalCount
       edges {
        cursor

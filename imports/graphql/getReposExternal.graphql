@@ -26,8 +26,14 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             login
             url
           }
-          issues(first: 1) {
+          issues(first: 1, orderBy: {field: UPDATED_AT, direction: DESC}) {
             totalCount
+            edges {
+              node {
+                id
+                updated_at
+              }
+            }
           }
           labels(first: 1) {
             totalCount
