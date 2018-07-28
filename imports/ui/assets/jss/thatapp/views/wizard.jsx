@@ -6,11 +6,15 @@ const wizardViewStyle = {
         zIndex: "2",
         position: "relative",
         paddingTop: "20vh",
-        color: "#FFFFFF"
+        color: "#FFFFFF",
     },
     instructions: {
         marginTop: '10px',
         marginBottom: '10px',
+    },
+    wizardCard: {
+      padding: '20px',
+      height: '500px',
     },
     pageHeader: {
         minHeight: "100vh",

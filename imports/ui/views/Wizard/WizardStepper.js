@@ -10,6 +10,8 @@ import { connect } from "react-redux";
 const styles = theme => ({
     root: {
         width: '90%',
+        margin: 'auto',
+        textAlign: 'center',
     },
     button: {
         marginRight: theme.spacing.unit,

@@ -12,6 +12,9 @@ import GridContainer from "../../components/Grid/GridContainer.js";
 import GridItem from "../../components/Grid/GridItem.js";
 import Card from "../../components/Card/Card.js";
 
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+
 import GitRequests from '../../components/Github/GitRequests.js';
 
 import WizardStepper from './WizardStepper.js';
@@ -78,9 +81,11 @@ class Wizard extends Component {
                     <div className={classes.container}>
                         <GridContainer justify="center">
                             <GridItem xs={12} sm={12} md={4}>
-                                <Card>
-                                    <WizardStepper />
-                                    <div>
+                                <Card className={classes.wizardCard}>
+                                    <div className={classes.wizardStepper}>
+                                        <WizardStepper />
+                                    </div>
+                                    <CardActions>
                                         {activeStep === steps.length ? (
                                             <div>
                                                 <Typography className={classes.instructions}>
@@ -92,12 +97,14 @@ class Wizard extends Component {
                                             </div>
                                         ) : (
                                             <div>
+                                                <CardContent>
                                                 {{
                                                     0: <Step1 />,
                                                     1: <Step2 />,
                                                     2: <Step3 />,
                                                     3: <Step4 />,
                                                 }[activeStep]}
+                                                </CardContent>
                                                 <div>
                                                     <Button
                                                         disabled={activeStep === 0}
@@ -117,7 +124,7 @@ class Wizard extends Component {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
+                                    </CardActions>
                                     <GitRequests />
                                 </Card>
                             </GridItem>
