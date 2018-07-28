@@ -23,10 +23,6 @@ const styles = theme => ({
 class ScanRepo extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-
-        };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -109,10 +105,18 @@ class ScanRepo extends Component {
 
 ScanRepo.propTypes = {
     classes: PropTypes.object,
+    loading: PropTypes.bool,
+    loadError: PropTypes.bool,
+    loadSuccess: PropTypes.bool,
+    orgName: PropTypes.string,
+    repoName: PropTypes.string,
+    setLoadFlag: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setOrgName: PropTypes.func,
+    setRepoName: PropTypes.func,
 };
 
 const mapState = state => ({
-    loadFlag: state.githubFetchRepo.loadFlag,
     loading: state.githubFetchRepo.loading,
     loadError: state.githubFetchRepo.loadError,
     loadSuccess: state.githubFetchRepo.loadSuccess,

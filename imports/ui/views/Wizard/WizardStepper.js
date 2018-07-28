@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -22,11 +22,13 @@ const styles = theme => ({
 
 
 
-class WizardStepper extends React.Component {
+class WizardStepper extends Component {
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         const { classes, activeStep, steps } = this.props;
-
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
@@ -48,16 +50,13 @@ class WizardStepper extends React.Component {
 
 WizardStepper.propTypes = {
     classes: PropTypes.object,
+    activeStep: PropTypes.number,
+    steps: PropTypes.array,
 };
 
 const mapState = state => ({
     activeStep: state.wizard.activeStep,
     steps: state.wizard.steps,
-
 });
 
-const mapDispatch = dispatch => ({
-    setActiveStep: dispatch.wizard.setActiveStep,
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(WizardStepper));
+export default connect(mapState, null)(withStyles(styles)(WizardStepper));

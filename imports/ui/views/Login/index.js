@@ -2,7 +2,6 @@
 Note: Most of this page design has been copied over from:
 https://github.com/creativetimofficial/material-kit-react/blob/master/src/views/LoginPage/LoginPage.jsx
  */
-
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 

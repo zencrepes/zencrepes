@@ -30,7 +30,7 @@ class Treeview extends Component {
             nodes: this.getData(),
             checked: cfgSources.find({active: true}).fetch().map(repo => repo.id),
         });
-    }
+    };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const updatedNodes = this.getData();
@@ -40,7 +40,7 @@ class Treeview extends Component {
                 checked: cfgSources.find({active: true}).fetch().map(repo => repo.id),
             });
         }
-    }
+    };
 
     checkNode = async (checked) => {
         await cfgSources.update({}, { $set: { active: false } }, {multi: true});
@@ -66,7 +66,7 @@ class Treeview extends Component {
             };
         });
         return data;
-    }
+    };
 
     render() {
         const { classes } = this.props;
@@ -86,19 +86,9 @@ class Treeview extends Component {
 
 Treeview.propTypes = {
     classes: PropTypes.object,
+    repos: PropTypes.array,
 };
 
-/*
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(Treeview));
-*/
 export default withTracker(() => {return {repos: cfgSources.find({}).fetch()}})
 (
     withStyles(styles)(Treeview)

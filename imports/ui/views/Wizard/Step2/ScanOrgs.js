@@ -23,9 +23,6 @@ const styles = theme => ({
 class ScanOrgs extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     componentDidMount() {
@@ -52,7 +49,7 @@ class ScanOrgs extends Component {
     };
 
     render() {
-        const { classes, loading, loadError, loadSuccess, loadedOrgs, loadedRepos } = this.props;
+        const { classes, loading, loadSuccess, loadedOrgs, loadedRepos } = this.props;
         if (loading) {
             return (
                 <div className={classes.loading}>
@@ -84,11 +81,16 @@ class ScanOrgs extends Component {
 
 ScanOrgs.propTypes = {
     classes: PropTypes.object,
+    loading: PropTypes.bool,
+    loadSuccess: PropTypes.bool,
+    loadedOrgs: PropTypes.number,
+    loadedRepos: PropTypes.number,
+    setLoadFlag: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
 };
 
 const mapState = state => ({
     loading: state.githubFetchOrgs.loading,
-    loadError: state.githubFetchOrgs.loadError,
     loadSuccess: state.githubFetchOrgs.loadSuccess,
     loadedOrgs: state.githubFetchOrgs.loadedOrgs,
     loadedRepos: state.githubFetchOrgs.loadedRepos,

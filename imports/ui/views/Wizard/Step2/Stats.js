@@ -54,10 +54,10 @@ class Stats extends Component {
 
 Stats.propTypes = {
     classes: PropTypes.object,
+    repos: PropTypes.array,
 };
-
 
 export default withTracker(() => {return {repos: cfgSources.find({active: true}).fetch()}})
 (
     withStyles(styles)(Stats)
-)
+);

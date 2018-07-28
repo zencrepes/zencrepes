@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
 
 const styles = theme => ({
     root: {
@@ -11,9 +12,6 @@ const styles = theme => ({
 class Step4 extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     render() {
@@ -31,4 +29,10 @@ class Step4 extends Component {
         );
     }
 }
+
+Step4.propTypes = {
+    classes: PropTypes.object,
+};
+
+
 export default withStyles(styles)(Step4);

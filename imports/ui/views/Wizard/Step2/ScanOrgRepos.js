@@ -23,9 +23,6 @@ const styles = theme => ({
 class ScanOrgRepos extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -92,10 +89,18 @@ class ScanOrgRepos extends Component {
 
 ScanOrgRepos.propTypes = {
     classes: PropTypes.object,
+    loading: PropTypes.bool,
+    loadError: PropTypes.bool,
+    loadSuccess: PropTypes.bool,
+    availableRepos: PropTypes.number,
+    loadedRepos: PropTypes.number,
+    name: PropTypes.string,
+    setLoadFlag: PropTypes.func,
+    setName: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
 };
 
 const mapState = state => ({
-    loadFlag: state.githubFetchOrgRepos.loadFlag,
     loading: state.githubFetchOrgRepos.loading,
     loadError: state.githubFetchOrgRepos.loadError,
     loadSuccess: state.githubFetchOrgRepos.loadSuccess,

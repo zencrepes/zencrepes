@@ -32,9 +32,6 @@ const styles = theme => ({
 class Wizard extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     handleNext = () => {
@@ -110,13 +107,15 @@ class Wizard extends Component {
 
 Wizard.propTypes = {
     classes: PropTypes.object,
+    activeStep: PropTypes.number,
+    steps: PropTypes.array,
+    setActiveStep: PropTypes.func,
+    history: PropTypes.object,
 };
-
 
 const mapState = state => ({
     activeStep: state.wizard.activeStep,
     steps: state.wizard.steps,
-
 });
 
 const mapDispatch = dispatch => ({

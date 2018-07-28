@@ -34,10 +34,9 @@ window.store = store;
 
 Tracker.autorun(function () {
     if (Meteor.user()) {
-        // Do something
-        console.log(Meteor.user());
         let username = Meteor.user().services.github.username;
 
+        // Reload minimongo data from local storage
         const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos-' + username);
         localCfgSources.refresh(true, () => {store.dispatch.startup.setLoadedSources(true);});
 
@@ -54,13 +53,6 @@ Tracker.autorun(function () {
 
 
 Meteor.startup(() => {
-    // Reload minimongo data from local storage
-    /*
-    localCfgSources.refresh(true, () => {store.dispatch.startup.setLoadedSources(true);});
-    localCfgIssues.refresh(true, () => {store.dispatch.startup.setLoadedIssues(true);});
-    localCfgQueries.refresh(true, () => {store.dispatch.startup.setLoadedQueries(true);});
-    localCfgLabels.refresh(true, () => {store.dispatch.startup.setLoadedLabels(true);});
-    */
     render(
         <Provider store={store}>
             <App />

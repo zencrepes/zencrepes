@@ -8,6 +8,7 @@ import ItemGrid from '../../../components/Grid/ItemGrid.js';
 
 import Selects from './Selects.js';
 import LoadContent from './LoadContent.js';
+import PropTypes from "prop-types";
 
 const styles = theme => ({
     root: {
@@ -71,4 +72,9 @@ class Step3 extends Component {
         );
     }
 }
+
+Step3.propTypes = {
+    classes: PropTypes.object,
+};
+
 export default withStyles(styles)(Step3);

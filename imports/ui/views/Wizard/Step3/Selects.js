@@ -134,12 +134,4 @@ Selects.propTypes = {
     classes: PropTypes.object,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(Selects));
+export default withStyles(styles)(Selects);

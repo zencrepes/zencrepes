@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
@@ -26,9 +25,6 @@ const styles = theme => ({
 class Step2 extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     render() {

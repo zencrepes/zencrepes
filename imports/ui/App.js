@@ -51,8 +51,6 @@ class App extends Component {
 
     render() {
         const { props, state, setAfterLoginPath } = this;
-        console.log(props);
-
         const {loadedIssues, loadedSources, loadedLabels, loadedQueries} = this.props;
         if ((!loadedIssues || !loadedSources || !loadedLabels || !loadedQueries) && Meteor.user() !== null) {
             return (
