@@ -59,7 +59,7 @@ class FetchReposContent extends Component {
     };
 
     loadReposContent = async () => {
-        const { setLoading, incrementIssuesLoadedCountBuffer, setIssuesTotalCount, setLabelsTotalCount, incrementLabelsLoadedCountBuffer} = this.props;
+        const { setLoading, incrementIssuesLoadedCountBuffer, setIssuesTotalCount, setLabelsTotalCount, setLoadSuccess, incrementLabelsLoadedCountBuffer} = this.props;
         await setLoading(true);  // Set to true to indicate issues are actually loading.
         await cfgIssues.update({}, { $set: { active: false } }, {multi: true}); // Set all issues inactive, at the end of the process, all inactive issues will be deleted
 
@@ -107,7 +107,7 @@ class FetchReposContent extends Component {
                     let lastUpdateDate = '1990-12-12T00:00:00Z';
                     if (lastUpdatedIssue !== undefined) {
                         lastUpdateDate = lastUpdatedIssue.updatedAt;
-                        console.log('Will load issues more recent than: ' + lastUpdatedIssue.updatedAt);
+                        console.log('Will load issues updated more recently than: ' + lastUpdatedIssue.updatedAt);
                     }
                     await this.getIssuesPagination(null, queryIncrement, repo, lastUpdateDate);
 
@@ -127,7 +127,6 @@ class FetchReposContent extends Component {
                     console.log('Labels import: ' + repo.name + ' - Query increment: ' + queryIncrement);
                     await this.getLabelsPagination(null, queryIncrement, repo);
 
-
                 }
             }
         }
@@ -135,6 +134,7 @@ class FetchReposContent extends Component {
 
         await cfgIssues.remove({active: false});
         setLoading(false);  // Set to true to indicate issues are done loading.
+        setLoadSuccess(true);
     };
 
     getIssuesPagination = async (cursor, increment, RepoObj, lastUpdateDate) => {
@@ -151,7 +151,7 @@ class FetchReposContent extends Component {
             if (data.data.repository !== null) {
                 let lastCursor = await this.ingestIssues(data, RepoObj, lastUpdateDate);
                 let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
-                console.log('Loading issues for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+                console.log('Loading issues for repo:  ' + RepoObj.name + ' - Query Increment: ' + queryIncrement);
                 if (queryIncrement > 0 && lastCursor !== null) {
                     await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj, lastUpdateDate);
                 }
@@ -165,33 +165,33 @@ class FetchReposContent extends Component {
         console.log(data.data.repository);
 
         for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
-            console.log('Loading issue: ' + currentIssue.node.title);
-            let existNode = cfgIssues.findOne({id: currentIssue.node.id});
-
-            let nodePinned = false;
-            let nodePoints = null;
-            if (existNode !== undefined) {
-                nodePinned = existNode.pinned;
-                nodePoints = existNode.points;
-            }
-            let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
-            issueObj['repo'] = RepoObj;
-            issueObj['org'] = RepoObj.org;
-            issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
-            issueObj['refreshed'] = true;
-            issueObj['pinned'] = nodePinned;
-            issueObj['points'] = nodePoints;
-            issueObj['active'] = true;
-            await cfgIssues.upsert({
-                id: issueObj.id
-            }, {
-                $set: issueObj
-            });
-            this.props.incrementIssuesLoadedCount(1);
-            lastCursor = currentIssue.cursor;
-
-            if (new Date(currentIssue.node.updatedAt) < new Date(lastUpdateDate)) {
+            if (new Date(currentIssue.node.updatedAt) <= new Date(lastUpdateDate)) {
                 lastCursor = null;
+            } else {
+                console.log('Loading issue: ' + currentIssue.node.title);
+                let existNode = cfgIssues.findOne({id: currentIssue.node.id});
+
+                let nodePinned = false;
+                let nodePoints = null;
+                if (existNode !== undefined) {
+                    nodePinned = existNode.pinned;
+                    nodePoints = existNode.points;
+                }
+                let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
+                issueObj['repo'] = RepoObj;
+                issueObj['org'] = RepoObj.org;
+                issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
+                issueObj['refreshed'] = true;
+                issueObj['pinned'] = nodePinned;
+                issueObj['points'] = nodePoints;
+                issueObj['active'] = true;
+                await cfgIssues.upsert({
+                    id: issueObj.id
+                }, {
+                    $set: issueObj
+                });
+                this.props.incrementIssuesLoadedCount(1);
+                lastCursor = currentIssue.cursor;
             }
         }
         if (lastCursor === null) {
@@ -272,6 +272,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
     setLoading: dispatch.githubFetchReposContent.setLoading,
+    setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
 
     updateChip: dispatch.chip.updateChip,
 

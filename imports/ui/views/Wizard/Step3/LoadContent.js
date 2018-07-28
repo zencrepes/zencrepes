@@ -56,8 +56,8 @@ class LoadContent extends Component {
     };
 
     render() {
-        const { classes, issuesLoading, labelsLoading, loadError, loadSuccess, loadedOrgs, loadedRepos } = this.props;
-        if (issuesLoading || labelsLoading) {
+        const { classes, loading, loadError, loadSuccess, loadedOrgs, loadedRepos, issuesLoadedCount } = this.props;
+        if (loading) {
             return (
                 <div className={classes.loading}>
                     <ProgressBar />
@@ -79,7 +79,7 @@ class LoadContent extends Component {
                         ContentProps={{
                             'aria-describedby': 'message-id',
                         }}
-                        message={<span id="message-id">Found {loadedRepos} repositories amongst {loadedOrgs} GitHub organizations</span>}
+                        message={<span id="message-id">Loaded or updated {issuesLoadedCount} issues</span>}
                     />
                 </div>
             );
@@ -92,19 +92,20 @@ LoadContent.propTypes = {
 };
 
 const mapState = state => ({
-    issuesLoading: state.githubIssues.loading,
-    labelsLoading: state.githubLabels.loading,
-    loadError: state.githubFetchOrgs.loadError,
-    loadSuccess: state.githubFetchOrgs.loadSuccess,
-    loadedOrgs: state.githubFetchOrgs.loadedOrgs,
-    loadedRepos: state.githubFetchOrgs.loadedRepos,
+    loading: state.githubFetchReposContent.loading,
+    loadError: state.githubFetchReposContent.loadError,
+    loadSuccess: state.githubFetchReposContent.loadSuccess,
+
+    issuesLoadedCount: state.githubIssues.loadedCount,
+    labelsLoadedCount: state.githubLabels.loadedCount,
+
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
     setLoading: dispatch.githubFetchReposContent.setLoading,
 
-    setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
+    setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadContent));

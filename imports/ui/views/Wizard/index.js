@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -37,8 +38,14 @@ class Wizard extends Component {
     }
 
     handleNext = () => {
-        const { activeStep, setActiveStep } = this.props;
-        setActiveStep(activeStep + 1);
+        const { activeStep, setActiveStep, steps, history } = this.props;
+        if (activeStep === steps.length -1) { // User clicked on finish
+            setActiveStep(0);
+            history.push('/dashboard');
+        } else {
+            setActiveStep(activeStep + 1);
+        }
+
     };
 
     handleBack = () => {
@@ -116,4 +123,4 @@ const mapDispatch = dispatch => ({
     setActiveStep: dispatch.wizard.setActiveStep,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Wizard));
+export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Wizard)));

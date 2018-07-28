@@ -107,6 +107,7 @@ class Repos extends Component {
     };
 
     loadReposContent = async () => {
+        console.log('loadReposContent');
         const { setIssuesLoading, incrementIssuesLoadedCountBuffer, setLabelsLoading, setIssuesTotalCount, setLabelsTotalCount, incrementLabelsLoadedCountBuffer} = this.props;
         await setIssuesLoading(true);  // Set to true to indicate issues are actually loading.
         await setLabelsLoading(true);  // Set to true to indicate labels are actually loading.

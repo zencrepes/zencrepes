@@ -81,6 +81,7 @@ class Issues extends Component {
     }
 
     loadIssues = async () => {
+        console.log('Load Issues');
         const { setIssuesLoading, setLoadedOrgs, incrementLoadedRepos, loadIssues, issuesLoading, incrementLoadedIssuesBuffer} = this.props;
         setIssuesLoading(true);  // Set issuesLoading to true to indicate issues are actually loading.
 

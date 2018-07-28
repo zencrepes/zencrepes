@@ -1,6 +1,6 @@
 export default {
     state: {
-        steps: ['Welcome !', 'Import Repositories', 'Load Data', 'Be Agile !'],
+        steps: ['Welcome !', 'Configure Repositories', 'Load Data', 'Be Agile !'],
         activeStep: 0,
     },
     reducers: {

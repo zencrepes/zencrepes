@@ -25,10 +25,6 @@ class FetchOrgs extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-        console.log('FectchIssues - Initialized');
-    };
-
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
