@@ -13,8 +13,18 @@ const wizardViewStyle = {
         marginBottom: '10px',
     },
     wizardCard: {
-      padding: '20px',
-      height: '500px',
+        padding: '20px',
+        height: '500px',
+        display: 'grid',
+        gridTemplateRows: '1fr auto',
+    },
+    wizardCardContent: {
+        maxHeight: '350px',
+        overflow: 'auto',
+    },
+    wizardCardActions: {
+        gridRowStart: '2',
+        gridRowEnd: '3',
     },
     pageHeader: {
         minHeight: "100vh",

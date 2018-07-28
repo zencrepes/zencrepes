@@ -82,50 +82,39 @@ class Wizard extends Component {
                         <GridContainer justify="center">
                             <GridItem xs={12} sm={12} md={4}>
                                 <Card className={classes.wizardCard}>
-                                    <div className={classes.wizardStepper}>
-                                        <WizardStepper />
-                                    </div>
-                                    <CardActions>
-                                        {activeStep === steps.length ? (
-                                            <div>
-                                                <Typography className={classes.instructions}>
-                                                    All steps completed - you&quot;re finished
-                                                </Typography>
-                                                <Button onClick={this.handleReset} className={classes.button}>
-                                                    Reset
-                                                </Button>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <CardContent>
-                                                {{
-                                                    0: <Step1 />,
-                                                    1: <Step2 />,
-                                                    2: <Step3 />,
-                                                    3: <Step4 />,
-                                                }[activeStep]}
-                                                </CardContent>
-                                                <div>
-                                                    <Button
-                                                        disabled={activeStep === 0}
-                                                        onClick={this.handleBack}
-                                                        className={classes.button}
-                                                    >
-                                                        Back
-                                                    </Button>
-                                                    <Button
-                                                        variant="outlined"
-                                                        color="primary"
-                                                        onClick={this.handleNext}
-                                                        className={classes.button}
-                                                    >
-                                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        )}
+                                    <CardContent>
+                                        <div className={classes.wizardStepper}>
+                                            <WizardStepper />
+                                        </div>
+                                        <div className={classes.wizardCardContent}>
+                                            {{
+                                                0: <Step1 />,
+                                                1: <Step2 />,
+                                                2: <Step3 />,
+                                                3: <Step4 />,
+                                            }[activeStep]}
+                                        </div>
+                                    </CardContent>
+                                    <CardActions className={classes.wizardCardActions}>
+                                        <div>
+                                            <Button
+                                                disabled={activeStep === 0}
+                                                onClick={this.handleBack}
+                                                className={classes.button}
+                                            >
+                                                Back
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={this.handleNext}
+                                                className={classes.button}
+                                            >
+                                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                            </Button>
+                                        </div>
+                                        <GitRequests />
                                     </CardActions>
-                                    <GitRequests />
                                 </Card>
                             </GridItem>
                         </GridContainer>
