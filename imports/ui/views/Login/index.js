@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 // core components
 import Footer from "../../components/Footer/index.js";
@@ -17,6 +18,7 @@ import CardHeader from "../../components/Card/CardHeader.js";
 import CardFooter from "../../components/Card/CardFooter.js";
 
 import loginPageStyle from "../../assets/jss/material-kit-react/views/loginPage.jsx";
+import loginViewStyle from "../../assets/jss/thatapp/views/login.jsx";
 
 import GitHubLogin from './GitHubLogin.js';
 
@@ -28,7 +30,7 @@ class Login extends Component {
 
         // we use this to make the card to appear after the page has been rendered
         this.state = {
-            cardAnimaton: "cardHidden"
+            cardAnimation: "cardHidden"
         };
     }
 
@@ -36,7 +38,7 @@ class Login extends Component {
         // we add a hidden class to the card and after 700 ms we delete it and the transition appears
         setTimeout(
             function() {
-                this.setState({ cardAnimaton: "" });
+                this.setState({ cardAnimation: "" });
             }.bind(this),
             700
         );
@@ -58,20 +60,13 @@ class Login extends Component {
                     <div className={classes.container}>
                         <GridContainer justify="center">
                             <GridItem xs={12} sm={12} md={4}>
-                                <Card className={classes[this.state.cardAnimaton]}>
-                                    <form className={classes.form}>
-                                        <CardHeader color="primary" className={classes.cardHeader}>
-                                            <div className={classes.socialLine}>
-                                                <GitHubLogin />
-                                            </div>
-                                        </CardHeader>
-                                        <p className={classes.divider}>A project management tool over GitHub issues</p>
-                                        <CardFooter className={classes.cardFooter}>
-                                            <Button color="primary" className={classes.button}>
-                                                Learn more
-                                            </Button>
-                                        </CardFooter>
-                                    </form>
+                                <Card className={classes[this.state.cardAnimation]}>
+                                    <div className={classes.gitButton}>
+                                        <GitHubLogin />
+                                    </div>
+                                    <Typography className={classes.divider}>
+                                        Manage and cleanup projects across Github Organizations & Repositories
+                                    </Typography>
                                 </Card>
                             </GridItem>
                         </GridContainer>
@@ -82,4 +77,18 @@ class Login extends Component {
         );
     }
 }
-export default withStyles(loginPageStyle)(Login);
+export default withStyles(loginViewStyle)(Login);
+
+/*
+                                        <CardHeader color="primary" className={classes.cardHeader}>
+                                            <div className={classes.socialLine}>
+                                                <GitHubLogin />
+                                            </div>
+                                        </CardHeader>
+
+                                        <CardFooter className={classes.cardFooter}>
+                                            <Button color="primary" className={classes.button}>
+                                                Learn more
+                                            </Button>
+                                        </CardFooter>
+ */
