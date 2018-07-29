@@ -22,9 +22,6 @@ class Selects extends Component {
         this.state = {
             load_issues: true,
             load_labels: true,
-            load_milestones: false,
-            load_pullrequests: false,
-            load_releases: false,
         };
     }
 
@@ -83,45 +80,6 @@ class Selects extends Component {
                                 />
                             }
                             label="Labels"
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={this.state.load_milestones}
-                                    onChange={this.handleChange('load_milestones')}
-                                    value="load_milestones"
-                                    color="primary"
-                                />
-                            }
-                            label="Milestones (NOT IMPLEMENTED)"
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={this.state.load_pullrequests}
-                                    onChange={this.handleChange('load_pullrequests')}
-                                    value="load_pullrequests"
-                                    color="primary"
-                                />
-                            }
-                            label="Pull Requests (NOT IMPLEMENTED)"
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={this.state.load_releases}
-                                    onChange={this.handleChange('load_releases')}
-                                    value="load_releases"
-                                    color="primary"
-                                />
-                            }
-                            label="Releases (NOT IMPLEMENTED)"
                         />
                     </ListItem>
                 </List>

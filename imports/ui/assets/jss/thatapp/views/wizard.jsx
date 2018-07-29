@@ -19,12 +19,16 @@ const wizardViewStyle = {
         gridTemplateRows: '1fr auto',
     },
     wizardCardContent: {
-        maxHeight: '350px',
+        maxHeight: '320px',
         overflow: 'auto',
     },
     wizardCardActions: {
         gridRowStart: '2',
         gridRowEnd: '3',
+        display: 'inline',
+    },
+    actionButtons: {
+        textAlign: 'right',
     },
     pageHeader: {
         minHeight: "100vh",

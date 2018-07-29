@@ -8,15 +8,25 @@ import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Snackbar from '@material-ui/core/Snackbar';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 const styles = theme => ({
+    root: {
+        margin: '10px',
+    },
+    title: {
+        marginBottom: 16,
+        fontSize: 14,
+    },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-        width: 200,
+        width: '100%',
     },
     button: {
-        margin: theme.spacing.unit,
+        width: '150px',
     },
 });
 
@@ -48,42 +58,53 @@ class ScanOrgRepos extends Component {
 
     render() {
         const { classes, loading, loadError, loadSuccess, name, availableRepos, loadedRepos } = this.props;
-        if (loading) {
-            return (
-                <div className={classes.loading}>
-                    <LinearProgress />
-                    <Typography component="p">
-                        Fetching repositories from {name} ... {loadedRepos} / {availableRepos}
-                    </Typography>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <TextField
-                        id="orgName"
-                        error={loadError}
-                        label="GitHub Organization"
-                        className={classes.textField}
-                        value={name}
-                        helperText={loadError && "Unable to fetch data from organiation"}
-                        onChange={this.handleChange('name')}
-                        margin="normal"
-                    />
-                    <Button color="primary" className={classes.button} onClick={this.handleScanOrg}>
-                        Scan Org
-                    </Button>
-                    <Snackbar
-                        anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-                        open={loadSuccess}
-                        ContentProps={{
-                            'aria-describedby': 'message-id',
-                        }}
-                        message={<span id="message-id">Found {loadedRepos} repositories from {name}</span>}
-                    />
-                </div>
-            );
-        }
+
+        return (
+            <div className={classes.root}>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Typography className={classes.title} color="textSecondary">
+                            Load from an Organization
+                        </Typography>
+                        {loading ? (
+                            <div className={classes.loading}>
+                                <LinearProgress />
+                                <Typography component="p">
+                                    Fetching repositories from {name} ... {loadedRepos} / {availableRepos}
+                                </Typography>
+                            </div>
+                        ) : (
+                            <Typography component="p">
+                                Load all repositories attached to a particular GitHub organization.
+                            </Typography>
+                        )}
+                    </CardContent>
+                    <CardActions>
+                        <TextField
+                            id="orgName"
+                            error={loadError}
+                            label="GitHub Organization"
+                            className={classes.textField}
+                            value={name}
+                            helperText={loadError && "Unable to fetch data from organiation"}
+                            onChange={this.handleChange('name')}
+                            margin="normal"
+                        />
+                        <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanOrg}>
+                            Scan Org
+                        </Button>
+                    </CardActions>
+                </Card>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
+                    open={loadSuccess}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Found {loadedRepos} repositories from {name}</span>}
+                />
+            </div>
+        );
     }
 }
 

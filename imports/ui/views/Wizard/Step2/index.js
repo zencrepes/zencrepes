@@ -36,7 +36,6 @@ class Step2 extends Component {
                 <FetchRepo/>
                 <Grid container>
                     <ItemGrid xs={12} sm={6} md={6}>
-                        <h3>1/ Scan for available repositories</h3>
                         <ScanOrgs />
                         <ScanOrgRepos />
                         <ScanRepo />

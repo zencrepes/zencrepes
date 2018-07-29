@@ -27,7 +27,7 @@ function Footer({ ...props }) {
     return (
         <footer className={footerClasses}>
             <div className={classes.container}>
-                <i>This is a footer, contains Links, T&C</i>
+                <i>A footer, with links and so on.</i>
             </div>
         </footer>
     );

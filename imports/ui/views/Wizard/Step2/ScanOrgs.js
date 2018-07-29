@@ -9,15 +9,32 @@ import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Snackbar from '@material-ui/core/Snackbar';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 import { cfgSources } from "../../../data/Minimongo.js";
 
 const styles = theme => ({
     root: {
+        margin: '10px',
+    },
+    title: {
+        marginBottom: 16,
+        fontSize: 14,
     },
     loading: {
         flexGrow: 1,
     },
+    button: {
+        width: '150px',
+    },
+    cardActions: {
+        display: 'inline',
+    },
+    actionButtons: {
+        textAlign: 'right',
+    }
 });
 
 class ScanOrgs extends Component {
@@ -50,32 +67,44 @@ class ScanOrgs extends Component {
 
     render() {
         const { classes, loading, loadSuccess, loadedOrgs, loadedRepos } = this.props;
-        if (loading) {
-            return (
-                <div className={classes.loading}>
-                    <LinearProgress />
-                    <Typography component="p">
-                        Fetched {loadedOrgs} Organizations and {loadedRepos} Repositories from GitHub ...
-                    </Typography>
-                </div>
-            );
-        } else {
-            return (
-                <div className={classes.root}>
-                    <Button color="primary" className={classes.button} onClick={this.reloadRepos}>
-                        Scan All
-                    </Button>
-                    <Snackbar
-                        anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-                        open={loadSuccess}
-                        ContentProps={{
-                            'aria-describedby': 'message-id',
-                        }}
-                        message={<span id="message-id">Found {loadedRepos} repositories amongst {loadedOrgs} GitHub organizations</span>}
-                    />
-                </div>
-            );
-        }
+        return (
+            <div className={classes.root}>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Typography className={classes.title} color="textSecondary">
+                            Affiliated Repositories & Organizations
+                        </Typography>
+                        {loading ? (
+                            <div className={classes.loading}>
+                                <LinearProgress />
+                                <Typography component="p">
+                                    Fetched {loadedOrgs} Organizations and {loadedRepos} Repositories from GitHub ...
+                                </Typography>
+                            </div>
+                        ) : (
+                            <Typography component="p">
+                                Load all repositories for which you are either an owner, collaborator or organization member.
+                            </Typography>
+                        )}
+                    </CardContent>
+                    <CardActions className={classes.cardActions} >
+                        <div className={classes.actionButtons} >
+                            <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
+                                Load
+                            </Button>
+                        </div>
+                    </CardActions>
+                </Card>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
+                    open={loadSuccess}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Found {loadedRepos} repositories amongst {loadedOrgs} GitHub organizations</span>}
+                />
+            </div>
+        );
     }
 }
 

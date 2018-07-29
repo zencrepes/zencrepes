@@ -96,7 +96,7 @@ class Wizard extends Component {
                                         </div>
                                     </CardContent>
                                     <CardActions className={classes.wizardCardActions}>
-                                        <div>
+                                        <div className={classes.actionButtons}>
                                             <Button
                                                 disabled={activeStep === 0}
                                                 onClick={this.handleBack}
@@ -113,7 +113,9 @@ class Wizard extends Component {
                                                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                             </Button>
                                         </div>
-                                        <GitRequests />
+                                        <div>
+                                            <GitRequests />
+                                        </div>
                                     </CardActions>
                                 </Card>
                             </GridItem>
