@@ -47,7 +47,7 @@ class App extends Component {
 
     setAfterLoginPath(afterLoginPath) {
         this.setState({ afterLoginPath });
-    }
+    };
 
     render() {
         const { props, state, setAfterLoginPath } = this;

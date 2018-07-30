@@ -2,15 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
+import {cfgSources} from "../../data/Minimongo.js";
+import {cfgIssues} from "../../data/Minimongo.js";
+
 class Authenticated extends React.Component {
     componentWillMount() {
         this.props.setAfterLoginPath(`${window.location.pathname}${window.location.search}`);
     }
 
     render() {
-        const {
-            loggingIn, authenticated, component, path, exact, ...rest
-        } = this.props;
+        const {loggingIn, authenticated, component, path, exact, ...rest} = this.props;
+
+        let redirectWizard = false;
+        if ((cfgSources.find({}).count() === 0 || cfgIssues.find({}).count() === 0) && path !== '/wizard') {
+            redirectWizard = true;
+        }
 
         return (
             <Route
@@ -18,9 +24,15 @@ class Authenticated extends React.Component {
                 exact={exact}
                 render={props => (
                     authenticated ?
-                        (React.createElement(component, {
-                            ...props, ...rest, loggingIn, authenticated,
-                        })) :
+                        (
+                            redirectWizard ? (
+                                <Redirect to="/wizard" />
+                            ) : (
+                                React.createElement(component, {
+                                ...props, ...rest, loggingIn, authenticated,
+                                })
+                            )
+                        ) :
                         (<Redirect to="/login" />)
                 )}
             />
