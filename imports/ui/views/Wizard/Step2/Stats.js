@@ -11,6 +11,8 @@ import {cfgSources} from "../../../data/Minimongo.js";
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        paddingTop: '10px',
+        fontSize: '10px',
     },
 });
 
@@ -43,9 +45,7 @@ class Stats extends Component {
         return (
             <div className={classes.root}>
                 <Typography component="p">
-                    Selected: {this.getOrgs()} Orgs <br />
-                    Selected: {this.getRepos()} Repos <br />
-                    Will be loading: {this.getIssues()} Issues <br />
+                    Selected {this.getOrgs()} Orgs, {this.getRepos()} Repos, {this.getIssues()} Issues
                 </Typography>
             </div>
         );

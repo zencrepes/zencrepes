@@ -41,12 +41,9 @@ class Step2 extends Component {
                         <ScanRepo />
                     </ItemGrid>
                     <ItemGrid xs={12} sm={6} md={6}>
-                        <h3>2/ Select repositories</h3>
-                        <Stats />
                         <Treeview />
                     </ItemGrid>
                 </Grid>
-
             </div>
         );
     }

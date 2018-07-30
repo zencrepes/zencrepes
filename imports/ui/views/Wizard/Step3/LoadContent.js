@@ -12,9 +12,12 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import ProgressBar from '../../../components/Loading/Issues/ProgressBar.js';
 import ProgressText from '../../../components/Loading/Issues/ProgressText.js';
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
 const styles = theme => ({
     root: {
+        margin: '10px',
     },
     loading: {
         flexGrow: 1,
@@ -67,9 +70,13 @@ class LoadContent extends Component {
         } else {
             return (
                 <div className={classes.root}>
-                    <Button color="primary" className={classes.button} onClick={this.loadIssues}>
-                        BIG LOAD BUTTON
-                    </Button>
+                    <Card>
+                        <CardContent className={classes.cardContent} >
+                            <Button color="primary" variant="raised" className={classes.button} onClick={this.loadIssues}>
+                                BIG LOAD BUTTON
+                            </Button>
+                        </CardContent>
+                    </Card>
                     <Snackbar
                         anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
                         open={loadSuccess}

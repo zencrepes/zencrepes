@@ -14,12 +14,12 @@ const wizardViewStyle = {
     },
     wizardCard: {
         padding: '20px',
-        height: '500px',
+        height: '600px',
         display: 'grid',
         gridTemplateRows: '1fr auto',
     },
     wizardCardContent: {
-        maxHeight: '320px',
+        maxHeight: '420px',
         overflow: 'auto',
     },
     wizardCardActions: {

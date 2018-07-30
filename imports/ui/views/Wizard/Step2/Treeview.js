@@ -9,9 +9,27 @@ import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
 import { cfgSources } from "../../../data/Minimongo.js";
+import Card from "@material-ui/core/Card";
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from "@material-ui/core/CardContent";
+import Typography from '@material-ui/core/Typography';
+
+import Stats from './Stats.js';
 
 const styles = theme => ({
-
+    root: {
+        margin: '10px',
+    },
+    card: {
+        height: '380px',
+        overflow: 'auto',
+    },
+    title: {
+        fontSize: 14,
+    },
+    cardContent: {
+        paddingBottom: '0px',
+    },
 });
 
 class Treeview extends Component {
@@ -71,14 +89,22 @@ class Treeview extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div >
-                <CheckboxTree
-                    nodes={this.state.nodes}
-                    checked={this.state.checked}
-                    expanded={this.state.expanded}
-                    onCheck={this.checkNode}
-                    onExpand={expanded => this.setState({ expanded })}
-                />
+            <div className={classes.root}>
+                <Card className={classes.card}>
+                    <CardContent className={classes.cardContent} >
+                        <Typography className={classes.title} color="textSecondary">
+                            Available Organizations and Repositories
+                        </Typography>
+                        <CheckboxTree
+                            nodes={this.state.nodes}
+                            checked={this.state.checked}
+                            expanded={this.state.expanded}
+                            onCheck={this.checkNode}
+                            onExpand={expanded => this.setState({ expanded })}
+                        />
+                        <Stats/>
+                    </CardContent>
+                </Card>
             </div>
         );
     }

@@ -17,28 +17,11 @@ const styles = theme => ({
         margin: '10px',
     },
     title: {
-        marginBottom: 16,
         fontSize: 14,
     },
-
     cardActions: {
-        display: 'grid',
-        height: '100%',
-        gridTemplateColumns: 'auto 300px',
-        gridTemplateRows: ,
-        gridTemplateAreas: 'abc def',
-    },
-    boxtextfield: {
-        gridArea: 'abc',
-    },
-    textField: {
-        width: '100%',
-    },
-    boxbutton: {
-        gridArea: 'def',
-    },
-    button: {
-        width: '150px',
+        paddingTop: '0px',
+        display: 'inline',
     },
     cardContent: {
         paddingBottom: '0px',
@@ -46,7 +29,15 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'right',
     },
-
+    button: {
+        width: '120px',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        marginTop: '0px',
+        width: 100,
+    },
 });
 
 class ScanOrgRepos extends Component {
@@ -85,22 +76,18 @@ class ScanOrgRepos extends Component {
                         <Typography className={classes.title} color="textSecondary">
                             Load from a GitHub Organization
                         </Typography>
-                        {loading ? (
+                        {loading &&
                             <div className={classes.loading}>
-                                <LinearProgress />
+                                <LinearProgress/>
                                 <Typography component="p">
                                     Fetching repositories from {name} ... {loadedRepos} / {availableRepos}
                                 </Typography>
                             </div>
-                        ) : (
-                            <Typography component="p">
-                                Load all repositories attached to a particular GitHub organization.
-                            </Typography>
-                        )}
+                        }
                     </CardContent>
-                    <CardActions>
-                        <div className={classes.cardActions}>
-                            <div className={classes.boxtextfield}>
+                    {!loading &&
+                        <CardActions>
+                            <div className={classes.cardActions}>
                                 <TextField
                                     id="orgName"
                                     error={loadError}
@@ -111,14 +98,14 @@ class ScanOrgRepos extends Component {
                                     onChange={this.handleChange('name')}
                                     margin="normal"
                                 />
-                            </div>
-                            <div className={classes.boxbutton}>
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanOrg}>
+                                <Button color="primary" variant="raised" className={classes.button}
+                                        onClick={this.handleScanOrg}>
                                     Load Org
                                 </Button>
                             </div>
-                        </div>
-                    </CardActions>
+                        </CardActions>
+                    }
+
                 </Card>
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center'}}

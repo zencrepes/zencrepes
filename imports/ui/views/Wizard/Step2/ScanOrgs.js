@@ -20,14 +20,13 @@ const styles = theme => ({
         margin: '10px',
     },
     title: {
-        marginBottom: 16,
         fontSize: 14,
     },
     loading: {
         flexGrow: 1,
     },
     button: {
-        width: '150px',
+        width: '120px',
     },
     cardActions: {
         display: 'inline',
@@ -72,31 +71,29 @@ class ScanOrgs extends Component {
         const { classes, loading, loadSuccess, loadedOrgs, loadedRepos } = this.props;
         return (
             <div className={classes.root}>
-                <Card className={classes.card}>
+                <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Affiliated GitHub Repositories & Organizations
+                            Load affiliated GitHub Repositories & Organizations
                         </Typography>
-                        {loading ? (
+                        {loading &&
                             <div className={classes.loading}>
                                 <LinearProgress />
                                 <Typography component="p">
-                                    Fetched {loadedOrgs} Organizations and {loadedRepos} Repositories from GitHub ...
+                                    Fetched {loadedOrgs} Organizations and {loadedRepos} Repositories.
                                 </Typography>
                             </div>
-                        ) : (
-                            <Typography component="p">
-                                Load all repositories for which you are either an owner, collaborator or organization member.
-                            </Typography>
-                        )}
+                        }
                     </CardContent>
-                    <CardActions className={classes.cardActions} >
-                        <div className={classes.actionButtons} >
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
-                                Load All
-                            </Button>
-                        </div>
-                    </CardActions>
+                    {!loading &&
+                        <CardActions className={classes.cardActions} >
+                                <div className={classes.actionButtons} >
+                                    <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
+                                        Load All
+                                    </Button>
+                                </div>
+                        </CardActions>
+                    }
                 </Card>
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center'}}

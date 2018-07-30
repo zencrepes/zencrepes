@@ -13,13 +13,27 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 const styles = theme => ({
+    root: {
+        margin: '10px',
+    },
+    title: {
+        fontSize: 14,
+    },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-        width: 200,
+        marginTop: '0px',
+        width: 100,
+    },
+    cardActions: {
+        paddingTop: '0px',
+        display: 'inline',
     },
     button: {
-        margin: theme.spacing.unit,
+        width: '120px',
+    },
+    cardContent: {
+        paddingBottom: '0px',
     },
 });
 
@@ -59,51 +73,49 @@ class ScanRepo extends Component {
         const { classes, orgName, repoName, loading, loadError, loadSuccess } = this.props;
         return (
             <div className={classes.root}>
-                <Card className={classes.card}>
-                    <CardContent>
+                <Card>
+                    <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Individual Repository
+                            Load individual Repository
                         </Typography>
-                        {loading ? (
+                        {loading &&
                             <div className={classes.loading}>
                                 <LinearProgress />
                                 <Typography component="p">
                                     Fetching {repoName} Repository from {orgName} Organization ...
                                 </Typography>
                             </div>
-                        ) : (
-                            <Typography component="p">
-                                Load a particular repository by providing its Organization and Repo name.
-                            </Typography>
-                        )}
+                        }
                     </CardContent>
-                    <CardActions className={classes.cardActions} >
-                        <TextField
-                            id="orgName"
-                            label="GitHub Organization"
-                            error={loadError}
-                            helperText={loadError && "Error"}
-                            className={classes.textField}
-                            value={orgName}
-                            onChange={this.changeOrgName('name')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="repoName"
-                            label="Repository"
-                            error={loadError}
-                            className={classes.textField}
-                            helperText={loadError && "Unable to fetch data from Org or Repo"}
-                            value={repoName}
-                            onChange={this.changeRepoName('name')}
-                            margin="normal"
-                        />
-                        <div className={classes.actionButtons} >
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanRepo}>
-                                Load Repo
-                            </Button>
-                        </div>
-                    </CardActions>
+                    {!loading &&
+                        <CardActions >
+                            <div className={classes.cardActions}>
+                                <TextField
+                                    id="orgName"
+                                    label="Organization"
+                                    error={loadError}
+                                    helperText={loadError && "Error"}
+                                    className={classes.textField}
+                                    value={orgName}
+                                    onChange={this.changeOrgName('name')}
+                                    margin="normal"
+                                />
+                                <TextField
+                                    id="repoName"
+                                    label="Repository"
+                                    error={loadError}
+                                    className={classes.textField}
+                                    helperText={loadError && "Unable to fetch data from Org or Repo"}
+                                    value={repoName}
+                                    onChange={this.changeRepoName('name')}
+                                    margin="normal"
+                                />
+                                <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanRepo}>
+                                    Load Repo
+                                </Button>
+                            </div>
+                        </CardActions>
+                    }
                 </Card>
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
