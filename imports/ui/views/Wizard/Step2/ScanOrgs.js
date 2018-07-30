@@ -32,6 +32,9 @@ const styles = theme => ({
     cardActions: {
         display: 'inline',
     },
+    cardContent: {
+        paddingBottom: '0px',
+    },
     actionButtons: {
         textAlign: 'right',
     }
@@ -70,9 +73,9 @@ class ScanOrgs extends Component {
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
-                    <CardContent>
+                    <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Affiliated Repositories & Organizations
+                            Affiliated GitHub Repositories & Organizations
                         </Typography>
                         {loading ? (
                             <div className={classes.loading}>
@@ -90,7 +93,7 @@ class ScanOrgs extends Component {
                     <CardActions className={classes.cardActions} >
                         <div className={classes.actionButtons} >
                             <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
-                                Load
+                                Load All
                             </Button>
                         </div>
                     </CardActions>

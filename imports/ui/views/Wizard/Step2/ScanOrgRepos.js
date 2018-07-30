@@ -20,14 +20,33 @@ const styles = theme => ({
         marginBottom: 16,
         fontSize: 14,
     },
+
+    cardActions: {
+        display: 'grid',
+        height: '100%',
+        gridTemplateColumns: 'auto 300px',
+        gridTemplateRows: ,
+        gridTemplateAreas: 'abc def',
+    },
+    boxtextfield: {
+        gridArea: 'abc',
+    },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
         width: '100%',
+    },
+    boxbutton: {
+        gridArea: 'def',
     },
     button: {
         width: '150px',
     },
+    cardContent: {
+        paddingBottom: '0px',
+    },
+    actionButtons: {
+        textAlign: 'right',
+    },
+
 });
 
 class ScanOrgRepos extends Component {
@@ -62,9 +81,9 @@ class ScanOrgRepos extends Component {
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
-                    <CardContent>
+                    <CardContent className={classes.cardContent}>
                         <Typography className={classes.title} color="textSecondary">
-                            Load from an Organization
+                            Load from a GitHub Organization
                         </Typography>
                         {loading ? (
                             <div className={classes.loading}>
@@ -80,19 +99,25 @@ class ScanOrgRepos extends Component {
                         )}
                     </CardContent>
                     <CardActions>
-                        <TextField
-                            id="orgName"
-                            error={loadError}
-                            label="GitHub Organization"
-                            className={classes.textField}
-                            value={name}
-                            helperText={loadError && "Unable to fetch data from organiation"}
-                            onChange={this.handleChange('name')}
-                            margin="normal"
-                        />
-                        <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanOrg}>
-                            Scan Org
-                        </Button>
+                        <div className={classes.cardActions}>
+                            <div className={classes.boxtextfield}>
+                                <TextField
+                                    id="orgName"
+                                    error={loadError}
+                                    label="Organization"
+                                    className={classes.textField}
+                                    value={name}
+                                    helperText={loadError && "Unable to fetch data from organization"}
+                                    onChange={this.handleChange('name')}
+                                    margin="normal"
+                                />
+                            </div>
+                            <div className={classes.boxbutton}>
+                                <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanOrg}>
+                                    Load Org
+                                </Button>
+                            </div>
+                        </div>
                     </CardActions>
                 </Card>
                 <Snackbar
