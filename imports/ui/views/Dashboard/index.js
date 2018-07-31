@@ -26,7 +26,15 @@ import CardHeader from '../../components/Card/CardHeader.js';
 import CardIcon from '../../components/Card/CardIcon.js';
 import CardFooter from '../../components/Card/CardFooter.js';
 
+import GridItem from '../../components/Grid/GridItem.js';
+import GridContainer from '../../components/Grid/GridContainer.js';
+
 import RemainingPoints from './RemainingPoints/index.js';
+import VelocityDays from './VelocityDays/index.js';
+import VelocityWeeks from './VelocityWeeks/index.js';
+import DaysToCompletion from './DaysToCompletion/index.js';
+import TimeToCompletionAssignee from './TimeToCompletionAssignee/index.js';
+import RepartitionByAssignee from './RepartitionByAssignee/index.js';
 
 class Dashboard extends Component {
     constructor(props) {
@@ -63,9 +71,26 @@ class Dashboard extends Component {
                                 <SprintsSelect />
                                 <PointSwitch />
                             </Toolbar>
-
-                            <RemainingPoints/>
-
+                            <GridContainer>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <RemainingPoints/>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <VelocityDays/>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <VelocityWeeks/>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <DaysToCompletion/>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <TimeToCompletionAssignee/>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <RepartitionByAssignee/>
+                                </GridItem>
+                            </GridContainer>
                         </div>
                     </div>
                     <Footer />

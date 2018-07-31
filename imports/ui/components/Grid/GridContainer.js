@@ -1,38 +1,43 @@
-/*
-From: https://github.com/creativetimofficial/material-kit-react/blob/master/src/components/Grid/GridContainer.jsx
- */
-import React from "react";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import { connect } from "react-redux";
+import classNames from "classnames";
 import PropTypes from "prop-types";
 
-// @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 
 const style = {
     grid: {
-        marginRight: "-15px",
-        marginLeft: "-15px",
-        width: "auto"
+        margin: "0 -15px !important"
     }
 };
 
-function GridContainer({ ...props }) {
-    const { classes, children, className } = props;
-    return (
-        <Grid container className={classes.grid + " " + className}>
-            {children}
-        </Grid>
-    );
+
+class GridContainer extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const { classes, children, ...rest } = this.props;
+        return (
+            <Grid container {...rest} className={classes.grid}>
+                {children}
+            </Grid>
+        );
+    }
 }
 
-GridContainer.defaultProps = {
-    className: ""
-};
-
 GridContainer.propTypes = {
-    classes: PropTypes.object.isRequired,
-    children: PropTypes.node,
-    className: PropTypes.string
+    classes: PropTypes.object,
 };
 
-export default withStyles(style)(GridContainer);
+const mapState = state => ({
+
+});
+
+const mapDispatch = dispatch => ({
+
+});
+
+export default connect(mapState, mapDispatch)(withStyles(style)(GridContainer));

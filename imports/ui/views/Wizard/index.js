@@ -80,7 +80,7 @@ class Wizard extends Component {
                 >
                     <div className={classes.container}>
                         <GridContainer justify="center">
-                            <GridItem xs={12} sm={12} md={4}>
+                            <GridItem xs={12} sm={12} md={12}>
                                 <Card className={classes.wizardCard}>
                                     <CardContent>
                                         <div className={classes.wizardStepper}>

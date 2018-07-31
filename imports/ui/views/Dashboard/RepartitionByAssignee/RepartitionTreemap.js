@@ -15,11 +15,11 @@ import { ResponsiveTreeMap } from '@nivo/treemap'
 
 const styles = theme => ({
     root: {
-        height: '150px'
+        height: '200px'
     },
 });
 
-class ReposTreemap extends Component {
+class RepartitionTreemap extends Component {
     constructor(props) {
         super(props);
 
@@ -28,14 +28,16 @@ class ReposTreemap extends Component {
     }
 
     buildDataset() {
-        const {repos, defaultPoints} = this.props;
-        let metric = 'points';
-        if (!defaultPoints) {metric = 'count';}
+        const {repartition, defaultPoints} = this.props;
         let chartData = {
-            name: 'repositories'
+            name: 'assignees'
             , color: 'hsl(67, 70%, 50%)'
-            , children: repos.map((v) => {
-                return {name: v.name, count: v[metric]};
+            , children: repartition.filter(v => (v.login !== 'UNASSIGNED' && v.open !== undefined) ).map((v) => {
+                if (!defaultPoints) {
+                    return {name: v.login, count: v.open.issues.length};
+                } else {
+                    return {name: v.login, count: v.open.points};
+                }
             })
         };
         return chartData;
@@ -48,33 +50,59 @@ class ReposTreemap extends Component {
         const { filter, updateFromQuery } = this.props;
 
         let updatedQuery = {};
+        if (params.data.name !== 'UNASSIGNED') {
             //updatedQuery = {...filter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[params.value]}}}}};
-            //            {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
-
-        updatedQuery = {...filter, ...{
-            state: {
-                header: 'States',
-                group: 'state',
-                type: 'text',
-                nested: false,
-                in: ['OPEN'],
-                nullSelected: false
-            }
-            ,
-            'repo.name': {
-                header: 'Repositories',
-                group: 'repo.name',
-                type: 'text',
-                nested: false,
-                in: [params.data.name]
-            }
-        }};
+            updatedQuery = {...filter, ...{
+                state: {
+                    header: 'States',
+                    group: 'state',
+                    type: 'text',
+                    nested: false,
+                    in: ['OPEN'],
+                    nullSelected: false
+                }
+                ,
+                assignees: {
+                    header: 'Assignees',
+                    group: 'assignees',
+                    type: 'text',
+                    nested: 'login',
+                    nullName: 'UNASSIGNED',
+                    nullFilter: {'assignees.totalCount': {'$eq': 0}},
+                    in: [params.data.name],
+                    nullSelected: false
+                }
+            }};
+        } else {
+            updatedQuery = {...filter, ...{
+                state: {
+                    header: 'States',
+                    group: 'state',
+                    type: 'text',
+                    nested: false,
+                    in: ['OPEN'],
+                    nullSelected: false
+                }
+                ,
+                assignees: {
+                    header: 'Assignees',
+                    group: 'assignees',
+                    type: 'text',
+                    nested: 'login',
+                    nullName: 'UNASSIGNED',
+                    nullFilter: {'assignees.totalCount': {'$eq': 0}},
+                    in: ['UNASSIGNED'],
+                    nullSelected: false
+                }
+            }};
+        }
         updateFromQuery(updatedQuery, this.props.history);
     };
 
 
     render() {
         const { classes } = this.props;
+
         return (
             <div className={classes.root}>
                 <ResponsiveTreeMap
@@ -90,9 +118,8 @@ class ReposTreemap extends Component {
                         "bottom": 0,
                         "left": 0
                     }}
-                    //label="name"
-                    label={(e) => _.truncate(e.name, {length: 15, omission: '...'})}
-                    labelFormat=''
+                    label="name"
+                    labelFormat=""
                     labelSkipSize={40}
                     labelTextColor="inherit:darker(1.2)"
                     colors="d320"
@@ -108,7 +135,7 @@ class ReposTreemap extends Component {
     }
 }
 
-ReposTreemap.propTypes = {
+RepartitionTreemap.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -118,9 +145,9 @@ const mapDispatch = dispatch => ({
 
 
 const mapState = state => ({
-    repos: state.remaining.repos,
-    filter: state.remaining.filter,
-    defaultPoints: state.remaining.defaultPoints,
+    repartition: state.repartition.repartition,
+    filter: state.repartition.filter,
+    defaultPoints: state.repartition.defaultPoints,
 });
 
 
@@ -129,7 +156,7 @@ export default
     (
             withRouter
             (
-                withStyles(styles)(ReposTreemap)
+                withStyles(styles)(RepartitionTreemap)
             )
     );
 
