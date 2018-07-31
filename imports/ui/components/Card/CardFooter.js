@@ -1,30 +1,60 @@
-/*
-From: https://github.com/creativetimofficial/material-kit-react/blob/master/src/components/Card/CardFooter.jsx
- */
-import React from "react";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import { connect } from "react-redux";
 import classNames from "classnames";
+
+import cardFooterStyle from "../../assets/jss/material-dashboard-react/components/cardFooterStyle.jsx";
+
 import PropTypes from "prop-types";
-import withStyles from "@material-ui/core/styles/withStyles";
 
-// core components
-import cardFooterStyle from "../../assets/jss/material-kit-react/components/cardFooterStyle.jsx";
+class CardFooter extends Component {
+    constructor(props) {
+        super(props);
+    }
 
-function CardFooter({ ...props }) {
-    const { classes, className, children, ...rest } = props;
-    const cardFooterClasses = classNames({
-        [classes.cardFooter]: true,
-        [className]: className !== undefined
-    });
-    return (
-        <div className={cardFooterClasses} {...rest}>
-            {children}
-        </div>
-    );
+    render() {
+        const {
+            classes,
+            className,
+            children,
+            plain,
+            profile,
+            stats,
+            chart,
+            ...rest
+        } = this.props;
+        const cardFooterClasses = classNames({
+            [classes.cardFooter]: true,
+            [classes.cardFooterPlain]: plain,
+            [classes.cardFooterProfile]: profile,
+            [classes.cardFooterStats]: stats,
+            [classes.cardFooterChart]: chart,
+            [className]: className !== undefined
+        });
+
+        return (
+            <div className={cardFooterClasses} {...rest}>
+                {children}
+            </div>
+        );
+    }
 }
 
 CardFooter.propTypes = {
     classes: PropTypes.object.isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
+    plain: PropTypes.bool,
+    profile: PropTypes.bool,
+    stats: PropTypes.bool,
+    chart: PropTypes.bool
 };
 
-export default withStyles(cardFooterStyle)(CardFooter);
+const mapState = state => ({
+
+});
+
+const mapDispatch = dispatch => ({
+
+});
+
+export default connect(mapState, mapDispatch)(withStyles(cardFooterStyle)(CardFooter));

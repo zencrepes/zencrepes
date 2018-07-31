@@ -31,7 +31,7 @@ class Sidebar extends Component {
             {path: '/velocity', icon: (<ChartLine />), text: 'Velocity', key: 'velocity'},
             {path: '/labels', icon: (<Label />), text: 'Labels', key: 'labels'},
             {path: '/settings', icon: (<Settings />), text: 'Settings', key: 'settings'},
-            {path: '/wizard', icon: (<Settings />), text: 'Wizard', key: 'wizard'},
+            {path: '/wizard', icon: (<Settings />), text: 'Setup Wizard', key: 'wizard'},
         ];
         const links = (
             <List className={classes.list}>

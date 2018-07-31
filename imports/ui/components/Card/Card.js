@@ -1,34 +1,58 @@
-/*
-From: https://github.com/creativetimofficial/material-kit-react/blob/master/src/components/Card/Card.jsx
- */
-import React from "react";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import { connect } from "react-redux";
 import classNames from "classnames";
+
+import cardStyle from "../../assets/jss/material-dashboard-react/components/cardStyle.jsx";
+
 import PropTypes from "prop-types";
-import withStyles from "@material-ui/core/styles/withStyles";
 
-// core components
-import cardStyle from "../../assets/jss/material-kit-react/components/cardStyle.jsx";
+class Card extends Component {
+    constructor(props) {
+        super(props);
+    }
 
-function Card({ ...props }) {
-    const { classes, className, children, plain, carousel } = props;
-    const cardClasses = classNames({
-        [classes.card]: true,
-        [classes.cardPlain]: plain,
-        [classes.cardCarousel]: carousel,
-        [className]: className !== undefined
-    });
-    return (
-        <div className={cardClasses} >
-            {children}
-        </div>
-    );
+    render() {
+        const {
+            classes,
+            className,
+            children,
+            plain,
+            profile,
+            chart,
+            ...rest
+        } = this.props;
+
+        const cardClasses = classNames({
+            [classes.card]: true,
+            [classes.cardPlain]: plain,
+            [classes.cardProfile]: profile,
+            [classes.cardChart]: chart,
+            [className]: className !== undefined
+        });
+
+        return (
+            <div className={cardClasses} {...rest}>
+                {children}
+            </div>
+        );
+    }
 }
 
 Card.propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.object,
     className: PropTypes.string,
     plain: PropTypes.bool,
-    carousel: PropTypes.bool
+    profile: PropTypes.bool,
+    chart: PropTypes.bool
 };
 
-export default withStyles(cardStyle)(Card);
+const mapState = state => ({
+
+});
+
+const mapDispatch = dispatch => ({
+
+});
+
+export default connect(mapState, mapDispatch)(withStyles(cardStyle)(Card));

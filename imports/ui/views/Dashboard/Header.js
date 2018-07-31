@@ -6,8 +6,6 @@ import { withRouter } from 'react-router-dom';
 import headerStyle from "../../assets/jss/material-dashboard-react/components/headerStyle.jsx";
 
 import UserMenu from '../../components/AppMenu/UserMenu.js';
-import QuerySelect from '../../components/Query/Select/index.js';
-import SprintsSelect from '../../components/Sprints/Select/index.js';
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,8 +14,6 @@ import Hidden from "@material-ui/core/Hidden";
 import Menu from "@material-ui/icons/Menu";
 
 import PropTypes from "prop-types";
-
-import PointsSwitch from './PointsSwitch.js';
 
 class Header extends Component {
     constructor(props) {
@@ -36,9 +32,6 @@ class Header extends Component {
                     </div>
                     <Hidden smDown implementation="css">
                         <div style={{ display: "flex" }} >
-                            <QuerySelect />
-                            <SprintsSelect />
-                            <PointsSwitch />
                             <UserMenu />
                         </div>
                     </Hidden>
