@@ -16,7 +16,6 @@ import { GithubCircle, Logout } from 'mdi-material-ui'
 
 import GET_USER_DATA from '../../../graphql/getUser.graphql';
 
-
 const styles = {
     root: {
         flexGrow: 1,
