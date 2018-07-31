@@ -54,6 +54,7 @@ export default {
     state: {
         loadFlag: false,
         loading: false,
+        initFlag: false, // Flag to check if the state was initialized at least once
         filters: {},
         repartition: [],
         defaultPoints: true,
@@ -62,6 +63,7 @@ export default {
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+        setInitFlag(state, payload) {return { ...state, initFlag: payload };},
         setFilters(state, payload) {return { ...state, filters: payload };},
         setRepartition(state, payload) {return { ...state, repartition: payload };},
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
@@ -121,6 +123,7 @@ export default {
 
             this.setRepartition(assignees);
             this.setLoading(false);
+            this.setInitFlag(true);
         }
     }
 };

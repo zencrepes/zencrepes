@@ -7,6 +7,7 @@ export default {
     state: {
         loadFlag: false,    // Flag to indicate the data should be reloaded
         loading: false,     // Data is currently loading
+        initFlag: false, // Flag to check if the state was initialized at least once
         velocity: {},
         filters: {},
         defaultPoints: true,
@@ -14,6 +15,7 @@ export default {
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+        setInitFlag(state, payload) {return { ...state, initFlag: payload };},
         setVelocity(state, payload) {return { ...state, velocity: payload };},
         setFilters(state, payload) {return { ...state, filters: payload };},
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
@@ -57,6 +59,7 @@ export default {
 
             this.setVelocity(dataObject);
             this.setLoading(false);
+            this.setInitFlag(true);
         }
     }
 };

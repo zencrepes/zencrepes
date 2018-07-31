@@ -9,9 +9,9 @@ import { connect } from "react-redux";
   - filters: Source filters to be applied to the redux store
   - setFilters: dispatch function to send the filter to
  */
-const loadReduxData = (newFilters, oldFilters, setFilters, loading, initStates) => {
+const loadReduxData = (newFilters, oldFilters, setFilters, loading, initStates, initFlag) => {
     if (loading === false) {
-        if (!_.isEqual(newFilters, oldFilters)) {
+        if (!_.isEqual(newFilters, oldFilters) || initFlag === false) {
             setFilters(newFilters);
             initStates();
         }
@@ -25,9 +25,12 @@ class DataLoader extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.loadVelocity();
-        this.loadRepartition();
-        this.loadRemaining();
+        const { queryFilters } = this.props;
+        if (!_.isEqual(prevProps.queryFilters, queryFilters)) {
+            this.loadVelocity();
+            this.loadRepartition();
+            this.loadRemaining();
+        }
     }
 
     componentDidMount() {
@@ -37,18 +40,18 @@ class DataLoader extends Component {
     }
 
     loadVelocity() {
-        const { queryFilters, velocityFilters, velocityLoading, velocityInitStates, velocitySetFilters} = this.props;
-        loadReduxData(queryFilters, velocityFilters, velocitySetFilters, velocityLoading, velocityInitStates);
+        const { queryFilters, velocityFilters, velocityLoading, velocityInitStates, velocitySetFilters, velocityInitFlag} = this.props;
+        loadReduxData(queryFilters, velocityFilters, velocitySetFilters, velocityLoading, velocityInitStates, velocityInitFlag);
     }
 
     loadRepartition() {
-        const { queryFilters, repartitionFilters, repartitionLoading, repartitionInitStates, repartitionSetFilters} = this.props;
-        loadReduxData(queryFilters, repartitionFilters, repartitionSetFilters, repartitionLoading, repartitionInitStates);
+        const { queryFilters, repartitionFilters, repartitionLoading, repartitionInitStates, repartitionSetFilters, repartitionInitFlag} = this.props;
+        loadReduxData(queryFilters, repartitionFilters, repartitionSetFilters, repartitionLoading, repartitionInitStates, repartitionInitFlag);
     }
 
     loadRemaining() {
-        const { queryFilters, remainingFilters, remainingLoading, remainingInitStates, remainingSetFilters} = this.props;
-        loadReduxData(queryFilters, remainingFilters, remainingSetFilters, remainingLoading, remainingInitStates);
+        const { queryFilters, remainingFilters, remainingLoading, remainingInitStates, remainingSetFilters, remainingInitFlag} = this.props;
+        loadReduxData(queryFilters, remainingFilters, remainingSetFilters, remainingLoading, remainingInitStates, remainingInitFlag);
     }
 
     render() {
@@ -64,12 +67,15 @@ const mapState = state => ({
     queryFilters: state.queries.filters,
 
     velocityLoading: state.velocity.loading,
+    velocityInitFlag: state.velocity.initFlag,
     velocityFilters: state.velocity.filters,
 
     repartitionLoading: state.repartition.loading,
+    repartitionInitFlag: state.repartition.initFlag,
     repartitionFilters: state.repartition.filters,
 
     remainingLoading: state.remaining.loading,
+    remainingInitFlag: state.remaining.initFlag,
     remainingFilters: state.remaining.filters,
 });
 

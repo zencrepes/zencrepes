@@ -13,7 +13,7 @@ import {ContentCopy, DateRange} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
 import Typography from "@material-ui/core/Typography";
-import ReposTreemap from "../../../components/Cards/RemainingPoints/ReposTreemap";
+import ReposTreemap from "./ReposTreemap";
 
 class RemainingPoints extends Component {
     constructor(props) {

@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 import statsCardStyle from './statsCardStyle.jsx';
 
-import ReposTreemap from './ReposTreemap.js';
+import ReposTreemap from '../../../views/Dashboard/RemainingPoints/ReposTreemap.js';
 
 class RemainingPoints extends Component {
     constructor (props) {

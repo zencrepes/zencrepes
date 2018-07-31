@@ -29,6 +29,7 @@ export default {
     state: {
         loadFlag: false,
         loading: false,
+        initFlag: false, // Flag to check if the state was initialized at least once
         filters: {},
         count: 0,
         points: 0,
@@ -38,6 +39,7 @@ export default {
     reducers: {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+        setInitFlag(state, payload) {return { ...state, initFlag: payload };},
         setFilters(state, payload) {return { ...state, filters: payload };},
         setCount(state, payload) {return { ...state, count: payload };},
         setPoints(state, payload) {return { ...state, points: payload };},
@@ -75,6 +77,7 @@ export default {
             this.setPoints(repos.map(r => r.points).reduce((acc, points) => acc + points, 0));
 
             this.setLoading(false);
+            this.setInitFlag(true);
         }
     }
 };
