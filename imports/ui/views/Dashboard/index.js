@@ -14,6 +14,7 @@ import DataLoader from './DataLoader.js';
 import PropTypes from "prop-types";
 
 import Toolbar from '@material-ui/core/Grid';
+import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import {ContentCopy, DateRange, LocalOffer, Store, Update, Warning} from "@material-ui/icons";
 
@@ -66,11 +67,13 @@ class Dashboard extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <DataLoader/>
-                            <Toolbar className={classes.container}>
-                                <QuerySelect />
-                                <SprintsSelect />
-                                <PointSwitch />
-                            </Toolbar>
+                            <AppBar position="static" color="default">
+                                <Toolbar className={classes.container}>
+                                    <QuerySelect />
+                                    <SprintsSelect />
+                                    <PointSwitch />
+                                </Toolbar>
+                            </AppBar>
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={3}>
                                     <RemainingPoints/>

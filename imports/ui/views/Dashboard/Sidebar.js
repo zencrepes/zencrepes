@@ -61,7 +61,7 @@ class Sidebar extends Component {
 
         var brand = (
             <div className={classes.logo}>
-                <a href="https://www.creative-tim.com" className={classes.logoLink}>
+                <a href="https://github.com/Fgerthoffert/github-agile-view" className={classes.logoLink}>
                     <div className={classes.logoImage}>
                         <img src="/react.png" />
                     </div>

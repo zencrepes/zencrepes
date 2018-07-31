@@ -12,13 +12,13 @@ import { cfgQueries } from '../../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {
-        width: '100%',
+        //width: '100%',
         overflowX: 'auto',
     },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-        width: 400,
+        width: 200,
     },
     menu: {
         width: '100%',

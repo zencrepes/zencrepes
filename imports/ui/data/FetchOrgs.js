@@ -76,7 +76,7 @@ class FetchOrgs extends Component {
             query: GET_GITHUB_ORGS,
             variables: {repo_cursor: cursor, increment: increment},
             fetchPolicy: 'no-cache',
-            errorPolicy: 'ignore,'
+            errorPolicy: 'ignore',
         });
         console.log(data);
         updateChip(data.data.rateLimit);

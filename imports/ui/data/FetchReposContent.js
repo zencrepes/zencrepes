@@ -110,6 +110,7 @@ class FetchReposContent extends Component {
                         console.log('Will load issues updated more recently than: ' + lastUpdatedIssue.updatedAt);
                     }
                     await this.getIssuesPagination(null, queryIncrement, repo, lastUpdateDate);
+                    await cfgIssues.update({'repo.id': repo.id}, {$set: {'active': true}});
 
                 }
                 if (repo.labels.totalCount > 0 && this.loadLabels) {
@@ -144,6 +145,7 @@ class FetchReposContent extends Component {
                 query: GET_GITHUB_ISSUES,
                 variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
                 fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
             });
             console.log(data);
             console.log(RepoObj);
@@ -212,6 +214,7 @@ class FetchReposContent extends Component {
                     repo_name: RepoObj.name
                 },
                 fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
             });
             this.props.updateChip(data.data.rateLimit);
             console.log(data);
