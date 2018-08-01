@@ -15,11 +15,13 @@ import {cfgIssues} from '../../data/Minimongo.js';
 
 const styles = theme => ({
     root: {
+        /*
         flexGrow: 1,
         zIndex: 1,
         overflow: 'hidden',
         position: 'relative',
         display: 'flex',
+        */
     },
     progress: {
         margin: 10,
@@ -78,22 +80,18 @@ class Facets extends Component {
             console.log('Facets - re-rendering facets');
             return (
                 <div className={classes.root}>
-                    <Card className={classes.card}>
-                        <CardContent>
-                            {facets.map(facet => {
-                                switch (facet.type) {
-                                    case 'text' :
-                                        return ( <TermFacet facet={facet} key={facet.header}/>);
-                                    case 'textCount':
-                                        return ( <TermFacet facet={facet} key={facet.header}/>);
-                                    case 'range':
-                                        return ( <RangeFacet facet={facet} key={facet.header}/>);
-                                    case 'bool':
-                                        return ( <BoolFacet facet={facet} key={facet.header}/>);
-                                }
-                            })}
-                        </CardContent>
-                    </Card>
+                    {facets.map(facet => {
+                        switch (facet.type) {
+                            case 'text' :
+                                return ( <TermFacet facet={facet} key={facet.header}/>);
+                            case 'textCount':
+                                return ( <TermFacet facet={facet} key={facet.header}/>);
+                            case 'range':
+                                return ( <RangeFacet facet={facet} key={facet.header}/>);
+                            case 'bool':
+                                return ( <BoolFacet facet={facet} key={facet.header}/>);
+                        }
+                    })}
                 </div>
             );
         }

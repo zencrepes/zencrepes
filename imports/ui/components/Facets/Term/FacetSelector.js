@@ -12,6 +12,20 @@ import { withStyles } from 'material-ui/styles';
 const styles = theme => ({
     root: {
 
+    },
+    listItem: {
+        padding: '0px',
+        height: '20px',
+    },
+    listItemText: {
+        padding: '0px',
+    },
+    chip: {
+        height: '18px',
+    },
+    checkbox: {
+        height: '18px',
+        width: '25px',
     }
 });
 
@@ -58,8 +72,9 @@ class FacetSelector extends React.Component {
                     checked={selected}
                     tabIndex={-1}
                     disableRipple
+                    className={classes.checkbox}
                 />
-                <ListItemText primary={data.name} />
+                <ListItemText primary={data.name} className={classes.listItemText} />
                 <ListItemSecondaryAction>
                     <Chip label={data.count} className={classes.chip} />
                 </ListItemSecondaryAction>

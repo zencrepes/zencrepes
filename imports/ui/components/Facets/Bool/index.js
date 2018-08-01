@@ -10,12 +10,29 @@ import Button from '@material-ui/core/Button';
 import FacetTitle from '../FacetTitle.js';
 
 import _ from 'lodash';
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 
 //import {cfgIssues} from "../../../data/Issues.js";
 
 
 const styles = theme => ({
     root: {
+        marginBottom: '10px',
+    },
+    card: {
+        padding: '0px',
+    },
+    cardContent: {
+        padding: '0px',
+    },
+    cardHeader: {
+        padding: '5px',
+    },
+    button: {
+        width: '60px',
+        padding: '5px',
 
     }
 });
@@ -93,10 +110,14 @@ class BoolFacet extends Component {
         let anyContent = this.getAny(currentFilters, facet);
         return (
             <div className={classes.root}>
-                <FacetTitle title={facet.header} />
-                <Button variant={yesContent.variant} color={yesContent.color} onClick={() => this.updateBool(yesContent)} className={classes.button}>{yesContent.text}</Button>
-                <Button variant={noContent.variant} color={noContent.color} onClick={() => this.updateBool(noContent)} className={classes.button}>{noContent.text}</Button>
-                <Button variant={anyContent.variant} color={anyContent.color} onClick={() => this.updateBool(anyContent)} className={classes.button}>{anyContent.text}</Button>
+                <Card className={classes.card}>
+                    <CardHeader title={facet.header} className={classes.cardHeader} />
+                    <CardContent className={classes.cardContent}>
+                        <Button variant={yesContent.variant} color={yesContent.color} onClick={() => this.updateBool(yesContent)} className={classes.button}>{yesContent.text}</Button>
+                        <Button variant={noContent.variant} color={noContent.color} onClick={() => this.updateBool(noContent)} className={classes.button}>{noContent.text}</Button>
+                        <Button variant={anyContent.variant} color={anyContent.color} onClick={() => this.updateBool(anyContent)} className={classes.button}>{anyContent.text}</Button>
+                    </CardContent>
+                </Card>
             </div>
         );
     }

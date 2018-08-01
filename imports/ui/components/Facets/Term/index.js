@@ -10,9 +10,23 @@ import List from 'material-ui/List';
 import FacetTitle from '../FacetTitle.js';
 import FacetSelector from './FacetSelector.js';
 
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+
 const styles = theme => ({
     root: {
-
+        marginBottom: '10px',
+    },
+    card: {
+        padding: '0px',
+    },
+    cardContent: {
+        padding: '0px',
+    },
+    cardHeader: {
+        padding: '5px',
     }
 });
 
@@ -66,17 +80,23 @@ class TermFacet extends Component {
 
         return (
             <div className={classes.root}>
-                <FacetTitle title={header} />
-                <List dense={this.state.dense}>
-                    {facetsData.map(value => (
-                        <FacetSelector
-                            data={value}
-                            key={value.name}
-                            selected={valueChecked.in.map((v) => {return v}).indexOf(value.name) !== -1}
-                        />
-                    ))}
-                </List>
-                <ExpandButton collapsed={collapsed} length={data.length} classes={classes} onClick={this.collapseFacet}/>
+                <Card className={classes.card}>
+                    <CardHeader title={header} className={classes.cardHeader} />
+                    <CardContent className={classes.cardContent}>
+                        <List dense={this.state.dense}>
+                            {facetsData.map(value => (
+                                <FacetSelector
+                                    data={value}
+                                    key={value.name}
+                                    selected={valueChecked.in.map((v) => {return v}).indexOf(value.name) !== -1}
+                                />
+                            ))}
+                        </List>
+                    </CardContent>
+                    <CardActions>
+                        <ExpandButton collapsed={collapsed} length={data.length} classes={classes} onClick={this.collapseFacet}/>
+                    </CardActions>
+                </Card>
             </div>
         );
     }
