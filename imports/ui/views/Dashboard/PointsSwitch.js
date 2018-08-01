@@ -8,7 +8,7 @@ import Switch from '@material-ui/core/Switch';
 
 const styles = theme => ({
     root: {
-
+        textAlign: 'right'
     },
 });
 class PointsSwitch extends Component {
@@ -28,7 +28,7 @@ class PointsSwitch extends Component {
         const { classes, defaultPoints } = this.props;
 
         return (
-            <div>
+            <div className={classes.root}>
                 Issues
                 <Switch
                     checked={defaultPoints}

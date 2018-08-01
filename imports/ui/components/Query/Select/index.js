@@ -14,11 +14,10 @@ const styles = theme => ({
     root: {
         //width: '100%',
         overflowX: 'auto',
+        maxWidth: '200px'
     },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
+        width: '100%',
     },
     menu: {
         width: '100%',

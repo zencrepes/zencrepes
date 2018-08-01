@@ -13,19 +13,11 @@ import DataLoader from './DataLoader.js';
 
 import PropTypes from "prop-types";
 
-import Toolbar from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
-import Grid from '@material-ui/core/Grid';
-import {ContentCopy, DateRange, LocalOffer, Store, Update, Warning} from "@material-ui/icons";
 
 import QuerySelect from "../../components/Query/Select";
 import SprintsSelect from "../../components/Sprints/Select";
-import PointSwitch from "../../pages/dashboard/PointsSwitch";
-
-import Card from '../../components/Card/Card.js';
-import CardHeader from '../../components/Card/CardHeader.js';
-import CardIcon from '../../components/Card/CardIcon.js';
-import CardFooter from '../../components/Card/CardFooter.js';
+import PointSwitch from "./PointsSwitch";
 
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
@@ -67,14 +59,14 @@ class Dashboard extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <DataLoader/>
-                            <AppBar position="static" color="default">
-                                <Toolbar className={classes.container}>
-                                    <QuerySelect />
-                                    <SprintsSelect />
-                                    <PointSwitch />
-                                </Toolbar>
-                            </AppBar>
                             <GridContainer>
+                                <GridItem xs={12} sm={12} md={12}>
+                                    <div className={classes.appBar}>
+                                        <QuerySelect />
+                                        <SprintsSelect />
+                                        <PointSwitch />
+                                    </div>
+                                </GridItem>
                                 <GridItem xs={12} sm={6} md={3}>
                                     <RemainingPoints/>
                                 </GridItem>

@@ -27,6 +27,13 @@ const appStyle = theme => ({
         padding: "30px 15px",
         minHeight: "calc(100vh - 123px)"
     },
+    appBar: {
+        display: 'grid',
+        height: '100%',
+        gridTemplateColumns: '1fr 1fr 1fr',
+        gridTemplateRows: '1fr',
+        gridTemplateAreas: ". . .",
+    },
     container,
     map: {
         marginTop: "70px"
