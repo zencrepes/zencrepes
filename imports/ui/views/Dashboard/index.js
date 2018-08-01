@@ -5,9 +5,9 @@ import { withRouter } from 'react-router-dom';
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
-import Sidebar from './Sidebar.js';
-import Footer from './Footer.js';
-import Header from './Header.js';
+import Sidebar from '../../components/Sidebar/index.js';
+import Footer from '../../components/Footer/Footer.js';
+import Header from '../../components/Header/index.js';
 
 import DataLoader from './DataLoader.js';
 

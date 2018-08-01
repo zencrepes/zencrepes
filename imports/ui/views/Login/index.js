@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 // core components
-import Footer from "../../components/Footer/index.js";
+import Footer from "../../components/Footer/FooterAnonymous.js";
 
 import GridContainer from "../../components/Grid/GridContainer.js";
 import GridItem from "../../components/Grid/GridItem.js";

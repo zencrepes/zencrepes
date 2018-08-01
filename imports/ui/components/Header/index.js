@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import headerStyle from "../../assets/jss/material-dashboard-react/components/headerStyle.jsx";
 
-import UserMenu from '../../components/AppMenu/UserMenu.js';
+import UserMenu from '../AppMenu/UserMenu.js';
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
