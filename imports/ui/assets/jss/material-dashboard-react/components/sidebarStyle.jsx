@@ -222,6 +222,26 @@ const sidebarStyle = theme => ({
             width: "100%",
             bottom: "13px"
         }
+    },
+    drawerMenu: {
+        display: 'grid',
+        height: '100%',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr auto',
+        gridTemplateAreas: '"Content" "Footer"',
+
+    },
+    drawerMenuContent: {
+        gridArea: 'Content',
+        overflow: 'hidden',
+
+    },
+    drawerMenuFooter: {
+        gridArea: 'Footer',
+        ...defaultFont,
+        margin: "0",
+        fontSize: "12px",
+        color: "#FFFFFF"
     }
 });
 

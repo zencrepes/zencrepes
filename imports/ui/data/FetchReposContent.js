@@ -131,9 +131,10 @@ class FetchReposContent extends Component {
                 }
             }
         }
-        console.log('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels in memory');
-
+        console.log('Will be deleting ' + cfgIssues.find({active: false}).count() + ' attached to disabled repositories');
         await cfgIssues.remove({active: false});
+
+        console.log('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels in memory');
         setLoading(false);  // Set to true to indicate issues are done loading.
         setLoadSuccess(true);
     };

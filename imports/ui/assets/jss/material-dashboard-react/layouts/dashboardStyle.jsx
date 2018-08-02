@@ -37,6 +37,23 @@ const appStyle = theme => ({
     container,
     map: {
         marginTop: "70px"
+    },
+    mainContent :{
+        display: 'grid',
+        height: '100%',
+        gridTemplateColumns: '250px auto',
+        gridTemplateRows: 'auto 1fr',
+        gridTemplateAreas: '"Query Query" "Facets Results"',
+    },
+    Query :{
+        gridArea: 'Query',
+    },
+    Facets :{
+        gridArea: 'Facets',
+    },
+    Results :{
+        gridArea: 'Results',
+        paddingLeft: '10px',
     }
 });
 

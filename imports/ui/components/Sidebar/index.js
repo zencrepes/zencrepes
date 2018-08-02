@@ -16,6 +16,8 @@ import Icon from "@material-ui/core/Icon";
 
 import { Settings, TableLarge, ChartLine, ViewDashboard, Label } from 'mdi-material-ui';
 
+import GitRequests from '../Github/GitRequests.js'
+
 import PropTypes from "prop-types";
 
 class Sidebar extends Component {
@@ -86,7 +88,14 @@ class Sidebar extends Component {
                     >
                         {brand}
                         <div className={classes.sidebarWrapper}>
-                            {links}
+                            <div className={classes.drawerMenu}>
+                                <div className={classes.drawerMenuContent}>
+                                    {links}
+                                </div>
+                                <div className={classes.drawerMenuFooter}>
+                                    <GitRequests />
+                                </div>
+                            </div>
                         </div>
                         <div
                             className={classes.background}
@@ -105,7 +114,14 @@ class Sidebar extends Component {
                     >
                         {brand}
                         <div className={classes.sidebarWrapper}>
-                            {links}
+                            <div className={classes.drawerMenu}>
+                                <div className={classes.drawerMenuContent}>
+                                    {links}
+                                </div>
+                                <div className={classes.drawerMenuFooter}>
+                                    <GitRequests />
+                                </div>
+                            </div>
                         </div>
                         <div
                             className={classes.background}

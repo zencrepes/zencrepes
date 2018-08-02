@@ -39,11 +39,10 @@ const styles = theme => ({
 });
 
 const LinkFormatter = ({ value }) => {
-    //console.log(value);
     return (
-        <Link to={value}>
+        <a href={value}>
             <GithubCircle />
-        </Link>
+        </a>
     )
 }
 
@@ -122,6 +121,7 @@ class IssuesTable extends Component {
                 { name: 'url', title: '' },
             ],
             tableColumnExtensions: [
+                { columnName: 'title', width: 300 },
                 { columnName: 'createdAt', width: 90 },
                 { columnName: 'updatedAt', width: 90 },
                 { columnName: 'closedAt', width: 90 },

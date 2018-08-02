@@ -50,20 +50,17 @@ class Search extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <SyncFilters />
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
+                            <div className={classes.mainContent}>
+                                <div className={classes.Query}>
                                     <QueryView />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
+                                </div>
+                                <div className={classes.Facets}>
                                     <Facets />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={8}>
+                                </div>
+                                <div className={classes.Results}>
                                     <IssuesTable />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <GitRequests />
-                                </GridItem>
-                            </GridContainer>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <Footer />

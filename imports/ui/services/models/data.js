@@ -154,6 +154,7 @@ const isFacetSelected = (facet, updatedFilters) => {
  * - mongoFilter: Mongo filter used to collect relevant data
  */
 const getFacetAggregations = (facet, mongoFilter) => {
+    console.log('=== getFacetAggregations ===');
     let statesGroup = [];
     if (facet.nested) {
         let allValues = [];
@@ -257,6 +258,7 @@ export default {
     effects: {
         //Add a filter, then refresh the data points
         async addFilterRefresh(payload, rootState) {
+            console.log('====== ADD FILTER REFRESH ====== ');
             //Get the list of updated filters, and push received filter payload to state
             let updatedFilters = addToFilters(payload, rootState.data.filters, rootState.data.facets);
             this.addFilter(payload);
@@ -286,6 +288,8 @@ export default {
             this.updateTableSelection(selectedIssues);
         },
         async removeFilterRefresh(payload, rootState) {
+            console.log('====== REMOVE FILTER REFRESH ====== ');
+
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);
             this.removeFilter(payload);
 
@@ -315,6 +319,8 @@ export default {
 
         },
         async initFacets(payload, rootState) {
+            console.log('====== INIT FACETS ====== ');
+
             this.updateLoading(true);
 
             await clearIssuesFilters();
@@ -345,6 +351,8 @@ export default {
             this.updateLoading(false);
         },
         async updateFromQuery(filter, rootState, history) {
+            console.log('====== UPDATE FROM QUERY ====== ');
+
             this.updateFilters(filter);
             let mongoFilter = buildMongoSelector(filter);
 
