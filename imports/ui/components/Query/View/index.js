@@ -27,6 +27,9 @@ const styles = theme => ({
     chip: {
         margin: theme.spacing.unit / 2,
     },
+    query: {
+        display: 'inline'
+    }
 });
 
 class QueryView extends Component {
@@ -52,13 +55,14 @@ class QueryView extends Component {
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent>
+                        <Paper className={classes.root}>
                         {Object.keys(filters).map(idx => {
                             return (
-                                <Paper className={classes.root} key={idx}>
-                                    <QueryFacets queryContent={filters[idx]} />
-                                </Paper>
+                                <div key={idx} className={classes.query}>{idx} {":"} <QueryFacets queryContent={filters[idx]} /></div>
                             );
                         })}
+                        </Paper>
+
                         <br />Filter Object: <i>{JSON.stringify(filters)}</i>
                         <br />Mongo Filter: <i>{JSON.stringify(buildMongoSelector(filters))}</i>
                         <br />

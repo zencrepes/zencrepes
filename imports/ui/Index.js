@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 
 import ReactDOM from 'react-dom';
 import Button from 'material-ui/Button';
+import {Redirect} from "react-router-dom";
 
 class Index extends Component {
     render() {
         return (
-            <h1>Welcome to the tool </h1>
+            <Redirect to="/dashboard" />
         );
     }
 }
