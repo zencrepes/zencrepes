@@ -21,6 +21,8 @@ const styles = theme => ({
     },
     loading: {
         flexGrow: 1,
+        overflow: 'hidden',
+        width: '100%'
     },
 });
 

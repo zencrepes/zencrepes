@@ -74,7 +74,7 @@ class ScanOrgRepos extends Component {
                 <Card className={classes.card}>
                     <CardContent className={classes.cardContent}>
                         <Typography className={classes.title} color="textSecondary">
-                            Load from a GitHub Organization
+                            GitHub Organization
                         </Typography>
                         {loading &&
                             <div className={classes.loading}>
@@ -100,7 +100,7 @@ class ScanOrgRepos extends Component {
                                 />
                                 <Button color="primary" variant="raised" className={classes.button}
                                         onClick={this.handleScanOrg}>
-                                    Load Org
+                                    Add Org
                                 </Button>
                             </div>
                         </CardActions>

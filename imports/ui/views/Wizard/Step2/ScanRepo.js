@@ -76,7 +76,7 @@ class ScanRepo extends Component {
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Load individual Repository
+                            Individual Repository
                         </Typography>
                         {loading &&
                             <div className={classes.loading}>
@@ -111,7 +111,7 @@ class ScanRepo extends Component {
                                     margin="normal"
                                 />
                                 <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanRepo}>
-                                    Load Repo
+                                    Add Repo
                                 </Button>
                             </div>
                         </CardActions>

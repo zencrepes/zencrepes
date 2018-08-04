@@ -9,7 +9,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        width: 600,
+        width: '100%',
     }
 });
 

@@ -74,7 +74,7 @@ class ScanOrgs extends Component {
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Load affiliated GitHub Repositories & Organizations
+                            Affiliated GitHub Repositories & Organizations
                         </Typography>
                         {loading &&
                             <div className={classes.loading}>
@@ -89,7 +89,7 @@ class ScanOrgs extends Component {
                         <CardActions className={classes.cardActions} >
                                 <div className={classes.actionButtons} >
                                     <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
-                                        Load All
+                                        Add All
                                     </Button>
                                 </div>
                         </CardActions>

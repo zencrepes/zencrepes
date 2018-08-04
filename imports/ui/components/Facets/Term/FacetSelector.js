@@ -8,6 +8,7 @@ import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-
 import Checkbox from 'material-ui/Checkbox';
 import Chip from 'material-ui/Chip';
 import { withStyles } from 'material-ui/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
     root: {
@@ -59,6 +60,11 @@ class FacetSelector extends React.Component {
         const { data, classes, selected } = this.props;
         //const { value } = this.state;
 
+        let facetItem = data.name;
+        if (facetItem.length > 20) {
+            facetItem = facetItem.slice(0, 25) + '...';
+        }
+
         return (
             <ListItem
                 key={data.name}
@@ -74,7 +80,9 @@ class FacetSelector extends React.Component {
                     disableRipple
                     className={classes.checkbox}
                 />
-                <ListItemText primary={data.name} className={classes.listItemText} />
+                <Tooltip title={data.name}>
+                    <ListItemText primary={facetItem} className={classes.listItemText} />
+                </Tooltip>
                 <ListItemSecondaryAction>
                     <Chip label={data.count} className={classes.chip} />
                 </ListItemSecondaryAction>
