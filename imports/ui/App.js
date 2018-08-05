@@ -12,9 +12,11 @@ import Login from './views/Login/index.js';
 import Wizard from './views/Wizard/index.js';
 import Dashboard from './views/Dashboard/index.js';
 import Search from './views/Search/index.js';
+import Velocity from './views/Velocity/index.js';
+
 import Settings from './pages/settings/index.js';
 //import Search from './pages/search/index.js';
-import Velocity from './pages/velocity/index.js';
+//import Velocity from './pages/velocity/index.js';
 import LabelsList from './pages/labels/List/index.js';
 import LabelsView from './pages/labels/View/index.js';
 import LabelsEdit from './pages/labels/Edit/index.js';
