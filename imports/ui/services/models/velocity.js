@@ -48,7 +48,7 @@ export default {
             let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
             dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate the object with count of days and weeks
             dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
-            dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
+            dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate closed issues count and points
             dataObject = populateTicketsPerDay(dataObject);
             dataObject = populateTicketsPerWeek(dataObject);
 

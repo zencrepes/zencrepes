@@ -81,8 +81,8 @@ export const initObject = (firstDay, lastDay) => {
         if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
             initObject['days'][currentDate.toJSON().slice(0, 10)] = {
                 date: currentDate.toJSON(),
-                issues: {count: 0},
-                points: {count: 0},
+                issues: {count: 0, velocity: 0},
+                points: {count: 0, velocity: 0},
             };
         }
 
@@ -99,8 +99,8 @@ export const initObject = (firstDay, lastDay) => {
             initObject['weeks'][currentWeekYear] = {
                 //weekStart: currentDate.toJSON(),
                 weekStart: currentWeekYear.toJSON(),
-                issues: {count: 0},
-                points: {count: 0},
+                issues: {count: 0, velocity: 0},
+                points: {count: 0, velocity: 0},
             };
         }
     }
@@ -216,9 +216,9 @@ export const populateTicketsPerWeek = (dataObject) => {
                 'range': 'all',
                 'issues': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'issues')},
                 'points': {'velocity': calculateAverageVelocity(ticketsPerWeek, 'points')},
-            }
-            currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
-            currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
+            };
+            currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'] * 5,3); //Multiplies by 5 as per 5 days in work week
+            currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'] * 5,3);
             completionVelocities.push(currentCompletion);
 
             if (idx >= 4) { // 4 weeks
@@ -227,9 +227,9 @@ export const populateTicketsPerWeek = (dataObject) => {
                     'range': '4w',
                     'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
-                }
-                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
-                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
+                };
+                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'] * 5,3);
+                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'] * 5,3);
                 completionVelocities.push(currentCompletion);
                 defaultVelocity = '4w';
             }
@@ -239,9 +239,9 @@ export const populateTicketsPerWeek = (dataObject) => {
                     'range': '8w',
                     'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
-                }
-                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
-                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
+                };
+                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity']*5,3);
+                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity']*5,3);
                 completionVelocities.push(currentCompletion);
             }
             if (idx >= 12) { // 12 weeks
@@ -250,9 +250,9 @@ export const populateTicketsPerWeek = (dataObject) => {
                     'range': '12w',
                     'issues': {'velocity': calculateAverageVelocity(currentWindowIssues, 'issues')},
                     'points': {'velocity': calculateAverageVelocity(currentWindowIssues, 'points')},
-                }
-                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity'],3);
-                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity'],3);
+                };
+                currentCompletion['issues']['effort'] = Math.round(remainingIssuesCount / currentCompletion['issues']['velocity']*5,3);
+                currentCompletion['points']['effort'] = Math.round(remainingPoints / currentCompletion['points']['velocity']*5,3);
                 completionVelocities.push(currentCompletion);
             }
         }

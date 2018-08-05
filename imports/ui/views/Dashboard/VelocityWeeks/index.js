@@ -43,7 +43,7 @@ class VelocityWeeks extends Component {
 
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v[metric].velocity}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v[metric].count}
             });
             return dataset;
         } else {
