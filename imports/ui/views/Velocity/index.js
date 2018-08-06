@@ -18,8 +18,9 @@ import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
 
 import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
+import OverallAssigneesVelocityWeeks from './OverallAssigneesVelocityWeeks/index.js';
 import OverallVelocityWeeksOld from '../../components/Cards/OverallVelocityWeeks/index.js';
-import OverallMemberVelocityWeeks from '../../components/Cards/OverallMemberVelocityWeeks/index.js';
+import OverallMemberVelocityWeeksOld from '../../components/Cards/OverallMemberVelocityWeeks/index.js';
 import {ContentCopy, LocalOffer} from "@material-ui/icons/index";
 
 import QuerySelect from '../../components/Query/Select/index.js';
@@ -65,7 +66,9 @@ class Velocity extends Component {
                                 <GridItem xs={12} sm={12} md={12}>
                                     <OverallVelocityWeeks />
                                 </GridItem>
-
+                                <GridItem xs={12} sm={12} md={12}>
+                                    <OverallAssigneesVelocityWeeks />
+                                </GridItem>
                             </GridContainer>
                         </div>
                     </div>
@@ -75,20 +78,6 @@ class Velocity extends Component {
         );
     }
 }
-
-/*
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <OverallMemberVelocityWeeks
-                                        icon={ContentCopy}
-                                        iconColor="red"
-                                        title="Completed this week"
-                                        description="32"
-                                        small="Pts"
-                                        statIcon={LocalOffer}
-                                        statText="Add small chart showing velocity past 16 weeks"
-                                    />
-                                </GridItem>
- */
 
 Velocity.propTypes = {
     classes: PropTypes.object,

@@ -55,7 +55,6 @@ class OverallVelocityWeeks extends Component {
         const { classes } = this.props;
 
         let dataset = this.prepareDataset();
-        console.log('Render Overall velocity weeks');
         return (
             <Card>
                 <CardHeader color="warning">

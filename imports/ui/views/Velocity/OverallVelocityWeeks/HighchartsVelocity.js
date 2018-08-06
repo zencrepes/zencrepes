@@ -45,9 +45,6 @@ class HighchartsVelocity extends Component {
         const { classes, data } = this.props;
         const { series } = this.state;
 
-        console.log('Render highcharts');
-        console.log(data);
-
         const plotOptions =  {
             series: {
                 stacking: null
