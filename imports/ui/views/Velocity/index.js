@@ -17,12 +17,13 @@ import AppBar from '@material-ui/core/AppBar';
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
 
-import OverallVelocityWeeks from '../../components/Cards/OverallVelocityWeeks/index.js';
+import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
+import OverallVelocityWeeksOld from '../../components/Cards/OverallVelocityWeeks/index.js';
 import OverallMemberVelocityWeeks from '../../components/Cards/OverallMemberVelocityWeeks/index.js';
 import {ContentCopy, LocalOffer} from "@material-ui/icons/index";
 
 import QuerySelect from '../../components/Query/Select/index.js';
-import DataLoader from '../../pages/velocity/DataLoader.js';
+import DataLoader from './DataLoader.js';
 
 
 class Velocity extends Component {
@@ -50,7 +51,7 @@ class Velocity extends Component {
                 <div className={classes.mainPanel} ref="mainPanel">
                     <Header
                         handleDrawerToggle={this.handleDrawerToggle}
-                        pageName={"Dashboard"}
+                        pageName={"Velocity"}
                     />
                     <div className={classes.content}>
                         <div className={classes.container}>
@@ -62,16 +63,20 @@ class Velocity extends Component {
                                     </div>
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={12}>
-                                    <OverallVelocityWeeks
-                                        icon={ContentCopy}
-                                        iconColor="red"
-                                        title="Completed this week"
-                                        description="32"
-                                        small="Pts"
-                                        statIcon={LocalOffer}
-                                        statText="Add small chart showing velocity past 16 weeks"
-                                    />
+                                    <OverallVelocityWeeks />
                                 </GridItem>
+
+                            </GridContainer>
+                        </div>
+                    </div>
+                    <Footer />
+                </div>
+            </div>
+        );
+    }
+}
+
+/*
                                 <GridItem xs={12} sm={12} md={12}>
                                     <OverallMemberVelocityWeeks
                                         icon={ContentCopy}
@@ -83,15 +88,7 @@ class Velocity extends Component {
                                         statText="Add small chart showing velocity past 16 weeks"
                                     />
                                 </GridItem>
-                            </GridContainer>
-                        </div>
-                    </div>
-                    <Footer />
-                </div>
-            </div>
-        );
-    }
-}
+ */
 
 Velocity.propTypes = {
     classes: PropTypes.object,
