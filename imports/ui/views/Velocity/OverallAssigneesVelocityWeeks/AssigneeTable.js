@@ -14,8 +14,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
 import IconButton from '@material-ui/core/IconButton';
+
+import { TableLarge } from 'mdi-material-ui';
+
 import Button from '@material-ui/core/Button';
 
 import { GithubCircle } from 'mdi-material-ui'
@@ -123,9 +125,7 @@ class AssigneeTable extends Component {
     buildReferenceDataset(dataset) {
         console.log(dataset);
         if (dataset.length > 0) {
-            console.log(dataset);
             let emptyDataset = [];
-
             //Build an empty dataset containing all weeks from the overall set
             console.log(dataset);
             dataset.forEach((assignee) => {
@@ -165,6 +165,7 @@ class AssigneeTable extends Component {
         let dataset = repartition.filter(v => v.login !== 'UNASSIGNED');
         dataset = dataset.filter(v => v.weeks !== undefined);
         dataset = this.buildReferenceDataset(dataset);
+        console.log(dataset);
         if (dataset.length > 0) {
             return (
                 <div className={classes.tableResponsive}>
@@ -194,14 +195,15 @@ class AssigneeTable extends Component {
                                         </TableCell>
                                         <TableCell className={classes.tableCell} key={4}>
                                             {assignee.open.issues.length}
+                                            <IconButton color="secondary" className={classes.button} aria-label="Open in search" onClick={() => this.clickAssignee(assignee.login)}>
+                                                <TableLarge />
+                                            </IconButton>
                                         </TableCell>
                                         <TableCell className={classes.tableCell} key={6}>
                                             {getTicketsPerWeek(assignee)}
                                         </TableCell>
                                         <TableCell className={classes.tableCell} key={5}>
-                                            <Button variant="raised" size="small" color="primary" onClick={() => this.clickAssignee(assignee.login)}>
-                                                {getTimeToCompletion(assignee)} days
-                                            </Button>
+                                            {getTimeToCompletion(assignee)} days
                                         </TableCell>
                                     </TableRow>
                                 );
