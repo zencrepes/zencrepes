@@ -19,8 +19,10 @@ import Settings from './pages/settings/index.js';
 //import Velocity from './pages/velocity/index.js';
 //import LabelsList from './pages/labels/List/index.js';
 import LabelsList from './views/Labels/List/index.js';
-import LabelsView from './pages/labels/View/index.js';
-import LabelsEdit from './pages/labels/Edit/index.js';
+//import LabelsView from './pages/labels/View/index.js';
+import LabelsView from './views/Labels/View/index.js';
+//import LabelsEdit from './pages/labels/Edit/index.js';
+import LabelsEdit from './views/Labels/Edit/index.js';
 import Index from './Index.js';
 
 import Public from './components/Public/Public.js'

@@ -13,6 +13,7 @@ query ($org_name: String!, $repo_name: String!){
     diskUsage
     forkCount
     isPrivate
+    isArchived
     owner{
       id
       login

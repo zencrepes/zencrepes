@@ -21,6 +21,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             diskUsage
             forkCount
             isPrivate
+            isArchived
             issues(first: 1, orderBy: {field: UPDATED_AT, direction: DESC}) {
               totalCount
               edges {

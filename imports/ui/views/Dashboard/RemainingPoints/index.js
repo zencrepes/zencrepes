@@ -5,11 +5,12 @@ import { withRouter } from 'react-router-dom';
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
+import {ContentCopy, DateRange} from "@material-ui/icons";
+
 import PropTypes from "prop-types";
 import Card from "../../../components/Card/Card";
 import CardHeader from "../../../components/Card/CardHeader";
 import CardIcon from "../../../components/Card/CardIcon";
-import {ContentCopy, DateRange} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
 import Typography from "@material-ui/core/Typography";

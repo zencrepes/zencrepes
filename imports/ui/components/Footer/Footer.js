@@ -22,30 +22,15 @@ class Footer extends Component {
                     <div className={classes.left}>
                         <List className={classes.list}>
                             <ListItem className={classes.inlineBlock}>
-                                <a href="#home" className={classes.block}>
-                                    Home
-                                </a>
-                            </ListItem>
-                            <ListItem className={classes.inlineBlock}>
-                                <a href="#company" className={classes.block}>
-                                    Company
-                                </a>
-                            </ListItem>
-                            <ListItem className={classes.inlineBlock}>
-                                <a href="#portfolio" className={classes.block}>
-                                    Portfolio
-                                </a>
-                            </ListItem>
-                            <ListItem className={classes.inlineBlock}>
-                                <a href="#blog" className={classes.block}>
-                                    Blog
+                                <a href="https://github.com/Fgerthoffert/github-agile-view/" className={classes.block}>
+                                    On Github
                                 </a>
                             </ListItem>
                         </List>
                     </div>
                     <p className={classes.right}>
                       <span>
-                        Some copyright notice
+                        All under GPLv3
                       </span>
                     </p>
                 </div>

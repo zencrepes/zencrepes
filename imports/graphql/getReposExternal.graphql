@@ -21,6 +21,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
           diskUsage
           forkCount
           isPrivate
+          isArchived
           owner {
             id
             login

@@ -43,6 +43,7 @@ class Labels extends Component {
         const { setLoading, setLoadingText, setAction, action, selectedName, selectedRepos, setChipRemaining, updateName, updateDescription, updateColor, newName, newDescription, newColor, resetValues} = this.props;
         setLoading(true);  // Set labelsLoading to true to indicate labels are actually updating.
 
+        //TODO - Test if repository is archived
         for (let repo of selectedRepos) {
             console.log('Processing: ' + repo.name);
             setLoadingText(repo.name);
