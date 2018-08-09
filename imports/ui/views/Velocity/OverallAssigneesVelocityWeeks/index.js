@@ -12,8 +12,8 @@ import CardIcon from "../../../components/Card/CardIcon";
 import {ContentCopy, DateRange} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
-import VelocityBar from "../../../components/Cards/shared/VelocityBar";
-import VelocityLine from "../../../components/Cards/shared/VelocityLine";
+import VelocityBar from "../../../components/Charts/VelocityBar";
+import VelocityLine from "../../../components/Charts/VelocityLine";
 import {getWeekYear} from "../../../utils/velocity";
 
 import AssigneeTable from './AssigneeTable.js';

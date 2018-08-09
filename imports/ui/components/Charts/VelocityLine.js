@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 
 import { ResponsiveLine } from '@nivo/line'
 
-import {getWeekYear} from "../../../utils/velocity/index";
+import {getWeekYear} from "../../utils/velocity/index";
 
 const styles = theme => ({
     root: {

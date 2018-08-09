@@ -11,15 +11,13 @@ import { connect } from "react-redux";
 
 import { ResponsiveBar } from '@nivo/bar'
 
-import {getWeekYear} from "../../../utils/velocity/index";
-
 const styles = theme => ({
     root: {
-        height: '75px'
+        height: '150px'
     },
 });
 
-class VelocityBar extends Component {
+class VelocityBarHorizontal extends Component {
     constructor(props) {
         super(props);
 
@@ -40,13 +38,48 @@ class VelocityBar extends Component {
                     indexBy="x"
                     margin={{
                         "top": 0,
-                        "right": -10,
+                        "right": 0,
                         "bottom": 27,
-                        "left": -10
+                        "left": 30
                     }}
                     colors="nivo"
                     colorBy="id"
+                    defs={[
+                        {
+                            "id": "dots",
+                            "type": "patternDots",
+                            "background": "inherit",
+                            "color": "#38bcb2",
+                            "size": 4,
+                            "padding": 1,
+                            "stagger": true
+                        },
+                        {
+                            "id": "lines",
+                            "type": "patternLines",
+                            "background": "inherit",
+                            "color": "#eed312",
+                            "rotation": -45,
+                            "lineWidth": 6,
+                            "spacing": 10
+                        }
+                    ]}
+                    fill={[
+                        {
+                            "match": {
+                                "id": "fries"
+                            },
+                            "id": "dots"
+                        },
+                        {
+                            "match": {
+                                "id": "sandwich"
+                            },
+                            "id": "lines"
+                        }
+                    ]}
                     borderColor="inherit:darker(1.6)"
+                    layout="horizontal"
                     enableGridY={false}
                     enableLabel={false}
                     labelSkipWidth={12}
@@ -55,7 +88,6 @@ class VelocityBar extends Component {
                     animate={true}
                     motionStiffness={90}
                     motionDamping={15}
-                    axisBottom={null}
                     legends={[
                         {
                             "dataFrom": "keys",
@@ -84,7 +116,7 @@ class VelocityBar extends Component {
     }
 }
 
-VelocityBar.propTypes = {
+VelocityBarHorizontal.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -101,7 +133,7 @@ export default
     (
             withRouter
             (
-                withStyles(styles)(VelocityBar)
+                withStyles(styles)(VelocityBarHorizontal)
             )
     );
 

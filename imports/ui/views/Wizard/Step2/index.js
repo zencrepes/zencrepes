@@ -8,7 +8,8 @@ import FetchOrgRepos  from '../../../data/FetchOrgRepos.js';
 import FetchRepo  from '../../../data/FetchRepo.js';
 import FetchOrgs  from '../../../data/FetchOrgs.js';
 
-import ItemGrid from '../../../components/Grid/ItemGrid.js';
+import GridContainer from '../../../components/Grid/GridContainer.js';
+import GridItem from '../../../components/Grid/GridItem.js';
 
 import Treeview from './Treeview.js';
 import Stats from './Stats.js';
@@ -34,16 +35,16 @@ class Step2 extends Component {
                 <FetchOrgs/>
                 <FetchOrgRepos/>
                 <FetchRepo/>
-                <Grid container>
-                    <ItemGrid xs={12} sm={6} md={6}>
+                <GridContainer>
+                    <GridItem xs={12} sm={6} md={6}>
                         <ScanOrgs />
                         <ScanOrgRepos />
                         <ScanRepo />
-                    </ItemGrid>
-                    <ItemGrid xs={12} sm={6} md={6}>
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={6}>
                         <Treeview />
-                    </ItemGrid>
-                </Grid>
+                    </GridItem>
+                </GridContainer>
             </div>
         );
     }

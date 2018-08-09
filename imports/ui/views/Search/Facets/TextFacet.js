@@ -13,7 +13,7 @@ import Typography from 'material-ui/Typography';
 import { connect } from "react-redux";
 import Button from 'material-ui/Button';
 
-import { cfgIssues } from '../../data/Minimongo.js';
+import { cfgIssues } from '../../../data/Minimongo.js';
 
 import _ from 'lodash';
 

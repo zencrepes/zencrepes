@@ -3,17 +3,19 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 
+import PropTypes from "prop-types";
+
+import {ContentCopy, DateRange} from "@material-ui/icons";
+
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
-import PropTypes from "prop-types";
 import Card from "../../../components/Card/Card";
 import CardHeader from "../../../components/Card/CardHeader";
 import CardIcon from "../../../components/Card/CardIcon";
-import {ContentCopy, DateRange} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
-import VelocityBar from "../../../components/Cards/shared/VelocityBar";
-import VelocityLine from "../../../components/Cards/shared/VelocityLine";
+import VelocityBar from "../../../components/Charts/VelocityBar";
+import VelocityLine from "../../../components/Charts/VelocityLine";
 import {getWeekYear} from "../../../utils/velocity";
 
 class VelocityWeeks extends Component {
@@ -114,7 +116,6 @@ class VelocityWeeks extends Component {
 
 VelocityWeeks.propTypes = {
     classes: PropTypes.object,
-
 };
 
 const mapState = state => ({
@@ -122,8 +123,4 @@ const mapState = state => ({
     defaultPoints: state.velocity.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(VelocityWeeks));
+export default connect(mapState, null)(withStyles(dashboardStyle)(VelocityWeeks));

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
@@ -12,9 +11,7 @@ import CardIcon from "../../../components/Card/CardIcon";
 import {ContentCopy, DateRange} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
-import Typography from "@material-ui/core/Typography";
-import VelocityBarHorizontal from "../../../components/Cards/shared/VelocityBarHorizontal";
-import CardContent from "@material-ui/core/CardContent";
+import VelocityBarHorizontal from "../../../components/Charts/VelocityBarHorizontal";
 
 class DaysToCompletion extends Component {
     constructor(props) {
@@ -124,8 +121,4 @@ const mapState = state => ({
     defaultPoints: state.velocity.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(DaysToCompletion));
+export default connect(mapState, null)(withStyles(dashboardStyle)(DaysToCompletion));

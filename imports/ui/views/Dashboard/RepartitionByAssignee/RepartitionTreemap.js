@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
-import {
-    withRouter
-} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from "react-redux";
 
 import { ResponsiveTreeMap } from '@nivo/treemap'
-
-//import {getWeekYear} from "../../../utils/velocity/index";
 
 const styles = theme => ({
     root: {
@@ -22,9 +17,6 @@ const styles = theme => ({
 class RepartitionTreemap extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     buildDataset() {
@@ -143,13 +135,11 @@ const mapDispatch = dispatch => ({
     updateFromQuery: dispatch.data.updateFromQuery,
 });
 
-
 const mapState = state => ({
     repartition: state.repartition.repartition,
     filter: state.repartition.filter,
     defaultPoints: state.repartition.defaultPoints,
 });
-
 
 export default
     connect(mapState, mapDispatch)

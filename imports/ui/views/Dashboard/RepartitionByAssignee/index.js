@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
-import PropTypes from "prop-types";
 import Card from "../../../components/Card/Card";
 import CardHeader from "../../../components/Card/CardHeader";
 import CardIcon from "../../../components/Card/CardIcon";
-import {ContentCopy, DateRange} from "@material-ui/icons";
+import {ContentCopy} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
-import Typography from "@material-ui/core/Typography";
-import VelocityBarHorizontal from "../../../components/Cards/shared/VelocityBarHorizontal";
-import CardContent from "@material-ui/core/CardContent";
 
 import RepartitionTreemap from "./RepartitionTreemap";
 
@@ -60,8 +56,4 @@ const mapState = state => ({
     defaultPoints: state.velocity.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(RepartitionByAssignee));
+export default connect(mapState, null)(withStyles(dashboardStyle)(RepartitionByAssignee));

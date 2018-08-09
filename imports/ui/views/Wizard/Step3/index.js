@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
-import ItemGrid from '../../../components/Grid/ItemGrid.js';
+import GridItem from '../../../components/Grid/GridItem.js';
+import GridContainer from '../../../components/Grid/GridContainer.js';
 
 import Selects from './Selects.js';
 import IssuesRepartition from './IssuesRepartition.js';
@@ -59,14 +60,14 @@ class Step3 extends Component {
                 <Typography component="p">
                     Aside facilitating planning, this tool was also created to facilitate cross-repos and cross-orgs consistency. To do so it needs to load a bunch of data.
                 </Typography>
-                <Grid container>
-                    <ItemGrid xs={12} sm={6} md={6}>
+                <GridContainer>
+                    <GridItem xs={12} sm={6} md={6}>
                         <Selects/>
-                    </ItemGrid>
-                    <ItemGrid xs={12} sm={6} md={6}>
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={6}>
                         <IssuesRepartition />
-                    </ItemGrid>
-                </Grid>
+                    </GridItem>
+                </GridContainer>
             </div>
         );
     }

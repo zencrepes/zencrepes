@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
@@ -9,21 +10,12 @@ import Sidebar from '../../components/Sidebar/index.js';
 import Footer from '../../components/Footer/Footer.js';
 import Header from '../../components/Header/index.js';
 
-import PropTypes from "prop-types";
-
-import AppBar from '@material-ui/core/AppBar';
-
-
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
+import QuerySelect from '../../components/Query/Select/index.js';
 
 import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
 import OverallAssigneesVelocityWeeks from './OverallAssigneesVelocityWeeks/index.js';
-import OverallVelocityWeeksOld from '../../components/Cards/OverallVelocityWeeks/index.js';
-import OverallMemberVelocityWeeksOld from '../../components/Cards/OverallMemberVelocityWeeks/index.js';
-import {ContentCopy, LocalOffer} from "@material-ui/icons/index";
-
-import QuerySelect from '../../components/Query/Select/index.js';
 import DataLoader from './DataLoader.js';
 
 
@@ -84,12 +76,4 @@ Velocity.propTypes = {
 
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withRouter(withStyles(dashboardStyle)(Velocity)));
+export default connect(null, null)(withRouter(withStyles(dashboardStyle)(Velocity)));

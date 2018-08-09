@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
@@ -9,19 +10,14 @@ import Sidebar from '../../components/Sidebar/index.js';
 import Footer from '../../components/Footer/Footer.js';
 import Header from '../../components/Header/index.js';
 
-import DataLoader from './DataLoader.js';
-
-import PropTypes from "prop-types";
-
-import AppBar from '@material-ui/core/AppBar';
-
 import QuerySelect from "../../components/Query/Select";
 import SprintsSelect from "../../components/Sprints/Select";
-import PointSwitch from "./PointsSwitch";
 
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
 
+import DataLoader from './DataLoader.js';
+import PointSwitch from "./PointsSwitch";
 import RemainingPoints from './RemainingPoints/index.js';
 import VelocityDays from './VelocityDays/index.js';
 import VelocityWeeks from './VelocityWeeks/index.js';
@@ -97,15 +93,6 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
     classes: PropTypes.object,
-
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withRouter(withStyles(dashboardStyle)(Dashboard)));
+export default connect(null, null)(withRouter(withStyles(dashboardStyle)(Dashboard)));
