@@ -15,7 +15,7 @@ import GridContainer from '../../components/Grid/GridContainer.js';
 import Grid from "material-ui/Grid";
 import QueryView from "../../components/Query/View";
 import Facets from "./Facets";
-import IssuesTable from "../../components/Table";
+import IssuesTable from "./IssuesTable.js";
 import GitRequests from "../../components/Github/GitRequests";
 import SyncFilters from "./SyncFilters.js";
 
