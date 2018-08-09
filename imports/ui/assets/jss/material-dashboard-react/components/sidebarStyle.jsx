@@ -242,6 +242,10 @@ const sidebarStyle = theme => ({
         margin: "0",
         fontSize: "12px",
         color: "#FFFFFF"
+    },
+    divider: {
+        height: "1px",
+        backgroundColor: "rgba(180, 180, 180, 0.3)"
     }
 });
 

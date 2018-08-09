@@ -6,43 +6,31 @@ import { Roles } from 'meteor/alanning:roles';
 
 import PropTypes from 'prop-types'
 import autoBind from 'react-autobind';
+import {connect} from "react-redux";
 
-//import Login from './pages/login/index.js';
 import Login from './views/Login/index.js';
 import Wizard from './views/Wizard/index.js';
 import Dashboard from './views/Dashboard/index.js';
 import Search from './views/Search/index.js';
 import Velocity from './views/Velocity/index.js';
-
-import Settings from './pages/settings/index.js';
-//import Search from './pages/search/index.js';
-//import Velocity from './pages/velocity/index.js';
-//import LabelsList from './pages/labels/List/index.js';
+import Settings from './views/Settings/index.js';;
 import LabelsList from './views/Labels/List/index.js';
-//import LabelsView from './pages/labels/View/index.js';
 import LabelsView from './views/Labels/View/index.js';
-//import LabelsEdit from './pages/labels/Edit/index.js';
 import LabelsEdit from './views/Labels/Edit/index.js';
+
 import Index from './Index.js';
 
 import Public from './components/Public/Public.js'
 import Authenticated from './components/Authenticated/Authenticated.js'
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
-import {withStyles} from "material-ui/styles/index";
 
-//import Issues from './data/Issues.js';
-//import Labels from './data/Labels.js';
 import Repos from './data/Repos.js';
 import FetchReposContent from './data/FetchReposContent.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
 import Startup from './components/Startup/index.js';
-import { cfgQueries } from "./data/Minimongo.js";
-import {connect} from "react-redux";
-import { cfgIssues } from "./data/Minimongo.js";
-import { cfgSources } from "./data/Minimongo.js";
-import { cfgLabels } from "./data/Minimongo.js";
+
 
 class App extends Component {
     constructor(props) {
@@ -116,27 +104,6 @@ const getUserName = name => ({
     object: `${name.first} ${name.last}`,
 }[typeof name]);
 
-/*
-export default withTracker(() => {
-    const loggingIn = Meteor.loggingIn();
-    const user = Meteor.user();
-    const userId = Meteor.userId();
-    const loading = !Roles.subscription.ready();
-    const name = user && user.profile && user.profile.name && getUserName(user.profile.name);
-    const emailAddress = user && user.emails && user.emails[0].address;
-
-    return {
-        loading,
-        loggingIn,
-        authenticated: !loggingIn && !!userId,
-        name: name || emailAddress,
-        roles: !loading && Roles.getRolesForUser(userId),
-        userId,
-        emailAddress,
-        emailVerified: user && user.emails ? user && user.emails && user.emails[0].verified : true,
-    };
-})(App);
-*/
 const mapState = state => ({
     loadedIssues: state.startup.loadedIssues,
     loadedSources: state.startup.loadedSources,

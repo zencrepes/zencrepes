@@ -13,8 +13,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
+import Divider from '@material-ui/core/Divider';
 
-import { Settings, TableLarge, ChartLine, ViewDashboard, Label } from 'mdi-material-ui';
+import { Settings, TableLarge, ChartLine, ViewDashboard, Label, AutoFix } from 'mdi-material-ui';
 
 import GitRequests from '../Github/GitRequests.js'
 
@@ -31,33 +32,39 @@ class Sidebar extends Component {
             {path: '/dashboard', icon: (<ViewDashboard />), text: 'Dashboard', key: 'dash'},
             {path: '/search', icon: (<TableLarge />), text: 'Search', key: 'search'},
             {path: '/velocity', icon: (<ChartLine />), text: 'Velocity', key: 'velocity'},
+            {divider: true, key: 'configdivider'},
             {path: '/labels', icon: (<Label />), text: 'Labels', key: 'labels'},
             {path: '/settings', icon: (<Settings />), text: 'Settings', key: 'settings'},
-            {path: '/wizard', icon: (<Settings />), text: 'Setup Wizard', key: 'wizard'},
+            {path: '/wizard', icon: (<AutoFix />), text: 'Setup Wizard', key: 'wizard'},
         ];
         const links = (
             <List className={classes.list}>
                 {routes.map((route) => {
-                    return (
-                        <NavLink
-                            to={route.path}
-                            className={classes.item}
-                            activeClassName="active"
-                            key={route.key}
-                        >
-                            <ListItem button className={classes.itemLink}>
-                                <ListItemIcon className={classes.itemIcon}>
-                                    {route.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={route.text}
-                                    className={classes.itemText}
-                                    disableTypography={true}
-                                />
-                            </ListItem>
-                        </NavLink>
-                    );
+                    if (route.divider !== undefined) {
+                        return (<Divider key={route.key} className={classes.divider} />);
+                    } else {
+                        return (
+                            <NavLink
+                                to={route.path}
+                                className={classes.item}
+                                activeClassName="active"
+                                key={route.key}
+                            >
+                                <ListItem button className={classes.itemLink}>
+                                    <ListItemIcon className={classes.itemIcon}>
+                                        {route.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={route.text}
+                                        className={classes.itemText}
+                                        disableTypography={true}
+                                    />
+                                </ListItem>
+                            </NavLink>
+                        );
+                    }
                 })}
+
             </List>
         );
 
