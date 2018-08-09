@@ -19,6 +19,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
+import Repositories from './Repositories/index.js';
+
 function TabContainer(props) {
     return (
         <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -74,7 +76,7 @@ class Settings extends Component {
                                 <Tab label="Story Points" />
                                 <Tab label="Item Three" />
                             </Tabs>
-                            {value === 0 && <TabContainer>Item One</TabContainer>}
+                            {value === 0 && <TabContainer><Repositories/></TabContainer>}
                             {value === 1 && <TabContainer>Item Two</TabContainer>}
                             {value === 2 && <TabContainer>Item Three</TabContainer>}
                         </div>
