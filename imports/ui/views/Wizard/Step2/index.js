@@ -11,12 +11,12 @@ import FetchOrgs  from '../../../data/FetchOrgs.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 import GridItem from '../../../components/Grid/GridItem.js';
 
-import Treeview from './Treeview.js';
-import Stats from './Stats.js';
+import Treeview from '../../../components/Settings/Repositories/Treeview.js';
+import Stats from '../../../components/Settings/Repositories/Stats.js';
 
-import ScanOrgs from './ScanOrgs.js';
-import ScanOrgRepos from './ScanOrgRepos.js';
-import ScanRepo from './ScanRepo.js';
+import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
+import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
+import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
 
 const styles = theme => ({
     root: {

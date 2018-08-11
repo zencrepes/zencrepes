@@ -20,6 +20,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
 import Repositories from './Repositories/index.js';
+import StoryPoints from './StoryPoints/index.js';
 
 function TabContainer(props) {
     return (
@@ -77,7 +78,7 @@ class Settings extends Component {
                                 <Tab label="Item Three" />
                             </Tabs>
                             {value === 0 && <TabContainer><Repositories/></TabContainer>}
-                            {value === 1 && <TabContainer>Item Two</TabContainer>}
+                            {value === 1 && <TabContainer><StoryPoints /></TabContainer>}
                             {value === 2 && <TabContainer>Item Three</TabContainer>}
                         </div>
                     </div>

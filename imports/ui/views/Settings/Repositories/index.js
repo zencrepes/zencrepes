@@ -9,6 +9,18 @@ import dashboardStyle from "../../../assets/jss/material-dashboard-react/layouts
 import GridItem from '../../../components/Grid/GridItem.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 
+import FetchOrgRepos  from '../../../data/FetchOrgRepos.js';
+import FetchRepo  from '../../../data/FetchRepo.js';
+import FetchOrgs  from '../../../data/FetchOrgs.js';
+
+import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
+import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
+import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
+
+import Treeview from '../../../components/Settings/Repositories/Treeview.js';
+
+import Selects from '../../../components/Settings/Load/Selects.js';
+
 class Repositories extends Component {
     constructor(props) {
         super(props);
@@ -18,14 +30,19 @@ class Repositories extends Component {
         const { classes } = this.props;
         return (
             <GridContainer>
-                <GridItem xs={12} sm={6} md={4}>
-                    <h3>Search for Repositories</h3>
+                <GridItem xs={12} sm={6} md={6}>
+                    <FetchOrgs/>
+                    <FetchOrgRepos/>
+                    <FetchRepo/>
+                    <ScanOrgs />
+                    <ScanOrgRepos />
+                    <ScanRepo />
                 </GridItem>
-                <GridItem xs={12} sm={6} md={4}>
-                    <h3>Select repositories</h3>
+                <GridItem xs={12} sm={6} md={6}>
+                    <Treeview />
                 </GridItem>
-                <GridItem xs={12} sm={6} md={4}>
-                    <h3>Load Data</h3>
+                <GridItem xs={12} sm={12} md={12}>
+                    <Selects />
                 </GridItem>
             </GridContainer>
         );

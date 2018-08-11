@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import GridItem from '../../../components/Grid/GridItem.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 
-import Selects from './Selects.js';
+import Selects from '../../../components/Settings/Load/Selects.js';
 import IssuesRepartition from './IssuesRepartition.js';
 import PropTypes from "prop-types";
 
