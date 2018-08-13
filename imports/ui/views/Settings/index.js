@@ -74,8 +74,8 @@ class Settings extends Component {
                                 centered
                             >
                                 <Tab label="Repositories" />
-                                <Tab label="Story Points" />
-                                <Tab label="Item Three" />
+                                <Tab label="Configure Points" />
+                                <Tab label="Import Points" />
                             </Tabs>
                             {value === 0 && <TabContainer><Repositories/></TabContainer>}
                             {value === 1 && <TabContainer><StoryPoints /></TabContainer>}

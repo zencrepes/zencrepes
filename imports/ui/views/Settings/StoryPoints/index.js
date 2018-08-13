@@ -10,6 +10,10 @@ import GridItem from '../../../components/Grid/GridItem.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 
 import Fibonacci from './Fibonacci.js';
+import EnabledRepos from './EnabledRepos/index.js';
+import SyncLabels from './SyncLabels.js';
+
+import CreatePointsLabels from '../../../data/CreatePointsLabels.js';
 
 class StoryPoints extends Component {
     constructor(props) {
@@ -21,11 +25,12 @@ class StoryPoints extends Component {
         return (
             <GridContainer>
                 <GridItem xs={12} sm={6} md={6}>
-                    <h4>Enable Points</h4>
                     <Fibonacci />
+                    <SyncLabels />
+                    <CreatePointsLabels />
                 </GridItem>
                 <GridItem xs={12} sm={6} md={6}>
-                    <h4>Remote sources</h4>
+                    <EnabledRepos />
                 </GridItem>
             </GridContainer>
         );

@@ -13,8 +13,9 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
+
+import fibonacci from 'fibonacci-fast';
 
 const styles = theme => ({
     root: {
@@ -46,43 +47,75 @@ class Fibonacci extends Component {
         super(props);
 
         this.state = {
-            value: 3,
+            value: 13,
+            fibonacciError: false,
+            fibonacciHelperText: '',
         }
     }
 
-    handleChange = (event, value) => {
-        this.setState({ value });
+    updateValue = (value) => {
+        const { setMaxPoints } = this.props;
+        if (fibonacci.is(value)) {
+            setMaxPoints(parseInt(value));
+            this.setState({
+                ['fibonacciError']: false,
+                ['fibonacciHelperText']: '',
+            });
+        } else {
+            this.setState({
+                ['fibonacciError']: true,
+                ['fibonacciHelperText']: 'This is not a Fibonacci number',
+            });
+        }
+    };
+
+    handleChange = name => event => {
+        this.updateValue(event.target.value);
+    };
+
+    incFibonacci = () => {
+        const { maxPoints } = this.props;
+        let requestedNumber = fibonacci.get(fibonacci.find(maxPoints).index +1);
+        this.updateValue(requestedNumber['number']);
+    };
+
+    decFibonacci = () => {
+        const { maxPoints } = this.props;
+        let requestedNumber = fibonacci.get(fibonacci.find(maxPoints).index -1);
+        this.updateValue(requestedNumber['number']);
     };
 
     render() {
-        const { classes } = this.props;
-        const { value } = this.state;
+        const { classes, maxPoints } = this.props;
+        const { fibonacciError, fibonacciHelperText } = this.state;
         return (
             <div className={classes.root}>
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Story points range
+                            Configure story points range
+                        </Typography>
+                        <Typography >
+                            This app uses numbers from the Fibonacci sequence as Story Points
                         </Typography>
                     </CardContent>
                     <CardActions className={classes.cardActions} >
-                        <Input
-                            label="From"
-                            defaultValue="1"
-                            className={classes.input}
-                            inputProps={{
-                                'aria-label': 'Description',
-                            }}
-                        />
-                        <Input
+                        <Typography >
+                            From 1 to :
+                        </Typography>
+                        <Button color="primary" variant="raised" className={classes.button} onClick={this.decFibonacci}>-</Button>
+                        <TextField
+                            id="full-width"
                             label="To"
-                            defaultValue="13"
-                            className={classes.input}
-                            error
-                            inputProps={{
-                                'aria-label': 'Description',
-                            }}
+                            error={fibonacciError}
+                            value={maxPoints}
+                            disabled
+                            className={classes.textField}
+                            helperText={fibonacciHelperText}
+                            margin="normal"
+                            onChange={this.handleChange()}
                         />
+                        <Button color="primary" variant="raised" className={classes.button} onClick={this.incFibonacci}>+</Button>
                     </CardActions>
                 </Card>
             </div>
@@ -96,12 +129,12 @@ Fibonacci.propTypes = {
 };
 
 const mapState = state => ({
-//    loading: state.githubFetchOrgs.loading,
+    maxPoints: state.githubLabels.maxPoints,
 
 });
 
 const mapDispatch = dispatch => ({
-//    setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
+    setMaxPoints: dispatch.githubLabels.setMaxPoints,
 
 });
 

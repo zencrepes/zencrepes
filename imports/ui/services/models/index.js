@@ -9,6 +9,8 @@ export { default as githubFetchOrgRepos } from './githubFetchOrgRepos.js';
 export { default as githubFetchRepo } from './githubFetchRepo.js';
 export { default as githubFetchReposContent } from './githubFetchReposContent.js';
 
+export { default as githubCreatePointsLabels } from './githubCreatePointsLabels.js';
+
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';
 export { default as queries } from './queries.js';
