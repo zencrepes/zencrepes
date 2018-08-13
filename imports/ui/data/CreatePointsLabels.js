@@ -44,13 +44,11 @@ class CreatePointsLabels extends Component {
             let labels = cfgLabels.find({'repo.id': repo.id}).map(label => label.name);
 
             //TODO - Add code to create labels
-
             setIncrementUpdatedRepos(1);
-            setIncrementCreatedLabels(labels.length);
+            setIncrementCreatedLabels(points.length);
             console.log(repo);
             console.log(labels);
         });
-
 
         setLoadSuccess(true);
         setLoading(false);

@@ -13,6 +13,8 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
+import TextField from '@material-ui/core/TextField';
+
 import { cfgSources } from "../../../data/Minimongo.js";
 
 const styles = theme => ({
@@ -39,7 +41,7 @@ const styles = theme => ({
     }
 });
 
-class SyncLabels extends Component {
+class Zenhub extends Component {
     constructor(props) {
         super(props);
     }
@@ -66,26 +68,40 @@ class SyncLabels extends Component {
         setLoadFlag(true);
     };
 
+    handleChange = name => event => {
+        const { setToken } = this.props;
+        setToken(event.target.value);
+    };
+
+
     render() {
-        const { classes, loading, loadSuccess, createdLabels, updatedRepos } = this.props;
+        const { classes, loading, loadSuccess, loadedIssues, token } = this.props;
         return (
             <div className={classes.root}>
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Create Story Points labels in your repositories
+                            Load points from Zenhub
                         </Typography>
                         <Typography>
-                            Warning, this process can be lengthy. Please also note that this process is not mandatory,
-                            simply adding a label 'SP:x' (with 'x' being a number) though GitHub web interface is sufficient.
-                            Adding through this interface ensures consistency (label names, color, description) across repositories.
+                            Calls to Zenhub API are limited to 100 per minute without concurrent calls. Depending of the number of issues, this can be a lengthy process. <br />
+                            If interrupted, the system will not re-load issues for which points were previously obtained. <br />
+                            This import should be a one-off process and should not be done subsequently.
                         </Typography>
-
+                        <TextField
+                            id="full-width"
+                            label="Zenhub API Key"
+                            value={token}
+                            disabled
+                            className={classes.textField}
+                            margin="normal"
+                            onChange={this.handleChange()}
+                        />
                         {loading &&
                         <div className={classes.loading}>
                             <LinearProgress />
                             <Typography component="p">
-                                Created {createdLabels} labels amongst {updatedRepos} Repositories.
+                                Loaded points from {loadedIssues} issues.
                             </Typography>
                         </div>
                         }
@@ -94,7 +110,7 @@ class SyncLabels extends Component {
                     <CardActions className={classes.cardActions} >
                         <div className={classes.actionButtons} >
                             <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
-                                Create Labels
+                                Load Points
                             </Button>
                         </div>
                     </CardActions>
@@ -113,7 +129,7 @@ class SyncLabels extends Component {
     }
 }
 
-SyncLabels.propTypes = {
+Zenhub.propTypes = {
     classes: PropTypes.object,
     loading: PropTypes.bool,
     loadSuccess: PropTypes.bool,
@@ -124,15 +140,18 @@ SyncLabels.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubCreatePointsLabels.loading,
-    loadSuccess: state.githubCreatePointsLabels.loadSuccess,
-    createdLabels: state.githubCreatePointsLabels.createdLabels,
-    updatedRepos: state.githubCreatePointsLabels.updatedRepos,
+    loading: state.zenhub.loading,
+    loadSuccess: state.zenhub.loadSuccess,
+
+    loadedIssues: state.zenhub.loadedIssues,
+    token: state.zenhub.token,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubCreatePointsLabels.setLoadFlag,
-    setLoadSuccess: dispatch.githubCreatePointsLabels.setLoadSuccess,
+    setLoadFlag: dispatch.zenhub.setLoadFlag,
+    setLoadSuccess: dispatch.zenhub.setLoadSuccess,
+
+    setToken: dispatch.zenhub.setToken,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(SyncLabels));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Zenhub));

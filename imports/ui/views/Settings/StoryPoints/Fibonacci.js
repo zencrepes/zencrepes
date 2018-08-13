@@ -17,6 +17,8 @@ import TextField from '@material-ui/core/TextField';
 
 import fibonacci from 'fibonacci-fast';
 
+import Color from '../../Labels/Edit/Actions/Color.js';
+
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -98,8 +100,6 @@ class Fibonacci extends Component {
                         <Typography >
                             This app uses numbers from the Fibonacci sequence as Story Points
                         </Typography>
-                    </CardContent>
-                    <CardActions className={classes.cardActions} >
                         <Typography >
                             From 1 to :
                         </Typography>
@@ -116,6 +116,9 @@ class Fibonacci extends Component {
                             onChange={this.handleChange()}
                         />
                         <Button color="primary" variant="raised" className={classes.button} onClick={this.incFibonacci}>+</Button>
+                        <Color />
+                    </CardContent>
+                    <CardActions className={classes.cardActions} >
                     </CardActions>
                 </Card>
             </div>
