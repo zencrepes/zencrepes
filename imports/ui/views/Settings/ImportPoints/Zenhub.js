@@ -17,6 +17,8 @@ import TextField from '@material-ui/core/TextField';
 
 import { cfgSources } from "../../../data/Minimongo.js";
 
+import FetchZenhubPoints from '../../../data/FetchZenhubPoints.js';
+
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -78,6 +80,7 @@ class Zenhub extends Component {
         const { classes, loading, loadSuccess, loadedIssues, paused, resumeIn, token } = this.props;
         return (
             <div className={classes.root}>
+                <FetchZenhubPoints />
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
@@ -91,7 +94,6 @@ class Zenhub extends Component {
                             id="full-width"
                             label="Zenhub API Key"
                             value={token}
-                            disabled
                             className={classes.textField}
                             margin="normal"
                             onChange={this.handleChange()}
@@ -150,6 +152,8 @@ const mapState = state => ({
 
     loadedIssues: state.zenhub.loadedIssues,
     token: state.zenhub.token,
+    paused: state.zenhub.paused,
+
 });
 
 const mapDispatch = dispatch => ({
