@@ -62,7 +62,7 @@ class LabelsList extends Component {
                 descriptions: descriptions,
             });
         });
-        labels = _.sortBy(labels, [function(o) {return o.labels.length;}]);
+        labels = _.sortBy(labels, ['count']);
         labels = labels.reverse();
         this.setState({labels: labels});
     };

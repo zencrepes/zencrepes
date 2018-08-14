@@ -75,7 +75,7 @@ class Zenhub extends Component {
 
 
     render() {
-        const { classes, loading, loadSuccess, loadedIssues, token } = this.props;
+        const { classes, loading, loadSuccess, loadedIssues, paused, resumeIn, token } = this.props;
         return (
             <div className={classes.root}>
                 <Card>
@@ -85,8 +85,7 @@ class Zenhub extends Component {
                         </Typography>
                         <Typography>
                             Calls to Zenhub API are limited to 100 per minute without concurrent calls. Depending of the number of issues, this can be a lengthy process. <br />
-                            If interrupted, the system will not re-load issues for which points were previously obtained. <br />
-                            This import should be a one-off process and should not be done subsequently.
+                            If interrupted, the system will not re-load issues for which points were previously obtained.
                         </Typography>
                         <TextField
                             id="full-width"
@@ -103,6 +102,12 @@ class Zenhub extends Component {
                             <Typography component="p">
                                 Loaded points from {loadedIssues} issues.
                             </Typography>
+                            {paused &&
+                                <Typography component="p">
+                                    Importing from Zenhub is currently paused to accomodate rate limit. <br />
+                                    Will resume in {resumeIn} seconds.
+                                </Typography>
+                            }
                         </div>
                         }
                     </CardContent>
@@ -122,7 +127,7 @@ class Zenhub extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Created {createdLabels} labels amongst {updatedRepos} GitHub repositories</span>}
+                    message={<span id="message-id">Loaded points from {loadedIssues} issues</span>}
                 />
             </div>
         );

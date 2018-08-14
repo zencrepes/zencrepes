@@ -98,9 +98,12 @@ export default {
 
         token: '',          // Zenhub Token
 
-        rateLimitMax: 80,      // To handle Zenhub API rate limiting
-        rateLimitUsed: 0,       // To handle Zenhub API rate limiting
-        rateLimitPause: 60000,   // in ms - To handle Zenhub API rate limiting
+        rateLimitMax: 80,           // To handle Zenhub API rate limiting
+        rateLimitUsed: 0,           // To handle Zenhub API rate limiting
+        rateLimitPause: 60000,      // in ms - To handle Zenhub API rate limiting
+
+        paused: false,              // Calls to Zenhub are currently on hold
+        resumeIn: 60,                // Calls to Zenhub will resume in X seconds
 
         loadedIssues: 0
     },
@@ -110,12 +113,14 @@ export default {
         setLoadError(state, payload) {return { ...state, loadError: payload };},
         setLoadSuccess(state, payload) {return { ...state, loadSuccess: payload };},
 
+        setPaused(state, payload) {return { ...state, paused: payload };},
+        setResumeIn(state, payload) {return { ...state, resumeIn: payload };},
+
         setToken(state, payload) {return { ...state, token: payload };},
         setRateLimitUsed(state, payload) {return { ...state, rateLimitUsed: payload };},
 
         setLoadedIssues(state, payload) {return { ...state, loadedIssues: payload };},
         setIncrementLoadedIssues(state, payload) {return { ...state, loadedIssues: state.loadedIssues + payload };},
-
     },
     effects: {
         async initStates(payload, rootState) {

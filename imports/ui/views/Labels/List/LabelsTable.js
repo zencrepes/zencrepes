@@ -76,7 +76,7 @@ const ReposFormatter = ({ value }) => {
     if (value.length > 1) {
         return value.length;
     } else {
-        return value[0].repo.name;
+        return '1 (' + value[0].repo.name + ')';
     }
 };
 
