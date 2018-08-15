@@ -17,7 +17,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { cfgSources } from "../../../data/Minimongo.js";
 
-import FetchZenhubPoints from '../../../data/FetchZenhubPoints.js';
+import FetchWafflePoints from '../../../data/FetchWafflePoints.js';
 
 const styles = theme => ({
     root: {
@@ -43,7 +43,7 @@ const styles = theme => ({
     }
 });
 
-class Zenhub extends Component {
+class Waffle extends Component {
     constructor(props) {
         super(props);
     }
@@ -71,29 +71,28 @@ class Zenhub extends Component {
     };
 
     handleChange = name => event => {
-        const { setToken } = this.props;
-        setToken(event.target.value);
+        const { setBoardUrl } = this.props;
+        setBoardUrl(event.target.value);
     };
 
 
     render() {
-        const { classes, loading, loadSuccess, loadedIssues, paused, resumeIn, token, rateLimitPause, message } = this.props;
+        const { classes, loading, loadSuccess, loadedIssues, boardUrl, rateLimitPause, message } = this.props;
         return (
             <div className={classes.root}>
-                <FetchZenhubPoints />
+                <FetchWafflePoints />
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Load points from Zenhub
+                            Load points from Waffle
                         </Typography>
                         <Typography>
-                            Calls to Zenhub API are limited to 100 per minute without concurrent calls. Depending of the number of issues, this can be a lengthy process. <br />
-                            If interrupted, the system will not re-load issues for which points were previously obtained.
+                            Loading data from Waffle.io is limited to public boards and non-archived issues.
                         </Typography>
                         <TextField
                             id="full-width"
-                            label="Zenhub API Key"
-                            value={token}
+                            label="Waffle board URL"
+                            value={boardUrl}
                             className={classes.textField}
                             fullWidth
                             margin="normal"
@@ -105,12 +104,6 @@ class Zenhub extends Component {
                             <Typography component="p">
                                 {message} <br /> {loadedIssues > 0 && ", Scanned " + loadedIssues + " issues"}
                             </Typography>
-                            {paused &&
-                                <Typography component="p">
-                                    Importing from Zenhub is currently paused for {rateLimitPause/1000} to avoid hitting rate limit. <br />
-                                    Will resume in {resumeIn} seconds.
-                                </Typography>
-                            }
                         </div>
                         }
                     </CardContent>
@@ -137,7 +130,7 @@ class Zenhub extends Component {
     }
 }
 
-Zenhub.propTypes = {
+Waffle.propTypes = {
     classes: PropTypes.object,
     loading: PropTypes.bool,
     loadSuccess: PropTypes.bool,
@@ -148,22 +141,19 @@ Zenhub.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.zenhub.loading,
-    loadSuccess: state.zenhub.loadSuccess,
+    loading: state.waffle.loading,
+    loadSuccess: state.waffle.loadSuccess,
 
-    loadedIssues: state.zenhub.loadedIssues,
-    token: state.zenhub.token,
-    paused: state.zenhub.paused,
-    message: state.zenhub.message,
-    rateLimitPause: state.zenhub.rateLimitPause,
-
+    loadedIssues: state.waffle.loadedIssues,
+    boardUrl: state.waffle.boardUrl,
+    message: state.waffle.message,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.zenhub.setLoadFlag,
-    setLoadSuccess: dispatch.zenhub.setLoadSuccess,
+    setLoadFlag: dispatch.waffle.setLoadFlag,
+    setLoadSuccess: dispatch.waffle.setLoadSuccess,
 
-    setToken: dispatch.zenhub.setToken,
+    setBoardUrl: dispatch.waffle.setBoardUrl,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Zenhub));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Waffle));

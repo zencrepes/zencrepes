@@ -15,8 +15,10 @@ export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';
 export { default as queries } from './queries.js';
 export { default as remaining } from './remaining.js';
-export { default as zenhub } from './zenhub.js';
 export { default as startup } from './startup.js';
 export { default as labelsconfiguration } from './labelsconfiguration.js';
 export { default as wizard } from './wizard.js';
+
+export { default as zenhub } from './zenhub.js';
+export { default as waffle } from './waffle.js';
 

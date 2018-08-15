@@ -45,10 +45,10 @@ class Startup extends Component {
                 <DialogTitle id="simple-dialog-title">Starting up the app ...</DialogTitle>
                 <DialogContent>
                     <div>
-                        Issues: {issuesCount} - {loadedIssues.toString()} <br />
-                        Labels: {labelsCount}  - {loadedLabels.toString()} <br />
-                        Queries: {queriesCount}  - {loadedQueries.toString()} <br />
-                        Repos: {sourcesCount} - {loadedSources.toString()} <br />
+                        Issues: {issuesCount} {loadedIssues && <i>- Complete</i>} <br />
+                        Labels: {labelsCount} {loadedLabels && <i>- Complete</i>} <br />
+                        Queries: {queriesCount} {loadedQueries && <i>- Complete</i>} <br />
+                        Repos: {sourcesCount} {loadedSources && <i>- Complete</i>} <br />
                     </div>
                 </DialogContent>
             </Dialog>

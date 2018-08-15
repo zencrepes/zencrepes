@@ -10,6 +10,7 @@ import GridItem from '../../../components/Grid/GridItem.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 
 import Zenhub from './Zenhub.js';
+import Waffle from './Waffle.js';
 
 class ImportPoints extends Component {
     constructor(props) {
@@ -24,7 +25,7 @@ class ImportPoints extends Component {
                     <Zenhub />
                 </GridItem>
                 <GridItem xs={12} sm={6} md={6}>
-                    <h4>Waffle</h4>
+                    <Waffle />
                 </GridItem>
             </GridContainer>
         );
