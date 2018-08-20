@@ -119,6 +119,7 @@ class Labels extends Component {
             } else if (action === 'delete') {
                 console.log('Request to delete label');
                 const result = await this.octokit.issues.deleteLabel({owner: repo.org.login, repo: repo.name, name: selectedName});
+                setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                 cfgLabels.remove({id:repo.label.id});
             }
         }

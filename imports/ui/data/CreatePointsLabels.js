@@ -59,23 +59,29 @@ class CreatePointsLabels extends Component {
             //TODO - Add code to create labels
             for (let label of missingPointsLabels) {
                 console.log('Processing: ' + label);
-                let result = await this.octokit.issues.createLabel({
-                    owner: repo.org.login,
-                    repo: repo.name,
-                    name: label,
-                    color: color.replace('#', ''),
-                    description: 'Story points estimate'
-                });
+                let result = false;
+                try {
+                    result = await this.octokit.issues.createLabel({
+                        owner: repo.org.login,
+                        repo: repo.name,
+                        name: label,
+                        color: color.replace('#', ''),
+                        description: 'Story points estimate'
+                    });
+                }
+                catch(error) {
+                    console.log(error);
+                }
                 console.log(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    console.log(result);
                     let labelObj = {
                         id: result.data.node_id,
                         url: result.data.url,
                         color: result.data.color,
                         name: result.data.name,
                         isDefault: result.data.default,
+                        issues: {totalCount: 0},
                         repo: repo,
                         refreshed: true,
                     };
