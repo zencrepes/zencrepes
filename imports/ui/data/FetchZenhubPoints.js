@@ -94,16 +94,17 @@ class FetchZenhubPoints extends Component {
         return issues.reduce((a, b) => [...a, ...b], []);
     };
 
-    getIssuesDataFromZenhub = async (issues, rootState, rateLimitUsed) => {
+    getIssuesDataFromZenhub = async (issues, rateLimitUsed) => {
         const { rateLimitMax, rateLimitPause, token, setRateLimitUsed, setPaused, setMessage, setIncrementLoadedIssues } = this.props;
         console.log('getIssuesDataFromZenhub');
 
         for (let issue of issues) {
             if (rateLimitUsed >=rateLimitMax) {
-                console.log('Migth be hitting zenhub API limit, pausing');
+                console.log('Might be hitting zenhub API limit, pausing');
                 setPaused(true);
                 await this.sleep(rateLimitPause);
                 setPaused(false);
+                rateLimitUsed = 0;
             }
             rateLimitUsed++;
             setRateLimitUsed(rateLimitUsed);
@@ -135,8 +136,9 @@ class FetchZenhubPoints extends Component {
         setLoadSuccess(false);
         setLoadedIssues(0);
 
+        let repositories = cfgSources.find({active: true, fetchZenhub: true}).fetch().filter(v => v.databaseId !== undefined);
         //let repositories = cfgSources.find({"org.name":{"$in":["Kids First Data Resource Center","Overture"]}}).fetch().filter(v => v.databaseId !== undefined);
-        let repositories = cfgSources.find({"org.name":{"$in":["Overture"]}}).fetch().filter(v => v.databaseId !== undefined);
+        //let repositories = cfgSources.find({"org.name":{"$in":["Overture"]}}).fetch().filter(v => v.databaseId !== undefined);
 
         const { rateLimitUsed, boardRepos } = await this.getReposFromZenhubBoards(repositories);
         setRateLimitUsed(rateLimitUsed);

@@ -19,6 +19,8 @@ import { cfgSources } from "../../../data/Minimongo.js";
 
 import FetchZenhubPoints from '../../../data/FetchZenhubPoints.js';
 
+import Tree from '../../../components/Settings/Repositories/Treeview/Tree.js';
+
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -99,11 +101,15 @@ class Zenhub extends Component {
                             margin="normal"
                             onChange={this.handleChange()}
                         />
+                        <Typography>
+                            Select repositories and organizations to import Zenhub points from:
+                        </Typography>
+                        <Tree all={{active: true}} selected={{active: true, fetchZenhub: true}} enable={{fetchZenhub: true}} disable={{fetchZenhub: false}} />
                         {loading &&
                         <div className={classes.loading}>
                             <LinearProgress />
                             <Typography component="p">
-                                {message} <br /> {loadedIssues > 0 && ", Scanned " + loadedIssues + " issues"}
+                                {message} <br /> {loadedIssues > 0 && "Scanned " + loadedIssues + " issues"}
                             </Typography>
                             {paused &&
                                 <Typography component="p">
@@ -130,7 +136,7 @@ class Zenhub extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Loaded points from {loadedIssues} issues</span>}
+                    message={<span id="message-id">Scan {loadedIssues} issues for Zenhub points</span>}
                 />
             </div>
         );

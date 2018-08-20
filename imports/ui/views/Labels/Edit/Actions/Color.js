@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 import classNames from 'classnames';
 
-import { SketchPicker } from 'react-color'
+import { SketchPicker } from 'react-color';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';

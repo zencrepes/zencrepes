@@ -10,6 +10,9 @@ import { cfgSources } from './Minimongo.js';
 import {cfgLabels} from "./Minimongo";
 import fibonacci from "fibonacci-fast";
 
+import GitHubApi from '@octokit/rest';
+
+
 /*
 Load data about Github Orgs
  */
@@ -17,6 +20,12 @@ class CreatePointsLabels extends Component {
     constructor (props) {
         super(props);
         this.repositories = [];
+
+        this.octokit = new GitHubApi();
+        this.octokit.authenticate({
+            type: 'oauth',
+            token: Meteor.user().services.github.accessToken
+        });
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -29,7 +38,7 @@ class CreatePointsLabels extends Component {
     };
 
     load = async () => {
-        const { client, updateChip, setLoading, setLoadError, setLoadSuccess, maxPoints, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
+        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, maxPoints, color, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -39,16 +48,47 @@ class CreatePointsLabels extends Component {
 
         let points = fibonacci.array(2, fibonacci.find(maxPoints).index + 1).map(x => 'SP:' + x.number.toString());
         console.log(points);
-        let repos = cfgSources.find({active: true}).map(repo => {
+        let repos = cfgSources.find({active: true, pushLabels: true}).fetch();
+        //let repos = cfgSources.find({active: true, pushLabels: true}).map(repo => {
+        for (let repo of repos) {
+            console.log(repo);
             //Get Labels for repo
             let labels = cfgLabels.find({'repo.id': repo.id}).map(label => label.name);
 
+            let missingPointsLabels = _.difference(points, labels);
             //TODO - Add code to create labels
+            for (let label of missingPointsLabels) {
+                console.log('Processing: ' + label);
+                let result = await this.octokit.issues.createLabel({
+                    owner: repo.org.login,
+                    repo: repo.name,
+                    name: label,
+                    color: color.replace('#', ''),
+                    description: 'Story points estimate'
+                });
+                console.log(result);
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    console.log(result);
+                    let labelObj = {
+                        id: result.data.node_id,
+                        url: result.data.url,
+                        color: result.data.color,
+                        name: result.data.name,
+                        isDefault: result.data.default,
+                        repo: repo,
+                        refreshed: true,
+                    };
+                    await cfgLabels.upsert({
+                        id: labelObj.id
+                    }, {
+                        $set: labelObj
+                    });
+                }
+            }
             setIncrementUpdatedRepos(1);
             setIncrementCreatedLabels(points.length);
-            console.log(repo);
-            console.log(labels);
-        });
+        }
 
         setLoadSuccess(true);
         setLoading(false);
@@ -68,6 +108,7 @@ const mapState = state => ({
     loading: state.githubCreatePointsLabels.loading,
 
     maxPoints: state.githubLabels.maxPoints,
+    color: state.githubLabels.color,
 
 });
 
@@ -83,6 +124,8 @@ const mapDispatch = dispatch => ({
     setIncrementUpdatedRepos: dispatch.githubCreatePointsLabels.setIncrementUpdatedRepos,
 
     updateChip: dispatch.chip.updateChip,
+    setChipRemaining: dispatch.chip.setRemaining,
+
 });
 
 export default connect(mapState, mapDispatch)(withApollo(CreatePointsLabels));

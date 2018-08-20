@@ -8,13 +8,14 @@ import PropTypes from "prop-types";
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
-import { cfgSources } from "../../../data/Minimongo.js";
+import { cfgSources } from "../../../../data/Minimongo.js";
 import Card from "@material-ui/core/Card";
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from "@material-ui/core/CardContent";
 import Typography from '@material-ui/core/Typography';
 
 import Stats from './Stats.js';
+import Tree from './Tree.js';
 
 const styles = theme => ({
     root: {
@@ -44,32 +45,36 @@ class Treeview extends Component {
     }
 
     componentDidMount() {
+        const { selected } = this.props;
         this.setState({
             nodes: this.getData(),
-            checked: cfgSources.find({active: true}).fetch().map(repo => repo.id),
+            checked: cfgSources.find(selected).fetch().map(repo => repo.id),
         });
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        const { selected } = this.props;
         const updatedNodes = this.getData();
         if (!_.isEqual(updatedNodes, prevState.nodes)) {
             this.setState({
                 nodes: this.getData(),
-                checked: cfgSources.find({active: true}).fetch().map(repo => repo.id),
+                checked: cfgSources.find(selected).fetch().map(repo => repo.id),
             });
         }
     };
 
     checkNode = async (checked) => {
-        await cfgSources.update({}, { $set: { active: false } }, {multi: true});
+        const { all, enable, disable } = this.props;
+        await cfgSources.update(all, { $set: disable }, {multi: true});
         checked.forEach(async (checkedId) => {
-            await cfgSources.update({id: checkedId}, { $set: { active: true } }, {multi: false});
+            await cfgSources.update({id: checkedId}, { $set: enable }, {multi: false});
         });
         this.setState({ checked });
     };
 
     getData(){
-        let allRepos = cfgSources.find({}).fetch();
+        const { all } = this.props;
+        let allRepos = cfgSources.find(all).fetch();
         let uniqueOrgs = _.toArray(_.groupBy(allRepos, 'org.login'));
         let data = uniqueOrgs.map((org) => {
             return {
@@ -87,7 +92,7 @@ class Treeview extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, all, selected, enable, disable } = this.props;
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
@@ -95,13 +100,7 @@ class Treeview extends Component {
                         <Typography className={classes.title} color="textSecondary">
                             Available Organizations and Repositories
                         </Typography>
-                        <CheckboxTree
-                            nodes={this.state.nodes}
-                            checked={this.state.checked}
-                            expanded={this.state.expanded}
-                            onCheck={this.checkNode}
-                            onExpand={expanded => this.setState({ expanded })}
-                        />
+                        <Tree all={all} selected={selected} enable={enable} disable={disable} />
                         <Stats/>
                     </CardContent>
                 </Card>
@@ -112,10 +111,6 @@ class Treeview extends Component {
 
 Treeview.propTypes = {
     classes: PropTypes.object,
-    repos: PropTypes.array,
 };
 
-export default withTracker(() => {return {repos: cfgSources.find({}).fetch()}})
-(
-    withStyles(styles)(Treeview)
-)
+export default withStyles(styles)(Treeview);

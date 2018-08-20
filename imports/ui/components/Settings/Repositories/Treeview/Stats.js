@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 import Typography from '@material-ui/core/Typography';
 
-import {cfgSources} from "../../../data/Minimongo.js";
+import {cfgSources} from "../../../../data/Minimongo.js";
 
 const styles = theme => ({
     root: {

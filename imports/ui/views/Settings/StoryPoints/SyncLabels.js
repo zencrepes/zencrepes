@@ -14,6 +14,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 import { cfgSources } from "../../../data/Minimongo.js";
+import Tree from '../../../components/Settings/Repositories/Treeview/Tree.js';
 
 const styles = theme => ({
     root: {
@@ -80,6 +81,10 @@ class SyncLabels extends Component {
                             Please also note that this process is not mandatory, simply adding a label 'SP:x' (with 'x' being a number) though GitHub web interface is sufficient. <br />
                             Adding through this interface ensures consistency (label names, color, description) across repositories.
                         </Typography>
+                        <Typography>
+                            Select repositories and organizations to push points labels to:
+                        </Typography>
+                        <Tree all={{active: true}} selected={{active: true, pushLabels: true}} enable={{pushLabels: true}} disable={{pushLabels: false}} />
 
                         {loading &&
                         <div className={classes.loading}>

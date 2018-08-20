@@ -11,8 +11,7 @@ import FetchOrgs  from '../../../data/FetchOrgs.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 import GridItem from '../../../components/Grid/GridItem.js';
 
-import Treeview from '../../../components/Settings/Repositories/Treeview.js';
-import Stats from '../../../components/Settings/Repositories/Stats.js';
+import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
 
 import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
 import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
@@ -42,7 +41,7 @@ class Step2 extends Component {
                         <ScanRepo />
                     </GridItem>
                     <GridItem xs={12} sm={6} md={6}>
-                        <Treeview />
+                        <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
                     </GridItem>
                 </GridContainer>
             </div>

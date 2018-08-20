@@ -48,7 +48,7 @@ class EnabledRepos extends Component {
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Status of points configuration across your repositories
+                            Status of points labels configuration across your repositories
                         </Typography>
                         <ReposTable />
                     </CardContent>

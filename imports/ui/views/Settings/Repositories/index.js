@@ -17,7 +17,8 @@ import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
 import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
 import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
 
-import Treeview from '../../../components/Settings/Repositories/Treeview.js';
+//import Treeview from '../../../components/Settings/Repositories/Treeview.js';
+import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
 
 import Selects from '../../../components/Settings/Load/Selects.js';
 
@@ -39,7 +40,7 @@ class Repositories extends Component {
                     <ScanRepo />
                 </GridItem>
                 <GridItem xs={12} sm={6} md={6}>
-                    <Treeview />
+                    <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={12}>
                     <Selects />
