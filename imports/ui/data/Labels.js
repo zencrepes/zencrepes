@@ -62,14 +62,18 @@ class Labels extends Component {
                         labelDescription = '';
                     }
 
-                    result = await this.octokit.issues.createLabel({
-                        owner: repo.org.login,
-                        repo: repo.name,
-                        name: labelName,
-                        color: labelColor,
-                        description: labelDescription
-                    });
-
+                    try {
+                        result = await this.octokit.issues.createLabel({
+                            owner: repo.org.login,
+                            repo: repo.name,
+                            name: labelName,
+                            color: labelColor,
+                            description: labelDescription
+                        });
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
                 } else {
                     console.log('Label does exist, updating label: ' + selectedName);
 
@@ -92,7 +96,12 @@ class Labels extends Component {
                         console.log('Nothing to be changed, not sending a request to Github');
                     } else {
                         console.log(updateObj);
-                        result = await this.octokit.issues.updateLabel(updateObj);
+                        try {
+                            result = await this.octokit.issues.updateLabel(updateObj);
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
                     }
                 }
                 if (result !== false) {

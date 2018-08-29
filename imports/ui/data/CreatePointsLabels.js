@@ -38,7 +38,7 @@ class CreatePointsLabels extends Component {
     };
 
     load = async () => {
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, maxPoints, color, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
+        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, maxPoints, action, color, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -55,41 +55,68 @@ class CreatePointsLabels extends Component {
             //Get Labels for repo
             let labels = cfgLabels.find({'repo.id': repo.id}).map(label => label.name);
 
-            let missingPointsLabels = _.difference(points, labels);
-            //TODO - Add code to create labels
-            for (let label of missingPointsLabels) {
-                console.log('Processing: ' + label);
-                let result = false;
-                try {
-                    result = await this.octokit.issues.createLabel({
-                        owner: repo.org.login,
-                        repo: repo.name,
-                        name: label,
-                        color: color.replace('#', ''),
-                        description: 'Story points estimate'
-                    });
+            if (action === 'create') {
+                let missingPointsLabels = _.difference(points, labels);
+                for (let label of missingPointsLabels) {
+                    console.log('Processing: ' + label);
+                    let result = false;
+                    try {
+                        result = await this.octokit.issues.createLabel({
+                            owner: repo.org.login,
+                            repo: repo.name,
+                            name: label,
+                            color: color.replace('#', ''),
+                            description: 'Story points estimate'
+                        });
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+                    console.log(result);
+                    if (result !== false) {
+                        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                        let labelObj = {
+                            id: result.data.node_id,
+                            url: result.data.url,
+                            color: result.data.color,
+                            name: result.data.name,
+                            isDefault: result.data.default,
+                            issues: {totalCount: 0},
+                            repo: repo,
+                            refreshed: true,
+                        };
+                        await cfgLabels.upsert({
+                            id: labelObj.id
+                        }, {
+                            $set: labelObj
+                        });
+                    }
                 }
-                catch(error) {
-                    console.log(error);
-                }
-                console.log(result);
-                if (result !== false) {
-                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    let labelObj = {
-                        id: result.data.node_id,
-                        url: result.data.url,
-                        color: result.data.color,
-                        name: result.data.name,
-                        isDefault: result.data.default,
-                        issues: {totalCount: 0},
-                        repo: repo,
-                        refreshed: true,
-                    };
-                    await cfgLabels.upsert({
-                        id: labelObj.id
-                    }, {
-                        $set: labelObj
-                    });
+            }
+            else if (action === 'delete') {
+                for (let label of points) {
+                    console.log('Processing: ' + label);
+                    let result = false;
+                    try {
+                        if (labels.includes(label)) {
+                            result = await this.octokit.issues.deleteLabel({
+                                owner: repo.org.login,
+                                repo: repo.name,
+                                name: label,
+                            });
+                        } else {
+                            console.log('Label: ' + label + ' does not exist in repo: ' + repo.name + ', skipping...');
+                        }
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                    console.log(result);
+                    if (result !== false) {
+                        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                        cfgLabels.remove({'repo.id': repo.id, name: 'label'});
+                        console.log('Label: ' + label + ' removed from repo: ' + repo.name);
+                    }
                 }
             }
             setIncrementUpdatedRepos(1);
@@ -112,6 +139,7 @@ CreatePointsLabels.propTypes = {
 const mapState = state => ({
     loadFlag: state.githubCreatePointsLabels.loadFlag,
     loading: state.githubCreatePointsLabels.loading,
+    action: state.githubCreatePointsLabels.action,
 
     maxPoints: state.githubLabels.maxPoints,
     color: state.githubLabels.color,

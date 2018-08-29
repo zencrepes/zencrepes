@@ -62,8 +62,15 @@ class SyncLabels extends Component {
         }
     };
 
-    reloadRepos = () => {
-        const { setLoadFlag } = this.props;
+    createLabels = () => {
+        const { setLoadFlag, setAction } = this.props;
+        setAction('create');
+        setLoadFlag(true);
+    };
+
+    deleteLabel = () => {
+        const { setLoadFlag, setAction } = this.props;
+        setAction('delete');
         setLoadFlag(true);
     };
 
@@ -82,7 +89,7 @@ class SyncLabels extends Component {
                             Adding through this interface ensures consistency (label names, color, description) across repositories.
                         </Typography>
                         <Typography>
-                            Select repositories and organizations to push points labels to:
+                            Select repositories and organizations to apply the modification to:
                         </Typography>
                         <Tree all={{active: true}} selected={{active: true, pushLabels: true}} enable={{pushLabels: true}} disable={{pushLabels: false}} />
 
@@ -90,7 +97,7 @@ class SyncLabels extends Component {
                         <div className={classes.loading}>
                             <LinearProgress />
                             <Typography component="p">
-                                Created {createdLabels} labels amongst {updatedRepos} Repositories.
+                                Applied {createdLabels} labels modifications amongst {updatedRepos} Repositories.
                             </Typography>
                         </div>
                         }
@@ -98,8 +105,11 @@ class SyncLabels extends Component {
                     {!loading &&
                     <CardActions className={classes.cardActions} >
                         <div className={classes.actionButtons} >
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
+                            <Button color="primary" variant="raised" className={classes.button} onClick={this.createLabels}>
                                 Create Labels
+                            </Button>
+                            <Button color="primary" variant="raised" className={classes.button} onClick={this.deleteLabel}>
+                                Delete Labels
                             </Button>
                         </div>
                     </CardActions>
@@ -111,7 +121,7 @@ class SyncLabels extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Created {createdLabels} labels amongst {updatedRepos} GitHub repositories</span>}
+                    message={<span id="message-id">Modified {createdLabels} labels amongst {updatedRepos} GitHub repositories</span>}
                 />
             </div>
         );
@@ -138,6 +148,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubCreatePointsLabels.setLoadFlag,
     setLoadSuccess: dispatch.githubCreatePointsLabels.setLoadSuccess,
+    setAction: dispatch.githubCreatePointsLabels.setAction,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(SyncLabels));
