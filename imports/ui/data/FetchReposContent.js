@@ -164,36 +164,39 @@ class FetchReposContent extends Component {
 
     ingestIssues = async (data, RepoObj, lastUpdateDate) => {
         let lastCursor = null;
+        let stopUpdates = false;
         console.log(data);
         console.log(data.data.repository);
 
         for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
+            console.log('Loading issue: ' + currentIssue.node.title);
+            let existNode = cfgIssues.findOne({id: currentIssue.node.id});
+
+            let nodePinned = false;
+            let nodePoints = null;
+            if (existNode !== undefined) {
+                nodePinned = existNode.pinned;
+                nodePoints = existNode.points;
+            }
+            let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
+            issueObj['repo'] = RepoObj;
+            issueObj['org'] = RepoObj.org;
+            issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
+            issueObj['refreshed'] = true;
+            issueObj['pinned'] = nodePinned;
+            issueObj['points'] = nodePoints;
+            issueObj['active'] = true;
+            await cfgIssues.upsert({
+                id: issueObj.id
+            }, {
+                $set: issueObj
+            });
+            this.props.incrementIssuesLoadedCount(1);
+
             if (new Date(currentIssue.node.updatedAt) <= new Date(lastUpdateDate)) {
                 lastCursor = null;
-            } else {
-                console.log('Loading issue: ' + currentIssue.node.title);
-                let existNode = cfgIssues.findOne({id: currentIssue.node.id});
-
-                let nodePinned = false;
-                let nodePoints = null;
-                if (existNode !== undefined) {
-                    nodePinned = existNode.pinned;
-                    nodePoints = existNode.points;
-                }
-                let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
-                issueObj['repo'] = RepoObj;
-                issueObj['org'] = RepoObj.org;
-                issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
-                issueObj['refreshed'] = true;
-                issueObj['pinned'] = nodePinned;
-                issueObj['points'] = nodePoints;
-                issueObj['active'] = true;
-                await cfgIssues.upsert({
-                    id: issueObj.id
-                }, {
-                    $set: issueObj
-                });
-                this.props.incrementIssuesLoadedCount(1);
+                stopUpdates = true;
+            } else if (stopUpdates === false) {
                 lastCursor = currentIssue.cursor;
             }
         }
