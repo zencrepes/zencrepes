@@ -39,11 +39,13 @@ class Actions extends Component {
     deleteIssues = () => {
         console.log('deleteIssues');
         cfgIssues.remove({});
+        this.forceUpdate();
     };
 
     deleteLabels = () => {
         console.log('deleteLabels');
         cfgLabels.remove({});
+        this.forceUpdate();
     };
 
     render() {

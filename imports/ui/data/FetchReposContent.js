@@ -186,6 +186,10 @@ class FetchReposContent extends Component {
             issueObj['pinned'] = nodePinned;
             issueObj['points'] = nodePoints;
             issueObj['active'] = true;
+
+            //Get points from labels
+            // Regex to test: ^SP:.\d$
+
             await cfgIssues.upsert({
                 id: issueObj.id
             }, {
