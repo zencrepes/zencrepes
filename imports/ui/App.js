@@ -20,8 +20,8 @@ import LabelsEdit from './views/Labels/Edit/index.js';
 
 import Index from './Index.js';
 
-import Public from './components/Public/Public.js'
-import Authenticated from './components/Authenticated/Authenticated.js'
+import Public from './components/Public/Public.js';
+import Authenticated from './components/Authenticated/Authenticated.js';
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 

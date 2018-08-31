@@ -62,10 +62,6 @@ class QueryView extends Component {
                             );
                         })}
                         </Paper>
-
-                        <br />Filter Object: <i>{JSON.stringify(filters)}</i>
-                        <br />Mongo Filter: <i>{JSON.stringify(buildMongoSelector(filters))}</i>
-                        <br />
                         <Button onClick={this.openSaveQuery} color="primary" autoFocus>
                             Save Query
                         </Button>

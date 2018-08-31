@@ -29,7 +29,7 @@ class GitRequests extends React.Component {
                 <Tooltip id="tooltip-bottom" title={tooltipValue} placement="bottom">
                     <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
                 </Tooltip>
-                Remaining Github tokens: {remaining} / 5000
+                Available Github tokens: {remaining} / 5000
             </div>
         );
     }
@@ -42,8 +42,6 @@ GitRequests.propTypes = {
     remaining: PropTypes.number,
     resetAt: PropTypes.string,
 };
-
-//export default withStyles(styles)(GitRequests);
 
 const mapState = state => ({
     limit: state.chip.limit,

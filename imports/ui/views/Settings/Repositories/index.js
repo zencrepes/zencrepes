@@ -17,7 +17,6 @@ import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
 import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
 import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
 
-//import Treeview from '../../../components/Settings/Repositories/Treeview.js';
 import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
 import Selects from '../../../components/Settings/Load/Selects.js';
 

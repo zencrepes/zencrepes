@@ -1,6 +1,9 @@
 export { default as chip } from './chip.js';
 export { default as data } from './data.js';
+export { default as loading } from './loading.js';
+
 export { default as github } from './github.js';
+
 export { default as githubIssues } from './githubIssues.js';
 export { default as githubLabels } from './githubLabels.js';
 

@@ -19,6 +19,7 @@ import IssuesTable from "./IssuesTable.js";
 import GitRequests from "../../components/Github/GitRequests";
 import SyncFilters from "./SyncFilters.js";
 
+import LoadingAll from '../../components/Loading/All/index.js'
 
 class Search extends Component {
     constructor(props) {
@@ -50,6 +51,7 @@ class Search extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <SyncFilters />
+                            <LoadingAll />
                             <div className={classes.mainContent}>
                                 <div className={classes.Query}>
                                     <QueryView />
@@ -76,7 +78,6 @@ Search.propTypes = {
 };
 
 const mapState = state => ({
-
 });
 
 const mapDispatch = dispatch => ({

@@ -257,6 +257,7 @@ export default {
     effects: {
         //Add a filter, then refresh the data points
         async addFilterRefresh(payload, rootState) {
+            window.store.dispatch.loading.setLoading(true);
             //Get the list of updated filters, and push received filter payload to state
             let updatedFilters = addToFilters(payload, rootState.data.filters, rootState.data.facets);
             this.addFilter(payload);
@@ -277,6 +278,7 @@ export default {
                     }
                     //facetMongoFilter = {};
                 }
+                window.store.dispatch.loading.setMessage('Building aggregations for facet: ' + facet.header);
                 return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
             await this.updateFacets(newFacets);
@@ -292,6 +294,7 @@ export default {
                 }
             });
             this.updateTableSelection(selectedIssues);
+            window.store.dispatch.loading.setLoading(false);
         },
         async removeFilterRefresh(payload, rootState) {
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);

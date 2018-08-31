@@ -143,7 +143,6 @@ class Sidebar extends Component {
 
 Sidebar.propTypes = {
     classes: PropTypes.object,
-
 };
 
 const mapState = state => ({

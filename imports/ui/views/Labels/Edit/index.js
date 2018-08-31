@@ -27,6 +27,8 @@ import EditActions from './Actions/index.js';
 import Labels from '../../../data/Labels.js';
 import UpdatingLabels from '../../../components/Loading/Labels/index.js';
 
+import LoadingAll from '../../../components/Loading/All/index.js';
+
 class LabelsEdit extends Component {
     constructor(props) {
         super(props);
@@ -41,9 +43,10 @@ class LabelsEdit extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        const { initSelectedRepos, initAvailableRepos, setSelectedName } = this.props;
+        const { initSelectedRepos, initAvailableRepos, setSelectedName, setLoading } = this.props;
         //When mounting the component, initializing content of the available and selected labels list
 
+        setLoading(true);
         let selectedRepos = [];
         if (this.props.match.params.id !== 'all') {
             selectedRepos = [cfgLabels.findOne({id: this.props.match.params.id}).repo];
@@ -63,6 +66,7 @@ class LabelsEdit extends Component {
         initAvailableRepos(availableRepos);
 
         setSelectedName(this.props.match.params.name);
+        setLoading(false);
     }
 
     render() {
@@ -84,6 +88,7 @@ class LabelsEdit extends Component {
                         <div className={classes.container}>
                             <Labels />
                             <UpdatingLabels />
+                            <LoadingAll />
                             <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
                             <Link to={"/labels/view/" + this.props.match.params.name}><Button className={classes.button}>Back Configuration</Button></Link>
                             <GridContainer>
@@ -122,6 +127,9 @@ const mapDispatch = dispatch => ({
     initAvailableRepos: dispatch.labelsconfiguration.initAvailableRepos,
     initSelectedRepos: dispatch.labelsconfiguration.initSelectedRepos,
     setSelectedName: dispatch.labelsconfiguration.setSelectedName,
+
+    setLoading: dispatch.loading.setLoading,
+
 });
 
 export default connect(mapState, mapDispatch)(withRouter(withStyles(dashboardStyle)(LabelsEdit)));
