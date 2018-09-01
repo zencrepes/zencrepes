@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
-
 import { cfgIssues } from "../../data/Minimongo.js";
 import {buildMongoSelector} from "../../utils/mongo/index.js";
+
+const timeout = ms => new Promise(res => setTimeout(res, ms))
 
 //Add the payload to current filters
 const addToFilters = (payload, currentFilters, currentFacets) => {
@@ -257,7 +258,8 @@ export default {
     effects: {
         //Add a filter, then refresh the data points
         async addFilterRefresh(payload, rootState) {
-            window.store.dispatch.loading.setLoading(true);
+            await window.store.dispatch.loading.updateLoading(true); //TODO - Replace timeout and loader display with something better
+
             //Get the list of updated filters, and push received filter payload to state
             let updatedFilters = addToFilters(payload, rootState.data.filters, rootState.data.facets);
             this.addFilter(payload);
@@ -265,6 +267,8 @@ export default {
             // Build the mongo filter from the filters state, set the filtered state in the mongo records.
             let mongoFilter = await buildMongoSelector(updatedFilters);
             await filterMongo(mongoFilter);
+
+            await window.store.dispatch.loading.updateMessage('Building facets aggregations');
 
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
@@ -278,10 +282,14 @@ export default {
                     }
                     //facetMongoFilter = {};
                 }
-                window.store.dispatch.loading.setMessage('Building aggregations for facet: ' + facet.header);
                 return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
+
+            await window.store.dispatch.loading.updateMessage('Updating facets'); //TODO - Replace timeout and loader display with something better
+
             await this.updateFacets(newFacets);
+
+            await window.store.dispatch.loading.updateMessage('Updating results table'); //TODO - Replace timeout and loader display with something better
 
             // Update the results
             let updatedResults = cfgIssues.find(mongoFilter).fetch()
@@ -294,7 +302,8 @@ export default {
                 }
             });
             this.updateTableSelection(selectedIssues);
-            window.store.dispatch.loading.setLoading(false);
+
+            await window.store.dispatch.loading.updateLoading(false);
         },
         async removeFilterRefresh(payload, rootState) {
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);
