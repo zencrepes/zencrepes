@@ -259,6 +259,7 @@ export default {
         //Add a filter, then refresh the data points
         async addFilterRefresh(payload, rootState) {
             await window.store.dispatch.loading.updateLoading(true); //TODO - Replace timeout and loader display with something better
+            await window.store.dispatch.loading.updateMessage('Refreshing filters');
 
             //Get the list of updated filters, and push received filter payload to state
             let updatedFilters = addToFilters(payload, rootState.data.filters, rootState.data.facets);
@@ -285,8 +286,6 @@ export default {
                 return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
 
-            await window.store.dispatch.loading.updateMessage('Updating facets'); //TODO - Replace timeout and loader display with something better
-
             await this.updateFacets(newFacets);
 
             await window.store.dispatch.loading.updateMessage('Updating results table'); //TODO - Replace timeout and loader display with something better
@@ -306,6 +305,9 @@ export default {
             await window.store.dispatch.loading.updateLoading(false);
         },
         async removeFilterRefresh(payload, rootState) {
+            await window.store.dispatch.loading.updateLoading(true); //TODO - Replace timeout and loader display with something better
+            await window.store.dispatch.loading.updateMessage('Refreshing filters');
+
             let updatedFilters = removeFromFilters(payload, rootState.data.filters);
             this.removeFilter(payload);
 
@@ -313,13 +315,18 @@ export default {
             let mongoFilter = await buildMongoSelector(updatedFilters);
             await filterMongo(mongoFilter);
 
+            await window.store.dispatch.loading.updateMessage('Building facets aggregations');
+
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 let facetMongoFilter = mongoFilter;
                 if (isFacetSelected(facet, updatedFilters) === true && facet.type !== 'bool') {facetMongoFilter = {};} // If the facet is currently selected, do not filter the facet's content
                 return {...facet, data: getFacetAggregations(facet, facetMongoFilter)};
             });
+
             await this.updateFacets(newFacets);
+
+            await window.store.dispatch.loading.updateMessage('Updating results table'); //TODO - Replace timeout and loader display with something better
 
             // Update the results
             let updatedResults = cfgIssues.find(mongoFilter).fetch()
@@ -332,9 +339,13 @@ export default {
                 }
             });
             this.updateTableSelection(selectedIssues);
+            await window.store.dispatch.loading.updateLoading(false); //TODO - Replace timeout and loader display with something better
 
         },
         async initFacets(payload, rootState) {
+            await window.store.dispatch.loading.updateLoading(true); //TODO - Replace timeout and loader display with something better
+            await window.store.dispatch.loading.updateMessage('Refreshing filters');
+
             this.updateLoading(true);
 
             await clearIssuesFilters();
@@ -344,11 +355,16 @@ export default {
 
             await filterMongo(mongoFilter);
 
+            await window.store.dispatch.loading.updateMessage('Building facets aggregations');
+
             // Refresh/populate the facets data from mongo
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 return {...facet, data: getFacetAggregations(facet, mongoFilter)};
             });
+
             await this.updateFacets(newFacets);
+
+            await window.store.dispatch.loading.updateMessage('Updating results table'); //TODO - Replace timeout and loader display with something better
 
             // Update the results
             let updatedResults = cfgIssues.find(mongoFilter).fetch()
@@ -363,8 +379,14 @@ export default {
             this.updateTableSelection(selectedIssues);
 
             this.updateLoading(false);
+
+            await window.store.dispatch.loading.updateLoading(false); //TODO - Replace timeout and loader display with something better
+
         },
         async updateFromQuery(filter, rootState, history) {
+            await window.store.dispatch.loading.updateLoading(true); //TODO - Replace timeout and loader display with something better
+            await window.store.dispatch.loading.updateMessage('Refreshing filters');
+
             this.updateFilters(filter);
             let mongoFilter = buildMongoSelector(filter);
 
@@ -373,10 +395,14 @@ export default {
 
             history.push('/search');
 
+            await window.store.dispatch.loading.updateMessage('Building facets aggregations');
+
             let newFacets = JSON.parse(JSON.stringify(rootState.data.facets)).map((facet) => {
                 return {...facet, data: getFacetAggregations(facet, mongoFilter)};
             });
             await this.updateFacets(newFacets);
+
+            await window.store.dispatch.loading.updateMessage('Updating results table'); //TODO - Replace timeout and loader display with something better
 
             // Update the results
             let updatedResults = cfgIssues.find(mongoFilter).fetch()
@@ -392,6 +418,7 @@ export default {
 
             this.updateLoading(false);
 
+            await window.store.dispatch.loading.updateLoading(false); //TODO - Replace timeout and loader display with something better
         }
 
     }

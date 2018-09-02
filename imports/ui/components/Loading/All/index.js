@@ -10,9 +10,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const styles = theme => ({
     root: {
+        width: '300px'
     }
 });
 
@@ -29,7 +31,8 @@ class LoadingAll extends Component {
                 <Dialog aria-labelledby="simple-dialog-title" open={true}>
                     <DialogTitle id="simple-dialog-title">Loading ...</DialogTitle>
                     <DialogContent>
-                        <div>
+                        <LinearProgress />
+                        <div className={classes.root} >
                             {message}
                         </div>
                     </DialogContent>
