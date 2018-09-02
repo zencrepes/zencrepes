@@ -187,8 +187,18 @@ class FetchReposContent extends Component {
             issueObj['points'] = nodePoints;
             issueObj['active'] = true;
 
-            //Get points from labels
-            // Regex to test: ^SP:.\d$
+            if (issueObj.labels !== undefined) {
+                //Get points from labels
+                // Regex to test: SP:[.\d]
+                let pointsExp = RegExp('SP:[.\\d]');
+                for (let [key, currentLabel] of Object.entries(issueObj.labels.edges)) {
+                    if (pointsExp.test(currentLabel.node.name)) {
+                        let points = parseInt(currentLabel.node.name.replace('SP:', ''));
+                        console.log('This issue has ' + points + ' story points');
+                        issueObj['points'] = points;
+                    }
+                }
+            }
 
             await cfgIssues.upsert({
                 id: issueObj.id
