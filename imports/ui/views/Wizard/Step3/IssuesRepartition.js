@@ -31,7 +31,6 @@ class IssuesRepartition extends Component {
 
     buildDataset = () => {
         let reposGroup = _.groupBy(cfgIssues.find({state: 'OPEN'}).fetch(), 'repo.name');
-        console.log(reposGroup);
         return {
             name: 'repositories'
             , color: 'hsl(67, 70%, 50%)'
@@ -43,7 +42,6 @@ class IssuesRepartition extends Component {
 
     render() {
         const { classes, loading } = this.props;
-        console.log(this.buildDataset());
         return (
             <div className={classes.root}>
                 <Card>
