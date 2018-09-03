@@ -32,7 +32,7 @@ class FetchRepo extends Component {
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
-        console.log('Getting data about Organization: ' + name + ' - Repository: ' + repoName);
+        console.log('Getting data about Organization: ' + orgName + ' - Repository: ' + repoName);
 
         let data = await client.query({
             query: GET_GITHUB_SINGLEREPO,
@@ -41,8 +41,9 @@ class FetchRepo extends Component {
             errorPolicy: 'ignore',
         });
 
-        updateChip(data.data.rateLimit);
         console.log(data);
+
+        updateChip(data.data.rateLimit);
         if (data.data.repository === null) {
             setLoadError(true);
         } else {

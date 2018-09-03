@@ -20,6 +20,7 @@ class FetchReposContent extends Component {
         this.state = {};
         this.loadIssues = false;
         this.loadLabels = false;
+        this.errorRetry = 0;
     }
 
     componentDidUpdate = (prevProps, prevState, snapshot) => {
@@ -141,24 +142,44 @@ class FetchReposContent extends Component {
     };
 
     getIssuesPagination = async (cursor, increment, RepoObj, lastUpdateDate) => {
-        const { client } = this.props;
+        const { client, setLoadSuccess } = this.props;
         if (this.props.loading) {
-            let data = await client.query({
-                query: GET_GITHUB_ISSUES,
-                variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
-                fetchPolicy: 'no-cache',
-                errorPolicy: 'ignore',
-            });
-            console.log(data);
-            console.log(RepoObj);
-            this.props.updateChip(data.data.rateLimit);
-            if (data.data.repository !== null) {
-                let lastCursor = await this.ingestIssues(data, RepoObj, lastUpdateDate);
-                let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
-                console.log('Loading issues for repo:  ' + RepoObj.name + ' - Query Increment: ' + queryIncrement);
-                if (queryIncrement > 0 && lastCursor !== null) {
-                    await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj, lastUpdateDate);
+            if (this.errorRetry <= 3) {
+                let data = {};
+                try {
+                    data = await client.query({
+                        query: GET_GITHUB_ISSUES,
+                        variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
+                        fetchPolicy: 'no-cache',
+                        errorPolicy: 'ignore',
+                    });
+                    console.log(data);
                 }
+                catch (error) {
+                    console.log(error);
+                }
+                console.log(data);
+                console.log(RepoObj);
+                if (data.data !== null) {
+                    this.errorRetry = 0;
+                    this.props.updateChip(data.data.rateLimit);
+                    if (data.data.repository !== null) {
+                        let lastCursor = await this.ingestIssues(data, RepoObj, lastUpdateDate);
+                        let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
+                        console.log('Loading issues for repo:  ' + RepoObj.name + ' - Query Increment: ' + queryIncrement);
+                        if (queryIncrement > 0 && lastCursor !== null) {
+                            await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj, lastUpdateDate);
+                        }
+                    }
+                } else {
+                    this.errorRetry = this.errorRetry + 1;
+                    console.log('Error loading content, current count: ' + this.errorRetry)
+                    await this.getIssuesPagination(cursor, increment, RepoObj, lastUpdateDate);
+                }
+            } else {
+                console.log('Got too many load errors, stopping');
+                setLoadSuccess(false);
+                setLoading(false);
             }
         }
     };
@@ -288,7 +309,6 @@ FetchReposContent.propTypes = {
 const mapState = state => ({
     loadFlag: state.githubFetchReposContent.loadFlag,
     loading: state.githubFetchReposContent.loading,
-
 });
 
 const mapDispatch = dispatch => ({
