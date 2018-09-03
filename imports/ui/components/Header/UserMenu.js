@@ -58,6 +58,11 @@ class UserMenu extends React.Component {
         window.open(this.props.currentUser.url, '_blank');
     };
 
+    logout = () => {
+        Meteor.logout();
+    };
+
+
     render() {
         const { classes, currentUser } = this.props;
         const { anchorEl } = this.state;
@@ -93,7 +98,7 @@ class UserMenu extends React.Component {
                             </ListItemIcon>
                             <ListItemText primary={currentUser.name} />
                         </ListItem>
-                        <ListItem onClick={this.openGitHub} button>
+                        <ListItem onClick={this.logout} button>
                             <ListItemIcon>
                                 <Logout />
                             </ListItemIcon>
