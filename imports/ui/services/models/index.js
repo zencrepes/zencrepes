@@ -13,6 +13,7 @@ export { default as githubFetchRepo } from './githubFetchRepo.js';
 export { default as githubFetchReposContent } from './githubFetchReposContent.js';
 
 export { default as githubCreatePointsLabels } from './githubCreatePointsLabels.js';
+export { default as githubPushPoints } from './githubPushPoints.js';
 
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';

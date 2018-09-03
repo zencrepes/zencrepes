@@ -45,7 +45,6 @@ class ScanOrgs extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
         const { setLoadFlag } = this.props;
         if (cfgSources.find({}).count() === 0) {
             setLoadFlag(true);

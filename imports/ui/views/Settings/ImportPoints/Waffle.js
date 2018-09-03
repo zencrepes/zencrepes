@@ -84,7 +84,7 @@ class Waffle extends Component {
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Load points from Waffle
+                            Import points from Waffle
                         </Typography>
                         <Typography>
                             Loading data from Waffle.io is limited to public boards and non-archived issues.

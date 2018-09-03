@@ -114,8 +114,9 @@ class FetchReposContent extends Component {
 
                 }
                 if (repo.labels.totalCount > 0 && this.loadLabels) {
-                    //First, marked all existing issues are non-refreshed
-                    let updatedDocs = cfgLabels.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
+                    //First, delete all labels since we'll be refreshing everything
+                    //let updatedDocs = cfgLabels.update({'repo.id': repo.id}, {$set: {'refreshed': false}});
+                    await cfgLabels.remove({'repo.id': repo.id});
 
                     //Increment the issues buffer, used for showing a progress bar buffer value
                     incrementLabelsLoadedCountBuffer(repo.labels.totalCount);
@@ -243,7 +244,7 @@ class FetchReposContent extends Component {
                     'repo.id': RepoObj.id,
                     'refreshed': true
                 }).count(), data.data.repository.labels.totalCount);
-                console.log('Loading data for repo:  ' + RepoObj.name + 'Query Increment: ' + queryIncrement);
+                console.log('Loading data for repo:  ' + RepoObj.name + ' - Query Increment: ' + queryIncrement);
                 if (queryIncrement > 0) {
                     await this.getLabelsPagination(lastCursor, queryIncrement, RepoObj);
                 }

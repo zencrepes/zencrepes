@@ -17,9 +17,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { cfgSources } from "../../../data/Minimongo.js";
 
-import FetchZenhubPoints from '../../../data/FetchZenhubPoints.js';
-
-import Tree from '../../../components/Settings/Repositories/Treeview/Tree.js';
+import PushPoints from '../../../data/PushPoints.js';
 
 const styles = theme => ({
     root: {
@@ -45,7 +43,7 @@ const styles = theme => ({
     }
 });
 
-class Zenhub extends Component {
+class Push extends Component {
     constructor(props) {
         super(props);
     }
@@ -72,51 +70,25 @@ class Zenhub extends Component {
         setLoadFlag(true);
     };
 
-    handleChange = name => event => {
-        const { setToken } = this.props;
-        setToken(event.target.value);
-    };
-
-
     render() {
-        const { classes, loading, loadSuccess, loadedIssues, paused, resumeIn, token, rateLimitPause, message } = this.props;
+        const { classes, loading, loadSuccess, updatedIssues, message } = this.props;
         return (
             <div className={classes.root}>
-                <FetchZenhubPoints />
+                <PushPoints />
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Import points from Zenhub
+                            Push points to GitHub as labels
                         </Typography>
                         <Typography>
-                            Calls to Zenhub API are limited to 100 per minute without concurrent calls. Depending of the number of issues, this can be a lengthy process. <br />
-                            If interrupted, the system will not re-load issues for which points were previously obtained.
+                            Attach the 'SP:X' label to all issues for which points have been imported from ZenHub or Waffle and push back to Github.
                         </Typography>
-                        <TextField
-                            id="full-width"
-                            label="Zenhub API Key"
-                            value={token}
-                            className={classes.textField}
-                            fullWidth
-                            margin="normal"
-                            onChange={this.handleChange()}
-                        />
-                        <Typography>
-                            Select repositories and organizations to import Zenhub points from:
-                        </Typography>
-                        <Tree all={{active: true}} selected={{active: true, fetchZenhub: true}} enable={{fetchZenhub: true}} disable={{fetchZenhub: false}} />
                         {loading &&
                         <div className={classes.loading}>
                             <LinearProgress />
                             <Typography component="p">
-                                {message} <br /> {loadedIssues > 0 && "Scanned " + loadedIssues + " issues"}
+                                {message} <br /> {updatedIssues > 0 && ", Updated " + updatedIssues + " issues"}
                             </Typography>
-                            {paused &&
-                                <Typography component="p">
-                                    Importing from Zenhub is currently paused for {rateLimitPause/1000} to avoid hitting rate limit. <br />
-                                    Will resume in {resumeIn} seconds.
-                                </Typography>
-                            }
                         </div>
                         }
                     </CardContent>
@@ -124,7 +96,7 @@ class Zenhub extends Component {
                     <CardActions className={classes.cardActions} >
                         <div className={classes.actionButtons} >
                             <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
-                                Load Points
+                                Push Points
                             </Button>
                         </div>
                     </CardActions>
@@ -136,14 +108,14 @@ class Zenhub extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Scan {loadedIssues} issues for Zenhub points</span>}
+                    message={<span id="message-id">Updated points for {updatedIssues} issues in GitHub</span>}
                 />
             </div>
         );
     }
 }
 
-Zenhub.propTypes = {
+Push.propTypes = {
     classes: PropTypes.object,
     loading: PropTypes.bool,
     loadSuccess: PropTypes.bool,
@@ -154,22 +126,16 @@ Zenhub.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.zenhub.loading,
-    loadSuccess: state.zenhub.loadSuccess,
+    loading: state.githubPushPoints.loading,
+    loadSuccess: state.githubPushPoints.loadSuccess,
 
-    loadedIssues: state.zenhub.loadedIssues,
-    token: state.zenhub.token,
-    paused: state.zenhub.paused,
-    message: state.zenhub.message,
-    rateLimitPause: state.zenhub.rateLimitPause,
-
+    updatedIssues: state.githubPushPoints.updatedIssues,
+    message: state.githubPushPoints.message,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.zenhub.setLoadFlag,
-    setLoadSuccess: dispatch.zenhub.setLoadSuccess,
-
-    setToken: dispatch.zenhub.setToken,
+    setLoadFlag: dispatch.githubPushPoints.setLoadFlag,
+    setLoadSuccess: dispatch.githubPushPoints.setLoadSuccess,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Zenhub));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Push));
