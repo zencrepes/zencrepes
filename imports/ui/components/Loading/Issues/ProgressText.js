@@ -23,8 +23,8 @@ class ProgressText extends React.Component {
         const { classes } = this.props;
         return (
             <DialogContentText id="alert-dialog-description">
-                Issues (Total / Loaded): {this.props.issuesTotalCount} / {this.props.issuesLoadedCount} <br />
-                Labels (Total / Loaded): {this.props.labelsTotalCount} / {this.props.labelsLoadedCount} <br />
+                Issues (Loaded / Total): {this.props.issuesLoadedCount} / {this.props.issuesTotalCount}<br />
+                Labels (Loaded / Total: {this.props.labelsLoadedCount} / {this.props.labelsTotalCount}<br />
             </DialogContentText>
         );
     }

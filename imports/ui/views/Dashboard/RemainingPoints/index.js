@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {ContentCopy} from "@material-ui/icons";
+import { Worker } from 'mdi-material-ui';
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
@@ -54,9 +55,9 @@ class RemainingPoints extends Component {
         const { classes } = this.props;
         return (
             <Card>
-                <CardHeader color="warning" stats icon>
-                    <CardIcon color="warning">
-                        <ContentCopy />
+                <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                        <Worker />
                     </CardIcon>
                     <p className={classes.cardCategory}>Remaining {this.getDefaultRemainingTxt()}</p>
                     <h3 className={classes.cardTitle}>

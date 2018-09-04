@@ -13,6 +13,8 @@ import CardIcon from "../../../components/Card/CardIcon";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
 
+import { AccountGroup } from 'mdi-material-ui';
+
 import RepartitionPie from "./RepartitionPie";
 
 class TimeToCompletionAssignee extends Component {
@@ -24,9 +26,9 @@ class TimeToCompletionAssignee extends Component {
         const { classes, velocity } = this.props;
         return (
             <Card>
-                <CardHeader color="warning" stats icon>
-                    <CardIcon color="warning">
-                        <ContentCopy />
+                <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                        <AccountGroup />
                     </CardIcon>
                     <p className={classes.cardCategory}>Time to completion</p>
                     <h3 className={classes.cardTitle}>

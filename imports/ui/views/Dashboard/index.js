@@ -11,13 +11,17 @@ import Footer from '../../components/Footer/Footer.js';
 import Header from '../../components/Header/index.js';
 
 import QuerySelect from "../../components/Query/Select";
-import SprintsSelect from "../../components/Sprints/Select";
+//import SprintsSelect from "../../components/Sprints/Select";
+
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
 
 import DataLoader from './DataLoader.js';
-import PointSwitch from "./PointsSwitch";
+import PointSwitch from './PointsSwitch';
+import DashboardHeader from './DashboardHeader.js';
 import RemainingPoints from './RemainingPoints/index.js';
 import VelocityDays from './VelocityDays/index.js';
 import VelocityWeeks from './VelocityWeeks/index.js';
@@ -53,36 +57,28 @@ class Dashboard extends Component {
                         pageName={"Dashboard"}
                     />
                     <div className={classes.content}>
-                        <div className={classes.container}>
-                            <DataLoader/>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <div className={classes.appBar}>
-                                        <QuerySelect />
-                                        <SprintsSelect />
-                                        <PointSwitch />
-                                    </div>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
-                                    <RemainingPoints/>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
-                                    <VelocityDays/>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
-                                    <VelocityWeeks/>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
-                                    <DaysToCompletion/>
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <TimeToCompletionAssignee/>
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <RepartitionByAssignee/>
-                                </GridItem>
-                            </GridContainer>
-                        </div>
+                        <DataLoader/>
+                        <DashboardHeader />
+                        <GridContainer>
+                            <GridItem xs={12} sm={6} md={3}>
+                                <RemainingPoints/>
+                            </GridItem>
+                            <GridItem xs={12} sm={6} md={3}>
+                                <VelocityDays/>
+                            </GridItem>
+                            <GridItem xs={12} sm={6} md={3}>
+                                <VelocityWeeks/>
+                            </GridItem>
+                            <GridItem xs={12} sm={6} md={3}>
+                                <DaysToCompletion/>
+                            </GridItem>
+                            <GridItem xs={12} sm={12} md={6}>
+                                <TimeToCompletionAssignee/>
+                            </GridItem>
+                            <GridItem xs={12} sm={12} md={6}>
+                                <RepartitionByAssignee/>
+                            </GridItem>
+                        </GridContainer>
                     </div>
                     <Footer />
                 </div>

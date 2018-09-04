@@ -29,7 +29,7 @@ class PointsSwitch extends Component {
 
         return (
             <div className={classes.root}>
-                Issues
+                Issues Count
                 <Switch
                     checked={defaultPoints}
                     onChange={this.handleChange('defaultPoints')}
@@ -50,7 +50,6 @@ const mapDispatch = dispatch => ({
     setVelocityDefaultPoints: dispatch.velocity.setDefaultPoints,
     setRepartitionDefaultPoints: dispatch.repartition.setDefaultPoints,
 });
-
 
 const mapState = state => ({
     defaultPoints: state.remaining.defaultPoints,

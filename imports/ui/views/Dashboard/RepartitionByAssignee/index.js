@@ -12,6 +12,8 @@ import {ContentCopy} from "@material-ui/icons";
 import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
 
+import { AccountGroup } from 'mdi-material-ui';
+
 import RepartitionTreemap from "./RepartitionTreemap";
 
 class RepartitionByAssignee extends Component {
@@ -24,9 +26,9 @@ class RepartitionByAssignee extends Component {
         const { classes, velocity } = this.props;
         return (
             <Card>
-                <CardHeader color="warning" stats icon>
-                    <CardIcon color="warning">
-                        <ContentCopy />
+                <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                        <AccountGroup />
                     </CardIcon>
                     <p className={classes.cardCategory}>Open issues by Assignee</p>
                     <h3 className={classes.cardTitle}>

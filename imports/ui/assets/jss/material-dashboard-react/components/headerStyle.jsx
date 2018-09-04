@@ -1,12 +1,12 @@
 import {
     container,
-        defaultFont,
-        primaryColor,
-        defaultBoxShadow,
-        infoColor,
-        successColor,
-        warningColor,
-        dangerColor
+    defaultFont,
+    primaryColor,
+    defaultBoxShadow,
+    infoColor,
+    successColor,
+    warningColor,
+    dangerColor
 } from "../material-dashboard-react.jsx";
 
 const headerStyle = theme => ({

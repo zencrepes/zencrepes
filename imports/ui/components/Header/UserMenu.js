@@ -154,7 +154,6 @@ class UserMenu extends React.Component {
 
 UserMenu.propTypes = {
     classes: PropTypes.object.isRequired,
-    client: PropTypes.func,
     updateChip: PropTypes.func,
 };
 

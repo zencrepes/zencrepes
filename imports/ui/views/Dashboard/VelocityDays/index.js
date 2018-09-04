@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import { ContentCopy } from "@material-ui/icons";
+import { Run } from 'mdi-material-ui';
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
@@ -97,9 +98,9 @@ class VelocitDays extends Component {
         let dataset = this.buildDataset();
         return (
             <Card>
-                <CardHeader color="warning" stats icon>
-                    <CardIcon color="warning">
-                        <ContentCopy />
+                <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                        <Run />
                     </CardIcon>
                     <p className={classes.cardCategory}>Completed {this.getLastDayTxtCompleted(dataset)}</p>
                     <h3 className={classes.cardTitle}>
