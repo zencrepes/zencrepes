@@ -13,6 +13,7 @@ import Wizard from './views/Wizard/index.js';
 import Dashboard from './views/Dashboard/index.js';
 import Search from './views/Search/index.js';
 import Velocity from './views/Velocity/index.js';
+import Burndown from './views/Burndown/index.js';
 import Settings from './views/Settings/index.js';;
 import LabelsList from './views/Labels/List/index.js';
 import LabelsView from './views/Labels/View/index.js';
@@ -71,6 +72,7 @@ class App extends Component {
                                         <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/burndown" component={Burndown} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels" component={LabelsList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/view/:name" component={LabelsView} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/edit/:name/:id" component={LabelsEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />

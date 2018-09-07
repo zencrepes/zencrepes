@@ -17,6 +17,7 @@ export { default as githubPushPoints } from './githubPushPoints.js';
 
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';
+export { default as burndown } from './burndown.js';
 export { default as queries } from './queries.js';
 export { default as remaining } from './remaining.js';
 export { default as startup } from './startup.js';

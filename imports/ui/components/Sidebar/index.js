@@ -15,7 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
 import Divider from '@material-ui/core/Divider';
 
-import { Settings, TableLarge, ChartLine, ViewDashboard, Label, AutoFix } from 'mdi-material-ui';
+import { Settings, TableLarge, ChartLine, ChartHistogram, ViewDashboard, Label, AutoFix } from 'mdi-material-ui';
 
 import GitRequests from '../Github/GitRequests.js'
 
@@ -32,6 +32,7 @@ class Sidebar extends Component {
             {path: '/dashboard', icon: (<ViewDashboard />), text: 'Dashboard', key: 'dash'},
             {path: '/search', icon: (<TableLarge />), text: 'Search', key: 'search'},
             {path: '/velocity', icon: (<ChartLine />), text: 'Velocity', key: 'velocity'},
+            {path: '/burndown', icon: (<ChartHistogram />), text: 'Burndown', key: 'burndown'},
             {divider: true, key: 'configdivider'},
             {path: '/labels', icon: (<Label />), text: 'Labels', key: 'labels'},
             {path: '/settings', icon: (<Settings />), text: 'Settings', key: 'settings'},
