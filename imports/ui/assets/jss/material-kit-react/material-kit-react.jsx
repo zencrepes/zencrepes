@@ -31,6 +31,13 @@ const containerFluid = {
     marginLeft: "auto",
     width: "100%"
 };
+
+const defaultFont = {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeight: "300",
+    lineHeight: "1.5em"
+};
+
 const container = {
     ...containerFluid,
     "@media (min-width: 576px)": {
@@ -61,12 +68,6 @@ const card = {
     borderRadius: "3px",
     color: "rgba(0, 0, 0, 0.87)",
     background: "#fff"
-};
-
-const defaultFont = {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    fontWeight: "300",
-    lineHeight: "1.5em"
 };
 
 const primaryColor = "#9c27b0";

@@ -61,6 +61,16 @@ class Login extends Component {
                         <GridContainer justify="center">
                             <GridItem xs={12} sm={12} md={4}>
                                 <Card className={classes[this.state.cardAnimation]}>
+                                    <div>
+                                        <div className={classes.logo}>
+                                            <a href="/dashboard" className={classes.logoLink}>
+                                                <div className={classes.logoImage}>
+                                                    <img src="/crepe-32.png" />
+                                                </div>
+                                                Zen Crepes
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div className={classes.gitButton}>
                                         <GitHubLogin />
                                     </div>

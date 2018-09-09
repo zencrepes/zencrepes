@@ -21,8 +21,14 @@ const container = {
         maxWidth: "1140px"
     }
 };
+const defaultFont = {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontWeight: "300",
+    lineHeight: "1.5em"
+};
 
 export {
     container,
     containerFluid,
+    defaultFont,
 };

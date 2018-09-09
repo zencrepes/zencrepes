@@ -46,7 +46,7 @@ class Dashboard extends Component {
         return (
             <div className={classes.wrapper}>
                 <Sidebar
-                    logoText={"Agile App"}
+                    logoText={"Zen Crepes"}
                     handleDrawerToggle={this.handleDrawerToggle}
                     open={this.state.mobileOpen}
                     color="blue"
