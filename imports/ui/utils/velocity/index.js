@@ -115,7 +115,7 @@ export const initObject = (firstDay, lastDay) => {
 * - array:
 * - indexValue:
 */
-const calculateAverageVelocity = (array, indexValue) => {
+export const calculateAverageVelocity = (array, indexValue) => {
     return array
         .map(values => values[indexValue]['count'])
         .reduce((accumulator, currentValue, currentIndex, array) => {

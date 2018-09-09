@@ -25,46 +25,40 @@ class OverallVelocityWeeks extends Component {
         super(props);
     }
 
-    prepareDataset() {
-        const { velocity } = this.props;
-        if (velocity['weeks'] !== undefined ) {
-            return velocity['weeks'];
+    getVelocityHighcharts() {
+        const { burndown } = this.props;
+        if (burndown.days !== undefined) {
+            let issuesCount = [];
+            let storyPoints = [];
+            burndown.days.forEach((day) => {
+                issuesCount.push([new Date(day.date).getTime(), day.count.remaining]);
+                storyPoints.push([new Date(day.date).getTime(), day.points.remaining]);
+            });
+            if (issuesCount.length === 0) {
+                return [];
+            } else {
+                return [
+                    {id: 'issues-' + uuidv1(), name: 'Issues Count', days: issuesCount},
+                    {id: 'points-' + uuidv1(), name: 'Story Points', days: storyPoints}
+                ];
+            }
         } else {
             return [];
-        }
-    }
-
-    getVelocityHighcharts(velocity) {
-        let issuesCount = [];
-        let storyPoints = [];
-        velocity.forEach((v) => {
-            issuesCount.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
-            storyPoints.push([new Date(v.weekStart).getTime(), Math.round(v.points.velocity, 1)]);
-        });
-        if (issuesCount.length === 0) {
-            return [];
-        } else {
-            return [
-                {id: 'issues-' + uuidv1(), name: 'Issues', weeks: issuesCount},
-                {id: 'points-' + uuidv1(), name: 'Story Points', weeks: storyPoints}
-            ];
         }
     }
 
     render() {
         const { classes } = this.props;
-
-        let dataset = this.prepareDataset();
         return (
             <Card>
                 <CardHeader color="warning">
-                    <h4 className={classes.cardTitleWhite}>Weekly Velocity</h4>
+                    <h4 className={classes.cardTitleWhite}>Burndown Chart</h4>
                     <p className={classes.cardCategoryWhite}>
-                        Calculated over the entire period
+                        Calculated over the selectd period
                     </p>
                 </CardHeader>
                 <CardBody>
-                    <HighchartsVelocity data={this.getVelocityHighcharts(dataset)} />
+                    <HighchartsVelocity data={this.getVelocityHighcharts()} />
                 </CardBody>
             </Card>
         );
@@ -77,7 +71,7 @@ OverallVelocityWeeks.propTypes = {
 };
 
 const mapState = state => ({
-    velocity: state.velocity.velocity,
+    burndown: state.burndown.burndown,
 
 });
 

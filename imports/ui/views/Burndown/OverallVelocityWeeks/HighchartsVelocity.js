@@ -35,14 +35,14 @@ class HighchartsVelocity extends Component {
         };
     }
 
-    renderSeries({ id, name, weeks }) {
+    renderSeries({ id, name, days }) {
         return (
-            <SplineSeries name={name} key={id} id={id} data={weeks} />
+            <SplineSeries name={name} key={id} id={id} data={days} />
         )
     };
 
     render() {
-        const { classes, data } = this.props;
+        const { classes, data, burndown } = this.props;
         const { series } = this.state;
 
         const plotOptions =  {

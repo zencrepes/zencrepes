@@ -13,7 +13,7 @@ const loadReduxData = (newFilters, oldFilters, setFilters, loading, initStates, 
     if (loading === false) {
         if (!_.isEqual(newFilters, oldFilters) || initFlag === false) {
             setFilters(newFilters);
-            initStates();
+            initStates(newFilters);
         }
     }
 };
@@ -24,6 +24,7 @@ class DataLoader extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log('Burndown component update');
         const { queryFilters } = this.props;
         if (!_.isEqual(prevProps.queryFilters, queryFilters)) {
             this.loadBurndown();
