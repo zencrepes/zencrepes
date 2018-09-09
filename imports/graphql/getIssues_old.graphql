@@ -1,0 +1,83 @@
+query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: String!){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  viewer {
+    organization(login: $org_name) {
+      login
+      id
+      name
+      url
+      repository(name: $repo_name) {
+        name
+        url
+        id
+        databaseId
+        issues(first: $increment, after: $repo_cursor) {
+          totalCount
+          edges {
+           cursor
+            node {
+              id
+              createdAt
+              updatedAt
+              closedAt
+              databaseId
+              number
+              url
+              title
+              state
+              author {
+                login
+                avatarUrl
+                url
+              }
+              labels (first: 10) {
+                totalCount
+                edges {
+                  node {
+                    id
+                    color
+                    name
+                    description
+                  }
+                }
+              }
+              milestone {
+                id
+                createdAt
+                closedAt
+                number
+                url
+                title
+                state
+                dueOn
+              }
+              assignees(first: 1) {
+                totalCount
+                edges {
+                  node {
+                    id
+                    avatarUrl
+                    login
+                    name
+                    url
+                  }
+                }
+              }
+              comments(first: 1) {
+                totalCount
+              }
+              participants(first: 1) {
+                totalCount
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "public": {},
+  "private": {
+    "MAIL_URL": "",
+    "OAuth": {
+      "github": {
+        "clientId": "",
+        "secret": "",
+        "loginStyle": "popup"
+      }
+    }
+  }
+}
