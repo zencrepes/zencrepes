@@ -28,6 +28,7 @@
     "apollo-link-http": "^1.5.3",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
+    "fibonacci-fast": "^0.2.0",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.8.0",
     "highcharts": "^5.0.15",
@@ -54,7 +55,8 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-treebeard": "^2.1.0",
-    "reactcss": "^1.2.3"
+    "reactcss": "^1.2.3",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "css-loader": "^0.28.11"
