@@ -11,7 +11,7 @@ export default {
         message: '',            // Message to be displayed during load
         token: '',              // Zenhub Token
 
-        rateLimitMax: 80,           // To handle Zenhub API rate limiting
+        rateLimitMax: 60,           // To handle Zenhub API rate limiting
         rateLimitUsed: 0,           // To handle Zenhub API rate limiting
         rateLimitPause: 60000,      // in ms - To handle Zenhub API rate limiting
 

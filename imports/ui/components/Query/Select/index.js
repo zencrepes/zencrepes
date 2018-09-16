@@ -46,6 +46,8 @@ class QuerySelect extends Component {
         });
     };
 
+
+
     render() {
         const { classes, queriesList } = this.props;
         return (

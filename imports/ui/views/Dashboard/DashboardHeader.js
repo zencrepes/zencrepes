@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import headerStyle from "../../assets/jss/material-dashboard-react/components/headerStyle.jsx";
 
 import QuerySelect from "../../components/Query/Select";
+import SimpleView from "../../components/Query/SimpleView";
 //import SprintsSelect from "../../components/Sprints/Select";
 
 import AppBar from "@material-ui/core/AppBar";
@@ -30,6 +31,11 @@ class DashboardHeader extends Component {
                         </div>
                         <div style={{ display: "flex" }} >
                             <PointSwitch />
+                        </div>
+                    </Toolbar>
+                    <Toolbar className={classes.container}>
+                        <div className={classes.flex}>
+                            <SimpleView />
                         </div>
                     </Toolbar>
                 </div>

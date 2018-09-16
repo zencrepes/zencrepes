@@ -1,7 +1,32 @@
+import _ from 'lodash';
+
 import { cfgIssues } from '../../data/Minimongo.js';
 
 import { getFirstDay, getLastDay, initObject, populateObject, populateOpen, populateClosed, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";
+
+/**
+ * getAssignees() Return an array of assignees
+ *
+ * Arguments:
+ * - issues: Array of issues
+ */
+const getAssignees = (issues) => {
+    //statesGroup = _.groupBy(issues, 'assignees.login');
+    let allValues = [];
+    issues.forEach((issue) => {
+        //console.log(issue);
+        if (issue['assignees'].totalCount > 0) {
+            issue['assignees'].edges.forEach((assignee) => {
+                //console.log(assignee);
+                allValues.push(assignee.node.login);
+            });
+        }
+    });
+//    console.log(allValues);
+    return _.uniq(allValues);
+    //statesGroup = _.groupBy(allValues, facet.nested);
+};
 
 export default {
     state: {
@@ -32,8 +57,12 @@ export default {
             let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
             let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
 
-            //For calculating velocity on closed issues, and if assignees are set, not relying on sprint
-            if (closedIssuesFilter['milestone.title'] !== undefined && closedIssuesFilter['assignees.edges'] !== undefined) {
+            // It is impossible and sometime irrelevant to calculate velocity when filtered on a sprint as it involves
+            // a strongly limited timeframe. In that case, we replace in the query the sprint by the list of assignees
+            // in this sprint, then calculate their velocity.
+            if (closedIssuesFilter['milestone.title'] !== undefined) {
+                let assignees = getAssignees(cfgIssues.find(closedIssuesFilter).fetch());
+                closedIssuesFilter = {...closedIssuesFilter, ...{'assignees.edges':{'$elemMatch':{'node.login':{'$in':assignees}}}}};
                 delete closedIssuesFilter['milestone.title'];
             }
 
