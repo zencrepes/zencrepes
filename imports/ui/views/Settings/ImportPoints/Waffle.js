@@ -89,6 +89,9 @@ class Waffle extends Component {
                         <Typography>
                             Loading data from Waffle.io is limited to public boards and non-archived issues.
                         </Typography>
+                        <Typography>
+                            Note: In early September, Waffle disable direct GET access to their API from external sources, this will likely not work anymore.
+                        </Typography>
                         <TextField
                             id="full-width"
                             label="Waffle board URL"
@@ -102,7 +105,7 @@ class Waffle extends Component {
                         <div className={classes.loading}>
                             <LinearProgress />
                             <Typography component="p">
-                                {message} <br /> {loadedIssues > 0 && ", Scanned " + loadedIssues + " issues"}
+                                {message} <br /> {loadedIssues > 0 && " Scanned " + loadedIssues + " issues"}
                             </Typography>
                         </div>
                         }

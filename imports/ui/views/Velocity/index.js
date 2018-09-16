@@ -18,6 +18,8 @@ import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
 import OverallAssigneesVelocityWeeks from './OverallAssigneesVelocityWeeks/index.js';
 import DataLoader from './DataLoader.js';
 
+import ViewToolbar from './ViewToolbar.js';
+
 
 class Velocity extends Component {
     constructor(props) {
@@ -49,12 +51,8 @@ class Velocity extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <DataLoader />
+                            <ViewToolbar />
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <div className={classes.appBar}>
-                                        <QuerySelect />
-                                    </div>
-                                </GridItem>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <OverallVelocityWeeks />
                                 </GridItem>

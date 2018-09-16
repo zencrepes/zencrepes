@@ -31,18 +31,18 @@ import {
 //import tableStyle from './tableStyle.jsx';
 import tableStyle from '../../../assets/jss/material-dashboard-react/components/tableStyle.jsx';
 
-const getTimeToCompletion = (assignee) => {
+const getTimeToCompletion = (assignee, type) => {
     let velocity = _.find(assignee.velocity, {'range': assignee.defaultVelocity});
-    if (velocity !== undefined) {
-        return velocity.issues.effort;
+    if (velocity !== undefined && velocity[type].effort > 0) {
+        return velocity[type].effort + ' days';
     } else {
         return '-';
     }
 };
-const getTicketsPerWeek = (assignee) => {
+const getTicketsPerWeek = (assignee, type) => {
     let velocity = _.find(assignee.velocity, {'range': assignee.defaultVelocity});
     if (velocity !== undefined) {
-        return Math.round(velocity.issues.velocity, 1);
+        return Math.round(velocity[type].velocity, 1);
     } else {
         return '-';
     }
@@ -178,6 +178,10 @@ class AssigneeTable extends Component {
                                 <TableCell className={classes.tableCell} key={4}>Open tickets</TableCell>
                                 <TableCell className={classes.tableCell} key={5}>Tickets/week</TableCell>
                                 <TableCell className={classes.tableCell} key={6}>Time to Completion</TableCell>
+                                <TableCell className={classes.tableCell} key={7}>Open Points</TableCell>
+                                <TableCell className={classes.tableCell} key={8}>Points/week</TableCell>
+                                <TableCell className={classes.tableCell} key={9}>Time to Completion</TableCell>
+                                <TableCell className={classes.tableCell} key={10}></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -195,15 +199,26 @@ class AssigneeTable extends Component {
                                         </TableCell>
                                         <TableCell className={classes.tableCell} key={4}>
                                             {assignee.open.issues.length}
+                                        </TableCell>
+                                        <TableCell className={classes.tableCell} key={5}>
+                                            {getTicketsPerWeek(assignee, 'issues')}
+                                        </TableCell>
+                                        <TableCell className={classes.tableCell} key={6}>
+                                            {getTimeToCompletion(assignee, 'issues')}
+                                        </TableCell>
+                                        <TableCell className={classes.tableCell} key={7}>
+                                            {assignee.open.points}
+                                        </TableCell>
+                                        <TableCell className={classes.tableCell} key={8}>
+                                            {getTicketsPerWeek(assignee, 'points')}
+                                        </TableCell>
+                                        <TableCell className={classes.tableCell} key={9}>
+                                            {getTimeToCompletion(assignee, 'points')}
+                                        </TableCell>
+                                        <TableCell className={classes.tableCell} key={10}>
                                             <IconButton color="secondary" className={classes.button} aria-label="Open in search" onClick={() => this.clickAssignee(assignee.login)}>
                                                 <TableLarge />
                                             </IconButton>
-                                        </TableCell>
-                                        <TableCell className={classes.tableCell} key={6}>
-                                            {getTicketsPerWeek(assignee)}
-                                        </TableCell>
-                                        <TableCell className={classes.tableCell} key={5}>
-                                            {getTimeToCompletion(assignee)} days
                                         </TableCell>
                                     </TableRow>
                                 );
