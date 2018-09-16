@@ -14,6 +14,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 
 import PointSwitch from "./PointsSwitch";
+import Refresh from "./Refresh";
 
 class DashboardHeader extends Component {
     constructor(props) {
@@ -36,6 +37,9 @@ class DashboardHeader extends Component {
                     <Toolbar className={classes.container}>
                         <div className={classes.flex}>
                             <SimpleView />
+                        </div>
+                        <div style={{ display: "flex" }} >
+                            <Refresh />
                         </div>
                     </Toolbar>
                 </div>
