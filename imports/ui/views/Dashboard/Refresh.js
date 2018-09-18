@@ -34,14 +34,28 @@ class Refresh extends Component {
         }
     };
 
-
-    refresh = () => {
-        console.log('refresh');
+    refreshFull = () => {
+        console.log('refreshFull');
         const { setLoadFlag } = this.props;
         setLoadFlag({
             issues: 'true',
             labels: 'false'
         });
+    };
+
+    refreshQuick = () => {
+        console.log('refreshQuick');
+        const { setLoadFlag, setLoadRepos, filters } = this.props;
+        //Get list of repositories for current query
+        let mongoSelector = buildMongoSelector(filters);
+        let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
+        let reposGroup = Object.keys(_.groupBy(cfgIssues.find(openedIssuesFilter).fetch(), 'repo.id'));
+        setLoadRepos(reposGroup);
+        setLoadFlag({
+            issues: 'true',
+            labels: 'false'
+        });
+
     };
 
     render() {
@@ -50,9 +64,14 @@ class Refresh extends Component {
         return (
             <div className={classes.root}>
                 {!loading &&
-                    <Button variant="raised" color="primary" className={classes.button} onClick={this.refresh}>
-                        Refresh
-                    </Button>
+                    <div>
+                        <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshFull}>
+                            Full
+                        </Button>
+                        <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshQuick}>
+                            Quick
+                        </Button>
+                    </div>
                 }
                 {loading &&
                     <ProgressBar />
@@ -79,6 +98,8 @@ const mapState = state => ({
     loadSuccess: state.githubFetchReposContent.loadSuccess,
 
     issuesLoadedCount: state.githubIssues.loadedCount,
+
+    filters: state.queries.filters,
 });
 
 const mapDispatch = dispatch => ({
@@ -86,6 +107,7 @@ const mapDispatch = dispatch => ({
     setLoading: dispatch.githubFetchReposContent.setLoading,
 
     setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
+    setLoadRepos: dispatch.githubFetchReposContent.setLoadRepos,
 });
 
 
