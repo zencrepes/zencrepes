@@ -71,7 +71,7 @@ class FetchReposContent extends Component {
             setLoadRepos} = this.props;
 
         await setLoading(true);  // Set to true to indicate issues are actually loading.
-        await cfgIssues.update({}, { $set: { active: false } }, {multi: true}); // Set all issues inactive, at the end of the process, all inactive issues will be deleted
+        //await cfgIssues.update({}, { $set: { active: false } }, {multi: true}); // Set all issues inactive, at the end of the process, all inactive issues will be deleted
 
         console.log(this.loadIssues);
         console.log(this.loadLabels);
