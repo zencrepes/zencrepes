@@ -94,34 +94,16 @@ class FetchReposContent extends Component {
         setLabelsTotalCount(labelsTotalCount);
 
         for (let repo of cfgSources.find(reposQuery).fetch()) {
-            if (repo.active === false) {
+            if (repo.active === false && (cfgIssues.find({'repo.id': repo.id}).count() > 0 || cfgLabels.find({'repo.id': repo.id}).count() > 0)) {
                 //If repo is inactive, delete any issues attached to this repo (if any)
+                //let attachedIssues = cfgIssues.find({'repo.id': repo.id}).count();
                 console.log('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgIssues.find({'repo.id': repo.id}).count() + ' issues and ' + cfgLabels.find({'repo.id': repo.id}).count() + ' labels');
+                //console.log(cfgIssues.find({'repo.id': repo.id}).fetch());
                 await cfgIssues.remove({'repo.id': repo.id});
                 await cfgLabels.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
-                console.log('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
+                console.log('Processing repo: ' + repo.name + ' - Is active, has ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
 
-                if (this.loadIssues) {
-                    // We always start by loading 5 issues in the repository
-                    // This is also used to refresh the total number of issues & labels in the repo, which might have
-                    // changed since last data load.
-                    // In the reload there is a need to take in consideration the sitatution where an issue is created during load
-                    // and find how to prevent an infinite loop. Might be sufficient to based on the following query after last cursor
-                    // TODO - Need to refresh issues content as well, so need to bring last updated date in the logic
-                    await this.getIssuesPagination(null, 5, repo);
-                }
-                if (this.loadLabels) {
-                    await cfgLabels.remove({'repo.id': repo.id});
-                    let loadLabelsIncrement = 15;
-                    if (repo.labels.totalCount > 0 && repo.labels.totalCount <= 100) {
-                        loadLabelsIncrement = repo.labels.totalCount;
-                    }
-                    await this.getLabelsPagination(null, loadLabelsIncrement, repo);
-                }
-
-
-                /*
                 //If repo is active, load all issues attached to this repo (if any)
                 if (repo.issues.totalCount > 0 && this.loadIssues) {
                     //First, marked all existing issues are non-refreshed
@@ -169,11 +151,10 @@ class FetchReposContent extends Component {
                     await this.getLabelsPagination(null, queryIncrement, repo);
 
                 }
-                */
             }
         }
 
-        console.log('Will be deleting ' + cfgIssues.find({active: false}).count() + ' issues attached to disabled repositories');
+        console.log('Will be deleting ' + cfgIssues.find({active: false}).count() + ' attached to disabled repositories');
         await cfgIssues.remove({active: false});
 
         console.log('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues and ' + cfgLabels.find({}).count() + ' labels in memory');
@@ -182,7 +163,7 @@ class FetchReposContent extends Component {
         setLoadRepos([]);// Reset load repos
     };
 
-    getIssuesPagination = async (cursor, increment, repoObj) => {
+    getIssuesPagination = async (cursor, increment, RepoObj, lastUpdateDate) => {
         const { client, setLoadSuccess } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
@@ -190,57 +171,7 @@ class FetchReposContent extends Component {
                 try {
                     data = await client.query({
                         query: GET_GITHUB_ISSUES,
-                        variables: {repo_cursor: cursor, increment: increment, org_name: repoObj.org.login, repo_name: repoObj.name},
-                        fetchPolicy: 'no-cache',
-                        errorPolicy: 'ignore',
-                    });
-                    console.log(data);
-                }
-                catch (error) {
-                    console.log(error);
-                }
-                console.log(repoObj);
-                if (data.data !== null) {
-                    this.errorRetry = 0;
-                    this.props.updateChip(data.data.rateLimit);
-                    // Check if the repository actually exist and issues were returned
-                    if (data.data.repository !== null && data.data.repository.issues.edges.length > 0) {
-                        //data.data.repository.issues.totalCount;
-                        // Refresh the repository with the updated issues count
-                        let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'issues.totalCount': data.data.repository.issues.totalCount}});
-
-                        let lastCursor = await this.ingestIssues(data, repoObj);
-                        let loadedIssuesCount = cfgIssues.find({'repo.id': repoObj.id, 'refreshed': true}).count();
-                        let queryIncrement = calculateQueryIncrement(loadedIssuesCount, data.data.repository.issues.totalCount);
-                        console.log('Loading issues for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedIssuesCount + ' - Remote Count: ' + data.data.repository.issues.totalCount);
-                        if (queryIncrement > 0 && lastCursor !== null) {
-                            //Start recurring call, to load all issues from a repository
-                            await this.getIssuesPagination(lastCursor, queryIncrement, repoObj);
-                        }
-                    }
-                } else {
-                    this.errorRetry = this.errorRetry + 1;
-                    console.log('Error loading content, current count: ' + this.errorRetry)
-                    await this.getIssuesPagination(cursor, increment, repoObj);
-                }
-            } else {
-                console.log('Got too many load errors, stopping');
-                setLoadSuccess(false);
-                setLoading(false);
-            }
-        }
-    };
-
-    /*
-    getIssuesPagination = async (cursor, increment, repoObj, lastUpdateDate) => {
-        const { client, setLoadSuccess } = this.props;
-        if (this.props.loading) {
-            if (this.errorRetry <= 3) {
-                let data = {};
-                try {
-                    data = await client.query({
-                        query: GET_GITHUB_ISSUES,
-                        variables: {repo_cursor: cursor, increment: increment, org_name: repoObj.org.login, repo_name: repoObj.name},
+                        variables: {repo_cursor: cursor, increment: increment, org_name: RepoObj.org.login, repo_name: RepoObj.name},
                         fetchPolicy: 'no-cache',
                         errorPolicy: 'ignore',
                     });
@@ -250,22 +181,22 @@ class FetchReposContent extends Component {
                     console.log(error);
                 }
                 console.log(data);
-                console.log(repoObj);
+                console.log(RepoObj);
                 if (data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
                     if (data.data.repository !== null) {
-                        let lastCursor = await this.ingestIssues(data, repoObj, lastUpdateDate);
-                        let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': repoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
-                        console.log('Loading issues for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement);
+                        let lastCursor = await this.ingestIssues(data, RepoObj, lastUpdateDate);
+                        let queryIncrement = calculateQueryIncrement(cfgIssues.find({'repo.id': RepoObj.id, 'refreshed': true}).count(), data.data.repository.issues.totalCount);
+                        console.log('Loading issues for repo:  ' + RepoObj.name + ' - Query Increment: ' + queryIncrement);
                         if (queryIncrement > 0 && lastCursor !== null) {
-                            await this.getIssuesPagination(lastCursor, queryIncrement, repoObj, lastUpdateDate);
+                            await this.getIssuesPagination(lastCursor, queryIncrement, RepoObj, lastUpdateDate);
                         }
                     }
                 } else {
                     this.errorRetry = this.errorRetry + 1;
                     console.log('Error loading content, current count: ' + this.errorRetry)
-                    await this.getIssuesPagination(cursor, increment, repoObj, lastUpdateDate);
+                    await this.getIssuesPagination(cursor, increment, RepoObj, lastUpdateDate);
                 }
             } else {
                 console.log('Got too many load errors, stopping');
@@ -274,37 +205,21 @@ class FetchReposContent extends Component {
             }
         }
     };
-    */
 
-    ingestIssues = async (data, repoObj) => {
+    ingestIssues = async (data, RepoObj, lastUpdateDate) => {
         let lastCursor = null;
-        let stopLoad = false;
+        let stopUpdates = false;
         console.log(data);
-        for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
-            console.log('Loading issue: ' + currentIssue.node.title);
-            let existNode = cfgIssues.findOne({id: currentIssue.node.id});
-            console.log(existNode);
-            console.log(currentIssue.node.updatedAt);
-            console.log(new Date(currentIssue.node.updatedAt).getTime());
-            console.log(new Date(existNode.updatedAt).getTime());
-            exitsNodeUPdateAt = null;
-            if (existNode !== undefined) {
-                exitsNodeUPdateAt = existNode.updatedAt;
-            }
-            if (Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUPdateAt).getTime()) {
-                console.log('Issue already loaded, skipping');
-                console.log(data.data.repository.issues.totalCount);
-                console.log(cfgIssues.find({'repo.id': repoObj.id}).count());
+        console.log(data.data.repository);
 
-                // Issues are loaded from newest to oldest, when it gets to a point where updated date of a loaded issue
-                // is equal to updated date of a local issue, it means there is no "new" content, but there might still be
-                // issues that were not loaded for any reason. So the system only stops loaded if totalCount remote is equal
-                //  to the total number of issues locally
-                if (data.data.repository.issues.totalCount === cfgIssues.find({'repo.id': repoObj.id}).count()) {
-                    stopLoad = true;
-                }
-            } else {
-                console.log('New or updated issue');
+        for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
+            if (new Date(currentIssue.node.updatedAt) <= new Date(lastUpdateDate)) {
+                lastCursor = null;
+                stopUpdates = true;
+            } else if (stopUpdates === false) {
+                console.log('Loading issue: ' + currentIssue.node.title);
+                let existNode = cfgIssues.findOne({id: currentIssue.node.id});
+
                 let nodePinned = false;
                 let nodePoints = null;
                 if (existNode !== undefined) {
@@ -312,8 +227,8 @@ class FetchReposContent extends Component {
                     nodePoints = existNode.points;
                 }
                 let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
-                issueObj['repo'] = repoObj;
-                issueObj['org'] = repoObj.org;
+                issueObj['repo'] = RepoObj;
+                issueObj['org'] = RepoObj.org;
                 issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
                 issueObj['refreshed'] = true;
                 issueObj['pinned'] = nodePinned;
@@ -332,25 +247,24 @@ class FetchReposContent extends Component {
                         }
                     }
                 }
+
                 await cfgIssues.upsert({
                     id: issueObj.id
                 }, {
                     $set: issueObj
                 });
                 this.props.incrementIssuesLoadedCount(1);
+
+                lastCursor = currentIssue.cursor;
             }
-            lastCursor = currentIssue.cursor;
         }
         if (lastCursor === null) {
             console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
-        if (stopLoad === true) {
-            lastCursor = null;
-        }
         return lastCursor;
     };
 
-    getLabelsPagination = async (cursor, increment, repoObj) => {
+    getLabelsPagination = async (cursor, increment, RepoObj) => {
         const { client } = this.props;
         if (this.props.loading) {
             let data = await client.query({
@@ -358,8 +272,8 @@ class FetchReposContent extends Component {
                 variables: {
                     repo_cursor: cursor,
                     increment: increment,
-                    org_name: repoObj.org.login,
-                    repo_name: repoObj.name
+                    org_name: RepoObj.org.login,
+                    repo_name: RepoObj.name
                 },
                 fetchPolicy: 'no-cache',
                 errorPolicy: 'ignore',
@@ -367,23 +281,21 @@ class FetchReposContent extends Component {
             this.props.updateChip(data.data.rateLimit);
             console.log(data);
             if (data.data.repository !== null) {
-                let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'labels.totalCount': data.data.repository.labels.totalCount}});
-
-                let lastCursor = await this.ingestLabels(data, repoObj);
+                let lastCursor = await this.ingestLabels(data, RepoObj);
                 console.log(data.data.repository);
-                let loadedLabelsCount = cfgLabels.find({'repo.id': repoObj.id, 'refreshed': true}).count();
-
-                let queryIncrement = calculateQueryIncrement(loadedLabelsCount, data.data.repository.labels.totalCount);
-                console.log('Loading data for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedLabelsCount + ' - Remote Count: ' + data.data.repository.labels.totalCount);
-
+                let queryIncrement = calculateQueryIncrement(cfgLabels.find({
+                    'repo.id': RepoObj.id,
+                    'refreshed': true
+                }).count(), data.data.repository.labels.totalCount);
+                console.log('Loading data for repo:  ' + RepoObj.name + ' - Query Increment: ' + queryIncrement);
                 if (queryIncrement > 0) {
-                    await this.getLabelsPagination(lastCursor, queryIncrement, repoObj);
+                    await this.getLabelsPagination(lastCursor, queryIncrement, RepoObj);
                 }
             }
         }
     };
 
-    ingestLabels = async (data, repoObj) => {
+    ingestLabels = async (data, RepoObj) => {
         let lastCursor = null;
         console.log(data.data.repository);
 
@@ -392,7 +304,7 @@ class FetchReposContent extends Component {
             //let existNode = cfgLabels.findOne({id: currentLabel.node.id});
 
             let labelObj = JSON.parse(JSON.stringify(currentLabel.node)); //TODO - Replace this with something better to copy object ?
-            labelObj['repo'] = repoObj;
+            labelObj['repo'] = RepoObj;
             labelObj['refreshed'] = true;
             await cfgLabels.upsert({
                 id: labelObj.id

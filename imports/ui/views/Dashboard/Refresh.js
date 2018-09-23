@@ -66,10 +66,10 @@ class Refresh extends Component {
                 {!loading &&
                     <div>
                         <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshFull}>
-                            Full
+                            All Repos
                         </Button>
                         <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshQuick}>
-                            Quick
+                            Selected Repos
                         </Button>
                     </div>
                 }
