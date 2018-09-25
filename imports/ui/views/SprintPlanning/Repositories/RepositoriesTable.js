@@ -31,43 +31,42 @@ const styles = theme => ({
     },
 });
 
-class AsisgneesTable extends Component {
+class RepositoriesTable extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             columns: [
-                { name: 'login', title: 'Username', getCellValue: row => (row.name === null ? row.login : row.name)},
-                { name: 'issues', title: 'Issues*', getCellValue: row => (row.issues ? row.issues.count : undefined)},
-                { name: 'points', title: 'Points*', getCellValue: row => (row.issues ? row.points.count : undefined)},
+                { name: 'name', title: 'Name' },
+                { name: 'issues', title: 'Issues', getCellValue: row => (row.issues ? row.issues.count : undefined)},
+                { name: 'points', title: 'Points', getCellValue: row => (row.issues ? row.points.count : undefined)},
             ],
             tableColumnExtensions: [
-                { columnName: 'issues', width: 80 },
-                { columnName: 'points', width: 80 },
+                { columnName: 'issues', width: 70 },
+                { columnName: 'points', width: 70 },
             ]
         };
     }
 
     render() {
-        const { classes, assignees } = this.props;
+        const { classes, repositories } = this.props;
         const { columns, tableColumnExtensions} = this.state;
 
         return (
             <div className={classes.root}>
                 <Grid
-                    rows={assignees}
+                    rows={repositories}
                     columns={columns}
                 >
                     <Table columnExtensions={tableColumnExtensions} />
                     <TableHeaderRow />
                 </Grid>
-                <i>*Issues with multiple assignees are counted multiple times</i>
             </div>
         );
     }
 }
 
-AsisgneesTable.propTypes = {
+RepositoriesTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -75,10 +74,8 @@ const mapDispatch = dispatch => ({
 
 });
 
-
 const mapState = state => ({
 
 });
 
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(AsisgneesTable));
+export default connect(mapState, mapDispatch)(withStyles(styles)(RepositoriesTable));

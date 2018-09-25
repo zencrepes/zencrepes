@@ -16,14 +16,13 @@ import QuerySelect from '../../components/Query/Select/index.js';
 
 //import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
 //import DataLoader from './DataLoader.js';
-import RemainingPoints from '../Dashboard/RemainingPoints/index.js';
 import VelocityWeeks from '../Dashboard/VelocityWeeks/index.js';
 import DaysToCompletion from '../Dashboard/DaysToCompletion/index.js';
 
 import ViewToolbar from './ViewToolbar/index.js';
 import Assignees from './Assignees/index.js';
-import Repositories from './Repositories.js';
-import Issues from './Issues.js';
+import Repositories from './Repositories/index.js';
+import Issues from './Issues/index.js';
 
 class SprintPlanning extends Component {
     constructor(props) {
@@ -56,10 +55,7 @@ class SprintPlanning extends Component {
                         <div className={classes.container}>
                             <ViewToolbar />
                             <GridContainer>
-                                <GridItem xs={12} sm={6} md={4}>
-                                    <RemainingPoints/>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={4}>
+                                <GridItem xs={12} sm={6} md={8}>
                                     <VelocityWeeks/>
                                 </GridItem>
                                 <GridItem xs={12} sm={6} md={4}>

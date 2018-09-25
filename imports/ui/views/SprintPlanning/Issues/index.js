@@ -2,17 +2,21 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
-import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 import { CalendarClock } from 'mdi-material-ui';
 
 import PropTypes from "prop-types";
-import Card from "../../components/Card/Card";
-import CardHeader from "../../components/Card/CardHeader";
-import CardIcon from "../../components/Card/CardIcon";
+import Card from "../../../components/Card/Card";
+import CardHeader from "../../../components/Card/CardHeader";
+import CardIcon from "../../../components/Card/CardIcon";
 import {ContentCopy, DateRange} from "@material-ui/icons";
-import CardFooter from "../../components/Card/CardFooter";
-import CardBody from "../../components/Card/CardBody";
+import CardFooter from "../../../components/Card/CardFooter";
+import CardBody from "../../../components/Card/CardBody";
+
+import {cfgIssues} from "../../../data/Minimongo";
+
+import IssuesTable from './IssuesTable.js';
 
 class Issues extends Component {
     constructor(props) {
@@ -20,7 +24,8 @@ class Issues extends Component {
     }
 
     render() {
-        const { classes, velocity } = this.props;
+        const { classes, sprintName } = this.props;
+
         return (
             <Card>
                 <CardHeader color="info" stats icon>
@@ -29,11 +34,11 @@ class Issues extends Component {
                     </CardIcon>
                     <p className={classes.cardCategory}>Issues in Sprint</p>
                     <h3 className={classes.cardTitle}>
-                        X
+                        {cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).count()}
                     </h3>
                 </CardHeader>
                 <CardBody>
-                    Display a table-like view of all issues in sprint.
+                    <IssuesTable issues={cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch()}/>
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
@@ -51,6 +56,7 @@ Issues.propTypes = {
 };
 
 const mapState = state => ({
+    sprintName: state.sprintPlanning.sprintName,
 
 });
 
