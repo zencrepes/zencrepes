@@ -30,6 +30,7 @@ class Sidebar extends Component {
         const { classes, open, logoText } = this.props;
         const routes = [
             {path: '/dashboard', icon: (<ViewDashboard />), text: 'Dashboard', key: 'dash'},
+            {path: '/sprint', icon: (<ViewDashboard />), text: 'Sprint Planning', key: 'sprint'},
             {path: '/search', icon: (<TableLarge />), text: 'Search', key: 'search'},
             {path: '/velocity', icon: (<ChartLine />), text: 'Velocity', key: 'velocity'},
             {path: '/burndown', icon: (<ChartHistogram />), text: 'Burndown', key: 'burndown'},
