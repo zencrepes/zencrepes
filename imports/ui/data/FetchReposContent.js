@@ -286,10 +286,10 @@ class FetchReposContent extends Component {
             console.log(existNode);
             console.log(currentIssue.node.updatedAt);
             console.log(new Date(currentIssue.node.updatedAt).getTime());
-            console.log(new Date(existNode.updatedAt).getTime());
             let exitsNodeUpdateAt = null;
             if (existNode !== undefined) {
                 exitsNodeUpdateAt = existNode.updatedAt;
+                console.log(new Date(existNode.updatedAt).getTime());
             }
             if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
                 console.log('Issue already loaded, skipping');
