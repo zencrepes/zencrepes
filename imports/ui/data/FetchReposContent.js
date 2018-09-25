@@ -287,11 +287,11 @@ class FetchReposContent extends Component {
             console.log(currentIssue.node.updatedAt);
             console.log(new Date(currentIssue.node.updatedAt).getTime());
             console.log(new Date(existNode.updatedAt).getTime());
-            exitsNodeUPdateAt = null;
+            let exitsNodeUpdateAt = null;
             if (existNode !== undefined) {
-                exitsNodeUPdateAt = existNode.updatedAt;
+                exitsNodeUpdateAt = existNode.updatedAt;
             }
-            if (Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUPdateAt).getTime()) {
+            if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
                 console.log('Issue already loaded, skipping');
                 console.log(data.data.repository.issues.totalCount);
                 console.log(cfgIssues.find({'repo.id': repoObj.id}).count());
