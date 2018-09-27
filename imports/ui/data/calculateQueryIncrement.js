@@ -7,7 +7,7 @@ function calculateQueryIncrement(recordsInCollection, totalCount) {
     //console.log("Total Count: " + totalCount);
     //console.log("Increment: " + queryIncrement);
     // Always return 10 as minimum increment
-    if (queryIncrement < 10) {queryIncrement = 10;}
+//    if (queryIncrement < 10) {queryIncrement = 10;}
     return queryIncrement
 }
 export default calculateQueryIncrement;
