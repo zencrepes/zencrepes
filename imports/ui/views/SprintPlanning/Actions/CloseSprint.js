@@ -18,7 +18,7 @@ const styles = theme => ({
         textAlign: 'right'
     },
 });
-class Create extends Component {
+class CloseSprint extends Component {
     constructor (props) {
         super(props);
         this.state = {};
@@ -55,7 +55,6 @@ class Create extends Component {
             issues: 'true',
             labels: 'false'
         });
-
     };
 
     render() {
@@ -66,7 +65,7 @@ class Create extends Component {
                 {!loading &&
                     <div>
                         <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshFull}>
-                            Create New Sprint
+                            Close Sprint (TBI)
                         </Button>
                     </div>
                 }
@@ -86,7 +85,7 @@ class Create extends Component {
     };
 }
 
-Create.propTypes = {
+CloseSprint.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -99,4 +98,4 @@ const mapDispatch = dispatch => ({
 });
 
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Create));
+export default connect(mapState, mapDispatch)(withStyles(styles)(CloseSprint));

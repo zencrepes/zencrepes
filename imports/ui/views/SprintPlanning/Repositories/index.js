@@ -32,9 +32,9 @@ class Repositories extends Component {
     };
 */
     render() {
-        const { classes, sprintName } = this.props;
-        let repositories = getRepositoriesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
-        console.log(repositories);
+        const { classes, sprintName, repositories } = this.props;
+        //let repositories = getRepositoriesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
+        //console.log(repositories);
         return (
             <Card>
                 <CardHeader color="info" stats icon>
@@ -66,6 +66,8 @@ Repositories.propTypes = {
 
 const mapState = state => ({
     sprintName: state.sprintPlanning.sprintName,
+    repositories: state.sprintPlanning.repositories,
+
 });
 
 export default connect(mapState, null)(withStyles(dashboardStyle)(Repositories));

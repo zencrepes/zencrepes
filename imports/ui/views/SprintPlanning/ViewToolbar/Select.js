@@ -34,9 +34,9 @@ class Select extends Component {
     }
 
     handleChange = name => event => {
-        const { setSprintName } = this.props;
+        const { updateSprint } = this.props;
         console.log('Dashboard - QueryPicker - handleChange');
-        setSprintName(event.target.value);
+        updateSprint(event.target.value);
     };
 
     getSprints = () => {
@@ -83,6 +83,7 @@ Select.propTypes = {
 
 const mapDispatch = dispatch => ({
     setSprintName: dispatch.sprintPlanning.setSprintName,
+    updateSprint: dispatch.sprintPlanning.updateSprint,
 });
 
 const mapState = state => ({

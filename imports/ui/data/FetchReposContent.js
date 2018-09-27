@@ -182,6 +182,8 @@ class FetchReposContent extends Component {
         setLoadRepos([]);// Reset load repos
     };
 
+    // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 issues, but local only has 99
+    // Query increment should not be just 1 since if the missing issue is far down, this will generate a large number of calls
     getIssuesPagination = async (cursor, increment, repoObj) => {
         const { client, setLoadSuccess } = this.props;
         if (this.props.loading) {
@@ -283,18 +285,18 @@ class FetchReposContent extends Component {
         for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
-            console.log(existNode);
-            console.log(currentIssue.node.updatedAt);
-            console.log(new Date(currentIssue.node.updatedAt).getTime());
+//            console.log(existNode);
+//            console.log(currentIssue.node.updatedAt);
+//            console.log(new Date(currentIssue.node.updatedAt).getTime());
             let exitsNodeUpdateAt = null;
             if (existNode !== undefined) {
                 exitsNodeUpdateAt = existNode.updatedAt;
-                console.log(new Date(existNode.updatedAt).getTime());
+//                console.log(new Date(existNode.updatedAt).getTime());
             }
             if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
                 console.log('Issue already loaded, skipping');
-                console.log(data.data.repository.issues.totalCount);
-                console.log(cfgIssues.find({'repo.id': repoObj.id}).count());
+//                console.log(data.data.repository.issues.totalCount);
+//                console.log(cfgIssues.find({'repo.id': repoObj.id}).count());
 
                 // Issues are loaded from newest to oldest, when it gets to a point where updated date of a loaded issue
                 // is equal to updated date of a local issue, it means there is no "new" content, but there might still be
@@ -421,7 +423,6 @@ const mapState = state => ({
     loading: state.githubFetchReposContent.loading,
 
     loadRepos: state.githubFetchReposContent.loadRepos,
-
 });
 
 const mapDispatch = dispatch => ({

@@ -8,6 +8,30 @@
 
 import {cfgIssues, cfgSources} from "../../data/Minimongo";
 
+export const getAssignees = (issues) => {
+    console.log('getAssignees');
+
+    let statesGroup = [];
+
+    let allValues = [];
+    issues.forEach((issue) => {
+        if (issue['assignees'].totalCount > 0) {
+            issue['assignees'].edges.map((assignee) => {
+                issue.assignee = assignee.node;
+                allValues.push(issue);
+            });
+        }
+    });
+    statesGroup = _.groupBy(allValues, (value) => value.assignee.login);
+
+    let assignees = []
+    Object.keys(statesGroup).forEach(function(key) {
+        assignees.push(statesGroup[key][0].assignee);
+    });
+
+    return assignees;
+}
+
 export const getAssigneesRepartition = (issues) => {
     console.log('getAssignees');
 
@@ -25,9 +49,7 @@ export const getAssigneesRepartition = (issues) => {
             });
         }
     });
-    console.log(allValues);
     statesGroup = _.groupBy(allValues, (value) => value.assignee.login);
-    console.log(statesGroup);
 
     let assignees = []
     Object.keys(statesGroup).forEach(function(key) {
@@ -43,20 +65,6 @@ export const getAssigneesRepartition = (issues) => {
         });
     });
 
-    /*
-    // If the key is 'undefined', replace with default facet name
-    if (statesGroup['undefined'] !== undefined) {
-        statesGroup['UNASSIGNED'] = statesGroup['undefined'];
-        delete statesGroup['undefined'];
-    }
-*/
-    /*
-    let states = [];
-    Object.keys(statesGroup).forEach(function(key) {
-        states.push({count: statesGroup[key].length, login: key });
-    });
-    */
-    //Return the array sorted by count
     return assignees.sort((a, b) => b.issues.count - a.issues.count);
 };
 
@@ -109,7 +117,7 @@ export const getAssigneesRepartition = (issues) => {
 */
 export const getRepositoriesRepartition = (issues) => {
     let repos = [];
-    statesGroup = _.groupBy(issues, 'repo.name');
+    statesGroup = _.groupBy(issues, (value) => value.repo.name);
     Object.keys(statesGroup).forEach(function(key) {
         repos.push({
             id: statesGroup[key][0].repo.id,

@@ -15,14 +15,11 @@ import CardFooter from "../../../components/Card/CardFooter";
 import CardBody from "../../../components/Card/CardBody";
 import {cfgIssues} from "../../../data/Minimongo";
 
-import AssigneesTable from './AssigneesTable.js';
-import AddButton from './AddButton.js';
-
-import AddAssignee from './AddAssignee/index.js';
-
+import CloseSprint from './CloseSprint';
+import Refresh from './Refresh';
 //import { getAssigneesRepartition } from '../../../utils/repartition/index.js';
 
-class Assignees extends Component {
+class Actions extends Component {
     constructor(props) {
         super(props);
     }
@@ -43,18 +40,15 @@ class Assignees extends Component {
                     <CardIcon color="info">
                         <CalendarClock />
                     </CardIcon>
-                    <p className={classes.cardCategory}>Assignees</p>
-                    <h3 className={classes.cardTitle}>
-                        {assignees.length}
-                    </h3>
+                    <p className={classes.cardCategory}>Actions</p>
                 </CardHeader>
                 <CardBody>
-                    <AddAssignee />
-                    <AssigneesTable assignees={assignees} />
+                    <CloseSprint />
+                    <Refresh />
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
-                        <AddButton />
+                        Various actions to be performed
                     </div>
                 </CardFooter>
             </Card>
@@ -62,7 +56,7 @@ class Assignees extends Component {
     }
 }
 
-Assignees.propTypes = {
+Actions.propTypes = {
     classes: PropTypes.object,
 
 };
@@ -72,4 +66,4 @@ const mapState = state => ({
     assignees: state.sprintPlanning.assignees,
 });
 
-export default connect(mapState, null)(withStyles(dashboardStyle)(Assignees));
+export default connect(mapState, null)(withStyles(dashboardStyle)(Actions));
