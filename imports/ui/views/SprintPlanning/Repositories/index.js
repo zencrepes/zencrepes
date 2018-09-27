@@ -16,6 +16,8 @@ import CardBody from "../../../components/Card/CardBody";
 import {cfgIssues} from "../../../data/Minimongo";
 
 import RepositoriesTable from './RepositoriesTable.js';
+import AddButton from './AddButton.js';
+import AddRepository from './AddRepository/index.js';
 
 import { getRepositoriesRepartition } from '../../../utils/repartition/index.js';
 
@@ -47,11 +49,12 @@ class Repositories extends Component {
                     </h3>
                 </CardHeader>
                 <CardBody>
+                    <AddRepository />
                     <RepositoriesTable repositories={repositories} />
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
-                        TO-DO: Add button to add Assignees
+                        <AddButton />
                     </div>
                 </CardFooter>
             </Card>

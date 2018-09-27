@@ -25,8 +25,8 @@ class AddButton extends Component {
 
     addClick = () => {
         console.log('addClick');
-        const { setOpenAddAssignee } = this.props;
-        setOpenAddAssignee(true);
+        const { setOpenAddRepository } = this.props;
+        setOpenAddRepository(true);
         /*
         const { setLoadFlag } = this.props;
         setLoadFlag({
@@ -58,7 +58,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setOpenAddAssignee: dispatch.sprintPlanning.setOpenAddAssignee,
+    setOpenAddRepository: dispatch.sprintPlanning.setOpenAddRepository,
 
 });
 

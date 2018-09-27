@@ -26,7 +26,7 @@ const styles = theme => ({
     },
 });
 
-class ListAssignees extends Component {
+class ListRepositories extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,25 +34,25 @@ class ListAssignees extends Component {
         };
     }
 
-    addAssignee = assignee => () => {
-        console.log('addAssignee');
-        const { addAssignee } = this.props;
-        addAssignee(assignee);
+    addRepository = repository => () => {
+        console.log('addRepository');
+        const { addRepository } = this.props;
+        addRepository(repository);
     };
 
     render() {
-        const { classes, filteredAvailableAssignees } = this.props;
+        const { classes, filteredAvailableRepositories } = this.props;
         return (
             <List className={classes.root}>
-                {filteredAvailableAssignees.map(assignee => (
+                {filteredAvailableRepositories.map(repository => (
                     <ListItem
-                        key={assignee.id}
+                        key={repository.id}
                         role={undefined}
                         dense
                         button
-                        onClick={this.addAssignee(assignee)}
+                        onClick={this.addRepository(repository)}
                     >
-                        <ListItemText primary={assignee.name === null ? assignee.login : assignee.name} />
+                        <ListItemText primary={repository.org.login + " / " + repository.name } />
                     </ListItem>
                 ))}
             </List>
@@ -60,17 +60,17 @@ class ListAssignees extends Component {
     }
 }
 
-ListAssignees.propTypes = {
+ListRepositories.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    filteredAvailableAssignees: state.sprintPlanning.filteredAvailableAssignees,
+    filteredAvailableRepositories: state.sprintPlanning.filteredAvailableRepositories,
     toggledAvailableRepos: state.labelsconfiguration.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({
-    addAssignee: dispatch.sprintPlanning.addAssignee
+    addRepository: dispatch.sprintPlanning.addRepository
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(ListAssignees));
+export default connect(mapState, mapDispatch)(withStyles(styles)(ListRepositories));

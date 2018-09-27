@@ -18,7 +18,7 @@ const styles = theme => ({
 
 });
 
-class SearchAssignees extends Component {
+class SearchRepositories extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,17 +27,17 @@ class SearchAssignees extends Component {
     }
 
     handleChange = name => event => {
-        const { classes, updateAvailableAssigneesFilter } = this.props;
-        updateAvailableAssigneesFilter(event.target.value);
+        const { classes, updateAvailableRepositoriesFilter } = this.props;
+        updateAvailableRepositoriesFilter(event.target.value);
     };
 
     render() {
-        const { classes, availableAssigneesFilter } = this.props;
+        const { classes, availableRepositoriesFilter } = this.props;
         return (
             <TextField
                 label="Search"
                 id="simple-start-adornment"
-                value={availableAssigneesFilter}
+                value={availableRepositoriesFilter}
                 className={classNames(classes.margin, classes.textField)}
                 onChange={this.handleChange('name')}
                 InputProps={{
@@ -48,17 +48,17 @@ class SearchAssignees extends Component {
     }
 }
 
-SearchAssignees.propTypes = {
+SearchRepositories.propTypes = {
     classes: PropTypes.object.isRequired,
 
 };
 
 const mapState = state => ({
-    availableAssigneesFilter: state.sprintPlanning.availableAssigneesFilter,
+    availableRepositoriesFilter: state.sprintPlanning.availableRepositoriesFilter,
 });
 
 const mapDispatch = dispatch => ({
-    updateAvailableAssigneesFilter: dispatch.sprintPlanning.updateAvailableAssigneesFilter
+    updateAvailableRepositoriesFilter: dispatch.sprintPlanning.updateAvailableRepositoriesFilter
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(SearchAssignees));
+export default connect(mapState, mapDispatch)(withStyles(styles)(SearchRepositories));

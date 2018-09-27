@@ -1,8 +1,7 @@
 import _ from 'lodash';
 
-import { getAssigneesRepartition, getAssignees } from '../../utils/repartition/index.js';
+import { getAssigneesRepartition, getAssignees, getRepositoriesRepartition, getRepositories } from '../../utils/repartition/index.js';
 import {cfgIssues} from "../../data/Minimongo";
-import {getRepositoriesRepartition} from "../../utils/repartition";
 import {
     getFirstDay,
     getLastDay, initObject, populateClosed, populateObject, populateOpen,
@@ -17,23 +16,33 @@ export default {
         availableAssignees: [],
         filteredAvailableAssignees: [],
         availableAssigneesFilter: '',
+        openAddAssignee: false,
 
         repositories: [],
         availableRepositories: [],
+        filteredAvailableRepositories: [],
+        availableRepositoryFilter: '',
+        openAddRepository: false,
 
         velocity: [],
 
-        openAddAssignee: false,
     },
     reducers: {
         setSprintName(state, payload) {return { ...state, sprintName: payload };},
-        setAssignees(state, payload) {return { ...state, assignees: payload };},
-        setRepositories(state, payload) {return { ...state, repositories: payload };},
-        setVelocity(state, payload) {return { ...state, velocity: payload };},
+
+        setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
-        setAvailableAssignees(state, payload) {return { ...state, availableAssignees: payload };},
-        setFilteredAvailableAssignees(state, payload) {return { ...state, filteredAvailableAssignees: payload };},
+        setAvailableAssignees(state, payload) {return { ...state, availableAssignees: JSON.parse(JSON.stringify(payload))};},
+        setFilteredAvailableAssignees(state, payload) {return { ...state, filteredAvailableAssignees: JSON.parse(JSON.stringify(payload)) };},
         setAvailableAssigneesFilter(state, payload) {return { ...state, availableAssigneesFilter: payload };},
+
+        setRepositories(state, payload) {return { ...state, repositories: JSON.parse(JSON.stringify(payload)) };},
+        setOpenAddRepository(state, payload) {return { ...state, openAddRepository: payload };},
+        setAvailableRepositories(state, payload) {return { ...state, availableRepositories: JSON.parse(JSON.stringify(payload))};},
+        setFilteredAvailableRepositories(state, payload) {return { ...state, filteredAvailableRepositories: JSON.parse(JSON.stringify(payload)) };},
+        setAvailableRepositoriesFilter(state, payload) {return { ...state, availableRepositoriesFilter: payload };},
+
+        setVelocity(state, payload) {return { ...state, velocity: payload };},
     },
 
     effects: {
@@ -55,7 +64,21 @@ export default {
             let repositories = getRepositoriesRepartition(cfgIssues.find(currentSprintFilter).fetch());
             this.setRepositories(repositories);
 
+            let allRepositories = getRepositories(cfgIssues.find({}).fetch());
+            let repositoriesDifference = _.differenceBy(allRepositories, repositories, 'id');
+            this.setAvailableRepositories(repositoriesDifference);
+            this.setFilteredAvailableRepositories(repositoriesDifference);
+            this.setAvailableRepositoriesFilter('');
+
+
+
+            this.updateVelocity(assignees);
+        },
+
+        async updateVelocity(assignees, rootState) {
             //Build velocity based on past assignees performance
+            let currentSprintFilter = {'state': { $eq : 'OPEN' }, 'milestone.title':{'$in':[rootState.sprintPlanning.sprintName]}};
+
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
             let closedIssues = cfgIssues.find(closedIssuesFilter).fetch()
@@ -97,7 +120,35 @@ export default {
             this.setAvailableAssignees(assigneesDifference);
 
             this.updateAvailableAssigneesFilter(rootState.sprintPlanning.availableAssigneesFilter);
+
+            this.updateVelocity(currentAssignees);
         },
+
+        async updateAvailableRepositoriesFilter(payload, rootState) {
+            this.setAvailableRepositoriesFilter(payload);
+            let filteredSet = _.filter(rootState.sprintPlanning.availableRepositories, function(repository) {
+                if (repository.name.toLowerCase().indexOf(payload.toLowerCase()) !== -1) {return true;}
+                else if (repository.org.login.toLowerCase().indexOf(payload.toLowerCase()) !== -1) {return true;}
+                else {return false;}
+            });
+            this.setFilteredAvailableRepositories(filteredSet);
+        },
+
+        async addRepository(payload, rootState) {
+            let currentRepositories = rootState.sprintPlanning.repositories;
+            currentRepositories.push(payload);
+            this.setRepositories(currentRepositories);
+            console.log(currentRepositories);
+
+            let allRepositories = getRepositories(cfgIssues.find({}).fetch());
+            let repositoriesDifference = _.differenceBy(allRepositories, currentRepositories, 'id');
+            this.setAvailableRepositories(repositoriesDifference);
+
+            this.updateAvailableRepositoriesFilter(rootState.sprintPlanning.availableRepositoriesFilter);
+
+            this.updateVelocity(currentRepositories);
+        },
+
     }
 };
 

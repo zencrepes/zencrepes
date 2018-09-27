@@ -108,6 +108,20 @@ export const getAssigneesRepartition = (issues) => {
     return states.sort((a, b) => b.count - a.count);
 };
 */
+
+export const getRepositories = (issues) => {
+    let repos = [];
+    statesGroup = _.groupBy(issues, (value) => value.repo.name);
+    Object.keys(statesGroup).forEach(function(key) {
+        repos.push({
+            id: statesGroup[key][0].repo.id,
+            org: statesGroup[key][0].repo.org,
+            name: statesGroup[key][0].repo.name,
+            url: statesGroup[key][0].repo.url,
+        });
+    });
+    return repos;
+};
 /*
 *
 * getRepositoriesRepartition() Take a list of issues and returns repartition by repository
