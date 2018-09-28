@@ -6,6 +6,10 @@ import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/d
 
 import { CalendarClock } from 'mdi-material-ui';
 
+import GridItem from '../../../components/Grid/GridItem.js';
+import GridContainer from '../../../components/Grid/GridContainer.js';
+
+
 import PropTypes from "prop-types";
 import Card from "../../../components/Card/Card";
 import CardHeader from "../../../components/Card/CardHeader";
@@ -43,7 +47,6 @@ class Actions extends Component {
                     <p className={classes.cardCategory}>Actions</p>
                 </CardHeader>
                 <CardBody>
-                    <CloseSprint />
                     <Refresh />
                 </CardBody>
                 <CardFooter stats>

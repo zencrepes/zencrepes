@@ -108,7 +108,7 @@ class VelocityWeeks extends Component {
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
-                        Velocity over the past 20 weeks
+                        Team velocity (current assignees) over the past 20 weeks
                     </div>
                 </CardFooter>
             </Card>

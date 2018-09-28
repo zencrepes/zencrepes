@@ -36,25 +36,11 @@ class CloseSprint extends Component {
 
     refreshFull = () => {
         console.log('refreshFull');
-        const { setLoadFlag } = this.props;
-        setLoadFlag({
-            issues: 'true',
-            labels: 'false'
-        });
     };
 
     refreshQuick = () => {
         console.log('refreshQuick');
-        const { setLoadFlag, setLoadRepos, filters } = this.props;
-        //Get list of repositories for current query
-        let mongoSelector = buildMongoSelector(filters);
-        let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
-        let reposGroup = Object.keys(_.groupBy(cfgIssues.find(openedIssuesFilter).fetch(), 'repo.id'));
-        setLoadRepos(reposGroup);
-        setLoadFlag({
-            issues: 'true',
-            labels: 'false'
-        });
+
     };
 
     render() {

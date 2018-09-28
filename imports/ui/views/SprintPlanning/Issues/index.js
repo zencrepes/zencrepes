@@ -24,7 +24,7 @@ class Issues extends Component {
     }
 
     render() {
-        const { classes, sprintName } = this.props;
+        const { classes, issues } = this.props;
 
         return (
             <Card>
@@ -34,11 +34,11 @@ class Issues extends Component {
                     </CardIcon>
                     <p className={classes.cardCategory}>Issues in Sprint</p>
                     <h3 className={classes.cardTitle}>
-                        {cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).count()}
+                        {issues.length}
                     </h3>
                 </CardHeader>
                 <CardBody>
-                    <IssuesTable issues={cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch()}/>
+                    <IssuesTable issues={issues}/>
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
@@ -56,8 +56,7 @@ Issues.propTypes = {
 };
 
 const mapState = state => ({
-    sprintName: state.sprintPlanning.sprintName,
-
+    issues: state.sprintPlanning.issues,
 });
 
 export default connect(mapState, null)(withStyles(dashboardStyle)(Issues));

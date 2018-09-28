@@ -24,6 +24,8 @@ export default {
         availableRepositoryFilter: '',
         openAddRepository: false,
 
+        issues: [],
+
         velocity: [],
 
     },
@@ -41,6 +43,8 @@ export default {
         setAvailableRepositories(state, payload) {return { ...state, availableRepositories: JSON.parse(JSON.stringify(payload))};},
         setFilteredAvailableRepositories(state, payload) {return { ...state, filteredAvailableRepositories: JSON.parse(JSON.stringify(payload)) };},
         setAvailableRepositoriesFilter(state, payload) {return { ...state, availableRepositoriesFilter: payload };},
+
+        setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
     },
@@ -70,7 +74,7 @@ export default {
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
 
-
+            this.setIssues(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
 
             this.updateVelocity(assignees);
         },

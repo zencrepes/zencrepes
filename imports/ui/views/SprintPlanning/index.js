@@ -19,6 +19,7 @@ import QuerySelect from '../../components/Query/Select/index.js';
 import VelocityWeeks from './VelocityWeeks/index.js';
 import DaysToCompletion from './DaysToCompletion/index.js';
 
+import StatsBar from './StatsBar/index.js';
 import ViewToolbar from './ViewToolbar/index.js';
 import Assignees from './Assignees/index.js';
 import Repositories from './Repositories/index.js';
@@ -55,6 +56,7 @@ class SprintPlanning extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <ViewToolbar />
+                            <StatsBar />
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={4}>
                                     <Actions />

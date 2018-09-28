@@ -55,7 +55,7 @@ class Select extends Component {
                 <TextField
                     id="select-query"
                     select
-                    label="Select a Sprint"
+                    label="Select an open sprint"
                     className={classes.textField}
                     value={sprintName}
                     onChange={this.handleChange('sprint')}
