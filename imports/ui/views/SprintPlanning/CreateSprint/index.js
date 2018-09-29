@@ -33,6 +33,11 @@ class CreateSprint extends Component {
         setOpenCreateSprint(false);
     };
 
+    create = () => {
+        const { setOpenCreateSprint } = this.props;
+        setOpenCreateSprint(false);
+    };
+
 
     changeSprintName = name => event => {
         this.setState({
@@ -41,6 +46,7 @@ class CreateSprint extends Component {
     };
 
     changeSprintDate = name => event => {
+        console.log(event.target.value);
         this.setState({
             'sprintDate': event.target.value
         });
@@ -49,6 +55,7 @@ class CreateSprint extends Component {
     render() {
         const { classes, openCreateSprint } = this.props;
         if (openCreateSprint) {
+            let twoWeeksFromNow = new Date(new Date().getTime() + (15*24*60*60*1000));
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openCreateSprint}>
                     <DialogTitle id="simple-dialog-title">Create Sprint</DialogTitle>
@@ -65,14 +72,14 @@ class CreateSprint extends Component {
                             onChange={this.changeSprintName()}
                         />
                         <TextField
-                            id="full-width"
+                            id="date"
                             label="End Date"
+                            type="date"
+                            defaultValue={twoWeeksFromNow.getFullYear() + "-" + (twoWeeksFromNow.getMonth()+1 < 10 ? '0' : '') + (twoWeeksFromNow.getMonth()+1) + "-" + (twoWeeksFromNow.getDate() < 10 ? '0' : '') + (twoWeeksFromNow.getDate())}
+                            className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            className={classes.textField}
-                            fullWidth
-                            margin="normal"
                             onChange={this.changeSprintDate()}
                         />
                         <FirstIssue />
@@ -80,6 +87,9 @@ class CreateSprint extends Component {
                     <DialogActions>
                         <Button onClick={this.close} color="primary" autoFocus>
                             Close
+                        </Button>
+                        <Button onClick={this.create} color="primary" autoFocus>
+                            Create
                         </Button>
                     </DialogActions>
                 </Dialog>

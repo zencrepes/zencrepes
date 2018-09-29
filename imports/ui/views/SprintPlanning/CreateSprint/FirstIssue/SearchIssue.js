@@ -51,7 +51,7 @@ class SearchIssue extends Component {
             <div className={classes.root}>
                 <TextField
                     id="full-width"
-                    label="First Issue"
+                    label="Search for an issue to initialize the sprint with"
                     InputLabelProps={{
                         shrink: true,
                     }}

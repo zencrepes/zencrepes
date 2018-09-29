@@ -30,6 +30,7 @@ export default {
 
         openCreateSprint: false,
         searchIssue: '',
+        selectedIssue: '',
 
     },
     reducers: {
@@ -53,6 +54,7 @@ export default {
 
         setOpenCreateSprint(state, payload) {return { ...state, openCreateSprint: payload };},
         setSearchIssue(state, payload) {return { ...state, searchIssue: payload };},
+        setSelectedIssue(state, payload) {return { ...state, selectedIssue: payload };},
     },
 
     effects: {

@@ -36,17 +36,9 @@ class ListIssues extends Component {
     }
 
     handleToggle = value => () => {
-        const { setToggledAvailableRepos, toggledAvailableRepos } = this.props;
-
-        const currentIndex = toggledAvailableRepos.findIndex((repo) => {return repo.id === value.id});
-        const newAvailable = [...toggledAvailableRepos];
-
-        if (currentIndex === -1) {
-            newAvailable.push(value);
-        } else {
-            newAvailable.splice(currentIndex, 1);
-        }
-        setToggledAvailableRepos(newAvailable);
+        const { setSearchIssue, setSelectedIssue } = this.props;
+        setSearchIssue('');
+        setSelectedIssue(value.id);
     };
     
 
@@ -64,8 +56,6 @@ class ListIssues extends Component {
                 else {return false;}
             });
         }
-
-        console.log(filteredIssues);
         return (
             <List className={classes.root}>
                 {filteredIssues.map(issue => (
@@ -94,6 +84,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
+    setSearchIssue: dispatch.sprintPlanning.setSearchIssue,
+    setSelectedIssue: dispatch.sprintPlanning.setSelectedIssue,
 
 });
 

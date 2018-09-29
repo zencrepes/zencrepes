@@ -14,6 +14,7 @@ import TextField from '@material-ui/core/TextField';
 
 import SearchIssue from './SearchIssue.js'
 import ListIssues from './ListIssues.js'
+import SelectedIssue from './SelectedIssue.js'
 
 const styles = theme => ({
     root: {
@@ -41,6 +42,7 @@ class FirstIssue extends Component {
             <div className={classes.root}>
                 <SearchIssue />
                 <ListIssues />
+                <SelectedIssue />
             </div>
         );
     };
