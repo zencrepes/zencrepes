@@ -26,6 +26,8 @@ import Repositories from './Repositories/index.js';
 import Issues from './Issues/index.js';
 import Actions from './Actions/index.js';
 
+import CreateSprint from './CreateSprint/index.js';
+
 class SprintPlanning extends Component {
     constructor(props) {
         super(props);
@@ -55,6 +57,7 @@ class SprintPlanning extends Component {
                     />
                     <div className={classes.content}>
                         <div className={classes.container}>
+                            <CreateSprint />
                             <ViewToolbar />
                             <StatsBar />
                             <GridContainer>

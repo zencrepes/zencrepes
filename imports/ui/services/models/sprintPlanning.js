@@ -28,6 +28,9 @@ export default {
 
         velocity: [],
 
+        openCreateSprint: false,
+        searchIssue: '',
+
     },
     reducers: {
         setSprintName(state, payload) {return { ...state, sprintName: payload };},
@@ -47,6 +50,9 @@ export default {
         setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
+
+        setOpenCreateSprint(state, payload) {return { ...state, openCreateSprint: payload };},
+        setSearchIssue(state, payload) {return { ...state, searchIssue: payload };},
     },
 
     effects: {

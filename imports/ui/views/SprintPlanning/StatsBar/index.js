@@ -41,12 +41,6 @@ class StatsBar extends Component {
                     <GridItem xs={12} sm={6} md={3}>
                         <i>Completed Points: {completedPoints} / {totalPoints}</i>
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <i>Assignees: {assignees.length}</i>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <i>Repositories: {repositories.length}</i>
-                    </GridItem>
                 </GridContainer>
             </div>
         );
