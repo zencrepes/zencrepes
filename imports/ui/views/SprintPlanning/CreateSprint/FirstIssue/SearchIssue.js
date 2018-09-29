@@ -40,9 +40,12 @@ class SearchIssue extends Component {
     };
 
     pushChange = () => {
-        const { setSearchIssue } = this.props;
+        const { setSearchIssue, setSelectedIssue } = this.props;
         const { searchValue } = this.state;
         setSearchIssue(searchValue);
+        if (searchValue === '') {
+            setSelectedIssue(null);
+        }
     }
 
     render() {
@@ -75,7 +78,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setSearchIssue: dispatch.sprintPlanning.setSearchIssue,
-
+    setSelectedIssue: dispatch.sprintPlanning.setSelectedIssue,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(SearchIssue));

@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import FirstIssue from './FirstIssue/index.js';
+import CreateButton from './CreateButton.js';
 
 const styles = theme => ({
     root: {
@@ -34,8 +35,9 @@ class CreateSprint extends Component {
     };
 
     create = () => {
-        const { setOpenCreateSprint } = this.props;
+        const { setOpenCreateSprint, setLoadFlag, setRepos, setName, setEndDate } = this.props;
         setOpenCreateSprint(false);
+
     };
 
 
@@ -88,9 +90,7 @@ class CreateSprint extends Component {
                         <Button onClick={this.close} color="primary" autoFocus>
                             Close
                         </Button>
-                        <Button onClick={this.create} color="primary" autoFocus>
-                            Create
-                        </Button>
+                        <CreateButton />
                     </DialogActions>
                 </Dialog>
             );
@@ -107,10 +107,17 @@ CreateSprint.propTypes = {
 
 const mapState = state => ({
     openCreateSprint: state.sprintPlanning.openCreateSprint,
+
 });
 
 const mapDispatch = dispatch => ({
     setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
+
+    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
+    setRepos: dispatch.githubCreateMilestones.setRepos,
+    setName: dispatch.githubCreateMilestones.setName,
+    setEndDate: dispatch.githubCreateMilestones.setEndDate,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(CreateSprint));

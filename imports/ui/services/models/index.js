@@ -15,7 +15,7 @@ export { default as githubFetchReposContent } from './githubFetchReposContent.js
 export { default as githubCreatePointsLabels } from './githubCreatePointsLabels.js';
 export { default as githubPushPoints } from './githubPushPoints.js';
 
-export { default as githubCreateMilestone } from './githubCreateMilestone.js';
+export { default as githubCreateMilestones } from './githubCreateMilestones.js';
 
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';

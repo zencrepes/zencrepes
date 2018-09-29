@@ -30,7 +30,7 @@ export default {
 
         openCreateSprint: false,
         searchIssue: '',
-        selectedIssue: '',
+        selectedIssue: null,
 
     },
     reducers: {
