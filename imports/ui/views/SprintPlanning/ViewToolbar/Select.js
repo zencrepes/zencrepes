@@ -29,27 +29,25 @@ const styles = theme => ({
 class Select extends Component {
     constructor(props) {
         super(props);
-
         this.state = {sprint: null};
     }
 
-    handleChange = name => event => {
-        const { updateSprint } = this.props;
-        console.log('Dashboard - QueryPicker - handleChange');
-        updateSprint(event.target.value);
-    };
+    componentDidMount() {
+        console.log('Sprint Planning - componentDidMount');
+        const { availableSprints, updateAvailableSprints } = this.props;
+        if (availableSprints.length === 0) {
+            updateAvailableSprints();
+        }
+    }
 
-    getSprints = () => {
-        //{"milestone.title":{"$in":["HCMI - Sprint 10"]}}
-        //let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
-        let milestonesGroup = Object.keys(_.groupBy(cfgIssues.find({'milestone.state':{'$in':['OPEN']}}).fetch(), 'milestone.title'));
-        //console.log(milestonesGroup);
-        return milestonesGroup;
+    handleChange = name => event => {
+        const { updateSelectedSprint } = this.props;
+        console.log('Dashboard - QueryPicker - handleChange');
+        updateSelectedSprint(event.target.value);
     };
 
     render() {
-        const { classes, sprintName } = this.props;
-        let sprints = this.getSprints();
+        const { classes, selectedSprintName, availableSprints } = this.props;
         return (
             <div className={classes.root}>
                 <TextField
@@ -57,7 +55,7 @@ class Select extends Component {
                     select
                     label="Select an open sprint"
                     className={classes.textField}
-                    value={sprintName}
+                    value={selectedSprintName}
                     onChange={this.handleChange('sprint')}
                     SelectProps={{
                         MenuProps: {
@@ -66,7 +64,7 @@ class Select extends Component {
                     }}
                     margin="normal"
                 >
-                    {sprints.map(query => (
+                    {availableSprints.map(query => (
                         <MenuItem key={query} value={query}>
                             {query}
                         </MenuItem>
@@ -82,13 +80,13 @@ Select.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    setSprintName: dispatch.sprintPlanning.setSprintName,
-    updateSprint: dispatch.sprintPlanning.updateSprint,
+    updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
+    updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
 });
 
 const mapState = state => ({
-    sprintName: state.sprintPlanning.sprintName,
+    selectedSprintName: state.sprintPlanning.selectedSprintName,
+    availableSprints: state.sprintPlanning.availableSprints,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Select));
-//export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesTable));

@@ -14,6 +14,7 @@ import TextField from '@material-ui/core/TextField';
 
 import FirstIssue from './FirstIssue/index.js';
 import CreateButton from './CreateButton.js';
+import SprintName from './SprintName.js';
 
 const styles = theme => ({
     root: {
@@ -24,7 +25,6 @@ class CreateSprint extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            sprintName: '',
             sprintDate: '',
         };
     }
@@ -37,15 +37,8 @@ class CreateSprint extends Component {
     create = () => {
         const { setOpenCreateSprint, setLoadFlag, setRepos, setName, setEndDate } = this.props;
         setOpenCreateSprint(false);
-
     };
 
-
-    changeSprintName = name => event => {
-        this.setState({
-            'sprintName': event.target.value
-        });
-    };
 
     changeSprintDate = name => event => {
         console.log(event.target.value);
@@ -62,17 +55,7 @@ class CreateSprint extends Component {
                 <Dialog aria-labelledby="simple-dialog-title" open={openCreateSprint}>
                     <DialogTitle id="simple-dialog-title">Create Sprint</DialogTitle>
                     <DialogContent className={classes.root}>
-                        <TextField
-                            id="full-width"
-                            label="Name"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            className={classes.textField}
-                            fullWidth
-                            margin="normal"
-                            onChange={this.changeSprintName()}
-                        />
+                        <SprintName />
                         <TextField
                             id="date"
                             label="End Date"

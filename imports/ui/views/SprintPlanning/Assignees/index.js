@@ -27,16 +27,8 @@ class Assignees extends Component {
         super(props);
     }
 
-    /*
-    getAssignees = () => {
-        const { sprintName } = this.props;
-        let assigneesRepartition = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
-        return assigneesRepartition;
-    };
-*/
     render() {
-        const { classes, sprintName, assignees } = this.props;
-        //let assignees = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
+        const { classes, assignees } = this.props;
         return (
             <Card>
                 <CardHeader color="info" stats icon>
@@ -64,11 +56,9 @@ class Assignees extends Component {
 
 Assignees.propTypes = {
     classes: PropTypes.object,
-
 };
 
 const mapState = state => ({
-    sprintName: state.sprintPlanning.sprintName,
     assignees: state.sprintPlanning.assignees,
 });
 

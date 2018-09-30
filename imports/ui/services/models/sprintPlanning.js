@@ -10,7 +10,8 @@ import {
 
 export default {
     state: {
-        sprintName: 'No Sprint Selected',
+        availableSprints: [],
+        selectedSprintName: 'No Sprint Selected',
 
         assignees: [],
         availableAssignees: [],
@@ -29,12 +30,14 @@ export default {
         velocity: [],
 
         openCreateSprint: false,
+        createSprintName: '',
         searchIssue: '',
         selectedIssue: null,
 
     },
     reducers: {
-        setSprintName(state, payload) {return { ...state, sprintName: payload };},
+        setAvailableSprints(state, payload) {return { ...state, availableSprints: payload };},
+        setSelectedSprintName(state, payload) {return { ...state, selectedSprintName: payload };},
 
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
@@ -53,16 +56,22 @@ export default {
         setVelocity(state, payload) {return { ...state, velocity: payload };},
 
         setOpenCreateSprint(state, payload) {return { ...state, openCreateSprint: payload };},
+        setCreateSprintName(state, payload) {return { ...state, createSprintName: payload };},
         setSearchIssue(state, payload) {return { ...state, searchIssue: payload };},
         setSelectedIssue(state, payload) {return { ...state, selectedIssue: payload };},
     },
 
     effects: {
-        async updateSprint(sprintName, rootState) {
-            console.log('Update Sprint');
-            this.setSprintName(sprintName);
+        async updateAvailableSprints(payload, rootState) {
+            let sprints = Object.keys(_.groupBy(cfgIssues.find({'milestone.state':{'$in':['OPEN']}}).fetch(), 'milestone.title'));
+            this.setAvailableSprints(sprints);
+        },
 
-            let currentSprintFilter = {'milestone.title':{'$in':[sprintName]}};
+        async updateSelectedSprint(selectedSprintName, rootState) {
+            console.log('Update Sprint');
+            this.setSelectedSprintName(selectedSprintName);
+
+            let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintName]}};
 
             let assignees = getAssigneesRepartition(cfgIssues.find(currentSprintFilter).fetch());
             this.setAssignees(assignees);
@@ -82,7 +91,7 @@ export default {
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
 
-            this.setIssues(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
+            this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintName]}}).fetch());
 
             this.updateVelocity(assignees);
         },

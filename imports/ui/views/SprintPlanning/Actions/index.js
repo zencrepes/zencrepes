@@ -36,7 +36,7 @@ class Actions extends Component {
     };
 */
     render() {
-        const { classes, sprintName, assignees } = this.props;
+        const { classes, selectedSprintName, assignees } = this.props;
         //let assignees = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
         return (
             <Card>
@@ -65,7 +65,7 @@ Actions.propTypes = {
 };
 
 const mapState = state => ({
-    sprintName: state.sprintPlanning.sprintName,
+    selectedSprintName: state.sprintPlanning.selectedSprintName,
     assignees: state.sprintPlanning.assignees,
 });
 
