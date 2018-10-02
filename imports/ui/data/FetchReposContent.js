@@ -279,6 +279,8 @@ class FetchReposContent extends Component {
     */
 
     ingestIssues = async (data, repoObj) => {
+        const { incrementIssuesLoadedCount } = this.props;
+
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
@@ -334,11 +336,13 @@ class FetchReposContent extends Component {
                         }
                     }
                 }
+                await cfgIssues.remove({'id': issueObj.id});
                 await cfgIssues.upsert({
                     id: issueObj.id
                 }, {
                     $set: issueObj
                 });
+
                 this.props.incrementIssuesLoadedCount(1);
             }
             lastCursor = currentIssue.cursor;

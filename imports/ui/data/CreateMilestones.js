@@ -37,17 +37,42 @@ class CreateMilestones extends Component {
     };
 
     load = async () => {
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, repos } = this.props;
+        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, repos, action, milestoneTitle, milestoneDueOn, callBack } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
 
+        console.log(repos);
         for (let repo of repos) {
             console.log('Creating milestone in repo: ');
             console.log(repo);
 
             if (action === 'create') {
+                try {
+                    result = await this.octokit.issues.createMilestone({
+                        owner: repo.org.login,
+                        repo: repo.name,
+                        title: milestoneTitle,
+                        due_on: milestoneDueOn,
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                console.log(result);
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    callBack(result);
+/*                    await cfgLabels.upsert({
+                        id: labelObj.id
+                    }, {
+                        $set: labelObj
+                    });*/
+                }
+
+                const result = await octokit.issues.createMilestone({owner, repo, title, state, description, due_on})
+
                 /*
                 let missingPointsLabels = _.difference(points, labels);
                 for (let label of missingPointsLabels) {
@@ -107,6 +132,9 @@ const mapState = state => ({
     action: state.githubCreateMilestones.action,
 
     repos: state.githubCreateMilestones.repos,
+    milestoneTitle: state.githubCreateMilestones.milestoneTitle,
+    milestoneDueOn: state.githubCreateMilestones.milestoneDueOn,
+    callBack: state.githubCreateMilestones.callBack
 });
 
 const mapDispatch = dispatch => ({

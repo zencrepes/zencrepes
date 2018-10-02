@@ -7,8 +7,10 @@ export default {
         action: 'create',       // Action to be performed, create or delete
 
         repos: [],
-        name: '',
-        endDate: '',
+        milestoneTitle: '',
+        milestoneDueOn: '',     //Format: YYYY-MM-DDTHH:MM:SSZ
+
+        callBack: null,
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -18,8 +20,10 @@ export default {
         setAction(state, payload) {return { ...state, action: payload };},
 
         setRepos(state, payload) {return { ...state, repos: payload };},
-        setName(state, payload) {return { ...state, repos: payload };},
-        setEndDate(state, payload) {return { ...state, repos: payload };},
+        setMilestoneTitle(state, payload) {return { ...state, milestoneTitle: payload };},
+        setMilestoneDueOn(state, payload) {return { ...state, milestoneDueOn: payload };},
+
+        setCallBack(state, payload) {return { ...state, callBack: payload };},
     },
     effects: {
 

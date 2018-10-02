@@ -15,6 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import FirstIssue from './FirstIssue/index.js';
 import CreateButton from './CreateButton.js';
 import SprintName from './SprintName.js';
+import SprintEndDate from './SprintEndDate.js';
 
 const styles = theme => ({
     root: {
@@ -50,23 +51,12 @@ class CreateSprint extends Component {
     render() {
         const { classes, openCreateSprint } = this.props;
         if (openCreateSprint) {
-            let twoWeeksFromNow = new Date(new Date().getTime() + (15*24*60*60*1000));
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openCreateSprint}>
                     <DialogTitle id="simple-dialog-title">Create Sprint</DialogTitle>
                     <DialogContent className={classes.root}>
                         <SprintName />
-                        <TextField
-                            id="date"
-                            label="End Date"
-                            type="date"
-                            defaultValue={twoWeeksFromNow.getFullYear() + "-" + (twoWeeksFromNow.getMonth()+1 < 10 ? '0' : '') + (twoWeeksFromNow.getMonth()+1) + "-" + (twoWeeksFromNow.getDate() < 10 ? '0' : '') + (twoWeeksFromNow.getDate())}
-                            className={classes.textField}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onChange={this.changeSprintDate()}
-                        />
+                        <SprintEndDate />
                         <FirstIssue />
                     </DialogContent>
                     <DialogActions>

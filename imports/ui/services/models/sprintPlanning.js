@@ -31,6 +31,7 @@ export default {
 
         openCreateSprint: false,
         createSprintName: '',
+        createSprintEndDate: '',
         searchIssue: '',
         selectedIssue: null,
 
@@ -57,6 +58,7 @@ export default {
 
         setOpenCreateSprint(state, payload) {return { ...state, openCreateSprint: payload };},
         setCreateSprintName(state, payload) {return { ...state, createSprintName: payload };},
+        setCreateSprintEndDate(state, payload) {return { ...state, createSprintEndDate: payload };},
         setSearchIssue(state, payload) {return { ...state, searchIssue: payload };},
         setSelectedIssue(state, payload) {return { ...state, selectedIssue: payload };},
     },
@@ -69,6 +71,11 @@ export default {
 
         async updateSelectedSprint(selectedSprintName, rootState) {
             console.log('Update Sprint');
+            console.log(selectedSprintName);
+            console.log(rootState.sprintPlanning.selectedSprintName);
+            if (selectedSprintName === null) {
+                selectedSprintName = rootState.sprintPlanning.selectedSprintName;
+            }
             this.setSelectedSprintName(selectedSprintName);
 
             let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintName]}};
@@ -98,7 +105,7 @@ export default {
 
         async updateVelocity(assignees, rootState) {
             //Build velocity based on past assignees performance
-            let currentSprintFilter = {'state': { $eq : 'OPEN' }, 'milestone.title':{'$in':[rootState.sprintPlanning.sprintName]}};
+            let currentSprintFilter = {'state': { $eq : 'OPEN' }, 'milestone.title':{'$in':[rootState.sprintPlanning.selectedSprintName]}};
 
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
@@ -170,6 +177,11 @@ export default {
             this.updateVelocity(currentRepositories);
         },
 
+        async sprintCreated(payload, rootState) {
+            console.log('sprintCreated');
+            console.log(payload);
+            console.log(rootState);
+        }
     }
 };
 

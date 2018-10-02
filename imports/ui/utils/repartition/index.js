@@ -15,6 +15,7 @@ export const getAssignees = (issues) => {
 
     let allValues = [];
     issues.forEach((issue) => {
+//        console.log(issue);
         if (issue['assignees'].totalCount > 0) {
             issue['assignees'].edges.map((assignee) => {
                 issue.assignee = assignee.node;

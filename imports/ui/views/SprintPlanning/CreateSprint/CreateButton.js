@@ -25,10 +25,17 @@ class CreateButton extends Component {
     }
 
     create = () => {
-        const { setOpenCreateSprint, setLoadFlag, setRepos, setName, setEndDate } = this.props;
+        const { setOpenCreateSprint, selectedIssue, createSprintName, createSprintEndDate, setLoadFlag, setRepos, setMilestoneTitle, setMilestoneDueOn, sprintCreated, setCallBack } = this.props;
+        if (selectedIssue !== null && createSprintName !== '' && createSprintEndDate !== '') {
+            setRepos([selectedIssue.repo]);
+            setMilestoneTitle(createSprintName);
+            setMilestoneDueOn(createSprintEndDate + 'T12:00:00Z'); //Format: YYYY-MM-DDTHH:MM:SSZ
 
-        setOpenCreateSprint(false);
-        setRepos([selectedIssue.repo]);
+            setLoadFlag(true);
+            setOpenCreateSprint(false);
+        } else {
+            console.log('Unable to create sprint, verify all fields were completed');
+        }
 
     };
 
@@ -50,17 +57,19 @@ CreateButton.propTypes = {
 
 const mapState = state => ({
     selectedIssue: state.sprintPlanning.selectedIssue,
-
+    createSprintName: state.sprintPlanning.createSprintName,
+    createSprintEndDate: state.sprintPlanning.createSprintEndDate,
 });
 
 const mapDispatch = dispatch => ({
     setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
+    sprintCreated: dispatch.sprintPlanning.sprintCreated,
 
     setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
     setRepos: dispatch.githubCreateMilestones.setRepos,
-    setName: dispatch.githubCreateMilestones.setName,
-    setEndDate: dispatch.githubCreateMilestones.setEndDate,
-
+    setMilestoneTitle: dispatch.githubCreateMilestones.setMilestoneTitle,
+    setMilestoneDueOn: dispatch.githubCreateMilestones.setMilestoneDueOn,
+    setMilestoneDueOn: dispatch.githubCreateMilestones.setCallBack
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(CreateButton));

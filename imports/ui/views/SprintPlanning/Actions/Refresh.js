@@ -25,12 +25,17 @@ class Refresh extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess } = this.props;
+        const { loadSuccess, setLoadSuccess, loadedCount, setLoadedCount, updateAvailableSprints, updateSelectedSprint } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
             setTimeout(() => {
                 setLoadSuccess(false);
             }, 2000);
+            if (loadedCount > 0) {
+                setLoadedCount(0);
+                updateAvailableSprints();
+                updateSelectedSprint(null);
+            }
         }
     };
 
@@ -48,7 +53,7 @@ class Refresh extends Component {
     };
 
     render() {
-        const { classes, loading, loadSuccess, issuesLoadedCount, repositories } = this.props;
+        const { classes, loading, loadSuccess, loadedCount, repositories } = this.props;
 
         if (repositories.length === 0) {
             return null;
@@ -71,7 +76,7 @@ class Refresh extends Component {
                         ContentProps={{
                             'aria-describedby': 'message-id',
                         }}
-                        message={<span id="message-id">Loaded or updated {issuesLoadedCount} issues</span>}
+                        message={<span id="message-id">Loaded or updated {loadedCount} issues</span>}
                     />
                 </div>
             )
@@ -87,7 +92,7 @@ const mapState = state => ({
     loading: state.githubFetchReposContent.loading,
     loadSuccess: state.githubFetchReposContent.loadSuccess,
 
-    issuesLoadedCount: state.githubIssues.loadedCount,
+    loadedCount: state.githubIssues.loadedCount,
 
     repositories: state.sprintPlanning.repositories,
 });
@@ -98,6 +103,12 @@ const mapDispatch = dispatch => ({
 
     setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
     setLoadRepos: dispatch.githubFetchReposContent.setLoadRepos,
+
+    setLoadedCount: dispatch.githubIssues.setLoadedCount,
+
+    updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
+    updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
+
 });
 
 

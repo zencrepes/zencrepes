@@ -28,11 +28,10 @@ class SelectedIssue extends Component {
 
     render() {
         const { classes, selectedIssue } = this.props;
-        let selectedIssueNode = cfgIssues.findOne({id: selectedIssue});
-        if (selectedIssueNode !== undefined) {
+        if (selectedIssue !== undefined && selectedIssue !== null) {
             return (
                 <div className={classes.root}>
-                    <b>Selected Issue: {selectedIssueNode.title + " (" + selectedIssueNode.org.login + "/" + selectedIssueNode.repo.name + "#"+ selectedIssueNode.number + ")"} </b>
+                    <b>Selected Issue: {selectedIssue.title + " (" + selectedIssue.org.login + "/" + selectedIssue.repo.name + "#"+ selectedIssue.number + ")"} </b>
                 </div>
             );
         } else {

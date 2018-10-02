@@ -38,7 +38,7 @@ class ListIssues extends Component {
     handleToggle = value => () => {
         const { setSearchIssue, setSelectedIssue } = this.props;
         setSearchIssue('');
-        setSelectedIssue(value.id);
+        setSelectedIssue(value);
     };
     
 

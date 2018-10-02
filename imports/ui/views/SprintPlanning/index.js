@@ -27,6 +27,7 @@ import Issues from './Issues/index.js';
 import Actions from './Actions/index.js';
 
 import CreateSprint from './CreateSprint/index.js';
+import CreateMilestones from '../../data/CreateMilestones.js';
 
 class SprintPlanning extends Component {
     constructor(props) {
@@ -58,6 +59,7 @@ class SprintPlanning extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <CreateSprint />
+                            <CreateMilestones />
                             <ViewToolbar />
                             <StatsBar />
                             <GridContainer>
