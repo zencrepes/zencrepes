@@ -10,6 +10,7 @@ import GET_GITHUB_LABELS from '../../graphql/getLabels.graphql';
 import { cfgIssues } from './Minimongo.js';
 import { cfgLabels } from './Minimongo.js';
 import { cfgSources } from './Minimongo.js';
+import { cfgMilestones } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 import getIssuesStats from './getIssuesStats.js';
@@ -343,7 +344,18 @@ class FetchReposContent extends Component {
                     $set: issueObj
                 });
 
-                this.props.incrementIssuesLoadedCount(1);
+                if (issueObj.milestone !== null) {
+                    let milestoneObj = issueObj.milestone;
+                    milestoneObj['repo'] = repoObj;
+                    milestoneObj['org'] = repoObj.org;
+                    await cfgMilestones.upsert({
+                        id: milestoneObj.id
+                    }, {
+                        $set: milestoneObj
+                    });
+                }
+
+                incrementIssuesLoadedCount(1);
             }
             lastCursor = currentIssue.cursor;
         }

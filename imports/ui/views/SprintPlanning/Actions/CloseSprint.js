@@ -9,7 +9,9 @@ import Button from '@material-ui/core/Button';
 import Snackbar from "@material-ui/core/Snackbar";
 
 import {buildMongoSelector} from "../../../utils/mongo";
+
 import {cfgIssues} from "../../../data/Minimongo";
+import {cfgMilestones} from "../../../data/Minimongo";
 
 import ProgressBar from "../../../components/Loading/Issues/ProgressBar";
 
@@ -25,49 +27,57 @@ class CloseSprint extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess } = this.props;
+        const { loadSuccess, setLoadSuccess, loadedCount, setLoadedCount, updateAvailableSprints, updateSelectedSprint } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
             setTimeout(() => {
                 setLoadSuccess(false);
+                setLoadedCount(0);
             }, 2000);
+            if (loadedCount > 0) {
+                updateAvailableSprints();
+                updateSelectedSprint(null);
+            }
         }
     };
 
-    refreshFull = () => {
-        console.log('refreshFull');
-    };
-
-    refreshQuick = () => {
-        console.log('refreshQuick');
-
+    closeSprint = () => {
+        console.log('closeSprint');
+        const { milestones, setLoadFlag, setMilestones, setAction } = this.props;
+        setMilestones(milestones);
+        setAction('close');
+        setLoadFlag(true);
     };
 
     render() {
-        const { classes, loading, loadSuccess, issuesLoadedCount } = this.props;
+        const { classes, loading, loadSuccess, loadedCount, repositories } = this.props;
 
-        return (
-            <div className={classes.root}>
-                {!loading &&
+        if (repositories.length === 0) {
+            return null;
+        } else {
+            return (
+                <div className={classes.root}>
+                    {!loading &&
                     <div>
-                        <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshFull}>
-                            Close Sprint (TBI)
+                        <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
+                            Close Sprint
                         </Button>
                     </div>
-                }
-                {loading &&
-                    <ProgressBar />
-                }
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-                    open={loadSuccess}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Loaded or updated {issuesLoadedCount} issues</span>}
-                />
-            </div>
-        )
+                    }
+                    {loading &&
+                    <ProgressBar/>
+                    }
+                    <Snackbar
+                        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                        open={loadSuccess}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id">Updated {loadedCount} milestones</span>}
+                    />
+                </div>
+            )
+        }
     };
 }
 
@@ -76,10 +86,28 @@ CloseSprint.propTypes = {
 };
 
 const mapState = state => ({
+    loading: state.githubCreateMilestones.loading,
+    loadSuccess: state.githubCreateMilestones.loadSuccess,
 
+    loadedCount: state.githubCreateMilestones.loadedCount,
+
+    repositories: state.sprintPlanning.repositories,
+
+    milestones: state.sprintPlanning.milestones,
 });
 
 const mapDispatch = dispatch => ({
+    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
+    setLoading: dispatch.githubCreateMilestones.setLoading,
+    setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
+
+    setMilestones: dispatch.githubCreateMilestones.setMilestones,
+    setAction: dispatch.githubCreateMilestones.setAction,
+
+    setLoadedCount: dispatch.githubCreateMilestones.setLoadedCount,
+
+    updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
+    updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
 
 });
 

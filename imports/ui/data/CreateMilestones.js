@@ -7,7 +7,7 @@ import { withApollo } from 'react-apollo';
 import GET_GITHUB_SINGLEREPO from '../../graphql/getSingleRepo.graphql';
 
 import { cfgSources } from './Minimongo.js';
-import {cfgLabels} from "./Minimongo";
+import {cfgLabels, cfgMilestones} from "./Minimongo";
 import fibonacci from "fibonacci-fast";
 
 import GitHubApi from '@octokit/rest';
@@ -37,18 +37,38 @@ class CreateMilestones extends Component {
     };
 
     load = async () => {
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, repos, action, milestoneTitle, milestoneDueOn, callBack } = this.props;
-
+        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, milestones, action, incrementLoadedCount } = this.props;
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
 
-        console.log(repos);
-        for (let repo of repos) {
-            console.log('Creating milestone in repo: ');
-            console.log(repo);
-
-            if (action === 'create') {
+        console.log(milestones);
+        for (let milestone of milestones) {
+            if (action === 'close') {
+                let result = false;
+                try {
+                    console.log(milestone);
+                    result = await this.octokit.issues.updateMilestone({
+                        owner: milestone.org.login,
+                        repo: milestone.repo.name,
+                        number: milestone.number,
+                        state: 'closed',
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                console.log(result);
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    incrementLoadedCount(1);
+                    await cfgMilestones.update({
+                        id: milestone.id
+                    }, {
+                        $set: {state: 'CLOSED'}
+                    });
+                }
+            } else if (action === 'create') {
                 try {
                     result = await this.octokit.issues.createMilestone({
                         owner: repo.org.login,
@@ -63,7 +83,6 @@ class CreateMilestones extends Component {
                 console.log(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    callBack(result);
 /*                    await cfgLabels.upsert({
                         id: labelObj.id
                     }, {
@@ -71,7 +90,7 @@ class CreateMilestones extends Component {
                     });*/
                 }
 
-                const result = await octokit.issues.createMilestone({owner, repo, title, state, description, due_on})
+                //const result = await octokit.issues.createMilestone({owner, repo, title, state, description, due_on})
 
                 /*
                 let missingPointsLabels = _.difference(points, labels);
@@ -131,10 +150,7 @@ const mapState = state => ({
     loading: state.githubCreateMilestones.loading,
     action: state.githubCreateMilestones.action,
 
-    repos: state.githubCreateMilestones.repos,
-    milestoneTitle: state.githubCreateMilestones.milestoneTitle,
-    milestoneDueOn: state.githubCreateMilestones.milestoneDueOn,
-    callBack: state.githubCreateMilestones.callBack
+    milestones: state.githubCreateMilestones.milestones,
 });
 
 const mapDispatch = dispatch => ({
@@ -142,6 +158,8 @@ const mapDispatch = dispatch => ({
     setLoading: dispatch.githubCreateMilestones.setLoading,
     setLoadError: dispatch.githubCreateMilestones.setLoadError,
     setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
+
+    incrementLoadedCount: dispatch.githubCreateMilestones.incrementLoadedCount,
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,

@@ -1,7 +1,10 @@
 import _ from 'lodash';
 
 import { getAssigneesRepartition, getAssignees, getRepositoriesRepartition, getRepositories } from '../../utils/repartition/index.js';
+
 import {cfgIssues} from "../../data/Minimongo";
+import {cfgMilestones} from "../../data/Minimongo";
+
 import {
     getFirstDay,
     getLastDay, initObject, populateClosed, populateObject, populateOpen,
@@ -26,6 +29,8 @@ export default {
         openAddRepository: false,
 
         issues: [],
+
+        milestones: [],
 
         velocity: [],
 
@@ -53,6 +58,7 @@ export default {
         setAvailableRepositoriesFilter(state, payload) {return { ...state, availableRepositoriesFilter: payload };},
 
         setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
+        setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
 
@@ -65,7 +71,8 @@ export default {
 
     effects: {
         async updateAvailableSprints(payload, rootState) {
-            let sprints = Object.keys(_.groupBy(cfgIssues.find({'milestone.state':{'$in':['OPEN']}}).fetch(), 'milestone.title'));
+//            let sprints = Object.keys(_.groupBy(cfgIssues.find({'milestone.state':{'$in':['OPEN']}}).fetch(), 'milestone.title')).sort();
+            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
             this.setAvailableSprints(sprints);
         },
 
@@ -99,6 +106,8 @@ export default {
             this.setAvailableRepositoriesFilter('');
 
             this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintName]}}).fetch());
+
+            this.setMilestones(cfgMilestones.find({'title':{'$in':[selectedSprintName]}}).fetch());
 
             this.updateVelocity(assignees);
         },

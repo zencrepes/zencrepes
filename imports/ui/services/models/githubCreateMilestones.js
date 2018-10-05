@@ -4,13 +4,11 @@ export default {
         loadFlag: false,        // Boolean to trigger issue load
         loadError: false,       // Is there an error during load
         loadSuccess: false,     // Was data successfully loaded
-        action: 'create',       // Action to be performed, create or delete
+        action: null,           // Action to be performed, create or delete
 
-        repos: [],
-        milestoneTitle: '',
-        milestoneDueOn: '',     //Format: YYYY-MM-DDTHH:MM:SSZ
+        milestones: [],   // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
 
-        callBack: null,
+        loadedCount: 0,
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -19,11 +17,11 @@ export default {
         setLoadSuccess(state, payload) {return { ...state, loadSuccess: payload };},
         setAction(state, payload) {return { ...state, action: payload };},
 
-        setRepos(state, payload) {return { ...state, repos: payload };},
-        setMilestoneTitle(state, payload) {return { ...state, milestoneTitle: payload };},
-        setMilestoneDueOn(state, payload) {return { ...state, milestoneDueOn: payload };},
+        setMilestones(state, payload) {return { ...state, milestones: payload };},
 
-        setCallBack(state, payload) {return { ...state, callBack: payload };},
+        setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
+        incrementLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},
+
     },
     effects: {
 

@@ -48,6 +48,7 @@ class Actions extends Component {
                 </CardHeader>
                 <CardBody>
                     <Refresh />
+                    <CloseSprint />
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>

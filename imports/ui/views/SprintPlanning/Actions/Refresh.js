@@ -30,9 +30,9 @@ class Refresh extends Component {
             //Set timer to actually set back success to false (and remove snackbar)
             setTimeout(() => {
                 setLoadSuccess(false);
+                setLoadedCount(0);
             }, 2000);
             if (loadedCount > 0) {
-                setLoadedCount(0);
                 updateAvailableSprints();
                 updateSelectedSprint(null);
             }
