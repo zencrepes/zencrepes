@@ -36,6 +36,7 @@ class Sidebar extends Component {
             {path: '/burndown', icon: (<ChartHistogram />), text: 'Burndown', key: 'burndown'},
             {divider: true, key: 'configdivider'},
             {path: '/labels', icon: (<Label />), text: 'Labels', key: 'labels'},
+            {path: '/milestones', icon: (<RunFast />), text: 'Milestones', key: 'milestones'},
             {path: '/settings', icon: (<Settings />), text: 'Settings', key: 'settings'},
             {path: '/wizard', icon: (<AutoFix />), text: 'Setup Wizard', key: 'wizard'},
         ];

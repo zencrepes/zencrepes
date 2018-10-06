@@ -11,6 +11,7 @@ export { default as githubFetchOrgs } from './githubFetchOrgs.js';
 export { default as githubFetchOrgRepos } from './githubFetchOrgRepos.js';
 export { default as githubFetchRepo } from './githubFetchRepo.js';
 export { default as githubFetchReposContent } from './githubFetchReposContent.js';
+export { default as githubFetchMilestones } from './githubFetchMilestones.js';
 
 export { default as githubCreatePointsLabels } from './githubCreatePointsLabels.js';
 export { default as githubPushPoints } from './githubPushPoints.js';
