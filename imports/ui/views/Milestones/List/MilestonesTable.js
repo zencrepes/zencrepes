@@ -88,7 +88,6 @@ const IssuesTypeProvider = props => (
 );
 
 const ActionsFormatter = ({ value }) => {
-    console.log(value);
     return <TableActionButtons key={value.title} milestonesdata={value} />
 };
 
@@ -129,8 +128,7 @@ class MilestonesTable extends Component {
                 { columnName: 'title', width: 200 },
                 { columnName: 'repos', width: 150 },
                 { columnName: 'issues', width: 90 },
-                { columnName: 'states', width: 150 },
-                { columnName: 'actions', width: 150 },
+                { columnName: 'states', width: 100 },
             ],
             statesColumns: ['states'],
             reposColumns: ['repos'],

@@ -103,6 +103,8 @@ class FetchReposMilestones extends Component {
     };
 
     ingestMilestones = async (data, repoObj) => {
+        const { incLoadedCount } = this.props;
+
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);

@@ -21,7 +21,6 @@ export default {
 
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
         incrementLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},
-
     },
     effects: {
 

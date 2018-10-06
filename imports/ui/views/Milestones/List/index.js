@@ -17,6 +17,7 @@ import GridContainer from '../../../components/Grid/GridContainer.js';
 import { cfgMilestones } from "../../../data/Minimongo";
 
 import FetchReposMilestones from "../../../data/FetchReposMilestones";
+import CreateMilestones from '../../../data/CreateMilestones.js';
 
 import MilestonesTable from './MilestonesTable.js';
 import LoadButton from './LoadButton.js';
@@ -53,8 +54,10 @@ class LabelsList extends Component {
                 title: idx,
                 count: uniqueTitles[idx].length,
                 milestones: uniqueTitles[idx],
+                closedNoIssues: uniqueTitles[idx].filter(m => m.issues !== undefined).filter(m => {if (m.issues.totalCount === 0 && m.state.toLowerCase() === 'closed') {return true;}}),
                 states: states,
             });
+
 
         });
         milestones = _.sortBy(milestones, ['count']);
@@ -83,6 +86,7 @@ class LabelsList extends Component {
                         <div className={classes.container}>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
+                                    <CreateMilestones />
                                     <LoadButton />
                                     <FetchReposMilestones />
                                     <MilestonesTable milestonesdata={milestones} />

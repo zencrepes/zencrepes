@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
@@ -11,6 +11,8 @@ import {cfgLabels, cfgMilestones} from "./Minimongo";
 import fibonacci from "fibonacci-fast";
 
 import GitHubApi from '@octokit/rest';
+
+import Snackbar from "@material-ui/core/Snackbar";
 
 /*
 Load data about Github Orgs
@@ -27,16 +29,36 @@ class CreateMilestones extends Component {
         });
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        const { loadSuccess, loadFlag } = this.props;
+        if (loadFlag !== nextProps.loadFlag) {
+            console.log('CreateMilestones - Will update because of change in loadFlag');
+            return true;
+        } else if (loadSuccess !== nextProps.loadSuccess) {
+            console.log('CreateMilestones - Will update because of change in loadSuccess');
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { setLoadFlag, loadFlag } = this.props;
+        const { setLoadFlag, loadFlag, loadSuccess, setLoadSuccess } = this.props;
         if (loadFlag) {
             console.log('CreateMilestones - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
+        if (prevProps.loadSuccess === false && loadSuccess === true) {
+            //Set timer to actually set back success to false (and remove snackbar)
+            setTimeout(() => {
+                setLoadSuccess(false);
+            }, 2000);
+        }
     };
 
     load = async () => {
+        console.log('CreateMilestones - Start load');
         const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, milestones, action, incrementLoadedCount } = this.props;
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -137,7 +159,21 @@ class CreateMilestones extends Component {
     };
 
     render() {
-        return null;
+        const {loadSuccess, loadedCount} = this.props;
+        console.log('Render CreateMilestones');
+        console.log(loadSuccess);
+        console.log(loadedCount);
+        return (
+            <Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                open={loadSuccess}
+                ContentProps={{
+                    'aria-describedby': 'message-id',
+                }}
+                message={<span id="message-id">Loaded or updated {loadedCount} milestones</span>}
+            />
+        );
+        //return null;
     }
 }
 
@@ -151,6 +187,9 @@ const mapState = state => ({
     action: state.githubCreateMilestones.action,
 
     milestones: state.githubCreateMilestones.milestones,
+
+    loadedCount: state.githubCreateMilestones.loadedCount,
+    loadSuccess: state.githubCreateMilestones.loadSuccess,
 });
 
 const mapDispatch = dispatch => ({

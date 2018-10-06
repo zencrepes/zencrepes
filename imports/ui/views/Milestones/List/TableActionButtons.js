@@ -34,38 +34,36 @@ class TableActionButtons extends Component {
         }
     };
 
-    loadMilestones = () => {
-        console.log('loadMilestones');
-        const { setLoadFlag, setLoadedCount } = this.props;
-        setLoadedCount(0);
+    closeSprint = () => {
+        console.log('closeSprint');
+        const { milestonesdata, setLoadFlag, setMilestones, setAction } = this.props;
+        setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() !== 'closed'));
+        setAction('close');
         setLoadFlag(true);
     };
 
     render() {
-        const { classes, loading, loadSuccess, loadedCount, milestonedata } = this.props;
-
-        console.log(milestonedata);
-
+        const { classes, loading, loadSuccess, loadedCount, milestonesdata } = this.props;
+        console.log(milestonesdata);
         return (
             <div className={classes.root}>
                 {!loading &&
                 <div>
-                    <Button variant="raised" color="primary" className={classes.button} onClick={this.loadMilestones}>
-                        Load/Refresh Milestones
-                    </Button>
+                    {milestonesdata.states.length > 1 &&
+                        <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
+                            Close All
+                        </Button>
+                    }
+                    {milestonesdata.closedNoIssues.length > 0 &&
+                        <Button variant="raised" color="primary" className={classes.button} onClick={this.loadMilestones}>
+                            Delete Empty
+                        </Button>
+                    }
                 </div>
                 }
                 {loading &&
                 <ProgressBar/>
                 }
-                <Snackbar
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    open={loadSuccess}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Loaded or updated {loadedCount} milestones</span>}
-                />
             </div>
         );
     };
@@ -76,16 +74,20 @@ TableActionButtons.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchMilestones.loading,
-    loadSuccess: state.githubFetchMilestones.loadSuccess,
-    loadedCount: state.githubFetchMilestones.loadedCount,
+    loading: state.githubCreateMilestones.loading,
+    loadSuccess: state.githubCreateMilestones.loadSuccess,
+    loadedCount: state.githubCreateMilestones.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchMilestones.setLoadFlag,
-    setLoading: dispatch.githubFetchMilestones.setLoading,
-    setLoadSuccess: dispatch.githubFetchMilestones.setLoadSuccess,
-    setLoadedCount: dispatch.githubFetchMilestones.setLoadedCount,
+    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
+    setLoading: dispatch.githubCreateMilestones.setLoading,
+    setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
+
+    setMilestones: dispatch.githubCreateMilestones.setMilestones,
+    setAction: dispatch.githubCreateMilestones.setAction,
+
+    setLoadedCount: dispatch.githubCreateMilestones.setLoadedCount,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(TableActionButtons));
