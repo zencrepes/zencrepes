@@ -17,6 +17,7 @@ import CardBody from "../../../components/Card/CardBody";
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
+import TableActionButtons from './TableActionButtons.js';
 
 import {
     // State or Local Processing Plugins
@@ -86,6 +87,19 @@ const IssuesTypeProvider = props => (
     />
 );
 
+const ActionsFormatter = ({ value }) => {
+    console.log(value);
+    return <TableActionButtons key={value.title} milestonesdata={value} />
+};
+
+const ActionsTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={ActionsFormatter}
+        {...props}
+    />
+);
+
+
 const EditLabelFormatter = ({ value }) => {
     return <Link to={"/labels/view/" + value}><EyeIcon /></Link>;
 };
@@ -103,11 +117,12 @@ class MilestonesTable extends Component {
 
         this.state = {
             columns: [
-                { name: 'edit', title: 'Edit', getCellValue: row => row.name },
+                { name: 'edit', title: 'Edit', getCellValue: row => row.title },
                 { name: 'title', title: 'Title' },
                 { name: 'repos', title: 'Repos Count', getCellValue: row => row.milestones },
                 { name: 'issues', title: 'Issues Count', getCellValue: row => row.milestones },
                 { name: 'states', title: 'State' },
+                { name: 'actions', title: 'Actions', getCellValue: row => row },
             ],
             tableColumnExtensions: [
                 { columnName: 'edit', width: 60 },
@@ -115,10 +130,12 @@ class MilestonesTable extends Component {
                 { columnName: 'repos', width: 150 },
                 { columnName: 'issues', width: 90 },
                 { columnName: 'states', width: 150 },
+                { columnName: 'actions', width: 150 },
             ],
             statesColumns: ['states'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
+            actionsColumns: ['actions'],
             editLabelColumns: ['edit'],
             currentPage: 0,
             pageSize: 50,
@@ -136,7 +153,7 @@ class MilestonesTable extends Component {
 
     render() {
         const { classes, milestonesdata } = this.props;
-        const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, editLabelColumns, tableColumnExtensions} = this.state;
+        const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         console.log(milestonesdata);
 
@@ -167,6 +184,9 @@ class MilestonesTable extends Component {
                         />
                         <IssuesTypeProvider
                             for={issuesColumns}
+                        />
+                        <ActionsTypeProvider
+                            for={actionsColumns}
                         />
                         <EditLabelTypeProvider
                             for={editLabelColumns}
