@@ -47,7 +47,6 @@ class FetchRepo extends Component {
         if (data.data.repository === null) {
             setLoadError(true);
         } else {
-
             let repoObj = JSON.parse(JSON.stringify(data.data.repository)); //TODO - Replace this with something better to copy object ?
             repoObj['org'] = {
                 login: data.data.repository.owner.login,
@@ -65,6 +64,9 @@ class FetchRepo extends Component {
             setLoadSuccess(true);
         }
         setLoading(false);
+
+        // Remove archived repositories, we don't want to take care of those since no actions are allowed
+        cfgSources.remove({'isArchived':true});
     };
 
     render() {

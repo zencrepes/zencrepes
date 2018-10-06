@@ -12,6 +12,7 @@ import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
 import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+import {cfgLabels} from "./Minimongo";
 
 /*
 Load data about Github Orgs
@@ -62,7 +63,11 @@ class FetchOrgs extends Component {
                 await this.getReposPagination(null, 5, OrgObj);
             }
         });
+
         console.log('Repositories loaded: ' + this.totalReposCount);
+
+        // Remove archived repositories, we don't want to take care of those since no actions are allowed
+        cfgSources.remove({'isArchived':true});
 
         setLoading(false);
         if (this.totalReposCount > 0) {

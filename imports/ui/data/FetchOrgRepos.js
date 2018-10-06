@@ -42,6 +42,10 @@ class FetchOrgRepos extends Component {
         console.log('Getting repositories from Organization: ' + name);
         await this.getReposPagination(null, 10);
         setLoading(false);
+
+        // Remove archived repositories, we don't want to take care of those since no actions are allowed
+        cfgSources.remove({'isArchived':true});
+
         if (this.reposCount === 0) {
             setLoadError(true);
         } else {
