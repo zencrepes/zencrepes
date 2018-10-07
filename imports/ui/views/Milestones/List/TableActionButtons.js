@@ -50,7 +50,6 @@ class TableActionButtons extends Component {
         setLoadFlag(true);
     };
 
-
     render() {
         const { classes, loadSuccess, milestonesdata } = this.props;
         console.log(milestonesdata);

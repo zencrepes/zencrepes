@@ -24,25 +24,14 @@ class LoadButton extends Component {
         this.state = {};
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess } = this.props;
-        if (prevProps.loadSuccess === false && loadSuccess === true) {
-            //Set timer to actually set back success to false (and remove snackbar)
-            setTimeout(() => {
-                setLoadSuccess(false);
-            }, 2000);
-        }
-    };
-
     loadMilestones = () => {
         console.log('loadMilestones');
-        const { setLoadFlag, setLoadedCount } = this.props;
-        setLoadedCount(0);
+        const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };
 
     render() {
-        const { classes, loading, loadSuccess, loadedCount } = this.props;
+        const { classes, loading } = this.props;
 
         return (
             <div className={classes.root}>
@@ -54,16 +43,8 @@ class LoadButton extends Component {
                 </div>
                 }
                 {loading &&
-                <ProgressBar/>
+                    <ProgressBar/>
                 }
-                <Snackbar
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    open={loadSuccess}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Loaded or updated {loadedCount} milestones</span>}
-                />
             </div>
         );
     };
@@ -75,15 +56,10 @@ LoadButton.propTypes = {
 
 const mapState = state => ({
     loading: state.githubFetchMilestones.loading,
-    loadSuccess: state.githubFetchMilestones.loadSuccess,
-    loadedCount: state.githubFetchMilestones.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchMilestones.setLoadFlag,
-    setLoading: dispatch.githubFetchMilestones.setLoading,
-    setLoadSuccess: dispatch.githubFetchMilestones.setLoadSuccess,
-    setLoadedCount: dispatch.githubFetchMilestones.setLoadedCount,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadButton));

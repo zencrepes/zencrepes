@@ -16,19 +16,17 @@ import GridContainer from '../../../components/Grid/GridContainer.js';
 
 import { cfgMilestones } from "../../../data/Minimongo";
 
-import FetchReposMilestones from "../../../data/FetchReposMilestones";
-import CreateMilestones from '../../../data/CreateMilestones.js';
+import MilestonesFetch from '../../../data/Milestones/Fetch/index.js';
+import MilestonesEdit from '../../../data/Milestones/Edit/index.js';
 
 import MilestonesTable from './MilestonesTable.js';
 import LoadButton from './LoadButton.js';
-import LoadingModal from './LoadingModal.js';
 
 class LabelsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mobileOpen: false,
-            milestones: []
+            mobileOpen: false
         };
     }
 
@@ -37,41 +35,12 @@ class LabelsList extends Component {
     };
 
     componentDidMount() {
-        console.log('componentDidMount');
         const { updateMilestones } = this.props;
         updateMilestones();
-
-        /*
-        let uniqueTitles = _.groupBy(cfgMilestones.find({}).fetch(), 'title');
-
-        let milestones = [];
-        Object.keys(uniqueTitles).map(idx => {
-            let stateElements = _.groupBy(uniqueTitles[idx], 'state');
-            let states = Object.keys(stateElements).map(idx => {return {
-                items: stateElements[idx],
-                value: idx,
-                count: stateElements[idx].length,
-            }});
-            states = _.sortBy(states, [function(o) {return o.count;}]);
-            states = states.reverse();
-
-            milestones.push({
-                title: idx,
-                count: uniqueTitles[idx].length,
-                milestones: uniqueTitles[idx],
-                closedNoIssues: uniqueTitles[idx].filter(m => m.issues !== undefined).filter(m => {if (m.issues.totalCount === 0 && m.state.toLowerCase() === 'closed') {return true;}}),
-                states: states,
-            });
-        });
-        milestones = _.sortBy(milestones, ['count']);
-        milestones = milestones.reverse();
-        this.setState({milestones: milestones});
-        */
     };
 
     render() {
         const { classes } = this.props;
-        const { milestones } = this.state;
 
         return (
             <div className={classes.wrapper}>
@@ -90,11 +59,10 @@ class LabelsList extends Component {
                         <div className={classes.container}>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
-                                    <CreateMilestones />
-                                    <LoadingModal />
+                                    <MilestonesEdit />
+                                    <MilestonesFetch />
                                     <LoadButton />
-                                    <FetchReposMilestones />
-                                    <MilestonesTable milestonesdata={milestones} />
+                                    <MilestonesTable />
                                 </GridItem>
                             </GridContainer>
                         </div>

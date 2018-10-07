@@ -12,17 +12,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
-
-import {buildMongoSelector} from "../../../utils/mongo";
-import {cfgIssues} from "../../../data/Minimongo";
-
-import ProgressBar from "../../../components/Loading/Issues/ProgressBar";
-
 const styles = theme => ({
     root: {
     },
 });
-class LoadingModal extends Component {
+class LoadModal extends Component {
     constructor (props) {
         super(props);
     }
@@ -45,7 +39,7 @@ class LoadingModal extends Component {
     };
 }
 
-LoadingModal.propTypes = {
+LoadModal.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -58,4 +52,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LoadingModal));
+export default connect(mapState, mapDispatch)(withStyles(styles)(LoadModal));

@@ -140,7 +140,6 @@ class MilestonesTable extends Component {
             pageSize: 50,
             pageSizes: [20, 50, 100],
             selection: [],
-            milestonesdata: [],
         };
         this.changeCurrentPage = currentPage => this.setState({ currentPage });
         this.changePageSize = pageSize => this.setState({ pageSize });
@@ -181,7 +180,6 @@ class MilestonesTable extends Component {
         const { classes, milestones } = this.props;
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
-        //console.log(milestonesdata);
         return (
             <Card>
                 <CardHeader color="success">
@@ -237,7 +235,6 @@ MilestonesTable.propTypes = {
 
 const mapState = state => ({
     milestones: state.milestones.milestones,
-
 });
 
 const mapDispatch = dispatch => ({
