@@ -21,6 +21,7 @@ import CreateMilestones from '../../../data/CreateMilestones.js';
 
 import MilestonesTable from './MilestonesTable.js';
 import LoadButton from './LoadButton.js';
+import LoadingModal from './LoadingModal.js';
 
 class LabelsList extends Component {
     constructor(props) {
@@ -37,6 +38,10 @@ class LabelsList extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
+        const { updateMilestones } = this.props;
+        updateMilestones();
+
+        /*
         let uniqueTitles = _.groupBy(cfgMilestones.find({}).fetch(), 'title');
 
         let milestones = [];
@@ -57,12 +62,11 @@ class LabelsList extends Component {
                 closedNoIssues: uniqueTitles[idx].filter(m => m.issues !== undefined).filter(m => {if (m.issues.totalCount === 0 && m.state.toLowerCase() === 'closed') {return true;}}),
                 states: states,
             });
-
-
         });
         milestones = _.sortBy(milestones, ['count']);
         milestones = milestones.reverse();
         this.setState({milestones: milestones});
+        */
     };
 
     render() {
@@ -87,6 +91,7 @@ class LabelsList extends Component {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <CreateMilestones />
+                                    <LoadingModal />
                                     <LoadButton />
                                     <FetchReposMilestones />
                                     <MilestonesTable milestonesdata={milestones} />
@@ -110,6 +115,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
+    updateMilestones: dispatch.milestones.updateMilestones,
 
 });
 

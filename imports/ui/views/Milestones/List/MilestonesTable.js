@@ -37,6 +37,7 @@ import {
     TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import {cfgMilestones} from "../../../data/Minimongo";
 
 const styles = theme => ({
     root: {
@@ -139,22 +140,48 @@ class MilestonesTable extends Component {
             pageSize: 50,
             pageSizes: [20, 50, 100],
             selection: [],
-
+            milestonesdata: [],
         };
         this.changeCurrentPage = currentPage => this.setState({ currentPage });
         this.changePageSize = pageSize => this.setState({ pageSize });
         this.hiddenColumnNamesChange = (hiddenColumnNames) => {
             this.setState({ hiddenColumnNames });
         };
+    }
 
+    formatData() {
+        const { milestones } = this.props;
+        let uniqueTitles = _.groupBy(milestones, 'title');
+
+        let milestonesdata = [];
+        Object.keys(uniqueTitles).map(idx => {
+            let stateElements = _.groupBy(uniqueTitles[idx], 'state');
+            let states = Object.keys(stateElements).map(idx => {return {
+                items: stateElements[idx],
+                value: idx,
+                count: stateElements[idx].length,
+            }});
+            states = _.sortBy(states, [function(o) {return o.count;}]);
+            states = states.reverse();
+
+            milestonesdata.push({
+                title: idx,
+                count: uniqueTitles[idx].length,
+                milestones: uniqueTitles[idx],
+                closedNoIssues: uniqueTitles[idx].filter(m => m.issues !== undefined).filter(m => {if (m.issues.totalCount === 0 && m.state.toLowerCase() === 'closed') {return true;}}),
+                states: states,
+            });
+        });
+        milestonesdata = _.sortBy(milestonesdata, ['count']);
+        milestonesdata = milestonesdata.reverse();
+        return milestonesdata;
     }
 
     render() {
-        const { classes, milestonesdata } = this.props;
+        const { classes, milestones } = this.props;
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
-        console.log(milestonesdata);
-
+        //console.log(milestonesdata);
         return (
             <Card>
                 <CardHeader color="success">
@@ -165,7 +192,7 @@ class MilestonesTable extends Component {
                 </CardHeader>
                 <CardBody>
                     <Grid
-                        rows={milestonesdata}
+                        rows={this.formatData()}
                         columns={columns}
                     >
                         <PagingState
@@ -207,14 +234,14 @@ MilestonesTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
+
+const mapState = state => ({
+    milestones: state.milestones.milestones,
+
+});
+
 const mapDispatch = dispatch => ({
 
 });
-
-
-const mapState = state => ({
-
-});
-
 
 export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(MilestonesTable));

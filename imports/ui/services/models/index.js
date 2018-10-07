@@ -32,4 +32,6 @@ export { default as waffle } from './waffle.js';
 
 export { default as sprintPlanning } from './sprintPlanning.js';
 
+// Milestones
+export { default as milestones } from './views/milestones.js';
 

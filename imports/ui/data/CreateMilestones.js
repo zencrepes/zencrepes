@@ -59,15 +59,16 @@ class CreateMilestones extends Component {
 
     load = async () => {
         console.log('CreateMilestones - Start load');
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, milestones, action, incrementLoadedCount } = this.props;
+        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, setLoadedCount, milestones, action, incrementLoadedCount, updateMilestones } = this.props;
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
+        setLoadedCount(0);
 
         console.log(milestones);
         for (let milestone of milestones) {
+            let result = false;
             if (action === 'close') {
-                let result = false;
                 try {
                     console.log(milestone);
                     result = await this.octokit.issues.updateMilestone({
@@ -90,14 +91,34 @@ class CreateMilestones extends Component {
                         $set: {state: 'CLOSED'}
                     });
                 }
+            } else if (action === 'deleteClosedEmpty') {
+                try {
+                    console.log(milestone);
+                    result = await this.octokit.issues.deleteMilestone({
+                        owner: milestone.org.login,
+                        repo: milestone.repo.name,
+                        number: milestone.number,
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                console.log(result);
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    incrementLoadedCount(1);
+                    cfgMilestones.remove({id: milestone.id});
+                }
             } else if (action === 'create') {
                 try {
+                    /*
                     result = await this.octokit.issues.createMilestone({
                         owner: repo.org.login,
                         repo: repo.name,
                         title: milestoneTitle,
                         due_on: milestoneDueOn,
                     });
+                    */
                 }
                 catch (error) {
                     console.log(error);
@@ -156,6 +177,7 @@ class CreateMilestones extends Component {
         }
         setLoadSuccess(true);
         setLoading(false);
+        updateMilestones();
     };
 
     render() {
@@ -198,7 +220,10 @@ const mapDispatch = dispatch => ({
     setLoadError: dispatch.githubCreateMilestones.setLoadError,
     setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
 
+    setLoadedCount: dispatch.githubCreateMilestones.setLoadedCount,
     incrementLoadedCount: dispatch.githubCreateMilestones.incrementLoadedCount,
+
+    updateMilestones: dispatch.milestones.updateMilestones,
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,

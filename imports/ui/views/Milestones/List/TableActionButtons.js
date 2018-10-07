@@ -42,27 +42,29 @@ class TableActionButtons extends Component {
         setLoadFlag(true);
     };
 
+    deleteClosedEmpty = () => {
+        console.log('deleteClosedEmpty');
+        const { milestonesdata, setLoadFlag, setMilestones, setAction } = this.props;
+        setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
+        setAction('deleteClosedEmpty');
+        setLoadFlag(true);
+    };
+
+
     render() {
-        const { classes, loading, loadSuccess, loadedCount, milestonesdata } = this.props;
+        const { classes, loadSuccess, milestonesdata } = this.props;
         console.log(milestonesdata);
         return (
             <div className={classes.root}>
-                {!loading &&
-                <div>
-                    {milestonesdata.states.length > 1 &&
-                        <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
-                            Close All
-                        </Button>
-                    }
-                    {milestonesdata.closedNoIssues.length > 0 &&
-                        <Button variant="raised" color="primary" className={classes.button} onClick={this.loadMilestones}>
-                            Delete Empty
-                        </Button>
-                    }
-                </div>
+                {milestonesdata.states.length > 1 &&
+                <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
+                    Close All
+                </Button>
                 }
-                {loading &&
-                <ProgressBar/>
+                {milestonesdata.closedNoIssues.length > 0 &&
+                <Button variant="raised" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+                    Delete Empty
+                </Button>
                 }
             </div>
         );
@@ -74,9 +76,7 @@ TableActionButtons.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubCreateMilestones.loading,
     loadSuccess: state.githubCreateMilestones.loadSuccess,
-    loadedCount: state.githubCreateMilestones.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
