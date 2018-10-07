@@ -21,6 +21,7 @@ import MilestonesEdit from '../../../data/Milestones/Edit/index.js';
 
 import MilestonesTable from './MilestonesTable.js';
 import LoadButton from './LoadButton.js';
+import DeleteClosedEmptyButton from './DeleteClosedEmptyButton.js';
 
 class LabelsList extends Component {
     constructor(props) {
@@ -58,10 +59,19 @@ class LabelsList extends Component {
                     <div className={classes.content}>
                         <div className={classes.container}>
                             <GridContainer>
+                                <GridItem xs={12} sm={12} md={4}>
+                                    <h3>ADD: Chart & Button to show Milestones with a closed/open mix state</h3>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={4}>
+                                    <h3>ADD: Chart & Button to show closed milestones with 0 issues</h3>
+                                </GridItem>
+                            </GridContainer>
+                            <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
-                                    <MilestonesEdit />
-                                    <MilestonesFetch loadModal={false}/>
+                                    <MilestonesEdit loadModal={true} />
+                                    <MilestonesFetch loadModal={false} />
                                     <LoadButton />
+                                    <DeleteClosedEmptyButton />
                                     <MilestonesTable />
                                 </GridItem>
                             </GridContainer>

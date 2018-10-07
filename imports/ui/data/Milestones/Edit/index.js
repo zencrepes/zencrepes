@@ -7,8 +7,8 @@ import PropTypes from "prop-types";
 
 import Data from './Data.js';
 import LoadModal from './LoadModal.js';
+import LoadSnackbar from './LoadSnackbar.js';
 import Notifications from './Notifications.js';
-import Progress from './Progress.js';
 
 class MilestonesEdit extends Component {
     constructor(props) {
@@ -16,12 +16,17 @@ class MilestonesEdit extends Component {
     }
 
     render() {
+        const { loadModal } = this.props;
         return (
             <div>
                 <Data />
+                {loadModal &&
                 <LoadModal />
+                }
+                {!loadModal &&
+                <LoadSnackbar />
+                }
                 <Notifications />
-                <Progress />
             </div>
         );
     }

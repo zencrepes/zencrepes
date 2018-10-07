@@ -7,8 +7,8 @@ import PropTypes from "prop-types";
 
 import Data from './Data.js';
 import LoadModal from './LoadModal.js';
+import LoadSnackbar from './LoadSnackbar.js';
 import Notifications from './Notifications.js';
-import Progress from './Progress.js';
 
 class MilestonesFetch extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class MilestonesFetch extends Component {
                     <LoadModal />
                 }
                 {!loadModal &&
-                    <Progress />
+                    <LoadSnackbar />
                 }
             </div>
         );

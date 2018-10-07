@@ -12,6 +12,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
+import LoadMessage from './LoadMessage.js';
+
 const styles = theme => ({
     root: {
     },
@@ -29,9 +31,7 @@ class LoadModal extends Component {
                 <Dialog aria-labelledby="simple-dialog-title" open={loading}>
                     <DialogTitle id="simple-dialog-title">Updating ...</DialogTitle>
                     <DialogContent>
-                        <div>
-                            Things are loading, {loadedCount} Milestones modified
-                        </div>
+                        <LoadMessage />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -45,7 +45,6 @@ LoadModal.propTypes = {
 
 const mapState = state => ({
     loading: state.githubCreateMilestones.loading,
-    loadedCount: state.githubCreateMilestones.loadedCount,
 });
 
 const mapDispatch = dispatch => ({

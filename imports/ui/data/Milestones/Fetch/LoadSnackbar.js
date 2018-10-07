@@ -7,17 +7,19 @@ import {connect} from "react-redux";
 
 import Snackbar from "@material-ui/core/Snackbar";
 
+import LoadMessage from './LoadMessage.js';
+
 const styles = theme => ({
     root: {
     },
 });
-class Progress extends Component {
+class LoadSnackbar extends Component {
     constructor (props) {
         super(props);
     }
 
     render() {
-        const { classes, loading, loadedCount } = this.props;
+        const { classes, loading } = this.props;
 
         return (
             <div className={classes.root}>
@@ -27,24 +29,23 @@ class Progress extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Things are loading, {loadedCount} Milestones modified</span>}
+                    message={<LoadMessage />}
                 />
             </div>
         );
     };
 }
 
-Progress.propTypes = {
+LoadSnackbar.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    loading: state.githubCreateMilestones.loading,
-    loadedCount: state.githubCreateMilestones.loadedCount,
+    loading: state.githubFetchMilestones.loading,
 });
 
 const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Progress));
+export default connect(mapState, mapDispatch)(withStyles(styles)(LoadSnackbar));

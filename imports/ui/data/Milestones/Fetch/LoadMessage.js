@@ -5,14 +5,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {connect} from "react-redux";
 
-import Snackbar from "@material-ui/core/Snackbar";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const styles = theme => ({
     root: {
     },
 });
-class Progress extends Component {
+class LoadMessage extends Component {
     constructor (props) {
         super(props);
     }
@@ -26,31 +25,19 @@ class Progress extends Component {
         const { classes, loading, loadedCount } = this.props;
 
         return (
-            <div className={classes.root}>
-                <Snackbar
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    open={loading}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={
-                        <div>
-                            <span id="message-id">Things are loading, {loadedCount} Milestones modified</span>
-                            <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
-                        </div>
-                    }
-                />
+            <div>
+                <span id="message-id">Things are loading, {loadedCount} Milestones modified</span>
+                <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
             </div>
         );
     };
 }
 
-Progress.propTypes = {
+LoadMessage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    loading: state.githubFetchMilestones.loading,
     loadedCount: state.githubFetchMilestones.loadedCount,
 
     iterateTotal: state.githubFetchMilestones.iterateTotal,
@@ -61,4 +48,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Progress));
+export default connect(mapState, mapDispatch)(withStyles(styles)(LoadMessage));

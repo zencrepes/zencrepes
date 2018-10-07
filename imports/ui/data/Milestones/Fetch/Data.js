@@ -28,7 +28,7 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent } = this.props;
+        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones } = this.props;
         setLoadedCount(0);
         setLoading(true);  // Set to true to indicate milestones are actually loading.
 
@@ -53,6 +53,7 @@ class Data extends Component {
         console.log('Load completed: There is a total of ' + cfgMilestones.find({}).count() + ' milestones in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
+        updateMilestones();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 milestones, but local only has 99
@@ -186,6 +187,8 @@ const mapDispatch = dispatch => ({
     incIterateCurrent: dispatch.githubFetchMilestones.incIterateCurrent,
 
     updateChip: dispatch.chip.updateChip,
+    updateMilestones: dispatch.milestones.updateMilestones,
+
 });
 
 export default connect(mapState, mapDispatch)(withApollo(Data));
