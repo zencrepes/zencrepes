@@ -6,6 +6,7 @@ import { withStyles } from 'material-ui/styles';
 import {connect} from "react-redux";
 
 import Snackbar from "@material-ui/core/Snackbar";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const styles = theme => ({
     root: {
@@ -15,6 +16,11 @@ class Progress extends Component {
     constructor (props) {
         super(props);
     }
+
+    getProgressValue = () => {
+        const { iterateTotal, iterateCurrent } = this.props;
+        return Math.round((iterateCurrent*100/iterateTotal),0);
+    };
 
     render() {
         const { classes, loading, loadedCount } = this.props;
@@ -27,7 +33,12 @@ class Progress extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Things are loading, {loadedCount} Milestones modified</span>}
+                    message={
+                        <div>
+                            <span id="message-id">Things are loading, {loadedCount} Milestones modified</span>
+                            <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
+                        </div>
+                    }
                 />
             </div>
         );
@@ -41,6 +52,9 @@ Progress.propTypes = {
 const mapState = state => ({
     loading: state.githubFetchMilestones.loading,
     loadedCount: state.githubFetchMilestones.loadedCount,
+
+    iterateTotal: state.githubFetchMilestones.iterateTotal,
+    iterateCurrent: state.githubFetchMilestones.iterateCurrent,
 });
 
 const mapDispatch = dispatch => ({

@@ -16,12 +16,17 @@ class MilestonesFetch extends Component {
     }
 
     render() {
+        const { loadModal } = this.props;
         return (
             <div>
                 <Data />
-                <LoadModal />
                 <Notifications />
-                <Progress />
+                {loadModal &&
+                    <LoadModal />
+                }
+                {!loadModal &&
+                    <Progress />
+                }
             </div>
         );
     }

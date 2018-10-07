@@ -28,11 +28,14 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount } = this.props;
+        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent } = this.props;
         setLoadedCount(0);
         setLoading(true);  // Set to true to indicate milestones are actually loading.
 
-        for (let repo of cfgSources.find({}).fetch()) {
+        let allRepos = cfgSources.find({}).fetch();
+        setIterateTotal(allRepos.length);
+        setIterateCurrent(0);
+        for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any milestones attached to this repo (if any)
                 console.log('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgMilestones.find({'repo.id': repo.id}).count() + ' milestones ');
@@ -41,6 +44,7 @@ class Data extends Component {
                 console.log('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.milestones.totalCount + ' milestones');
                 await this.getMilestonesPagination(null, 5, repo);
             }
+            incIterateCurrent(1);
         }
 
         console.log('Will be deleting ' + cfgMilestones.find({active: false}).count() + ' milestones attached to disabled repositories');
@@ -177,6 +181,10 @@ const mapDispatch = dispatch => ({
     setLoadedCount: dispatch.githubFetchMilestones.setLoadedCount,
 
     incLoadedCount: dispatch.githubFetchMilestones.incLoadedCount,
+    setIterateTotal: dispatch.githubFetchMilestones.setIterateTotal,
+    setIterateCurrent: dispatch.githubFetchMilestones.setIterateCurrent,
+    incIterateCurrent: dispatch.githubFetchMilestones.incIterateCurrent,
+
     updateChip: dispatch.chip.updateChip,
 });
 

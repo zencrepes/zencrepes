@@ -42,9 +42,6 @@ class LoadButton extends Component {
                     </Button>
                 </div>
                 }
-                {loading &&
-                    <ProgressBar/>
-                }
             </div>
         );
     };
