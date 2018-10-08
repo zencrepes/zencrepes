@@ -148,8 +148,47 @@ class LabelsTable extends Component {
 
     }
 
+    formatData() {
+        console.log('componentDidMount');
+        const { labels } = this.props;
+
+        let uniqueLabels = _.groupBy(labels, 'name');
+
+        let labelsdata = [];
+        Object.keys(uniqueLabels).map(idx => {
+            let colorElements = _.groupBy(uniqueLabels[idx], 'color');
+            let colors = Object.keys(colorElements).map(idx => {return {
+                items: colorElements[idx],
+                count: colorElements[idx].length,
+                name: "#" + colorElements[idx][0].color,
+            }});
+            colors = _.sortBy(colors, [function(o) {return o.count;}]);
+            colors = colors.reverse();
+
+            let descriptionsElements = _.groupBy(uniqueLabels[idx], 'description');
+            let descriptions = Object.keys(descriptionsElements).map(idx => {return {
+                items: descriptionsElements[idx],
+                count: descriptionsElements[idx].length,
+                name: descriptionsElements[idx][0].description,
+            }});
+            descriptions = _.sortBy(descriptions, [function(o) {return o.count;}]);
+            descriptions = descriptions.reverse();
+
+            labelsdata.push({
+                name: idx,
+                count: uniqueLabels[idx].length,
+                labels: uniqueLabels[idx],
+                colors: colors,
+                descriptions: descriptions,
+            });
+        });
+        labelsdata = _.sortBy(labelsdata, ['count']);
+        labelsdata = labelsdata.reverse();
+        return labelsdata;
+    }
+
     render() {
-        const { classes, labelsdata } = this.props;
+        const { classes } = this.props;
         const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
@@ -162,7 +201,7 @@ class LabelsTable extends Component {
                 </CardHeader>
                 <CardBody>
                     <Grid
-                        rows={labelsdata}
+                        rows={this.formatData()}
                         columns={columns}
                     >
                         <PagingState
@@ -208,9 +247,8 @@ const mapDispatch = dispatch => ({
 
 });
 
-
 const mapState = state => ({
-
+    labels: state.labelsView.labels,
 });
 
 

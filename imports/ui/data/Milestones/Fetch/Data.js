@@ -171,23 +171,23 @@ Data.propTypes = {
 };
 
 const mapState = state => ({
-    loadFlag: state.githubFetchMilestones.loadFlag,
-    loading: state.githubFetchMilestones.loading,
+    loadFlag: state.milestonesFetch.loadFlag,
+    loading: state.milestonesFetch.loading,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchMilestones.setLoadFlag,
-    setLoading: dispatch.githubFetchMilestones.setLoading,
-    setLoadSuccess: dispatch.githubFetchMilestones.setLoadSuccess,
-    setLoadedCount: dispatch.githubFetchMilestones.setLoadedCount,
+    setLoadFlag: dispatch.milestonesFetch.setLoadFlag,
+    setLoading: dispatch.milestonesFetch.setLoading,
+    setLoadSuccess: dispatch.milestonesFetch.setLoadSuccess,
+    setLoadedCount: dispatch.milestonesFetch.setLoadedCount,
 
-    incLoadedCount: dispatch.githubFetchMilestones.incLoadedCount,
-    setIterateTotal: dispatch.githubFetchMilestones.setIterateTotal,
-    setIterateCurrent: dispatch.githubFetchMilestones.setIterateCurrent,
-    incIterateCurrent: dispatch.githubFetchMilestones.incIterateCurrent,
+    incLoadedCount: dispatch.milestonesFetch.incLoadedCount,
+    setIterateTotal: dispatch.milestonesFetch.setIterateTotal,
+    setIterateCurrent: dispatch.milestonesFetch.setIterateCurrent,
+    incIterateCurrent: dispatch.milestonesFetch.incIterateCurrent,
 
     updateChip: dispatch.chip.updateChip,
-    updateMilestones: dispatch.milestones.updateMilestones,
+    updateMilestones: dispatch.milestonesView.updateMilestones,
 
 });
 

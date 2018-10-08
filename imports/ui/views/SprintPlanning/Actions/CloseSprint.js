@@ -86,10 +86,10 @@ CloseSprint.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubCreateMilestones.loading,
-    loadSuccess: state.githubCreateMilestones.loadSuccess,
+    loading: state.milestonesEdit.loading,
+    loadSuccess: state.milestonesEdit.loadSuccess,
 
-    loadedCount: state.githubCreateMilestones.loadedCount,
+    loadedCount: state.milestonesEdit.loadedCount,
 
     repositories: state.sprintPlanning.repositories,
 
@@ -97,14 +97,14 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
-    setLoading: dispatch.githubCreateMilestones.setLoading,
-    setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
+    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
+    setLoading: dispatch.milestonesEdit.setLoading,
+    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
 
-    setMilestones: dispatch.githubCreateMilestones.setMilestones,
-    setAction: dispatch.githubCreateMilestones.setAction,
+    setMilestones: dispatch.milestonesEdit.setMilestones,
+    setAction: dispatch.milestonesEdit.setAction,
 
-    setLoadedCount: dispatch.githubCreateMilestones.setLoadedCount,
+    setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
 
     updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
     updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,

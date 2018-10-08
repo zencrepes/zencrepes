@@ -75,18 +75,18 @@ TableActionButtons.propTypes = {
 };
 
 const mapState = state => ({
-    loadSuccess: state.githubCreateMilestones.loadSuccess,
+    loadSuccess: state.milestonesEdit.loadSuccess,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
-    setLoading: dispatch.githubCreateMilestones.setLoading,
-    setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
+    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
+    setLoading: dispatch.milestonesEdit.setLoading,
+    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
 
-    setMilestones: dispatch.githubCreateMilestones.setMilestones,
-    setAction: dispatch.githubCreateMilestones.setAction,
+    setMilestones: dispatch.milestonesEdit.setMilestones,
+    setAction: dispatch.milestonesEdit.setAction,
 
-    setLoadedCount: dispatch.githubCreateMilestones.setLoadedCount,
+    setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(TableActionButtons));

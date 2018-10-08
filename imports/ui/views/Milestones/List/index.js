@@ -60,14 +60,14 @@ class LabelsList extends Component {
                         <div className={classes.container}>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={4}>
-                                    <h3>ADD: Chart to display a breakdown of open/closed milestones</h3>
+                                    <h3>TODO: Chart to display a breakdown of open/closed milestones</h3>
                                     <LoadButton />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={4}>
-                                    <h3>ADD: Chart & Button to show Milestones with a closed/open mix state</h3>
+                                    <h3>TODO: Chart & Button to show Milestones with a mixed closed/open</h3>
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={4}>
-                                    <h3>ADD: Chart & Button to show closed milestones with 0 issues</h3>
+                                    <h3>TODO: Chart & Button to show closed milestones with 0 issues</h3>
                                     <DeleteClosedEmptyButton />
                                 </GridItem>
                             </GridContainer>
@@ -96,7 +96,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    updateMilestones: dispatch.milestones.updateMilestones,
+    updateMilestones: dispatch.milestonesView.updateMilestones,
 
 });
 

@@ -234,7 +234,7 @@ MilestonesTable.propTypes = {
 
 
 const mapState = state => ({
-    milestones: state.milestones.milestones,
+    milestones: state.milestonesView.milestones,
 });
 
 const mapDispatch = dispatch => ({

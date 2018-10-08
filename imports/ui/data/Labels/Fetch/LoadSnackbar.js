@@ -41,7 +41,7 @@ LoadSnackbar.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.milestonesFetch.loading,
+    loading: state.labelsFetch.loading,
 });
 
 const mapDispatch = dispatch => ({

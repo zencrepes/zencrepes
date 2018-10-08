@@ -50,12 +50,12 @@ LoadButton.propTypes = {
 };
 
 const mapState = state => ({
-    loadSuccess: state.githubFetchMilestones.loadSuccess,
-    loadedCount: state.githubFetchMilestones.loadedCount,
+    loadSuccess: state.milestonesFetch.loadSuccess,
+    loadedCount: state.milestonesFetch.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadSuccess: dispatch.githubFetchMilestones.setLoadSuccess,
+    setLoadSuccess: dispatch.milestonesFetch.setLoadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadButton));

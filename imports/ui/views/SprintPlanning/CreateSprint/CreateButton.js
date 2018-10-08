@@ -65,11 +65,11 @@ const mapDispatch = dispatch => ({
     setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
     sprintCreated: dispatch.sprintPlanning.sprintCreated,
 
-    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
-    setRepos: dispatch.githubCreateMilestones.setRepos,
-    setMilestoneTitle: dispatch.githubCreateMilestones.setMilestoneTitle,
-    setMilestoneDueOn: dispatch.githubCreateMilestones.setMilestoneDueOn,
-    setMilestoneDueOn: dispatch.githubCreateMilestones.setCallBack
+    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
+    setRepos: dispatch.milestonesEdit.setRepos,
+    setMilestoneTitle: dispatch.milestonesEdit.setMilestoneTitle,
+    setMilestoneDueOn: dispatch.milestonesEdit.setMilestoneDueOn,
+    setMilestoneDueOn: dispatch.milestonesEdit.setCallBack
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(CreateButton));

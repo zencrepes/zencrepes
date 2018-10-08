@@ -29,6 +29,7 @@ class LoadButton extends Component {
 
     render() {
         const { classes, loadSuccess, loadedCount } = this.props;
+
         return (
             <div className={classes.root}>
                 <Snackbar
@@ -37,7 +38,7 @@ class LoadButton extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Loaded or updated {loadedCount} milestones</span>}
+                    message={<span id="message-id">Loaded or updated {loadedCount} labels</span>}
                 />
             </div>
         );
@@ -49,12 +50,12 @@ LoadButton.propTypes = {
 };
 
 const mapState = state => ({
-    loadedCount: state.milestonesEdit.loadedCount,
-    loadSuccess: state.milestonesEdit.loadSuccess,
+    loadSuccess: state.labelsFetch.loadSuccess,
+    loadedCount: state.labelsFetch.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
+    setLoadSuccess: dispatch.labelsFetch.setLoadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LoadButton));

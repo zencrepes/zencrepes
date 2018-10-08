@@ -86,10 +86,10 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
 
-    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
-    setRepos: dispatch.githubCreateMilestones.setRepos,
-    setName: dispatch.githubCreateMilestones.setName,
-    setEndDate: dispatch.githubCreateMilestones.setEndDate,
+    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
+    setRepos: dispatch.milestonesEdit.setRepos,
+    setName: dispatch.milestonesEdit.setName,
+    setEndDate: dispatch.milestonesEdit.setEndDate,
 
 });
 

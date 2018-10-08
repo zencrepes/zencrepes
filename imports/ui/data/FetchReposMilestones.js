@@ -167,16 +167,16 @@ FetchReposMilestones.propTypes = {
 };
 
 const mapState = state => ({
-    loadFlag: state.githubFetchMilestones.loadFlag,
-    loading: state.githubFetchMilestones.loading,
+    loadFlag: state.milestonesFetch.loadFlag,
+    loading: state.milestonesFetch.loading,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchMilestones.setLoadFlag,
-    setLoading: dispatch.githubFetchMilestones.setLoading,
-    setLoadSuccess: dispatch.githubFetchMilestones.setLoadSuccess,
+    setLoadFlag: dispatch.milestonesFetch.setLoadFlag,
+    setLoading: dispatch.milestonesFetch.setLoading,
+    setLoadSuccess: dispatch.milestonesFetch.setLoadSuccess,
 
-    incLoadedCount: dispatch.githubFetchMilestones.incLoadedCount,
+    incLoadedCount: dispatch.milestonesFetch.incLoadedCount,
     updateChip: dispatch.chip.updateChip,
 });
 

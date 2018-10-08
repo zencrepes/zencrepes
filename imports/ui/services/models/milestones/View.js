@@ -11,7 +11,7 @@ export default {
     },
     effects: {
         async updateMilestones(payload, rootState) {
-            this.setMilestones(cfgMilestones.find(rootState.milestones.query).fetch());
+            this.setMilestones(cfgMilestones.find(rootState.milestonesView.query).fetch());
         }
     }
 };

@@ -204,26 +204,26 @@ CreateMilestones.propTypes = {
 };
 
 const mapState = state => ({
-    loadFlag: state.githubCreateMilestones.loadFlag,
-    loading: state.githubCreateMilestones.loading,
-    action: state.githubCreateMilestones.action,
+    loadFlag: state.milestonesEdit.loadFlag,
+    loading: state.milestonesEdit.loading,
+    action: state.milestonesEdit.action,
 
-    milestones: state.githubCreateMilestones.milestones,
+    milestones: state.milestonesEdit.milestones,
 
-    loadedCount: state.githubCreateMilestones.loadedCount,
-    loadSuccess: state.githubCreateMilestones.loadSuccess,
+    loadedCount: state.milestonesEdit.loadedCount,
+    loadSuccess: state.milestonesEdit.loadSuccess,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubCreateMilestones.setLoadFlag,
-    setLoading: dispatch.githubCreateMilestones.setLoading,
-    setLoadError: dispatch.githubCreateMilestones.setLoadError,
-    setLoadSuccess: dispatch.githubCreateMilestones.setLoadSuccess,
+    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
+    setLoading: dispatch.milestonesEdit.setLoading,
+    setLoadError: dispatch.milestonesEdit.setLoadError,
+    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
 
-    setLoadedCount: dispatch.githubCreateMilestones.setLoadedCount,
-    incrementLoadedCount: dispatch.githubCreateMilestones.incrementLoadedCount,
+    setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
+    incrementLoadedCount: dispatch.milestonesEdit.incrementLoadedCount,
 
-    updateMilestones: dispatch.milestones.updateMilestones,
+    updateMilestones: dispatch.milestonesView.updateMilestones,
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,

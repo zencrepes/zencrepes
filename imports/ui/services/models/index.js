@@ -11,12 +11,9 @@ export { default as githubFetchOrgs } from './githubFetchOrgs.js';
 export { default as githubFetchOrgRepos } from './githubFetchOrgRepos.js';
 export { default as githubFetchRepo } from './githubFetchRepo.js';
 export { default as githubFetchReposContent } from './githubFetchReposContent.js';
-export { default as githubFetchMilestones } from './githubFetchMilestones.js';
 
 export { default as githubCreatePointsLabels } from './githubCreatePointsLabels.js';
 export { default as githubPushPoints } from './githubPushPoints.js';
-
-export { default as githubCreateMilestones } from './githubCreateMilestones.js';
 
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';
@@ -33,5 +30,10 @@ export { default as waffle } from './waffle.js';
 export { default as sprintPlanning } from './sprintPlanning.js';
 
 // Milestones
-export { default as milestones } from './views/milestones.js';
+export { default as milestonesView } from './milestones/View.js';
+export { default as milestonesEdit } from './milestones/Edit.js';
+export { default as milestonesFetch } from './milestones/Fetch.js';
 
+// Labels
+export { default as labelsView } from './labels/View.js';
+export { default as labelsFetch } from './labels/Fetch.js';

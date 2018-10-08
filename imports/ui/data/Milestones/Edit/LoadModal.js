@@ -44,7 +44,7 @@ LoadModal.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubCreateMilestones.loading,
+    loading: state.milestonesEdit.loading,
 });
 
 const mapDispatch = dispatch => ({

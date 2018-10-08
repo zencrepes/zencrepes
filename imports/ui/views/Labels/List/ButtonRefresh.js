@@ -18,27 +18,24 @@ const styles = theme => ({
         textAlign: 'right'
     },
 });
-class LoadButton extends Component {
+class ButtonRefresh extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
-    loadMilestones = () => {
-        console.log('loadMilestones');
+    loadLabels = () => {
         const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };
 
     render() {
         const { classes, loading } = this.props;
-
         return (
             <div className={classes.root}>
                 {!loading &&
                 <div>
-                    <Button variant="raised" color="primary" className={classes.button} onClick={this.loadMilestones}>
-                        Load/Refresh Milestones
+                    <Button variant="raised" color="primary" className={classes.button} onClick={this.loadLabels}>
+                        Load/Refresh Labels
                     </Button>
                 </div>
                 }
@@ -47,16 +44,16 @@ class LoadButton extends Component {
     };
 }
 
-LoadButton.propTypes = {
+ButtonRefresh.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    loading: state.milestonesFetch.loading,
+    loading: state.labelsFetch.loading,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.milestonesFetch.setLoadFlag,
+    setLoadFlag: dispatch.labelsFetch.setLoadFlag,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LoadButton));
+export default connect(mapState, mapDispatch)(withStyles(styles)(ButtonRefresh));

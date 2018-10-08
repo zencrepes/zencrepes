@@ -57,12 +57,12 @@ DeleteClosedEmptyButton.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchMilestones.loading,
-    milestones: state.milestones.milestones,
+    loading: state.milestonesFetch.loading,
+    milestones: state.milestonesView.milestones,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchMilestones.setLoadFlag,
+    setLoadFlag: dispatch.milestonesFetch.setLoadFlag,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(DeleteClosedEmptyButton));

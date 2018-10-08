@@ -26,7 +26,7 @@ class LoadMessage extends Component {
 
         return (
             <div>
-                <span id="message-id">Things are loading, {loadedCount} Milestones modified</span>
+                <span id="message-id">Things are loading, {loadedCount} Labels found</span>
                 <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
             </div>
         );
@@ -38,10 +38,10 @@ LoadMessage.propTypes = {
 };
 
 const mapState = state => ({
-    loadedCount: state.milestonesFetch.loadedCount,
+    loadedCount: state.labelsFetch.loadedCount,
 
-    iterateTotal: state.milestonesFetch.iterateTotal,
-    iterateCurrent: state.milestonesFetch.iterateCurrent,
+    iterateTotal: state.labelsFetch.iterateTotal,
+    iterateCurrent: state.labelsFetch.iterateCurrent,
 });
 
 const mapDispatch = dispatch => ({

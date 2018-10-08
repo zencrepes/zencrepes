@@ -38,10 +38,10 @@ LoadMessage.propTypes = {
 };
 
 const mapState = state => ({
-    loadedCount: state.githubCreateMilestones.loadedCount,
+    loadedCount: state.milestonesEdit.loadedCount,
 
-    iterateTotal: state.githubCreateMilestones.iterateTotal,
-    iterateCurrent: state.githubCreateMilestones.iterateCurrent,
+    iterateTotal: state.milestonesEdit.iterateTotal,
+    iterateCurrent: state.milestonesEdit.iterateCurrent,
 });
 
 const mapDispatch = dispatch => ({
