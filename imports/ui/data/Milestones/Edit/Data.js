@@ -38,7 +38,7 @@ class Data extends Component {
     };
 
     load = async () => {
-        console.log('CreateMilestones - Start load');
+        console.log('MilestonesEdit - Start load');
         const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, setLoadedCount, milestones, action, incrementLoadedCount, updateMilestones } = this.props;
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);

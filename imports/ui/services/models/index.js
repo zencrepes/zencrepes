@@ -21,7 +21,6 @@ export { default as burndown } from './burndown.js';
 export { default as queries } from './queries.js';
 export { default as remaining } from './remaining.js';
 export { default as startup } from './startup.js';
-export { default as labelsconfiguration } from './labelsconfiguration.js';
 export { default as wizard } from './wizard.js';
 
 export { default as zenhub } from './zenhub.js';
@@ -37,3 +36,4 @@ export { default as milestonesFetch } from './milestones/Fetch.js';
 // Labels
 export { default as labelsView } from './labels/View.js';
 export { default as labelsFetch } from './labels/Fetch.js';
+export { default as labelsEdit } from './labels/Edit.js';

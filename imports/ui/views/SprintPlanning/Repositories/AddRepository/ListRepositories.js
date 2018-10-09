@@ -66,7 +66,7 @@ ListRepositories.propTypes = {
 
 const mapState = state => ({
     filteredAvailableRepositories: state.sprintPlanning.filteredAvailableRepositories,
-    toggledAvailableRepos: state.labelsconfiguration.toggledAvailableRepos,
+    toggledAvailableRepos: state.labelsEdit.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({

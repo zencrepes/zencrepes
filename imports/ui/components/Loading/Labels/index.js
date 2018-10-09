@@ -60,11 +60,11 @@ UpdatingLabels.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.labelsconfiguration.loading,
+    loading: state.labelsEdit.loading,
 });
 
 const mapDispatch = dispatch => ({
-    setLoading: dispatch.labelsconfiguration.setLoading,
+    setLoading: dispatch.labelsEdit.setLoading,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(UpdatingLabels));

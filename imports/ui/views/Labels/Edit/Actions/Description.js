@@ -70,13 +70,13 @@ LabelDescription.propTypes = {
 };
 
 const mapState = state => ({
-    updateDescription: state.labelsconfiguration.updateDescription,
-    newDescription: state.labelsconfiguration.newDescription,
+    updateDescription: state.labelsEdit.updateDescription,
+    newDescription: state.labelsEdit.newDescription,
 });
 
 const mapDispatch = dispatch => ({
-    setUpdateDescription: dispatch.labelsconfiguration.setUpdateDescription,
-    setNewDescription: dispatch.labelsconfiguration.setNewDescription,
+    setUpdateDescription: dispatch.labelsEdit.setUpdateDescription,
+    setNewDescription: dispatch.labelsEdit.setNewDescription,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LabelDescription));

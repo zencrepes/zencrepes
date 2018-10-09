@@ -17,19 +17,14 @@ import PropTypes from "prop-types";
 import GridItem from '../../../components/Grid/GridItem.js';
 import GridContainer from '../../../components/Grid/GridContainer.js';
 
-import {cfgLabels, cfgSources} from "../../../data/Minimongo";
-
 import SelectedColors from './Stats/SelectedColors.js';
 import SelectedDescriptions from './Stats/SelectedDescriptions.js';
 import EditSelection from './Selection/index.js';
 import EditActions from './Actions/index.js';
 
-import Labels from '../../../data/Labels.js';
-import UpdatingLabels from '../../../components/Loading/Labels/index.js';
+import LabelsEdit from '../../../data/Labels/Edit/index.js';
 
-import LoadingAll from '../../../components/Loading/All/index.js';
-
-class LabelsEdit extends Component {
+class LabelEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -43,30 +38,9 @@ class LabelsEdit extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        const { initSelectedRepos, initAvailableRepos, setSelectedName, setLoading } = this.props;
-        //When mounting the component, initializing content of the available and selected labels list
-
-        setLoading(true);
-        let selectedRepos = [];
-        if (this.props.match.params.id !== 'all') {
-            selectedRepos = [cfgLabels.findOne({id: this.props.match.params.id}).repo];
-        } else {
-            selectedRepos = cfgLabels.find({name: this.props.match.params.name}).map(label => label.repo);
-        }
-        //Add Label details in selectedRepos
-        selectedRepos = selectedRepos.map((repo) => {
-            return {...repo, label: cfgLabels.findOne({name: this.props.match.params.name, 'repo.id': repo.id})};
-        });
-        initSelectedRepos(selectedRepos);
-
-        let availableRepos = _.differenceBy(cfgSources.find({}).fetch(), selectedRepos, 'id');
-        availableRepos = availableRepos.map((repo) => {
-            return {...repo, label: cfgLabels.findOne({name: this.props.match.params.name, 'repo.id': repo.id})};
-        });
-        initAvailableRepos(availableRepos);
-
-        setSelectedName(this.props.match.params.name);
-        setLoading(false);
+        const { initConfiguration } = this.props;
+        let labelName = this.props.match.params.name;
+        initConfiguration(labelName)
     }
 
     render() {
@@ -86,11 +60,8 @@ class LabelsEdit extends Component {
                     />
                     <div className={classes.content}>
                         <div className={classes.container}>
-                            <Labels />
-                            <UpdatingLabels />
-                            <LoadingAll />
+                            <LabelsEdit loadModal={false} />
                             <Link to="/labels"><Button className={classes.button}>Back to List</Button></Link>
-                            <Link to={"/labels/view/" + this.props.match.params.name}><Button className={classes.button}>Back Configuration</Button></Link>
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={4}>
                                     <SelectedColors />
@@ -114,9 +85,8 @@ class LabelsEdit extends Component {
     }
 }
 
-LabelsEdit.propTypes = {
+LabelEdit.propTypes = {
     classes: PropTypes.object,
-
 };
 
 const mapState = state => ({
@@ -124,12 +94,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    initAvailableRepos: dispatch.labelsconfiguration.initAvailableRepos,
-    initSelectedRepos: dispatch.labelsconfiguration.initSelectedRepos,
-    setSelectedName: dispatch.labelsconfiguration.setSelectedName,
-
-    setLoading: dispatch.loading.setLoading,
-
+    initConfiguration: dispatch.labelsEdit.initConfiguration,
 });
 
-export default connect(mapState, mapDispatch)(withRouter(withStyles(dashboardStyle)(LabelsEdit)));
+export default connect(mapState, mapDispatch)(withRouter(withStyles(dashboardStyle)(LabelEdit)));

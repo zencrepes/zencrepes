@@ -96,14 +96,14 @@ DeleteWarning.propTypes = {
 };
 
 const mapState = state => ({
-    deleteWarning: state.labelsconfiguration.deleteWarning
+    deleteWarning: state.labelsEdit.deleteWarning
 
 });
 
 const mapDispatch = dispatch => ({
-    setDeleteWarning: dispatch.labelsconfiguration.setDeleteWarning,
-    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag,
-    setAction: dispatch.labelsconfiguration.setAction,
+    setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
+    setLoadFlag: dispatch.labelsEdit.setLoadFlag,
+    setAction: dispatch.labelsEdit.setAction,
 
 });
 

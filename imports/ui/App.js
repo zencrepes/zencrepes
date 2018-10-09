@@ -18,7 +18,7 @@ import SprintPlanning from './views/SprintPlanning/index.js';
 import Settings from './views/Settings/index.js';;
 import LabelsList from './views/Labels/List/index.js';
 import LabelsView from './views/Labels/View/index.js';
-import LabelsEdit from './views/Labels/Edit/index.js';
+import LabelEdit from './views/Labels/Edit/index.js';
 import MilestonesList from './views/Milestones/List/index.js';
 
 import Index from './Index.js';
@@ -77,7 +77,7 @@ class App extends Component {
                                         <Authenticated exact path="/sprint" component={SprintPlanning} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels" component={LabelsList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/view/:name" component={LabelsView} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelsEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/milestones" component={MilestonesList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     </Switch>
                                 </div>

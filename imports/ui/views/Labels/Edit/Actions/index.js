@@ -94,10 +94,10 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    //saveLabels: dispatch.labelsconfiguration.saveLabels
-    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag,
-    setDeleteWarning: dispatch.labelsconfiguration.setDeleteWarning,
-    setAction: dispatch.labelsconfiguration.setAction
+    //saveLabels: dispatch.labelsEdit.saveLabels
+    setLoadFlag: dispatch.labelsEdit.setLoadFlag,
+    setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
+    setAction: dispatch.labelsEdit.setAction
 
 });
 

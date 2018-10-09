@@ -66,7 +66,7 @@ ListAssignees.propTypes = {
 
 const mapState = state => ({
     filteredAvailableAssignees: state.sprintPlanning.filteredAvailableAssignees,
-    toggledAvailableRepos: state.labelsconfiguration.toggledAvailableRepos,
+    toggledAvailableRepos: state.labelsEdit.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({

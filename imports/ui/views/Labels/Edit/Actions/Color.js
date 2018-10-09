@@ -111,13 +111,13 @@ LabelColor.propTypes = {
 };
 
 const mapState = state => ({
-    updateColor: state.labelsconfiguration.updateColor,
-    newColor: state.labelsconfiguration.newColor,
+    updateColor: state.labelsEdit.updateColor,
+    newColor: state.labelsEdit.newColor,
 });
 
 const mapDispatch = dispatch => ({
-    setUpdateColor: dispatch.labelsconfiguration.setUpdateColor,
-    setNewColor: dispatch.labelsconfiguration.setNewColor,
+    setUpdateColor: dispatch.labelsEdit.setUpdateColor,
+    setNewColor: dispatch.labelsEdit.setNewColor,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(LabelColor));

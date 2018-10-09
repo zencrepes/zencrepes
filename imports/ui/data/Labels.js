@@ -149,32 +149,32 @@ Labels.propTypes = {
 };
 
 const mapState = state => ({
-    loadFlag: state.labelsconfiguration.loadFlag,
-    loading: state.labelsconfiguration.loading,
+    loadFlag: state.labelsEdit.loadFlag,
+    loading: state.labelsEdit.loading,
 
-    action: state.labelsconfiguration.action,
+    action: state.labelsEdit.action,
 
-    selectedName: state.labelsconfiguration.selectedName,
-    selectedRepos: state.labelsconfiguration.selectedRepos,
+    selectedName: state.labelsEdit.selectedName,
+    selectedRepos: state.labelsEdit.selectedRepos,
 
-    updateName: state.labelsconfiguration.updateName,
-    updateDescription: state.labelsconfiguration.updateDescription,
-    updateColor: state.labelsconfiguration.updateColor,
+    updateName: state.labelsEdit.updateName,
+    updateDescription: state.labelsEdit.updateDescription,
+    updateColor: state.labelsEdit.updateColor,
 
-    newName: state.labelsconfiguration.newName,
-    newDescription: state.labelsconfiguration.newDescription,
-    newColor: state.labelsconfiguration.newColor,
+    newName: state.labelsEdit.newName,
+    newDescription: state.labelsEdit.newDescription,
+    newColor: state.labelsEdit.newColor,
 
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.labelsconfiguration.setLoadFlag,
-    setLoading: dispatch.labelsconfiguration.setLoading,
-    setLoadingText: dispatch.labelsconfiguration.setLoadingText,
+    setLoadFlag: dispatch.labelsEdit.setLoadFlag,
+    setLoading: dispatch.labelsEdit.setLoading,
+    setLoadingText: dispatch.labelsEdit.setLoadingText,
 
-    setAction: dispatch.labelsconfiguration.setAction,
+    setAction: dispatch.labelsEdit.setAction,
 
-    resetValues: dispatch.labelsconfiguration.resetValues,
+    resetValues: dispatch.labelsEdit.resetValues,
 
     setChipRemaining: dispatch.chip.setRemaining,
 });
