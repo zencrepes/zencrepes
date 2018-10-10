@@ -24,23 +24,10 @@ class Refresh extends Component {
         this.state = {};
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess } = this.props;
-        if (prevProps.loadSuccess === false && loadSuccess === true) {
-            //Set timer to actually set back success to false (and remove snackbar)
-            setTimeout(() => {
-                setLoadSuccess(false);
-            }, 2000);
-        }
-    };
-
     refreshFull = () => {
-        console.log('refreshFull');
-        const { setLoadFlag } = this.props;
-        setLoadFlag({
-            issues: 'true',
-            labels: 'false'
-        });
+        const { setLoadFlag, setLoadRepos } = this.props;
+        setLoadRepos([]);
+        setLoadFlag(true);
     };
 
     refreshQuick = () => {
@@ -51,15 +38,11 @@ class Refresh extends Component {
         let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
         let reposGroup = Object.keys(_.groupBy(cfgIssues.find(openedIssuesFilter).fetch(), 'repo.id'));
         setLoadRepos(reposGroup);
-        setLoadFlag({
-            issues: 'true',
-            labels: 'false'
-        });
-
+        setLoadFlag(true);
     };
 
     render() {
-        const { classes, loading, loadSuccess, issuesLoadedCount } = this.props;
+        const { classes, loading } = this.props;
 
         return (
             <div className={classes.root}>
@@ -73,17 +56,6 @@ class Refresh extends Component {
                         </Button>
                     </div>
                 }
-                {loading &&
-                    <ProgressBar />
-                }
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-                    open={loadSuccess}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Loaded or updated {issuesLoadedCount} issues</span>}
-                />
             </div>
         )
     };
@@ -94,20 +66,18 @@ Refresh.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchReposContent.loading,
-    loadSuccess: state.githubFetchReposContent.loadSuccess,
-
-    issuesLoadedCount: state.githubIssues.loadedCount,
+    loading: state.issuesFetch.loading,
+    loadSuccess: state.issuesFetch.loadSuccess,
 
     filters: state.queries.filters,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
-    setLoading: dispatch.githubFetchReposContent.setLoading,
+    setLoadFlag: dispatch.issuesFetch.setLoadFlag,
+    setLoading: dispatch.issuesFetch.setLoading,
 
-    setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
-    setLoadRepos: dispatch.githubFetchReposContent.setLoadRepos,
+    setLoadSuccess: dispatch.issuesFetch.setLoadSuccess,
+    setLoadRepos: dispatch.issuesFetch.setLoadRepos,
 });
 
 

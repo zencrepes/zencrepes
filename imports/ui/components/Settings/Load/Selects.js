@@ -36,51 +36,17 @@ const styles = theme => ({
 class Selects extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            load_issues: true,
-            load_labels: true,
-        };
     }
-
-    componentDidMount() {
-        for (let key in this.state) {
-            // if the key exists in localStorage
-            if (localStorage.hasOwnProperty(key)) {
-                // get the key's value from localStorage
-                let value = localStorage.getItem(key);
-
-                // parse the localStorage string and setState
-                try {
-                    value = JSON.parse(value);
-                    this.setState({ [key]: value });
-                } catch (e) {
-                    // handle empty string
-                    this.setState({ [key]: value });
-                }
-            } else {
-                localStorage.setItem(key, this.state[key]);
-            }
-        }
-    };
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess } = this.props;
-        if (prevProps.loadSuccess === false && loadSuccess === true) {
-            //Set timer to actually set back success to false (and remove snackbar)
-            setTimeout(() => {
-                setLoadSuccess(false);
-            }, 2000);
-        }
-    };
 
     loadIssues = () => {
         console.log('loadIssues');
-        const { setLoadFlag } = this.props;
-        setLoadFlag({
-            issues: localStorage.getItem('load_issues'),
-            labels: localStorage.getItem('load_labels')
-        });
+        const { setLoadFlag, setIterateCurrent, setLoadedCount, setLoading } = this.props;
+
+        setIterateCurrent(0);
+        setLoadedCount(0);
+        setLoading(true);  // Set to true to indicate milestones are actually loading.
+
+        setLoadFlag(true);
     };
 
     cancelLoad = () => {
@@ -88,77 +54,30 @@ class Selects extends Component {
         this.props.setLoading(false);
     };
 
-
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.checked });
-        localStorage.setItem(name, event.target.checked);
-    };
-
     render() {
         const { classes, loading, loadSuccess, issuesLoadedCount  } = this.props;
         return (
             <div className={classes.root}>
                 <Card>
-                    <CardContent className={classes.cardContent} >
-                        <Typography className={classes.title} color="textSecondary">
-                            Select the type of data to load
-                        </Typography>
-                        <List>
-                            <ListItem className={classes.listItem}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={this.state.load_issues}
-                                            onChange={this.handleChange('load_issues')}
-                                            value="load_issues"
-                                            color="primary"
-                                        />
-                                    }
-                                    label="Issues"
-                                />
-                            </ListItem>
-                            <ListItem className={classes.listItem}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={this.state.load_labels}
-                                            onChange={this.handleChange('load_labels')}
-                                            value="load_labels"
-                                            color="primary"
-                                        />
-                                    }
-                                    label="Labels"
-                                />
-                            </ListItem>
-                        </List>
-                        {loading &&
+                    {loading &&
+                        <CardContent className={classes.cardContent} >
                             <div className={classes.loading}>
-                                <ProgressBar />
-                                <ProgressText />
                                 <Button onClick={this.cancelLoad} color="primary" autoFocus>
                                     Cancel Load
                                 </Button>
                             </div>
-                        }
-                    </CardContent>
+                        </CardContent>
+                    }
                     {!loading &&
-                    <CardActions className={classes.cardActions} >
-                        <div className={classes.actionButtons} >
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.loadIssues}>
-                                BIG LOAD BUTTON
-                            </Button>
-                        </div>
-                    </CardActions>
+                        <CardActions className={classes.cardActions} >
+                            <div className={classes.actionButtons} >
+                                <Button color="primary" variant="raised" className={classes.button} onClick={this.loadIssues}>
+                                    BIG LOAD BUTTON
+                                </Button>
+                            </div>
+                        </CardActions>
                     }
                 </Card>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-                    open={loadSuccess}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">Loaded or updated {issuesLoadedCount} issues</span>}
-                />
             </div>
         );
     }
@@ -175,17 +94,21 @@ Selects.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchReposContent.loading,
-    loadSuccess: state.githubFetchReposContent.loadSuccess,
+    loading: state.issuesFetch.loading,
+    loadSuccess: state.issuesFetch.loadSuccess,
 
-    issuesLoadedCount: state.githubIssues.loadedCount,
+    issuesLoadedCount: state.issuesFetch.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
-    setLoading: dispatch.githubFetchReposContent.setLoading,
+    setLoadFlag: dispatch.issuesFetch.setLoadFlag,
+    setLoading: dispatch.issuesFetch.setLoading,
 
-    setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
+    setIterateCurrent: dispatch.issuesFetch.setIterateCurrent,
+    setLoadedCount: dispatch.issuesFetch.setLoadedCount,
+    setLoading: dispatch.issuesFetch.setLoading
+
+    setLoadSuccess: dispatch.issuesFetch.setLoadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Selects));

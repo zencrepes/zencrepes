@@ -13,6 +13,8 @@ import Header from '../../components/Header/index.js';
 import QuerySelect from "../../components/Query/Select";
 //import SprintsSelect from "../../components/Sprints/Select";
 
+import IssuesFetch from '../../data/Issues/Fetch/index.js';
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 
@@ -57,7 +59,8 @@ class Dashboard extends Component {
                         pageName={"Dashboard"}
                     />
                     <div className={classes.content}>
-                        <DataLoader/>
+                        <IssuesFetch />
+                        <DataLoader />
                         <DashboardHeader />
                         <GridContainer>
                             <GridItem xs={12} sm={6} md={3}>

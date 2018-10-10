@@ -11,6 +11,8 @@ import Selects from '../../../components/Settings/Load/Selects.js';
 import IssuesRepartition from './IssuesRepartition.js';
 import PropTypes from "prop-types";
 
+import IssuesFetch from '../../../data/Issues/Fetch/index.js';
+
 const styles = theme => ({
     root: {
     },
@@ -19,44 +21,13 @@ const styles = theme => ({
 class Step3 extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            load_issues: true,
-            load_labels: true,
-            load_milestones: false,
-            load_pullrequests: false,
-            load_releases: false,
-        };
     }
-
-    componentDidMount() {
-        for (let key in this.state) {
-            // if the key exists in localStorage
-            if (localStorage.hasOwnProperty(key)) {
-                // get the key's value from localStorage
-                let value = localStorage.getItem(key);
-
-                // parse the localStorage string and setState
-                try {
-                    value = JSON.parse(value);
-                    this.setState({ [key]: value });
-                } catch (e) {
-                    // handle empty string
-                    this.setState({ [key]: value });
-                }
-            }
-        }
-    };
-
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.checked });
-        localStorage.setItem(name, event.target.checked);
-    };
 
     render() {
         const { classes } = this.props;
         return (
             <div>
+                <IssuesFetch />
                 <Typography component="p">
                     Aside facilitating planning, this tool was also created to facilitate cross-repos and cross-orgs consistency. To do so it needs to load a bunch of data.
                 </Typography>

@@ -24,6 +24,7 @@ class Refresh extends Component {
         this.state = {};
     }
 
+    /*
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { loadSuccess, setLoadSuccess, loadedCount, setLoadedCount, updateAvailableSprints, updateSelectedSprint } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
@@ -38,17 +39,19 @@ class Refresh extends Component {
             }
         }
     };
-
+*/
     refreshRepos = () => {
         console.log('refreshQuick');
-        const { setLoadFlag, setLoadRepos, repositories } = this.props;
+        const { setLoadFlag, setLoadRepos, repositories, setIterateCurrent, setLoadedCount, setLoading } = this.props;
         //Get list of repositories for current query
         console.log(repositories);
         setLoadRepos(repositories.map(repository => repository.id));
-        setLoadFlag({
-            issues: 'true',
-            labels: 'false'
-        });
+
+        setIterateCurrent(0);
+        setLoadedCount(0);
+        setLoading(true);  // Set to true to indicate milestones are actually loading.
+
+        setLoadFlag(true);
 
     };
 
@@ -89,22 +92,25 @@ Refresh.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchReposContent.loading,
-    loadSuccess: state.githubFetchReposContent.loadSuccess,
+    loading: state.issuesFetch.loading,
+    loadSuccess: state.issuesFetch.loadSuccess,
 
-    loadedCount: state.githubIssues.loadedCount,
+    loadedCount: state.issuesFetch.loadedCount,
 
     repositories: state.sprintPlanning.repositories,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.githubFetchReposContent.setLoadFlag,
-    setLoading: dispatch.githubFetchReposContent.setLoading,
+    setLoadFlag: dispatch.issuesFetch.setLoadFlag,
+    setLoading: dispatch.issuesFetch.setLoading,
+    setIterateCurrent: dispatch.issuesFetch.setIterateCurrent,
+    setLoadedCount: dispatch.issuesFetch.setLoadedCount,
+    setLoading: dispatch.issuesFetch.setLoading,
 
-    setLoadSuccess: dispatch.githubFetchReposContent.setLoadSuccess,
-    setLoadRepos: dispatch.githubFetchReposContent.setLoadRepos,
+    setLoadSuccess: dispatch.issuesFetch.setLoadSuccess,
+    setLoadRepos: dispatch.issuesFetch.setLoadRepos,
 
-    setLoadedCount: dispatch.githubIssues.setLoadedCount,
+    setLoadedCount: dispatch.issuesFetch.setLoadedCount,
 
     updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
     updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
