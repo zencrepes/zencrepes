@@ -106,7 +106,7 @@ const mapDispatch = dispatch => ({
 
     setIterateCurrent: dispatch.issuesFetch.setIterateCurrent,
     setLoadedCount: dispatch.issuesFetch.setLoadedCount,
-    setLoading: dispatch.issuesFetch.setLoading
+    setLoading: dispatch.issuesFetch.setLoading,
 
     setLoadSuccess: dispatch.issuesFetch.setLoadSuccess,
 });
