@@ -19,9 +19,9 @@ class Data extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading} = this.props;
-        console.log(loadFlag);
-        if (loadFlag === true && loading === false) {
+        const { setLoadFlag, loadFlag, loading } = this.props;
+        // Only trigger load if loadFlag transitioned from false to true
+        if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
             this.load();
         }
@@ -29,8 +29,6 @@ class Data extends Component {
 
     load = async () => {
         const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones } = this.props;
-        setLoadedCount(0);
-        setLoading(true);  // Set to true to indicate milestones are actually loading.
 
         let allRepos = cfgSources.find({}).fetch();
         setIterateTotal(allRepos.length);

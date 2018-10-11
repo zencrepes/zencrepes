@@ -1,3 +1,5 @@
+import {cfgMilestones} from "../../../data/Minimongo";
+
 export default {
     state: {
         loading: false,         // Boolean to indicate issues are currently loading
@@ -12,7 +14,14 @@ export default {
         iterateCurrent: 0,      // To show progress, current iterations status
     },
     reducers: {
-        setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
+        setLoadFlag(state, loadFlag) {
+            // Only allow load to start if loading is not already currently happening
+            if (loadFlag === true && state.loading === false) {
+                return { ...state, loadFlag: true, iterateCurrent: 0, loadedCount: 0, loading: true};
+            } else {
+                return { ...state, loadFlag: false };
+            }
+        },
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadError(state, payload) {return { ...state, loadError: payload };},
         setLoadSuccess(state, payload) {return { ...state, loadSuccess: payload };},
@@ -27,6 +36,5 @@ export default {
         incIterateCurrent(state, payload) {return { ...state, iterateCurrent: state.iterateCurrent + payload };},
     },
     effects: {
-
     }
 };

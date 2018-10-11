@@ -42,15 +42,10 @@ class Refresh extends Component {
 */
     refreshRepos = () => {
         console.log('refreshQuick');
-        const { setLoadFlag, setLoadRepos, repositories, setIterateCurrent, setLoadedCount, setLoading } = this.props;
+        const { setLoadFlag, setLoadRepos, repositories } = this.props;
         //Get list of repositories for current query
         console.log(repositories);
         setLoadRepos(repositories.map(repository => repository.id));
-
-        setIterateCurrent(0);
-        setLoadedCount(0);
-        setLoading(true);  // Set to true to indicate milestones are actually loading.
-
         setLoadFlag(true);
 
     };

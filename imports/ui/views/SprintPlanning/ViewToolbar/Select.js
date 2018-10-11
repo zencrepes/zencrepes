@@ -39,6 +39,14 @@ class Select extends Component {
             updateAvailableSprints();
         }
     }
+    
+    componentDidUpdate() {
+        console.log('Sprint Planning - componentDidUpdate');
+        const { availableSprints, updateAvailableSprints } = this.props;
+        if (availableSprints.length === 0) {
+            updateAvailableSprints();
+        }
+    }
 
     handleChange = name => event => {
         const { updateSelectedSprint } = this.props;

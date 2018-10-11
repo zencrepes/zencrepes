@@ -22,9 +22,9 @@ class Data extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading} = this.props;
-        console.log(loadFlag);
-        if (loadFlag === true) { // TODO - Need to prevent load() to run in parrallel
+        const { setLoadFlag, loadFlag, loading } = this.props;
+        // Only trigger load if loadFlag transitioned from false to true
+        if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
             this.load();
         }
@@ -42,11 +42,6 @@ class Data extends Component {
             loadRepos
         } = this.props;
 
-        /*
-        setIterateCurrent(0);
-        setLoadedCount(0);
-        setLoading(true);  // Set to true to indicate milestones are actually loading.
-*/
         //Check if there if we are loading everything or just data for a subset of repositories
         let reposQuery = {};
         if (loadRepos.length > 0) {
@@ -84,8 +79,6 @@ class Data extends Component {
     // Query increment should not be just 1 since if the missing issue is far down, this will generate a large number of calls
     getIssuesPagination = async (cursor, increment, repoObj) => {
         const { client, setLoadSuccess, setLoading } = this.props;
-        console.log(this.props.loading);
-        console.log(this.errorRetry);
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};

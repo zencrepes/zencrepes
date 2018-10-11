@@ -40,18 +40,14 @@ class Selects extends Component {
 
     loadIssues = () => {
         console.log('loadIssues');
-        const { setLoadFlag, setIterateCurrent, setLoadedCount, setLoading } = this.props;
-
-        setIterateCurrent(0);
-        setLoadedCount(0);
-        setLoading(true);  // Set to true to indicate milestones are actually loading.
-
-        setLoadFlag(true);
+        const { setLoadFlag } = this.props;
+        setLoadFlag();
     };
 
     cancelLoad = () => {
         console.log('cancelLoad');
-        this.props.setLoading(false);
+        const { setLoading } = this.props;
+        setLoading(false);
     };
 
     render() {
@@ -90,7 +86,6 @@ Selects.propTypes = {
     issuesLoadedCount: PropTypes.number,
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
 };
 
 const mapState = state => ({
@@ -103,12 +98,6 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.issuesFetch.setLoadFlag,
     setLoading: dispatch.issuesFetch.setLoading,
-
-    setIterateCurrent: dispatch.issuesFetch.setIterateCurrent,
-    setLoadedCount: dispatch.issuesFetch.setLoadedCount,
-    setLoading: dispatch.issuesFetch.setLoading,
-
-    setLoadSuccess: dispatch.issuesFetch.setLoadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Selects));
