@@ -58,7 +58,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setOpenAddAssignee: dispatch.sprintPlanning.setOpenAddAssignee,
+    setOpenAddAssignee: dispatch.sprintsView.setOpenAddAssignee,
 
 });
 

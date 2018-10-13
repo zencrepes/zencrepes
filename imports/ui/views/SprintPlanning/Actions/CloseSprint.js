@@ -91,9 +91,9 @@ const mapState = state => ({
 
     loadedCount: state.milestonesEdit.loadedCount,
 
-    repositories: state.sprintPlanning.repositories,
+    repositories: state.sprintsView.repositories,
 
-    milestones: state.sprintPlanning.milestones,
+    milestones: state.sprintsView.milestones,
 });
 
 const mapDispatch = dispatch => ({
@@ -106,8 +106,8 @@ const mapDispatch = dispatch => ({
 
     setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
 
-    updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
-    updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
+    updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
+    updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,
 
 });
 

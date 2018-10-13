@@ -65,12 +65,12 @@ ListRepositories.propTypes = {
 };
 
 const mapState = state => ({
-    filteredAvailableRepositories: state.sprintPlanning.filteredAvailableRepositories,
+    filteredAvailableRepositories: state.sprintsView.filteredAvailableRepositories,
     toggledAvailableRepos: state.labelsEdit.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({
-    addRepository: dispatch.sprintPlanning.addRepository
+    addRepository: dispatch.sprintsView.addRepository
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ListRepositories));

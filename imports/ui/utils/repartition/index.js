@@ -35,18 +35,18 @@ export const getAssignees = (issues) => {
 
 export const getAssigneesRepartition = (issues) => {
     console.log('getAssignees');
-
     let statesGroup = [];
-
     let allValues = [];
     issues.forEach((issue) => {
         if (issue['assignees'].totalCount === 0) {
-            issue.assignee = {login: 'UNASSIGNED'};
-            allValues.push(issue);
+            let issueCopy = JSON.parse(JSON.stringify(issue));
+            issueCopy.assignee = {login: 'UNASSIGNED'};
+            allValues.push(issueCopy);
         } else {
-            issue['assignees'].edges.map((assignee) => {
-                issue.assignee = assignee.node;
-                allValues.push(issue);
+            issue['assignees'].edges.forEach((assignee) => {
+                let issueCopy = JSON.parse(JSON.stringify(issue));
+                issueCopy.assignee = assignee.node;
+                allValues.push(issueCopy);
             });
         }
     });
@@ -65,7 +65,7 @@ export const getAssigneesRepartition = (issues) => {
             },
         });
     });
-
+    
     return assignees.sort((a, b) => b.issues.count - a.issues.count);
 };
 

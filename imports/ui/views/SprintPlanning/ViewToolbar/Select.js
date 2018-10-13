@@ -10,8 +10,6 @@ import { connect } from "react-redux";
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
-import { cfgIssues } from '../../../data/Minimongo.js';
-
 const styles = theme => ({
     root: {
         //width: '100%',
@@ -29,24 +27,25 @@ const styles = theme => ({
 class Select extends Component {
     constructor(props) {
         super(props);
-        this.state = {sprint: null};
     }
 
     componentDidMount() {
         console.log('Sprint Planning - componentDidMount');
-        const { availableSprints, updateAvailableSprints } = this.props;
-        if (availableSprints.length === 0) {
+        const { sprints, updateAvailableSprints } = this.props;
+        if (sprints.length === 0) {
             updateAvailableSprints();
         }
     }
-    
+
+    /*
     componentDidUpdate() {
         console.log('Sprint Planning - componentDidUpdate');
-        const { availableSprints, updateAvailableSprints } = this.props;
-        if (availableSprints.length === 0) {
+        const { sprints, updateAvailableSprints } = this.props;
+        if (sprints.length === 0) {
             updateAvailableSprints();
         }
     }
+    */
 
     handleChange = name => event => {
         const { updateSelectedSprint } = this.props;
@@ -55,7 +54,7 @@ class Select extends Component {
     };
 
     render() {
-        const { classes, selectedSprintName, availableSprints } = this.props;
+        const { classes, selectedSprintName, sprints } = this.props;
         return (
             <div className={classes.root}>
                 <TextField
@@ -72,9 +71,9 @@ class Select extends Component {
                     }}
                     margin="normal"
                 >
-                    {availableSprints.map(query => (
-                        <MenuItem key={query} value={query}>
-                            {query}
+                    {sprints.map(sprintTitle => (
+                        <MenuItem key={sprintTitle} value={sprintTitle}>
+                            {sprintTitle}
                         </MenuItem>
                     ))}
                 </TextField>
@@ -88,13 +87,13 @@ Select.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
-    updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
+    updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,
+    updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
 });
 
 const mapState = state => ({
-    selectedSprintName: state.sprintPlanning.selectedSprintName,
-    availableSprints: state.sprintPlanning.availableSprints,
+    selectedSprintName: state.sprintsView.selectedSprintTitle,
+    sprints: state.sprintsView.sprints,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Select));

@@ -59,11 +59,11 @@ AddRepository.propTypes = {
 };
 
 const mapState = state => ({
-    openAddRepository: state.sprintPlanning.openAddRepository,
+    openAddRepository: state.sprintsView.openAddRepository,
 });
 
 const mapDispatch = dispatch => ({
-    setOpenAddRepository: dispatch.sprintPlanning.setOpenAddRepository,
+    setOpenAddRepository: dispatch.sprintsView.setOpenAddRepository,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(AddRepository));

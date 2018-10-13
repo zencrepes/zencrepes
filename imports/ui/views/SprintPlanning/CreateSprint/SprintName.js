@@ -78,11 +78,11 @@ SprintName.propTypes = {
 };
 
 const mapState = state => ({
-    availableSprints: state.sprintPlanning.availableSprints,
+    availableSprints: state.sprintsView.availableSprints,
 });
 
 const mapDispatch = dispatch => ({
-    setCreateSprintName: dispatch.sprintPlanning.setCreateSprintName
+    setCreateSprintName: dispatch.sprintsView.setCreateSprintName
 
 });
 

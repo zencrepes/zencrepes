@@ -79,12 +79,12 @@ CreateSprint.propTypes = {
 };
 
 const mapState = state => ({
-    openCreateSprint: state.sprintPlanning.openCreateSprint,
+    openCreateSprint: state.sprintsView.openCreateSprint,
 
 });
 
 const mapDispatch = dispatch => ({
-    setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
+    setOpenCreateSprint: dispatch.sprintsView.setOpenCreateSprint,
 
     setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
     setRepos: dispatch.milestonesEdit.setRepos,

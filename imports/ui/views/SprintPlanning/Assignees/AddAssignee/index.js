@@ -59,11 +59,11 @@ AddAssignee.propTypes = {
 };
 
 const mapState = state => ({
-    openAddAssignee: state.sprintPlanning.openAddAssignee,
+    openAddAssignee: state.sprintsView.openAddAssignee,
 });
 
 const mapDispatch = dispatch => ({
-    setOpenAddAssignee: dispatch.sprintPlanning.setOpenAddAssignee,
+    setOpenAddAssignee: dispatch.sprintsView.setOpenAddAssignee,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(AddAssignee));

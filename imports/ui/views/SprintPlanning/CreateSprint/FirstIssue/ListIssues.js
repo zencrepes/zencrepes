@@ -79,13 +79,13 @@ ListIssues.propTypes = {
 };
 
 const mapState = state => ({
-    searchIssue: state.sprintPlanning.searchIssue,
+    searchIssue: state.sprintsView.searchIssue,
 
 });
 
 const mapDispatch = dispatch => ({
-    setSearchIssue: dispatch.sprintPlanning.setSearchIssue,
-    setSelectedIssue: dispatch.sprintPlanning.setSelectedIssue,
+    setSearchIssue: dispatch.sprintsView.setSearchIssue,
+    setSelectedIssue: dispatch.sprintsView.setSelectedIssue,
 
 });
 

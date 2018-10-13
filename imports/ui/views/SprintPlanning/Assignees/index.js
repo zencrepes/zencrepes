@@ -59,7 +59,7 @@ Assignees.propTypes = {
 };
 
 const mapState = state => ({
-    assignees: state.sprintPlanning.assignees,
+    assignees: state.sprintsView.assignees,
 });
 
 export default connect(mapState, null)(withStyles(dashboardStyle)(Assignees));

@@ -65,12 +65,12 @@ ListAssignees.propTypes = {
 };
 
 const mapState = state => ({
-    filteredAvailableAssignees: state.sprintPlanning.filteredAvailableAssignees,
+    filteredAvailableAssignees: state.sprintsView.filteredAvailableAssignees,
     toggledAvailableRepos: state.labelsEdit.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({
-    addAssignee: dispatch.sprintPlanning.addAssignee
+    addAssignee: dispatch.sprintsView.addAssignee
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ListAssignees));

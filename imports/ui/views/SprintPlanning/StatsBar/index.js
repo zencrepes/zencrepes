@@ -52,9 +52,9 @@ StatsBar.propTypes = {
 };
 
 const mapState = state => ({
-    repositories: state.sprintPlanning.repositories,
-    assignees: state.sprintPlanning.assignees,
-    issues: state.sprintPlanning.issues,
+    repositories: state.sprintsView.repositories,
+    assignees: state.sprintsView.assignees,
+    issues: state.sprintsView.issues,
 });
 
 

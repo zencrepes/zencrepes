@@ -59,7 +59,7 @@ Repositories.propTypes = {
 };
 
 const mapState = state => ({
-    repositories: state.sprintPlanning.repositories,
+    repositories: state.sprintsView.repositories,
 });
 
 export default connect(mapState, null)(withStyles(dashboardStyle)(Repositories));

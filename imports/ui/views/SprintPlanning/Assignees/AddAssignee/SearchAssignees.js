@@ -54,11 +54,11 @@ SearchAssignees.propTypes = {
 };
 
 const mapState = state => ({
-    availableAssigneesFilter: state.sprintPlanning.availableAssigneesFilter,
+    availableAssigneesFilter: state.sprintsView.availableAssigneesFilter,
 });
 
 const mapDispatch = dispatch => ({
-    updateAvailableAssigneesFilter: dispatch.sprintPlanning.updateAvailableAssigneesFilter
+    updateAvailableAssigneesFilter: dispatch.sprintsView.updateAvailableAssigneesFilter
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(SearchAssignees));

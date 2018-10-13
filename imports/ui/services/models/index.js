@@ -39,3 +39,7 @@ export { default as labelsEdit } from './labels/Edit.js';
 
 // Issues
 export { default as issuesFetch } from './issues/Fetch.js';
+
+// Sprints (specific view over milestones)
+export { default as sprintsView } from './sprints/View.js';
+

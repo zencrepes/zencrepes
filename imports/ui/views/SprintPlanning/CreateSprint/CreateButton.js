@@ -56,14 +56,14 @@ CreateButton.propTypes = {
 };
 
 const mapState = state => ({
-    selectedIssue: state.sprintPlanning.selectedIssue,
-    createSprintName: state.sprintPlanning.createSprintName,
-    createSprintEndDate: state.sprintPlanning.createSprintEndDate,
+    selectedIssue: state.sprintsView.selectedIssue,
+    createSprintName: state.sprintsView.createSprintName,
+    createSprintEndDate: state.sprintsView.createSprintEndDate,
 });
 
 const mapDispatch = dispatch => ({
-    setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
-    sprintCreated: dispatch.sprintPlanning.sprintCreated,
+    setOpenCreateSprint: dispatch.sprintsView.setOpenCreateSprint,
+    sprintCreated: dispatch.sprintsView.sprintCreated,
 
     setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
     setRepos: dispatch.milestonesEdit.setRepos,

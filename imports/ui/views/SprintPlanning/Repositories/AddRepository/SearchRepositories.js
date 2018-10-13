@@ -54,11 +54,11 @@ SearchRepositories.propTypes = {
 };
 
 const mapState = state => ({
-    availableRepositoriesFilter: state.sprintPlanning.availableRepositoriesFilter,
+    availableRepositoriesFilter: state.sprintsView.availableRepositoriesFilter,
 });
 
 const mapDispatch = dispatch => ({
-    updateAvailableRepositoriesFilter: dispatch.sprintPlanning.updateAvailableRepositoriesFilter
+    updateAvailableRepositoriesFilter: dispatch.sprintsView.updateAvailableRepositoriesFilter
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(SearchRepositories));

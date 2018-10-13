@@ -92,7 +92,7 @@ const mapState = state => ({
 
     loadedCount: state.issuesFetch.loadedCount,
 
-    repositories: state.sprintPlanning.repositories,
+    repositories: state.sprintsView.repositories,
 });
 
 const mapDispatch = dispatch => ({
@@ -107,8 +107,8 @@ const mapDispatch = dispatch => ({
 
     setLoadedCount: dispatch.issuesFetch.setLoadedCount,
 
-    updateAvailableSprints: dispatch.sprintPlanning.updateAvailableSprints,
-    updateSelectedSprint: dispatch.sprintPlanning.updateSelectedSprint,
+    updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
+    updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,
 
 });
 

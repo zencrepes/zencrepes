@@ -77,8 +77,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setSearchIssue: dispatch.sprintPlanning.setSearchIssue,
-    setSelectedIssue: dispatch.sprintPlanning.setSelectedIssue,
+    setSearchIssue: dispatch.sprintsView.setSearchIssue,
+    setSelectedIssue: dispatch.sprintsView.setSelectedIssue,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(SearchIssue));

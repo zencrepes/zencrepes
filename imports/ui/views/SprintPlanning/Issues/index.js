@@ -56,7 +56,7 @@ Issues.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.sprintPlanning.issues,
+    issues: state.sprintsView.issues,
 });
 
 export default connect(mapState, null)(withStyles(dashboardStyle)(Issues));

@@ -45,7 +45,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setOpenCreateSprint: dispatch.sprintPlanning.setOpenCreateSprint,
+    setOpenCreateSprint: dispatch.sprintsView.setOpenCreateSprint,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Create));

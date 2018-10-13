@@ -58,7 +58,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setOpenAddRepository: dispatch.sprintPlanning.setOpenAddRepository,
+    setOpenAddRepository: dispatch.sprintsView.setOpenAddRepository,
 
 });
 

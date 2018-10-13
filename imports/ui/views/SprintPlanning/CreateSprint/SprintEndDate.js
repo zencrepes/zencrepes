@@ -63,7 +63,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setCreateSprintEndDate: dispatch.sprintPlanning.setCreateSprintEndDate
+    setCreateSprintEndDate: dispatch.sprintsView.setCreateSprintEndDate
 
 });
 

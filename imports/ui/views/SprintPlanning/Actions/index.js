@@ -66,8 +66,8 @@ Actions.propTypes = {
 };
 
 const mapState = state => ({
-    selectedSprintName: state.sprintPlanning.selectedSprintName,
-    assignees: state.sprintPlanning.assignees,
+    selectedSprintName: state.sprintsView.selectedSprintName,
+    assignees: state.sprintsView.assignees,
 });
 
 export default connect(mapState, null)(withStyles(dashboardStyle)(Actions));

@@ -49,7 +49,7 @@ SelectedIssue.propTypes = {
 };
 
 const mapState = state => ({
-    selectedIssue: state.sprintPlanning.selectedIssue,
+    selectedIssue: state.sprintsView.selectedIssue,
 
 });
 

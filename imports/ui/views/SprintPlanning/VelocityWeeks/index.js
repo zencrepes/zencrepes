@@ -121,7 +121,7 @@ VelocityWeeks.propTypes = {
 };
 
 const mapState = state => ({
-    velocity: state.sprintPlanning.velocity,
+    velocity: state.sprintsView.velocity,
     defaultPoints: true,
 });
 
