@@ -25,8 +25,6 @@ export { default as wizard } from './wizard.js';
 export { default as zenhub } from './zenhub.js';
 export { default as waffle } from './waffle.js';
 
-export { default as sprintPlanning } from './sprintPlanning.js';
-
 // Milestones
 export { default as milestonesView } from './milestones/View.js';
 export { default as milestonesEdit } from './milestones/Edit.js';

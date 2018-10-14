@@ -162,9 +162,10 @@ export default {
             let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
             let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
 
-            let firstDay = getFirstDay(mongoSelector, cfgIssues);
+            let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(mongoSelector, cfgIssues);
 
+            console.log(mongoSelector);
             console.log(firstDay);
             console.log(lastDay);
 

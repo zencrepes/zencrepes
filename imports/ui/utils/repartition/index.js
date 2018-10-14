@@ -65,7 +65,7 @@ export const getAssigneesRepartition = (issues) => {
             },
         });
     });
-    
+
     return assignees.sort((a, b) => b.issues.count - a.issues.count);
 };
 

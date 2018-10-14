@@ -16,8 +16,9 @@ export default {
     reducers: {
         setLoadFlag(state, loadFlag) {
             // Only allow load to start if loading is not already currently happening
+            console.log(state.loading);
             if (loadFlag === true && state.loading === false) {
-                return { ...state, loadFlag: true, iterateCurrent: 0, loadedCount: 0, loading: true};
+                return { ...state, loadFlag: true, iterateCurrent: 0, loadedCount: 0, loading: true, loadSuccess: false};
             } else {
                 return { ...state, loadFlag: false };
             }

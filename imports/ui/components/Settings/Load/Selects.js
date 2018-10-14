@@ -41,7 +41,7 @@ class Selects extends Component {
     loadIssues = () => {
         console.log('loadIssues');
         const { setLoadFlag } = this.props;
-        setLoadFlag();
+        setLoadFlag(true);
     };
 
     cancelLoad = () => {

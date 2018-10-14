@@ -39,7 +39,8 @@ class Data extends Component {
             setIterateTotal,
             incIterateCurrent,
             setIterateCurrent,
-            loadRepos
+            loadRepos,
+            updateSprintsView
         } = this.props;
 
         //Check if there if we are loading everything or just data for a subset of repositories
@@ -243,8 +244,6 @@ const mapDispatch = dispatch => ({
     incIterateCurrent: dispatch.issuesFetch.incIterateCurrent,
 
     updateChip: dispatch.chip.updateChip,
-    updateMilestones: dispatch.milestonesView.updateMilestones,
-
 });
 
 export default connect(mapState, mapDispatch)(withApollo(Data));

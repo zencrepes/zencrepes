@@ -37,15 +37,13 @@ class Select extends Component {
         }
     }
 
-    /*
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         console.log('Sprint Planning - componentDidUpdate');
-        const { sprints, updateAvailableSprints } = this.props;
-        if (sprints.length === 0) {
-            updateAvailableSprints();
+        const { updateView, loadSuccess } = this.props;
+        if (prevProps.loadSuccess === false && loadSuccess === true) {
+            updateView();
         }
     }
-    */
 
     handleChange = name => event => {
         const { updateSelectedSprint } = this.props;
@@ -89,11 +87,13 @@ Select.propTypes = {
 const mapDispatch = dispatch => ({
     updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,
     updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
+    updateView: dispatch.sprintsView.updateView,
 });
 
 const mapState = state => ({
     selectedSprintName: state.sprintsView.selectedSprintTitle,
     sprints: state.sprintsView.sprints,
+    loadSuccess: state.issuesFetch.loadSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Select));

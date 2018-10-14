@@ -83,6 +83,12 @@ export default {
             this.setSprints(sprints);
         },
         async updateSelectedSprint(selectedSprintTitle, rootState) {
+            await this.setSelectedSprintTitle(selectedSprintTitle);
+            this.updateView();
+        },
+
+        async updateView(payload, rootState) {
+            /*
             console.log('Update Sprint');
             console.log(selectedSprintTitle);
             console.log(rootState.sprintsView.selectedSprintTitle);
@@ -90,7 +96,8 @@ export default {
                 selectedSprintTitle = rootState.sprintPlanning.selectedSprintTitle;
             }
             this.setSelectedSprintTitle(selectedSprintTitle);
-
+*/
+            let selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
             let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintTitle]}};
 
             // Create an array of assignees involved in a particular sprint
@@ -112,6 +119,7 @@ export default {
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
 
+
             this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
 
             this.setMilestones(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch());
@@ -121,7 +129,7 @@ export default {
 
         async updateVelocity(assignees, rootState) {
             //Build velocity based on past assignees performance
-            let currentSprintFilter = {'state': { $eq : 'OPEN' }, 'milestone.title':{'$in':[rootState.sprintPlanning.selectedSprintTitle]}};
+            let currentSprintFilter = {'state': { $eq : 'OPEN' }, 'milestone.title':{'$in':[rootState.sprintsView.selectedSprintTitle]}};
 
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
@@ -143,7 +151,7 @@ export default {
 
         async updateAvailableAssigneesFilter(payload, rootState) {
             this.setAvailableAssigneesFilter(payload);
-            let filteredSet = _.filter(rootState.sprintPlanning.availableAssignees, function(assignee) {
+            let filteredSet = _.filter(rootState.sprintsView.availableAssignees, function(assignee) {
                 if (assignee.name !== null) {
                     if (assignee.name.toLowerCase().indexOf(payload.toLowerCase()) !== -1) {return true;}
                 }
@@ -154,7 +162,7 @@ export default {
         },
 
         async addAssignee(payload, rootState) {
-            let currentAssignees = rootState.sprintPlanning.assignees;
+            let currentAssignees = rootState.sprintsView.assignees;
             currentAssignees.push(payload);
             this.setAssignees(currentAssignees);
             console.log(currentAssignees);
@@ -163,14 +171,14 @@ export default {
             let assigneesDifference = _.differenceBy(allAssignees, currentAssignees, 'id');
             this.setAvailableAssignees(assigneesDifference);
 
-            this.updateAvailableAssigneesFilter(rootState.sprintPlanning.availableAssigneesFilter);
+            this.updateAvailableAssigneesFilter(rootState.sprintsView.availableAssigneesFilter);
 
             this.updateVelocity(currentAssignees);
         },
 
         async updateAvailableRepositoriesFilter(payload, rootState) {
             this.setAvailableRepositoriesFilter(payload);
-            let filteredSet = _.filter(rootState.sprintPlanning.availableRepositories, function(repository) {
+            let filteredSet = _.filter(rootState.sprintsView.availableRepositories, function(repository) {
                 if (repository.name.toLowerCase().indexOf(payload.toLowerCase()) !== -1) {return true;}
                 else if (repository.org.login.toLowerCase().indexOf(payload.toLowerCase()) !== -1) {return true;}
                 else {return false;}
@@ -179,7 +187,7 @@ export default {
         },
 
         async addRepository(payload, rootState) {
-            let currentRepositories = rootState.sprintPlanning.repositories;
+            let currentRepositories = rootState.sprintsView.repositories;
             currentRepositories.push(payload);
             this.setRepositories(currentRepositories);
             console.log(currentRepositories);
@@ -188,7 +196,7 @@ export default {
             let repositoriesDifference = _.differenceBy(allRepositories, currentRepositories, 'id');
             this.setAvailableRepositories(repositoriesDifference);
 
-            this.updateAvailableRepositoriesFilter(rootState.sprintPlanning.availableRepositoriesFilter);
+            this.updateAvailableRepositoriesFilter(rootState.sprintsView.availableRepositoriesFilter);
 
             this.updateVelocity(currentRepositories);
         },
