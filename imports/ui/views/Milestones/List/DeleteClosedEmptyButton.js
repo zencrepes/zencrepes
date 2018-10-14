@@ -11,8 +11,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import {buildMongoSelector} from "../../../utils/mongo";
 import {cfgIssues} from "../../../data/Minimongo";
 
-import ProgressBar from "../../../components/Loading/Issues/ProgressBar";
-
 const styles = theme => ({
     root: {
         textAlign: 'right'

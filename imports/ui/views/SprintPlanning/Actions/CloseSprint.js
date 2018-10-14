@@ -13,8 +13,6 @@ import {buildMongoSelector} from "../../../utils/mongo";
 import {cfgIssues} from "../../../data/Minimongo";
 import {cfgMilestones} from "../../../data/Minimongo";
 
-import ProgressBar from "../../../components/Loading/Issues/ProgressBar";
-
 const styles = theme => ({
     root: {
         textAlign: 'right'
@@ -50,9 +48,9 @@ class CloseSprint extends Component {
     };
 
     render() {
-        const { classes, loading, loadSuccess, loadedCount, repositories } = this.props;
+        const { classes, loading, loadSuccess, loadedCount, milestones } = this.props;
 
-        if (repositories.length === 0) {
+        if (milestones.length === 0) {
             return null;
         } else {
             return (
@@ -63,9 +61,6 @@ class CloseSprint extends Component {
                             Close Sprint
                         </Button>
                     </div>
-                    }
-                    {loading &&
-                    <ProgressBar/>
                     }
                     <Snackbar
                         anchorOrigin={{vertical: 'top', horizontal: 'center'}}
