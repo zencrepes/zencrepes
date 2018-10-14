@@ -14,8 +14,6 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import ProgressBar from "../../Loading/Issues/ProgressBar";
-import ProgressText from "../../Loading/Issues/ProgressText";
 
 const styles = theme => ({
     root: {

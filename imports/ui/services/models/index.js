@@ -16,7 +16,6 @@ export { default as githubPushPoints } from './githubPushPoints.js';
 
 export { default as velocity } from './velocity.js';
 export { default as repartition } from './repartition.js';
-export { default as burndown } from './burndown.js';
 export { default as queries } from './queries.js';
 export { default as remaining } from './remaining.js';
 export { default as startup } from './startup.js';
@@ -40,4 +39,7 @@ export { default as issuesFetch } from './issues/Fetch.js';
 
 // Sprints (specific view over milestones)
 export { default as sprintsView } from './sprints/View.js';
+
+// Burndown
+export { default as burndownView } from './burndown/View.js';
 

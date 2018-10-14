@@ -1,8 +1,8 @@
-import { cfgIssues } from '../../data/Minimongo.js';
+import { cfgIssues } from '../../../data/Minimongo.js';
 
-import {getLastDay, populateOpen, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
-import {buildMongoSelector} from "../../utils/mongo/index.js";
-import {formatDate} from "../../utils/velocity";
+import {getLastDay, populateOpen, populateTicketsPerDay, populateTicketsPerWeek } from '../../../utils/velocity/index.js';
+import {buildMongoSelector} from "../../../utils/mongo/index.js";
+import {formatDate} from "../../../utils/velocity";
 
 /*
 *

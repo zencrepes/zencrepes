@@ -52,14 +52,14 @@ DataLoader.propTypes = {
 const mapState = state => ({
     queryFilters: state.queries.filters,
 
-    burndownLoading: state.burndown.loading,
-    burndownInitFlag: state.burndown.initFlag,
-    burndownFilters: state.burndown.filters,
+    burndownLoading: state.burndownView.loading,
+    burndownInitFlag: state.burndownView.initFlag,
+    burndownFilters: state.burndownView.filters,
 });
 
 const mapDispatch = dispatch => ({
-    burndownInitStates: dispatch.burndown.initStates,
-    burndownSetFilters: dispatch.burndown.setFilters,
+    burndownInitStates: dispatch.burndownView.initStates,
+    burndownSetFilters: dispatch.burndownView.setFilters,
 });
 
 export default connect(mapState, mapDispatch)(DataLoader);

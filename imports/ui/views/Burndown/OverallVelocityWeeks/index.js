@@ -17,7 +17,6 @@ import VelocityBar from "../../../components/Charts/VelocityBar";
 import VelocityLine from "../../../components/Charts/VelocityLine";
 import {getWeekYear} from "../../../utils/velocity";
 
-
 import HighchartsVelocity from './HighchartsVelocity.js';
 
 class OverallVelocityWeeks extends Component {
@@ -71,7 +70,7 @@ OverallVelocityWeeks.propTypes = {
 };
 
 const mapState = state => ({
-    burndown: state.burndown.burndown,
+    burndown: state.burndownView.burndown,
 
 });
 
