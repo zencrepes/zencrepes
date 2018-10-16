@@ -23,6 +23,7 @@ import StatsBar from './StatsBar/index.js';
 import ViewToolbar from './ViewToolbar/index.js';
 import Assignees from './Assignees/index.js';
 import Repositories from './Repositories/index.js';
+import Labels from './Labels/index.js';
 import Issues from './Issues/index.js';
 import Actions from './Actions/index.js';
 
@@ -81,6 +82,7 @@ class SprintPlanning extends Component {
                                 <GridItem xs={12} sm={6} md={4}>
                                     <Assignees />
                                     <Repositories />
+                                    <Labels />
                                 </GridItem>
                                 <GridItem xs={12} sm={6} md={8}>
                                     <Issues />

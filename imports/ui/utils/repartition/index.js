@@ -151,3 +151,38 @@ export const getRepositoriesRepartition = (issues) => {
     return repos;
 };
 
+export const getLabelsRepartition = (issues) => {
+    console.log('getLabelsRepartition');
+    let statesGroup = [];
+    let allValues = [];
+    issues.forEach((issue) => {
+        if (issue['labels'].totalCount === 0) {
+            let issueCopy = JSON.parse(JSON.stringify(issue));
+            issueCopy.label = {name: 'NO LABELS'};
+            allValues.push(issueCopy);
+        } else {
+            issue['labels'].edges.forEach((label) => {
+                let issueCopy = JSON.parse(JSON.stringify(issue));
+                issueCopy.label = label.node;
+                allValues.push(issueCopy);
+            });
+        }
+    });
+    statesGroup = _.groupBy(allValues, (value) => value.label.name);
+
+    let labels = []
+    Object.keys(statesGroup).forEach(function(key) {
+        labels.push({
+            ...statesGroup[key][0].label,
+            issues: {
+                list: statesGroup[key],
+                count: statesGroup[key].length
+            },
+            points: {
+                count: statesGroup[key].map(issue => issue.points). reduce((acc, count) => acc + count, 0)
+            },
+        });
+    });
+
+    return labels.sort((a, b) => b.issues.count - a.issues.count);
+};

@@ -6,7 +6,8 @@ import {
     getAssigneesRepartition,
     getAssignees,
     getRepositories,
-    getRepositoriesRepartition
+    getRepositoriesRepartition,
+    getLabelsRepartition,
 } from "../../../utils/repartition/index.js";
 
 import {
@@ -36,6 +37,8 @@ export default {
         filteredAvailableRepositories: [],
         availableRepositoryFilter: '',
         openAddRepository: false,
+
+        labels: [],
 
         issues: [],
 
@@ -69,6 +72,8 @@ export default {
         setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
+
+        setLabels(state, payload) {return { ...state, labels: payload };},
 
         setOpenCreateSprint(state, payload) {return { ...state, openCreateSprint: payload };},
         setCreateSprintName(state, payload) {return { ...state, createSprintName: payload };},
@@ -113,12 +118,14 @@ export default {
             let repositories = getRepositoriesRepartition(cfgIssues.find(currentSprintFilter).fetch());
             this.setRepositories(repositories);
 
+            let labels = getLabelsRepartition(cfgIssues.find(currentSprintFilter).fetch());
+            this.setLabels(labels);
+
             let allRepositories = getRepositories(cfgIssues.find({}).fetch());
             let repositoriesDifference = _.differenceBy(allRepositories, repositories, 'id');
             this.setAvailableRepositories(repositoriesDifference);
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
-
 
             this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
 
