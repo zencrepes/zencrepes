@@ -38,7 +38,6 @@ class Data extends Component {
     };
 
     load = async () => {
-        console.log('LabelsEdit - Start load');
         const { client,
             setChipRemaining,
             setLoading,
@@ -89,7 +88,6 @@ class Data extends Component {
                     if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
                         console.log('Nothing to be changed, not sending a request to Github');
                     } else {
-                        console.log(updateObj);
                         try {
                             result = await this.octokit.issues.updateLabel(updateObj);
                         }
@@ -103,8 +101,8 @@ class Data extends Component {
                     if (updateName === false) {updateObj['name'] = selectedName;}
 
                     updateObj['color'] = newColor.replace('#', '');
-                    if (updateDescription !== false) {updateObj['description'] = newDescription;}
 
+                    if (updateDescription !== false) {updateObj['description'] = newDescription;}
                     try {
                         result = await this.octokit.issues.createLabel(updateObj);
                     }
@@ -112,6 +110,7 @@ class Data extends Component {
                         console.log(error);
                     }
                 }
+                console.log(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     let labelObj = {
@@ -120,13 +119,11 @@ class Data extends Component {
                         color: result.data.color,
                         name: result.data.name,
                         isDefault: result.data.default,
-                        repo: repo,
+                        repo: currentRepo,
                         refreshed: true,
                     };
-                    if (updateDescription !== false && currentLabel !== undefined) {
-                        if (currentLabel.description !== newDescription) {
-                            labelObj['description'] = newDescription;
-                        }
+                    if (updateDescription !== false) {
+                        labelObj['description'] = newDescription;
                     }
                     await cfgLabels.upsert({
                         id: labelObj.id
@@ -138,7 +135,6 @@ class Data extends Component {
             }
         } else if (action === 'delete') {
             for (let label of selectedLabels) {
-                console.log(label);
                 const result = await this.octokit.issues.deleteLabel({
                     owner: label.org.login,
                     repo: label.repo.name,
