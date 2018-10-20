@@ -80,7 +80,6 @@ class UserMenu extends React.Component {
     fetchUserData = async () => {
         const { client, updateChip } = this.props;
 
-        console.log('fetchUserData');
         let data = await client.query({
             query: GET_USER_DATA,
             variables: {login: Meteor.user().services.github.username},
@@ -89,8 +88,6 @@ class UserMenu extends React.Component {
         });
 
         updateChip(data.data.rateLimit);
-
-        console.log(data);
 
         this.setState({
             avatarUrl: data.data.user.avatarUrl,
