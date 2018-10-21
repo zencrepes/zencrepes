@@ -15,8 +15,11 @@ import PropTypes from "prop-types";
 
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
+import Grid from '@material-ui/core/Grid';
 
-import Facets from './Facets/index.js';
+import IssuesFacets from './Facets/index.js';
+import IssuesQuery from './Query/index.js';
+import IssuesTabs from './Tabs/index.js';
 
 class Issues extends Component {
     constructor(props) {
@@ -54,8 +57,32 @@ class Issues extends Component {
                     />
                     <div className={classes.content}>
                         <div className={classes.container}>
-                            <h1>Issues view content</h1>
-                            <Facets />
+                            <Grid
+                                container
+                                direction="row"
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                spacing={8}
+                            >
+                                <Grid item >
+                                    <IssuesFacets />
+                                </Grid>
+                                <Grid item xs={12} sm container>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        justify="flex-start"
+                                        alignItems="flex-start"
+                                    >
+                                        <Grid item >
+                                            <IssuesQuery />
+                                        </Grid>
+                                        <Grid item xs={12} sm={12} md={12}>
+                                            <IssuesTabs />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </div>
                     </div>
                     <Footer />

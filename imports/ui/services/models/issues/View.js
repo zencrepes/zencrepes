@@ -36,6 +36,7 @@ const buildAggregations = (issues) => {
         states: {},
         authors: {},
         milestones: {},
+        milestonesStates: {},
         assignees: {},
         labels: {},
     };
@@ -49,6 +50,10 @@ const buildAggregations = (issues) => {
         let milestoneValue = 'UNASSIGNED';
         if (issue.milestone !== null) {milestoneValue = issue.milestone.title;}
         aggregations = populateNonNested(aggregations, 'milestones', milestoneValue, issue);
+
+        if (issue.milestone !== null) {
+            aggregations = populateNonNested(aggregations, 'milestonesStates', issue.milestone.state, issue);
+        }
 
         aggregations = populateNested(aggregations, 'assignees', 'login', issue);
         aggregations = populateNested(aggregations, 'labels', 'name', issue);

@@ -6,11 +6,8 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
-import TermFacet from './Term/index.js';
-
 const styles = theme => ({
     root: {
-        width: '250px',
         /*
         flexGrow: 1,
         zIndex: 1,
@@ -19,39 +16,32 @@ const styles = theme => ({
         display: 'flex',
         */
     },
-    progress: {
-        margin: 10,
-    },
 });
 
 
-class IssuesFacets extends Component {
+class IssuesTabs extends Component {
     constructor (props) {
         super(props);
     }
 
     render() {
-        console.log('Facets - render()');
-        const { classes, facets } = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
-                {facets.map(facet => {
-                    return ( <TermFacet facet={facet} key={facet.name}/>);
-                })}
+                <h1>Tabs Box</h1>
             </div>
         );
     }
 }
 
-IssuesFacets.propTypes = {
+IssuesTabs.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    facets: state.issuesView.facets,
 });
 
 const mapDispatch = dispatch => ({
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesFacets));
+export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesTabs));
