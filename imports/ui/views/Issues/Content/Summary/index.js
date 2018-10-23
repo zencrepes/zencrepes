@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 
 const styles = theme => ({
     root: {
-        height: '5opx',
         /*
         flexGrow: 1,
         zIndex: 1,
@@ -20,7 +19,7 @@ const styles = theme => ({
 });
 
 
-class IssuesQuery extends Component {
+class Summary extends Component {
     constructor (props) {
         super(props);
     }
@@ -29,20 +28,22 @@ class IssuesQuery extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <h4>Query Box: {}</h4>
+                <h1>Summary</h1>
             </div>
         );
     }
 }
 
-IssuesQuery.propTypes = {
+Summary.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
+
 });
 
 const mapDispatch = dispatch => ({
+
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Summary));

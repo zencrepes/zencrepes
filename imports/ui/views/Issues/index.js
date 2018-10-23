@@ -20,6 +20,7 @@ import Grid from '@material-ui/core/Grid';
 import IssuesFacets from './Facets/index.js';
 import IssuesQuery from './Query/index.js';
 import IssuesTabs from './Tabs/index.js';
+import IssuesContent from './Content/index.js';
 
 class Issues extends Component {
     constructor(props) {
@@ -77,8 +78,11 @@ class Issues extends Component {
                                         <Grid item >
                                             <IssuesQuery />
                                         </Grid>
-                                        <Grid item xs={12} sm={12} md={12}>
+                                        <Grid item xs={12} sm>
                                             <IssuesTabs />
+                                        </Grid>
+                                        <Grid item xs={12} sm>
+                                            <IssuesContent />
                                         </Grid>
                                     </Grid>
                                 </Grid>

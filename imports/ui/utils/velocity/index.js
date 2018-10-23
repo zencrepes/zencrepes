@@ -1,10 +1,85 @@
 /*
 *
+* refreshVelocity() Takes a mongo selector (finder) and Initialize an object containing indices for all days between two dates
+*
+* Arguments:
+* - mongoSelector: MongoDb query selector
+* - cfgIssues: Minimongo instance
+*/
+export const refreshVelocity = (mongoSelector, cfgIssues) => {
+    console.log('refreshVelocity');
+    console.log(mongoSelector);
+
+    if (mongoSelector['state'] !== undefined) {
+        delete mongoSelector['state'];
+    }
+    let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
+    let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
+
+    // It is impossible and sometime irrelevant to calculate velocity when filtered on a sprint as it involves
+    // a strongly limited timeframe. In that case, we replace in the query the sprint by the list of assignees
+    // in this sprint, then calculate their velocity.
+    if (closedIssuesFilter['milestone.title'] !== undefined) {
+        let assignees = getAssignees(cfgIssues.find(closedIssuesFilter).fetch());
+        closedIssuesFilter = {...closedIssuesFilter, ...{'assignees.edges':{'$elemMatch':{'node.login':{'$in':assignees}}}}};
+        delete closedIssuesFilter['milestone.title'];
+    }
+
+    let closedIssuesFilterNoSprint = JSON.parse(JSON.stringify(closedIssuesFilter));
+    if (closedIssuesFilterNoSprint['milestone.state'] !== undefined) {
+        delete closedIssuesFilterNoSprint['milestone.state'];
+    }
+
+    let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
+    let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
+
+    let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
+    dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate the object with count of days and weeks
+    dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch()); // Populate remaining issues count and remaining points
+    dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate closed issues count and points
+    dataObject = populateTicketsPerDay(dataObject);
+    dataObject = populateTicketsPerWeek(dataObject);
+
+    console.log(closedIssuesFilter);
+    console.log('+++++++++');
+    console.log(dataObject);
+    console.log('+++++++++');
+
+    return dataObject;
+};
+
+/*
+*
+* getAssignees() Return an array of assignees
+*
+* Arguments:
+* - issues: Array of issues
+*/
+const getAssignees = (issues) => {
+    //statesGroup = _.groupBy(issues, 'assignees.login');
+    let allValues = [];
+    issues.forEach((issue) => {
+        //console.log(issue);
+        if (issue['assignees'].totalCount > 0) {
+            issue['assignees'].edges.forEach((assignee) => {
+                //console.log(assignee);
+                allValues.push(assignee.node.login);
+            });
+        }
+    });
+//    console.log(allValues);
+    return _.uniq(allValues);
+    //statesGroup = _.groupBy(allValues, facet.nested);
+};
+
+/*
+*
 * formatDate() Take out hours, minutes and seconds from a date string and return date object
 *
 * Arguments:
 * - dateString: Date string
 */
+//TODO - To be removed, has been moved to shared.js
 export const formatDate = (dateString) => {
     day = new Date(dateString);
     day.setUTCHours(0);
@@ -51,6 +126,7 @@ export const getFirstDay = (mongoFilter, cfgIssues) => {
 * - mongoFilter: Filter to be applied to minimongo
 * - cfgIssues: Minimongo instance
 */
+//TODO - To be removed, has been moved to shared.js
 export const getLastDay = (mongoFilter, cfgIssues) => {
     if (cfgIssues.find(mongoFilter).count() > 0) {
         let lastDay = formatDate(cfgIssues.findOne(mongoFilter, {

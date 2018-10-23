@@ -6,8 +6,10 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Summary from './Summary/index.js';
+import Burndown from './Burndown/index.js';
+import Velocity from './Velocity/index.js';
+import IssuesList from './IssuesList/index.js';
 
 const styles = theme => ({
     root: {
@@ -22,38 +24,31 @@ const styles = theme => ({
 });
 
 
-class IssuesTabs extends Component {
+class IssuesContent extends Component {
     constructor (props) {
         super(props);
     }
 
     handleChange = (event, value) => {
-        const { setSelectedTab } = this.props;
-        setSelectedTab(value);
+        this.setState({ selectedTab: value });
     };
 
     render() {
         const { classes, selectedTab } = this.props;
         return (
             <div className={classes.root}>
-                <Tabs
-                    value={selectedTab}
-                    onChange={this.handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="Summary" />
-                    <Tab label="List" />
-                    <Tab label="Velocity" />
-                    <Tab label="Burndown" />
-                </Tabs>
+                {{
+                    0: <Summary />,
+                    1: <IssuesList />,
+                    2: <Velocity />,
+                    3: <Burndown />,
+                }[selectedTab]}
             </div>
         );
     }
 }
 
-IssuesTabs.propTypes = {
+IssuesContent.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -63,8 +58,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setSelectedTab: dispatch.issuesView.setSelectedTab,
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesTabs));
+export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesContent));
