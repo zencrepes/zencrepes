@@ -37,9 +37,15 @@ export default {
             console.log('initIssues');
 
             this.refreshFacets();
+            this.refreshIssues();
 
             this.setShouldBurndownDataReload(true);
             this.setShouldVelocityDataReload(true);
+        },
+
+        async refreshIssues(payload, rootState) {
+            let issues = cfgIssues.find(rootState.issuesView.query).fetch();
+            this.setIssues(issues);
         },
 
         async refreshFacets(payload, rootState) {

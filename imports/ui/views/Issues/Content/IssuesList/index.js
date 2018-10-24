@@ -6,6 +6,8 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
+import IssuesTable from './Table/index.js';
+
 const styles = theme => ({
     root: {
         /*
@@ -25,10 +27,10 @@ class IssuesList extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, issues } = this.props;
         return (
             <div className={classes.root}>
-                <h1>Issues List</h1>
+                <IssuesTable issues={issues} />
             </div>
         );
     }
@@ -39,6 +41,7 @@ IssuesList.propTypes = {
 };
 
 const mapState = state => ({
+    issues: state.issuesView.issues,
 
 });
 
