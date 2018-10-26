@@ -22,7 +22,6 @@ class ReposTreemap extends Component {
 
     buildDataset() {
         const {repos, defaultPoints} = this.props;
-        console.log(repos);
         let metric = 'points';
         if (!defaultPoints) {metric = 'count';}
         let chartData = {
@@ -34,38 +33,6 @@ class ReposTreemap extends Component {
         };
         return chartData;
     }
-
-    /* clickAssignee() - If a table cell is clicked, redirect the user to the search page with the parameters allowing to see the open issues
-     *
-     */
-    clickAssignee = (params) => {
-        const { filter, updateFromQuery } = this.props;
-
-        let updatedQuery = {};
-            //updatedQuery = {...filter, ...{'state':{$in:['OPEN']},'assignees.edges':{$elemMatch:{'node.login':{$in:[params.value]}}}}};
-            //            {header: 'Repositories', group: 'repo.name', type: 'text', nested: false, data: [] },
-
-        updatedQuery = {...filter, ...{
-            state: {
-                header: 'States',
-                group: 'state',
-                type: 'text',
-                nested: false,
-                in: ['OPEN'],
-                nullSelected: false
-            }
-            ,
-            'repo.name': {
-                header: 'Repositories',
-                group: 'repo.name',
-                type: 'text',
-                nested: false,
-                in: [params.data.name]
-            }
-        }};
-        updateFromQuery(updatedQuery, this.props.history);
-    };
-
 
     render() {
         const { classes } = this.props;
@@ -106,22 +73,5 @@ ReposTreemap.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-    updateFromQuery: dispatch.data.updateFromQuery,
-});
-
-const mapState = state => ({
-    repos: state.remaining.repos,
-    filter: state.remaining.filter,
-    defaultPoints: state.remaining.defaultPoints,
-});
-
-export default
-    connect(mapState, mapDispatch)
-    (
-            withRouter
-            (
-                withStyles(styles)(ReposTreemap)
-            )
-    );
+export default withStyles(styles)(ReposTreemap);
 

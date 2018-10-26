@@ -15,6 +15,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import TablePaginationActions from './TablePaginationActions.js';
+import Issue from './Issue.js';
 
 const styles = theme => ({
     root: {
@@ -64,11 +65,7 @@ class IssuesTable extends Component {
                     <TableBody>
                         {issues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(issue => {
                             return (
-                                <TableRow key={issue.id}>
-                                    <TableCell component="th" scope="row">
-                                        {issue.org.login}/{issue.repo.name} {issue.title}
-                                    </TableCell>
-                                </TableRow>
+                                <Issue issue={issue} key={issue.id} />
                             );
                         })}
                         {emptyRows > 0 && (

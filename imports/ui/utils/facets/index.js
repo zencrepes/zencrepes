@@ -18,6 +18,18 @@ export const refreshFacets = (issues) => {
     return facets;
 };
 
+const aggregationsModel = {
+    repos: {key: 'repos', name: 'Repositories', aggregations: {}},
+    orgs: {key: 'orgs', name: 'Organizations', aggregations: {}},
+    states: {key: 'states', name: 'States', aggregations: {}},
+    authors: {key: 'authors', name: 'Authors', aggregations: {}},
+    milestones: {key: 'milestones', name: 'Milestones', aggregations: {}},
+    milestonesStates: {key: 'milestonesStates', name: 'Milestones States', aggregations: {}},
+    assignees: {key: 'assignees', name: 'Assignees', aggregations: {}},
+    labels: {key: 'labels', name: 'Labels', aggregations: {}},
+};
+
+
 /*
 *
 * buildFacets() Convert an object containing aggregations and build facets
@@ -28,12 +40,14 @@ export const refreshFacets = (issues) => {
 const buildFacets = (aggregations) => {
     let facets = Object.entries(aggregations).map(([facet, content]) => {
         return {
-            name: facet,
-            values: Object.entries(content)
+            key: content.key,
+            name: content.name,
+            values: Object.entries(content.aggregations)
                 .map(([name, content]) => {
                     return {
                         name: name,
                         issues: Object.values(content),
+                        count: Object.values(content).length,
                         points: Object.values(content).map(i => i.points).reduce((acc, points) => acc + points, 0)
                     }
                 })
@@ -51,7 +65,8 @@ const buildFacets = (aggregations) => {
 * Arguments:
 * - issues: Array of issues
 */
-const buildAggregations = (issues) => {
+export const buildAggregations = (issues) => {
+    /*
     let aggregations = {
         repos: {},
         orgs: {},
@@ -62,6 +77,8 @@ const buildAggregations = (issues) => {
         assignees: {},
         labels: {},
     };
+    */
+    let aggregations = JSON.parse(JSON.stringify(aggregationsModel));
     issues.forEach((issue) => {
         // Manually build aggregations, limiting iterations to the extreme
         aggregations = populateNonNested(aggregations, 'repos', issue.repo.name, issue);
@@ -90,10 +107,10 @@ const buildAggregations = (issues) => {
 };
 
 const populateNonNested = (aggregations, aggIdx, itemIdx, issue) => {
-    if (aggregations[aggIdx][itemIdx] === undefined) {
-        aggregations[aggIdx][itemIdx] = {};
+    if (aggregations[aggIdx].aggregations[itemIdx] === undefined) {
+        aggregations[aggIdx].aggregations[itemIdx] = {};
     }
-    aggregations[aggIdx][itemIdx][issue.id] = issue;
+    aggregations[aggIdx].aggregations[itemIdx][issue.id] = issue;
     return aggregations;
 };
 
@@ -101,10 +118,10 @@ const populateNested = (aggregations, aggIdx, itemIdx, issue) => {
     if (issue[aggIdx].totalCount > 0) {
         issue[aggIdx].edges.forEach((item) => {
             let idxValue = item.node[itemIdx];
-            if (aggregations[aggIdx][idxValue] === undefined) {
-                aggregations[aggIdx][idxValue] = {}
+            if (aggregations[aggIdx].aggregations[idxValue] === undefined) {
+                aggregations[aggIdx].aggregations[idxValue] = {}
             }
-            aggregations[aggIdx][idxValue][issue.id] = issue;
+            aggregations[aggIdx].aggregations[idxValue][issue.id] = issue;
         });
     }
     return aggregations;

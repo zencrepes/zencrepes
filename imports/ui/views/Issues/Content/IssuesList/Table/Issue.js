@@ -6,9 +6,12 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 const styles = theme => ({
     root: {
-        height: '5opx',
         /*
         flexGrow: 1,
         zIndex: 1,
@@ -20,31 +23,25 @@ const styles = theme => ({
 });
 
 
-class IssuesQuery extends Component {
+class Issue extends Component {
     constructor (props) {
         super(props);
     }
 
     render() {
-        const { classes, query } = this.props;
+        const { classes, issue } = this.props;
         return (
-            <div className={classes.root}>
-                <h4>Query: {JSON.stringify(query)}</h4>
-            </div>
+            <TableRow key={issue.id}>
+                <TableCell component="th" scope="row">
+                    {issue.org.login}/{issue.repo.name} {issue.title}
+                </TableCell>
+            </TableRow>
         );
     }
 }
 
-IssuesQuery.propTypes = {
+Issue.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapState = state => ({
-    query: state.issuesView.query,
-
-});
-
-const mapDispatch = dispatch => ({
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
+export default withStyles(styles)(Issue);

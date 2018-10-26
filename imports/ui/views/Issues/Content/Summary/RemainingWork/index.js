@@ -1,31 +1,48 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import { CardActions, CardContent } from 'material-ui/Card';
+import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
-import {ContentCopy} from "@material-ui/icons";
+import Grid from '@material-ui/core/Grid';
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import dashboardStyle from "../../../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 import { Worker } from 'mdi-material-ui';
-import Card from "../../../components/Card/Card";
-import CardHeader from "../../../components/Card/CardHeader";
-import CardIcon from "../../../components/Card/CardIcon";
-import CardFooter from "../../../components/Card/CardFooter";
-import CardBody from "../../../components/Card/CardBody";
+import Card from "../../../../../components/Card/Card";
+import CardHeader from "../../../../../components/Card/CardHeader";
+import CardIcon from "../../../../../components/Card/CardIcon";
+import CardFooter from "../../../../../components/Card/CardFooter";
+import CardBody from "../../../../../components/Card/CardBody";
+
 import ReposTreemap from "./ReposTreemap";
 
-class RemainingPoints extends Component {
-    constructor(props) {
+const styles = theme => ({
+    root: {
+        /*
+        flexGrow: 1,
+        zIndex: 1,
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        */
+    },
+});
+
+
+class RemainingWork extends Component {
+    constructor (props) {
         super(props);
     }
 
     getDefaultRemaining() {
-        const { defaultPoints, remainingCount, remainingPoints } = this.props;
+        const { defaultPoints, remainingWorkPoints, remainingWorkCount } = this.props;
         if (defaultPoints) {
-            return remainingPoints;
+            return remainingWorkPoints;
         } else {
-            return remainingCount;
+            return remainingWorkCount;
         }
     };
 
@@ -46,13 +63,9 @@ class RemainingPoints extends Component {
         }
     };
 
-    handleChange = name => event => {
-        const { setDefaultPoints } = this.props;
-        setDefaultPoints(event.target.checked);
-    };
-
     render() {
-        const { classes } = this.props;
+        const { classes, defaultPoints, remainingWorkPoints, remainingWorkRepos, remainingWorkCount  } = this.props;
+
         return (
             <Card>
                 <CardHeader color="info" stats icon>
@@ -65,7 +78,7 @@ class RemainingPoints extends Component {
                     </h3>
                 </CardHeader>
                 <CardBody>
-                    <ReposTreemap />
+                    <ReposTreemap repos={remainingWorkRepos} defaultPoints={defaultPoints}/>
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
@@ -77,20 +90,8 @@ class RemainingPoints extends Component {
     }
 }
 
-RemainingPoints.propTypes = {
-    classes: PropTypes.object,
-
+RemainingWork.propTypes = {
+    classes: PropTypes.object.isRequired,
 };
 
-const mapState = state => ({
-    velocity: state.velocity.velocity,
-    remainingCount: state.remaining.count,
-    remainingPoints: state.remaining.points,
-    defaultPoints: state.remaining.defaultPoints,
-});
-
-const mapDispatch = dispatch => ({
-    setDefaultPoints: dispatch.remaining.setDefaultPoints,
-});
-
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(RemainingPoints));
+export default withStyles(dashboardStyle)(RemainingWork);

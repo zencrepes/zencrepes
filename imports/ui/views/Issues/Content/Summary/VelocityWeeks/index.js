@@ -6,9 +6,10 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
+import Grid from '@material-ui/core/Grid';
+
 const styles = theme => ({
     root: {
-        height: '5opx',
         /*
         flexGrow: 1,
         zIndex: 1,
@@ -20,31 +21,31 @@ const styles = theme => ({
 });
 
 
-class IssuesQuery extends Component {
+class VelocityWeeks extends Component {
     constructor (props) {
         super(props);
     }
 
     render() {
-        const { classes, query } = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <h4>Query: {JSON.stringify(query)}</h4>
+                <h3>Velocity Weeks</h3>
             </div>
         );
     }
 }
 
-IssuesQuery.propTypes = {
+VelocityWeeks.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    query: state.issuesView.query,
 
 });
 
 const mapDispatch = dispatch => ({
+
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
+export default connect(mapState, mapDispatch)(withStyles(styles)(VelocityWeeks));

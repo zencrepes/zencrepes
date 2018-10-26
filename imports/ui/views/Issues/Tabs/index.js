@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import PointsSwitch from './PointsSwitch.js';
+
 const styles = theme => ({
     root: {
         /*
@@ -36,18 +38,23 @@ class IssuesTabs extends Component {
         const { classes, selectedTab } = this.props;
         return (
             <div className={classes.root}>
-                <Tabs
-                    value={selectedTab}
-                    onChange={this.handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="Summary" />
-                    <Tab label="List" />
-                    <Tab label="Velocity" />
-                    <Tab label="Burndown" />
-                </Tabs>
+                <div className={classes.flex}>
+                    <Tabs
+                        value={selectedTab}
+                        onChange={this.handleChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                    >
+                        <Tab label="Summary" />
+                        <Tab label="List" />
+                        <Tab label="Velocity" />
+                        <Tab label="Burndown" />
+                    </Tabs>
+                </div>
+                <div style={{ display: "flex" }} >
+                    <PointsSwitch />
+                </div>
             </div>
         );
     }
