@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
+import Grid from '@material-ui/core/Grid';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -38,23 +39,31 @@ class IssuesTabs extends Component {
         const { classes, selectedTab } = this.props;
         return (
             <div className={classes.root}>
-                <div className={classes.flex}>
-                    <Tabs
-                        value={selectedTab}
-                        onChange={this.handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
-                        <Tab label="Summary" />
-                        <Tab label="List" />
-                        <Tab label="Velocity" />
-                        <Tab label="Burndown" />
-                    </Tabs>
-                </div>
-                <div style={{ display: "flex" }} >
-                    <PointsSwitch />
-                </div>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item >
+                        <Tabs
+                            value={selectedTab}
+                            onChange={this.handleChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            centered
+                        >
+                            <Tab label="Summary" />
+                            <Tab label="List" />
+                            <Tab label="Velocity" />
+                            <Tab label="Burndown" />
+                        </Tabs>
+                    </Grid>
+                    <Grid item xs={12} sm>
+                        <PointsSwitch />
+                    </Grid>
+                </Grid>
             </div>
         );
     }

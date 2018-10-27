@@ -75,13 +75,13 @@ class Issues extends Component {
                                         justify="flex-start"
                                         alignItems="flex-start"
                                     >
-                                        <Grid item >
+                                        <Grid item xs={12} sm className={classes.fullWidth}>
                                             <IssuesQuery />
                                         </Grid>
-                                        <Grid item xs={12} sm>
+                                        <Grid item xs={12} sm className={classes.fullWidth}>
                                             <IssuesTabs />
                                         </Grid>
-                                        <Grid item xs={12} sm>
+                                        <Grid item xs={12} sm className={classes.fullWidth}>
                                             <IssuesContent />
                                         </Grid>
                                     </Grid>
@@ -107,7 +107,6 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     initIssues: dispatch.issuesView.initIssues,
-
 });
 
 export default connect(mapState, mapDispatch)(withRouter(withStyles(dashboardStyle)(Issues)));

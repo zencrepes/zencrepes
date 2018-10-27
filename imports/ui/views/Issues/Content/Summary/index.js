@@ -15,6 +15,7 @@ import VelocityWeeks from './VelocityWeeks/index.js';
 
 const styles = theme => ({
     root: {
+        width: '100%',
         /*
         flexGrow: 1,
         zIndex: 1,
@@ -32,26 +33,36 @@ class Summary extends Component {
     }
 
     componentDidMount(prevProps, prevState, snapshot) {
-        const { refreshSummary, shouldSummaryDataReload } = this.props;
-        console.log('Burndown - componentDidMount');
+        const { refreshSummary, shouldSummaryDataReload, refreshVelocity, shouldVelocityDataReload,  } = this.props;
         if (shouldSummaryDataReload === true) {
-            console.log('Burndown - componentDidMount - Trigger initFacets');
             refreshSummary();
+        }
+        if (shouldVelocityDataReload === true) {
+            refreshVelocity();
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { refreshSummary, shouldSummaryDataReload } = this.props;
-        console.log('Burndown - componentDidUpdate');
+        const { refreshSummary, shouldSummaryDataReload, refreshVelocity, shouldVelocityDataReload,  } = this.props;
         if (prevProps.shouldSummaryDataReload === false && shouldSummaryDataReload === true) {
-            console.log('Burndown - componentDidUpdate - Trigger initFacets');
             refreshSummary();
+        }
+        if (prevProps.shouldVelocityDataReload === false && shouldVelocityDataReload === true) {
+            refreshVelocity();
         }
     }
 
 
     render() {
-        const { classes, remainingWorkRepos, defaultPoints, remainingWorkPoints, remainingWorkCount } = this.props;
+        const { classes, remainingWorkRepos, defaultPoints, remainingWorkPoints, remainingWorkCount, velocity } = this.props;
+
+        console.log('++++++++++++');
+        console.log(defaultPoints);
+        console.log(remainingWorkRepos);
+        console.log(remainingWorkPoints);
+        console.log(remainingWorkCount);
+        console.log(velocity);
+        console.log('++++++++++++');
 
         return (
             <div className={classes.root}>
@@ -72,7 +83,12 @@ class Summary extends Component {
                         }
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
-                        <DaysToCompletion />
+                        {velocity !== {} &&
+                            <DaysToCompletion
+                                velocity={velocity}
+                                defaultPoints={defaultPoints}
+                            />
+                        }
                     </Grid>
                 </Grid>
                 <Grid
@@ -82,10 +98,20 @@ class Summary extends Component {
                     alignItems="flex-start"
                 >
                     <Grid item xs={12} sm={6} md={6}>
-                        <VelocityDays />
+                        {velocity !== {} &&
+                            <VelocityDays
+                                velocity={velocity}
+                                defaultPoints={defaultPoints}
+                            />
+                        }
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
-                        <VelocityWeeks />
+                        {velocity !== {} &&
+                            <VelocityWeeks
+                                velocity={velocity}
+                                defaultPoints={defaultPoints}
+                            />
+                        }
                     </Grid>
                 </Grid>
             </div>
@@ -100,18 +126,20 @@ Summary.propTypes = {
 const mapState = state => ({
     facets: state.issuesView.facets,
     shouldSummaryDataReload: state.issuesView.shouldSummaryDataReload,
+    shouldVelocityDataReload: state.issuesView.shouldVelocityDataReload,
 
     remainingWorkRepos: state.issuesView.remainingWorkRepos,
     remainingWorkPoints: state.issuesView.remainingWorkPoints,
     remainingWorkCount: state.issuesView.remainingWorkCount,
 
+    velocity: state.issuesView.velocity,
+
     defaultPoints: state.issuesView.defaultPoints,
-
-
 });
 
 const mapDispatch = dispatch => ({
-    refreshSummary: dispatch.issuesView.refreshSummary
+    refreshSummary: dispatch.issuesView.refreshSummary,
+    refreshVelocity: dispatch.issuesView.refreshVelocity
 
 });
 
