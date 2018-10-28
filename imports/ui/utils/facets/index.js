@@ -19,14 +19,55 @@ export const refreshFacets = (issues) => {
 };
 
 const aggregationsModel = {
-    repos: {key: 'repos', name: 'Repositories', aggregations: {}},
-    orgs: {key: 'orgs', name: 'Organizations', aggregations: {}},
-    states: {key: 'states', name: 'States', aggregations: {}},
-    authors: {key: 'authors', name: 'Authors', aggregations: {}},
-    milestones: {key: 'milestones', name: 'Milestones', aggregations: {}},
-    milestonesStates: {key: 'milestonesStates', name: 'Milestones States', aggregations: {}},
-    assignees: {key: 'assignees', name: 'Assignees', aggregations: {}},
-    labels: {key: 'labels', name: 'Labels', aggregations: {}},
+    repos: {
+        key: 'repo.name',
+        name: 'Repositories',
+        nested: false,
+        aggregations: {}
+    },
+    orgs: {
+        key: 'org.name',
+        name: 'Organizations',
+        nested: false,
+        aggregations: {}
+    },
+    states: {
+        key: 'state',
+        name: 'States',
+        nested: false,
+        aggregations: {}
+    },
+    authors: {
+        key: 'author.login',
+        name: 'Authors',
+        nested: false,
+        aggregations: {}
+    },
+    milestones: {
+        key: 'milestone.title',
+        name: 'Milestones',
+        nested: false,
+        aggregations: {}
+    },
+    milestonesStates: {
+        key: 'milestone.state',
+        name: 'Milestones States',
+        nested: false,
+        aggregations: {}
+    },
+    assignees: {
+        key: 'assignees.edges',
+        name: 'Assignees',
+        nested: true,
+        nestedKey: 'node.login',
+        aggregations: {}
+    },
+    labels: {
+        key: 'labels.edges',
+        name: 'Labels',
+        nested: true,
+        aggregations: {}
+    },
 };
 
 
@@ -40,8 +81,9 @@ const aggregationsModel = {
 const buildFacets = (aggregations) => {
     let facets = Object.entries(aggregations).map(([facet, content]) => {
         return {
-            key: content.key,
-            name: content.name,
+            ...content,
+            //key: content.key,
+            //name: content.name,
             values: Object.entries(content.aggregations)
                 .map(([name, content]) => {
                     return {

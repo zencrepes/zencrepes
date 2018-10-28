@@ -39,9 +39,11 @@ class FacetSelector extends React.Component {
         };
     }
 
-    handleToggle = value => () => {
-        const { addFilterRefresh, removeFilterRefresh, queryValues } = this.props;
-
+    handleToggle = clickedValue => () => {
+        console.log('handleToggle');
+        const { clickItem } = this.props;
+        clickItem(clickedValue);
+        /*
         //check to handle the situation where the group does not exist yet
         let valueChecked = {in:[]};
         if (queryValues[value.group] !== undefined) {
@@ -54,10 +56,11 @@ class FacetSelector extends React.Component {
         } else {
             removeFilterRefresh(value);
         }
+        */
     };
 
     render() {
-        const { data, classes, selected } = this.props;
+        const { data, classes, selected, clickItem } = this.props;
         //const { value } = this.state;
 
         let facetItem = data.name;
@@ -72,6 +75,7 @@ class FacetSelector extends React.Component {
                 dense
                 button
                 onClick={this.handleToggle(data)}
+                //onClick={clickItem(data)}
                 className={classes.listItem}
             >
                 <Checkbox

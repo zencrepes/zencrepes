@@ -32,11 +32,17 @@ class IssuesFacets extends Component {
 
     render() {
         console.log('Facets - render()');
-        const { classes, facets } = this.props;
+        const { classes, facets, query, addRemoveQuery } = this.props;
+        console.log(facets);
         return (
             <div className={classes.root}>
                 {facets.map(facet => {
-                    return ( <TermFacet facet={facet} key={facet.name}/>);
+                    return ( <TermFacet
+                        facet={facet}
+                        key={facet.name}
+                        query={query}
+                        addRemoveQuery={addRemoveQuery}
+                    />);
                 })}
             </div>
         );
@@ -49,9 +55,11 @@ IssuesFacets.propTypes = {
 
 const mapState = state => ({
     facets: state.issuesView.facets,
+    query: state.issuesView.query,
 });
 
 const mapDispatch = dispatch => ({
+    addRemoveQuery: dispatch.issuesView.addRemoveQuery,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesFacets));

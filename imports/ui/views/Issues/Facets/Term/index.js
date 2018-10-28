@@ -62,12 +62,20 @@ class TermFacet extends Component {
         this.setState({collapsed: value})
     };
 
+    clickItem = (clickedValue) => {
+        console.log('clickItem');
+        const { facet, addRemoveQuery } = this.props;
+        addRemoveQuery(clickedValue, facet);
+    };
+
     render() {
-        const { classes, facet, currentFilters } = this.props;
+        const { classes, facet, query, addRemoveQuery } = this.props;
+
         const { name, values } = facet;
         const { collapsed, selectAll } = this.state;
 
         let group = 'abcd';
+        let currentFilters = [];
 
         let valueChecked = {in:[]};
         if (currentFilters[group] !== undefined) {
@@ -89,6 +97,7 @@ class TermFacet extends Component {
                                 <FacetSelector
                                     data={value}
                                     key={value.name}
+                                    clickItem={this.clickItem}
                                     selected={valueChecked.in.map((v) => {return v}).indexOf(value.name) !== -1}
                                 />
                             ))}

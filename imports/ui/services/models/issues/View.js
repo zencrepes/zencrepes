@@ -34,6 +34,8 @@ export default {
         setFacets(state, payload) {return { ...state, facets: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
 
+        setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
+
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
 
         setShouldBurndownDataReload(state, payload) {return { ...state, shouldBurndownDataReload: payload };},
@@ -58,6 +60,53 @@ export default {
             this.setShouldBurndownDataReload(true);
             this.setShouldVelocityDataReload(true);
             this.setShouldSummaryDataReload(true);
+        },
+
+        async addRemoveQuery(value, rootState, facet) {
+            console.log('addRemoveQuery');
+            console.log(value);
+            console.log(facet);
+            console.log(rootState);
+            let query = rootState.issuesView.query;
+
+            //1- Mutate the query to the corresponding state
+            if (facet.nested === false) {
+                if (query[facet.key] === undefined) {
+                    query[facet.key] = {"$in": [value.name]};
+                } else if (query[facet.key]['$in'].includes(value.name)) {
+                    // Remove element from array
+                    query[facet.key]['$in'] = query[facet.key]['$in'].filter(i => i !== value.name);
+                    if (query[facet.key]['$in'].length === 0) {
+                        delete query[facet.key];
+                    }
+                } else {
+                    query[facet.key]['$in'].push(value.name);
+                }
+            } else {
+                if (query[facet.key] === undefined) {
+                    query[facet.key] = {'$elemMatch': {}};
+                    query[facet.key]['$elemMatch'][facet.nestedKey] = {"$in": [value.name]};
+                } else if (query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].includes(value.name)) {
+                    query[facet.key]['$elemMatch'][facet.nestedKey]['$in'] = query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].filter(i => i !== value.name);
+                    if (query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].length === 0) {
+                        delete query[facet.key];
+                    }
+                } else {
+                    query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].push(value.name);
+                }
+            }
+            /*
+            {"assignees.edges":{"$elemMatch":{"node.login":{"$in":["lepsalex","hlminh2000"]}}}
+            ,"milestone.state":{"$in":["OPEN"]}
+            ,"org.name":{"$in":["Human Cancer Models Initiative - Catalog","Kids First Data Resource Center"]}}
+            */
+            this.setShouldBurndownDataReload(true);
+            this.setShouldVelocityDataReload(true);
+            this.setShouldSummaryDataReload(true);
+            this.setQuery(query);
+
+            this.refreshFacets();
+            this.refreshIssues();
         },
 
         async refreshIssues(payload, rootState) {
