@@ -70,8 +70,8 @@ class TermFacet extends Component {
 
     render() {
         const { classes, facet, query, addRemoveQuery } = this.props;
+        const { collapsed, selectAll } = this.state;
 
-        console.log(query);
         let selectedValues = [];
         let facetKey = facet.key;
         if (facet.nested === true) {
@@ -85,28 +85,19 @@ class TermFacet extends Component {
                 selectedValues = query[facetKey]['$elemMatch'][nestedKey]['$in'];
             }
         }
-        console.log(selectedValues);
-
-        const { name, values } = facet;
-        const { collapsed, selectAll } = this.state;
 
         let group = 'abcd';
         let currentFilters = [];
 
-        let valueChecked = {in:[]};
-        if (currentFilters[group] !== undefined) {
-            valueChecked = currentFilters[group];
-        }
-
-        let facetsData = values;
+        let facetsData = facet.values;
         if (collapsed) {
-            facetsData = values.slice(0, 5);
+            facetsData = facet.values.slice(0, 5);
         }
 
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
-                    <CardHeader title={name} className={classes.cardHeader} />
+                    <CardHeader title={facet.name} className={classes.cardHeader} />
                     <CardContent className={classes.cardContent}>
                         <List dense={this.state.dense}>
                             {facetsData.map(value => (
@@ -120,7 +111,7 @@ class TermFacet extends Component {
                         </List>
                     </CardContent>
                     <CardActions>
-                        <ExpandButton collapsed={collapsed} length={values.length} classes={classes} onClick={this.collapseFacet}/>
+                        <ExpandButton collapsed={collapsed} length={facet.values.length} classes={classes} onClick={this.collapseFacet}/>
                     </CardActions>
                 </Card>
             </div>

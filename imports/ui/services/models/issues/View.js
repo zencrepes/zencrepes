@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { cfgIssues } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
-import { refreshFacets, initFacets } from '../../../utils/facets/index.js';
+import { buildFacets } from '../../../utils/facets/index.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
 export default {
@@ -48,7 +48,6 @@ export default {
         setRemainingWorkRepos(state, payload) {return { ...state, remainingWorkRepos: payload };},
         setRemainingWorkPoints(state, payload) {return { ...state, remainingWorkPoints: payload };},
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
-
     },
     effects: {
         async initIssues(payload, rootState) {
@@ -58,26 +57,24 @@ export default {
             this.refreshIssues();
 
             this.setShouldBurndownDataReload(true);
-            this.setShouldVelocityDataReload(true);
-            this.setShouldSummaryDataReload(true);
+            this.refreshSummary();
+            this.refreshVelocity();
+
         },
 
         async updateQuery(query, rootState) {
             this.setQuery(query);
 
             this.setShouldBurndownDataReload(true);
-            this.setShouldVelocityDataReload(true);
-            this.setShouldSummaryDataReload(true);
 
             this.refreshFacets();
             this.refreshIssues();
+            this.refreshSummary();
+            this.refreshVelocity();
         },
 
         async addRemoveQuery(value, rootState, facet) {
             console.log('addRemoveQuery');
-            console.log(value);
-            console.log(facet);
-            console.log(rootState);
             let query = rootState.issuesView.query;
 
             //1- Mutate the query to the corresponding state
@@ -152,14 +149,8 @@ export default {
         async refreshFacets(payload, rootState) {
             let t0 = performance.now();
 
-            /*
-            let issues = cfgIssues.find(rootState.issuesView.query).fetch();
-            let updatedFacets = refreshFacets(issues);
-            this.setFacets(updatedFacets);
-            */
-
             let query = rootState.issuesView.query;
-            let updatedFacets = initFacets(query, cfgIssues);
+            let updatedFacets = buildFacets(query, cfgIssues);
             this.setFacets(updatedFacets);
 
             var t1 = performance.now();

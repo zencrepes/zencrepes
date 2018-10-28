@@ -29,24 +29,6 @@ class Velocity extends Component {
         super(props);
     }
 
-    componentDidMount(prevProps, prevState, snapshot) {
-        const { refreshVelocity, shouldVelocityDataReload, velocity } = this.props;
-        console.log('Velocity - componentDidMount');
-        if (shouldVelocityDataReload === true) {
-            console.log('Velocity - componentDidMount - Trigger initFacets');
-            refreshVelocity();
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { refreshVelocity, shouldVelocityDataReload } = this.props;
-        console.log('Velocity - componentDidUpdate');
-        if (prevProps.shouldVelocityDataReload === false && shouldVelocityDataReload === true) {
-            console.log('Velocity - componentDidUpdate - Trigger initFacets');
-            refreshVelocity();
-        }
-    }
-
     prepareDataset() {
         const { velocity } = this.props;
         if (velocity['weeks'] !== undefined ) {
@@ -91,12 +73,10 @@ Velocity.propTypes = {
 };
 
 const mapState = state => ({
-    shouldVelocityDataReload: state.issuesView.shouldVelocityDataReload,
     velocity: state.issuesView.velocity,
 });
 
 const mapDispatch = dispatch => ({
-    refreshVelocity: dispatch.issuesView.refreshVelocity,
 
 });
 

@@ -32,27 +32,6 @@ class Summary extends Component {
         super(props);
     }
 
-    componentDidMount(prevProps, prevState, snapshot) {
-        const { refreshSummary, shouldSummaryDataReload, refreshVelocity, shouldVelocityDataReload,  } = this.props;
-        if (shouldSummaryDataReload === true) {
-            refreshSummary();
-        }
-        if (shouldVelocityDataReload === true) {
-            refreshVelocity();
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { refreshSummary, shouldSummaryDataReload, refreshVelocity, shouldVelocityDataReload,  } = this.props;
-        if (prevProps.shouldSummaryDataReload === false && shouldSummaryDataReload === true) {
-            refreshSummary();
-        }
-        if (prevProps.shouldVelocityDataReload === false && shouldVelocityDataReload === true) {
-            refreshVelocity();
-        }
-    }
-
-
     render() {
         const { classes, remainingWorkRepos, defaultPoints, remainingWorkPoints, remainingWorkCount, velocity } = this.props;
 
@@ -124,9 +103,9 @@ Summary.propTypes = {
 };
 
 const mapState = state => ({
+    defaultPoints: state.issuesView.defaultPoints,
+
     facets: state.issuesView.facets,
-    shouldSummaryDataReload: state.issuesView.shouldSummaryDataReload,
-    shouldVelocityDataReload: state.issuesView.shouldVelocityDataReload,
 
     remainingWorkRepos: state.issuesView.remainingWorkRepos,
     remainingWorkPoints: state.issuesView.remainingWorkPoints,
@@ -134,14 +113,10 @@ const mapState = state => ({
 
     velocity: state.issuesView.velocity,
 
-    defaultPoints: state.issuesView.defaultPoints,
-
     query: state.issuesView.query,
 });
 
 const mapDispatch = dispatch => ({
-    refreshSummary: dispatch.issuesView.refreshSummary,
-    refreshVelocity: dispatch.issuesView.refreshVelocity
 
 });
 
