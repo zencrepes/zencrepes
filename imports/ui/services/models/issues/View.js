@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { cfgIssues } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
-import { refreshFacets } from '../../../utils/facets/index.js';
+import { refreshFacets, initFacets } from '../../../utils/facets/index.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
 export default {
@@ -62,6 +62,17 @@ export default {
             this.setShouldSummaryDataReload(true);
         },
 
+        async updateQuery(query, rootState) {
+            this.setQuery(query);
+
+            this.setShouldBurndownDataReload(true);
+            this.setShouldVelocityDataReload(true);
+            this.setShouldSummaryDataReload(true);
+
+            this.refreshFacets();
+            this.refreshIssues();
+        },
+
         async addRemoveQuery(value, rootState, facet) {
             console.log('addRemoveQuery');
             console.log(value);
@@ -70,43 +81,41 @@ export default {
             let query = rootState.issuesView.query;
 
             //1- Mutate the query to the corresponding state
+            let facetKey = facet.key;
             if (facet.nested === false) {
-                if (query[facet.key] === undefined) {
-                    query[facet.key] = {"$in": [value.name]};
-                } else if (query[facet.key]['$in'].includes(value.name)) {
+                if (query[facetKey] === undefined) {
+                    query[facetKey] = {"$in": [value.name]};
+                } else if (query[facetKey]['$in'].includes(value.name)) {
                     // Remove element from array
-                    query[facet.key]['$in'] = query[facet.key]['$in'].filter(i => i !== value.name);
-                    if (query[facet.key]['$in'].length === 0) {
-                        delete query[facet.key];
+                    query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== value.name);
+                    if (query[facetKey]['$in'].length === 0) {
+                        delete query[facetKey];
                     }
                 } else {
-                    query[facet.key]['$in'].push(value.name);
+                    query[facetKey]['$in'].push(value.name);
                 }
             } else {
-                if (query[facet.key] === undefined) {
-                    query[facet.key] = {'$elemMatch': {}};
-                    query[facet.key]['$elemMatch'][facet.nestedKey] = {"$in": [value.name]};
-                } else if (query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].includes(value.name)) {
-                    query[facet.key]['$elemMatch'][facet.nestedKey]['$in'] = query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].filter(i => i !== value.name);
-                    if (query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].length === 0) {
-                        delete query[facet.key];
+                facetKey = facetKey + '.edges';
+                let nestedKey = 'node.' + facet.nestedKey;
+                if (query[facetKey] === undefined) {
+                    query[facetKey] = {'$elemMatch': {}};
+                    query[facetKey]['$elemMatch'][nestedKey] = {"$in": [value.name]};
+                } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(value.name)) {
+                    query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== value.name);
+                    if (query[facetKey]['$elemMatch'][nestedKey]['$in'].length === 0) {
+                        delete query[facetKey];
                     }
                 } else {
-                    query[facet.key]['$elemMatch'][facet.nestedKey]['$in'].push(value.name);
+                    query[facetKey]['$elemMatch'][nestedKey]['$in'].push(value.name);
                 }
             }
             /*
-            {"assignees.edges":{"$elemMatch":{"node.login":{"$in":["lepsalex","hlminh2000"]}}}
+            {
+            "assignees.edges":{"$elemMatch":{"node.login":{"$in":["lepsalex","hlminh2000"]}}}
             ,"milestone.state":{"$in":["OPEN"]}
             ,"org.name":{"$in":["Human Cancer Models Initiative - Catalog","Kids First Data Resource Center"]}}
             */
-            this.setShouldBurndownDataReload(true);
-            this.setShouldVelocityDataReload(true);
-            this.setShouldSummaryDataReload(true);
-            this.setQuery(query);
-
-            this.refreshFacets();
-            this.refreshIssues();
+            this.updateQuery(query);
         },
 
         async refreshIssues(payload, rootState) {
@@ -143,8 +152,14 @@ export default {
         async refreshFacets(payload, rootState) {
             let t0 = performance.now();
 
+            /*
             let issues = cfgIssues.find(rootState.issuesView.query).fetch();
             let updatedFacets = refreshFacets(issues);
+            this.setFacets(updatedFacets);
+            */
+
+            let query = rootState.issuesView.query;
+            let updatedFacets = initFacets(query, cfgIssues);
             this.setFacets(updatedFacets);
 
             var t1 = performance.now();
@@ -175,7 +190,6 @@ export default {
 
             console.log('refreshVelocity');
             console.log(rootState.issuesView.query);
-
 
             let mongoFilter = rootState.issuesView.query;
             let velocityData = await refreshVelocity(mongoFilter, cfgIssues);

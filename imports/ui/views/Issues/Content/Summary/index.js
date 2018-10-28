@@ -135,6 +135,8 @@ const mapState = state => ({
     velocity: state.issuesView.velocity,
 
     defaultPoints: state.issuesView.defaultPoints,
+
+    query: state.issuesView.query,
 });
 
 const mapDispatch = dispatch => ({

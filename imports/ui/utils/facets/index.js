@@ -1,22 +1,11 @@
+import _ from 'lodash';
+
 import {
     formatDate,
     getLastDay,
     populateOpen,
 } from '../shared.js';
-
-/*
-*
-* refreshFacets() Build facets from an array of issues
-*
-* Arguments:
-* - issues: Array of issues
-*/
-export const refreshFacets = (issues) => {
-    let aggregations = buildAggregations(issues);
-    let facets = buildFacets(aggregations);
-
-    return facets;
-};
+import {cfgIssues} from "../../data/Minimongo";
 
 const aggregationsModel = {
     repos: {
@@ -46,6 +35,8 @@ const aggregationsModel = {
     milestones: {
         key: 'milestone.title',
         name: 'Milestones',
+        nullValue: 'NO MILESTONE',
+        nullFilter: {'milestone': { $eq : null }},
         nested: false,
         aggregations: {}
     },
@@ -56,20 +47,38 @@ const aggregationsModel = {
         aggregations: {}
     },
     assignees: {
-        key: 'assignees.edges',
+        key: 'assignees',
         name: 'Assignees',
+        nullValue: 'UNASSIGNED',
+        nullFilter: {'assignees.totalCount': { $eq : 0 }},
         nested: true,
-        nestedKey: 'node.login',
+        nestedKey: 'login',
         aggregations: {}
     },
     labels: {
-        key: 'labels.edges',
+        key: 'labels',
         name: 'Labels',
+        nullValue: 'NO LABEL',
+        nullFilter: {'labels.totalCount': { $eq : 0 }},
         nested: true,
+        nestedKey: 'name',
         aggregations: {}
     },
 };
 
+/*
+*
+* refreshFacets() Build facets from an array of issues
+*
+* Arguments:
+* - issues: Array of issues
+*/
+export const refreshFacets = (issues) => {
+    let aggregations = buildAggregations(issues);
+    let facets = buildFacets(aggregations);
+
+    return facets;
+};
 
 /*
 *
@@ -136,13 +145,13 @@ export const buildAggregations = (issues) => {
             aggregations = populateNonNested(aggregations, 'milestonesStates', issue.milestone.state, issue);
         }
 
-        aggregations = populateNested(aggregations, 'assignees', 'login', issue);
-        aggregations = populateNested(aggregations, 'labels', 'name', issue);
+//        aggregations = populateNested(aggregations, 'assignees', 'login', issue);
+//        aggregations = populateNested(aggregations, 'labels', 'name', issue);
 
         // Assignee
-        if (issue.assignees.totalCount < 0) {
-            console.log('Has an issue');
-        }
+//        if (issue.assignees.totalCount < 0) {
+//            console.log('Has an issue');
+//        }
     });
 
     return aggregations;
@@ -167,4 +176,97 @@ const populateNested = (aggregations, aggIdx, itemIdx, issue) => {
         });
     }
     return aggregations;
+};
+
+/*
+*
+* initFacets() Build facets from a query
+*
+* Arguments:
+* - query: Query used as source for facets building
+* - cfgIssues: Minimongo instance
+*/
+export const initFacets = (query, cfgIssues) => {
+    console.log('initFacets');
+    let aggregations = Object.entries(aggregationsModel).map(([facet, content]) => {
+        return content
+    });
+
+    return aggregations.map((facet) => {
+        return {
+            ...facet,
+            values: buildFacetValues(query, cfgIssues, facet).sort((a, b) => b.issues.length - a.issues.length)
+        };
+    });
+};
+
+/*
+*
+* buildFacetValues() Build all facet values corresponding to a particular query
+*
+* Arguments:
+* - query: Query used as source for facets building
+* - cfgIssues: Minimongo instance
+*/
+const buildFacetValues = (query, cfgIssues, facet) => {
+    console.log('buildFacetValues');
+
+    //1- Query Manipulation
+    let facetQuery = JSON.parse(JSON.stringify(query));
+    let queryElement = facet.key;
+    if (facet.nested === true) {
+        queryElement = facet.key + '.edges';
+    }
+    if (facetQuery[queryElement] !== undefined) {
+        delete facetQuery[queryElement];
+    }
+
+    /*
+    {
+    "assignees.edges":{"$elemMatch":{"node.login":{"$in":["lepsalex","hlminh2000"]}}}
+    ,"milestone.state":{"$in":["OPEN"]}
+    ,"org.name":{"$in":["Human Cancer Models Initiative - Catalog","Kids First Data Resource Center"]}}
+    */
+
+    let statesGroup = {};
+    if (facet.nested === true) {
+        let allValues = [];
+        cfgIssues.find(facetQuery).forEach((issue) => {
+            if (issue[facet.key].totalCount === 0) {
+                let pushObj = {};
+                pushObj[facet.nestedKey] = facet.nullValue;
+                allValues.push(pushObj);
+            } else {
+                issue[facet.key].edges.map((nestedValue) => {
+                    if (nestedValue.node[facet.nestedKey] === null || nestedValue.node[facet.nestedKey] === '' || nestedValue.node[facet.nestedKey] === undefined ) {
+                        //console.log({...nestedValue.node, name: nestedValue.node.login});
+                        allValues.push({...nestedValue.node, name: nestedValue.node.login});
+                    } else {
+                        allValues.push(nestedValue.node);
+                    }
+                })
+            }
+        });
+        //console.log(allValues);
+        statesGroup = _.groupBy(allValues, facet.nestedKey);
+    } else {
+        statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
+    }
+    //console.log(statesGroup);
+    // If the key is 'undefined', replace with default facet name
+    if (statesGroup['undefined'] !== undefined) {
+        statesGroup[facet.nullName] = statesGroup['undefined'];
+        delete statesGroup['undefined'];
+    }
+
+    return Object.entries(statesGroup)
+        .map(([name, content]) => {
+            return {
+                name: name,
+                issues: Object.values(content),
+                count: Object.values(content).length,
+                points: Object.values(content).map(i => i.points).reduce((acc, points) => acc + points, 0)
+            }
+        });
+
 };

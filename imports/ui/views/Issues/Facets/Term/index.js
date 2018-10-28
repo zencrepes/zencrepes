@@ -71,6 +71,17 @@ class TermFacet extends Component {
     render() {
         const { classes, facet, query, addRemoveQuery } = this.props;
 
+        console.log(query);
+        let selectedValues = [];
+        if (query[facet.key] !== undefined) {
+            if (facet.nested === false) {
+                selectedValues = query[facet.key]['$in'];
+            } else {
+                selectedValues = query[facet.key]['$elemMatch'][facet.nestedKey]['$in'];
+            }
+        }
+        console.log(selectedValues);
+
         const { name, values } = facet;
         const { collapsed, selectAll } = this.state;
 
@@ -98,7 +109,7 @@ class TermFacet extends Component {
                                     data={value}
                                     key={value.name}
                                     clickItem={this.clickItem}
-                                    selected={valueChecked.in.map((v) => {return v}).indexOf(value.name) !== -1}
+                                    selected={selectedValues.indexOf(value.name) !== -1}
                                 />
                             ))}
                         </List>
