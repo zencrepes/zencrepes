@@ -73,11 +73,16 @@ class TermFacet extends Component {
 
         console.log(query);
         let selectedValues = [];
-        if (query[facet.key] !== undefined) {
+        let facetKey = facet.key;
+        if (facet.nested === true) {
+            facetKey = facetKey + '.edges';
+        }
+        if (query[facetKey] !== undefined) {
             if (facet.nested === false) {
-                selectedValues = query[facet.key]['$in'];
+                selectedValues = query[facetKey]['$in'];
             } else {
-                selectedValues = query[facet.key]['$elemMatch'][facet.nestedKey]['$in'];
+                let nestedKey = 'node.' + facet.nestedKey;
+                selectedValues = query[facetKey]['$elemMatch'][nestedKey]['$in'];
             }
         }
         console.log(selectedValues);
