@@ -29,3 +29,4 @@ accounts-github@1.4.1
 swydo:graphql
 frozeman:persistent-minimongo2
 underscore@1.0.10
+okgrow:analytics

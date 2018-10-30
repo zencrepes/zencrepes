@@ -22,10 +22,10 @@ class General extends Component {
     }
 
     render() {
-        const { classes, selectedTab } = this.props;
+        const { classes, children } = this.props;
         return (
             <div className={classes.root}>
-                <h1>General Layout</h1>
+                {children}
             </div>
         );
     }
@@ -35,4 +35,4 @@ General.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(IssuesTabs);
+export default withStyles(styles)(General);

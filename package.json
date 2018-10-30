@@ -2,9 +2,11 @@
   "name": "github-agile-view",
   "private": true,
   "scripts": {
-    "start": "meteor run --settings settings-development.json"
+    "start": "meteor run --settings settings-development.json",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
+    "@babel/core": "^7.1.2",
     "@babel/runtime": "^7.0.0-beta.44",
     "@devexpress/dx-react-core": "^1.1.2",
     "@devexpress/dx-react-grid": "^1.1.2",
@@ -18,6 +20,7 @@
     "@nivo/treemap": "^0.42.1",
     "@octokit/rest": "^15.9.4",
     "@rematch/core": "^0.6.0",
+    "@storybook/addon-actions": "^4.0.0",
     "ag-grid": "^17.1.1",
     "ag-grid-react": "^17.1.0",
     "apollo-boost": "^0.1.4",
@@ -27,6 +30,7 @@
     "apollo-link-context": "^1.0.7",
     "apollo-link-http": "^1.5.3",
     "axios": "^0.18.0",
+    "babel-loader": "^8.0.4",
     "bluebird": "^3.5.1",
     "fibonacci-fast": "^0.2.0",
     "graphql": "^0.13.2",
@@ -40,12 +44,12 @@
     "nivo": "^0.31.0",
     "primereact": "^1.5.1",
     "prop-types": "^15.6.1",
-    "react": "^16.4.0",
+    "react": "^16.6.0",
     "react-apollo": "^2.1.3",
     "react-autobind": "^1.0.6",
     "react-checkbox-tree": "^1.2.3",
     "react-color": "^2.14.1",
-    "react-dom": "^16.4.0",
+    "react-dom": "^16.6.0",
     "react-dom-factories": "^1.0.2",
     "react-dropdown-tree-select": "^1.9.2",
     "react-dual-listbox": "^1.3.2",
@@ -60,6 +64,8 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@storybook/react": "^4.0.0",
+    "babel-core": "^6.26.3",
     "css-loader": "^0.28.11"
   }
 }
