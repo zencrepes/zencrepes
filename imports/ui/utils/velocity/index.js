@@ -7,9 +7,6 @@
 * - cfgIssues: Minimongo instance
 */
 export const refreshVelocity = (mongoSelector, cfgIssues) => {
-    console.log('refreshVelocity');
-    console.log(mongoSelector);
-
     if (mongoSelector['state'] !== undefined) {
         delete mongoSelector['state'];
     }
@@ -31,7 +28,8 @@ export const refreshVelocity = (mongoSelector, cfgIssues) => {
     }
 
     let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
-    let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
+//    let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
+    let lastDay = new Date();
 
     let dataObject = initObject(firstDay, lastDay); // Build an object of all days and weeks between two dates
     dataObject = populateObject(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate the object with count of days and weeks
@@ -40,11 +38,12 @@ export const refreshVelocity = (mongoSelector, cfgIssues) => {
     dataObject = populateTicketsPerDay(dataObject);
     dataObject = populateTicketsPerWeek(dataObject);
 
+    /*
     console.log(closedIssuesFilter);
     console.log('+++++++++');
     console.log(dataObject);
     console.log('+++++++++');
-
+    */
     return dataObject;
 };
 

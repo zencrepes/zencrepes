@@ -31,7 +31,6 @@ class IssuesFacets extends Component {
     }
 
     render() {
-        console.log('Facets - render()');
         const { classes, facets, query, addRemoveQuery } = this.props;
         return (
             <div className={classes.root}>

@@ -75,7 +75,6 @@ const aggregationsModel = {
 * - cfgIssues: Minimongo instance
 */
 export const buildFacets = (query, cfgIssues) => {
-    console.log('initFacets');
     let aggregations = Object.entries(aggregationsModel).map(([facet, content]) => {
         return content
     });
@@ -97,8 +96,6 @@ export const buildFacets = (query, cfgIssues) => {
 * - cfgIssues: Minimongo instance
 */
 const buildFacetValues = (query, cfgIssues, facet) => {
-    console.log('buildFacetValues');
-
     //1- Query Manipulation
     let facetQuery = JSON.parse(JSON.stringify(query));
     let queryElement = facet.key;

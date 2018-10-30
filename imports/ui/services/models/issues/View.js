@@ -51,15 +51,12 @@ export default {
     },
     effects: {
         async initIssues(payload, rootState) {
-            console.log('initIssues');
-
             this.refreshFacets();
             this.refreshIssues();
 
             this.setShouldBurndownDataReload(true);
             this.refreshSummary();
             this.refreshVelocity();
-
         },
 
         async updateQuery(query, rootState) {
@@ -137,7 +134,6 @@ export default {
                     points: statesGroup[key].map(i => i.points).reduce((acc, points) => acc + points, 0)
                 });
             });
-            console.log(repos);
             this.setRemainingWorkRepos(repos);
             this.setRemainingWorkPoints(repos.map(r => r.points).reduce((acc, points) => acc + points, 0));
             this.setRemainingWorkCount(repos.map(r => r.issues.length).reduce((acc, count) => acc + count, 0));
@@ -162,9 +158,6 @@ export default {
 
             this.setShouldBurndownDataReload(false);
 
-            console.log('refreshBurndown');
-            console.log(rootState.issuesView.query);
-
             let mongoFilter = rootState.issuesView.query;
             let burndownData = await refreshBurndown(mongoFilter, cfgIssues);
 
@@ -178,9 +171,6 @@ export default {
             let t0 = performance.now();
 
             this.setShouldVelocityDataReload(false);
-
-            console.log('refreshVelocity');
-            console.log(rootState.issuesView.query);
 
             let mongoFilter = rootState.issuesView.query;
             let velocityData = await refreshVelocity(mongoFilter, cfgIssues);

@@ -35,6 +35,7 @@ class Summary extends Component {
     render() {
         const { classes, remainingWorkRepos, defaultPoints, remainingWorkPoints, remainingWorkCount, velocity } = this.props;
 
+        /*
         console.log('++++++++++++');
         console.log(defaultPoints);
         console.log(remainingWorkRepos);
@@ -42,6 +43,7 @@ class Summary extends Component {
         console.log(remainingWorkCount);
         console.log(velocity);
         console.log('++++++++++++');
+        */
 
         return (
             <div className={classes.root}>
