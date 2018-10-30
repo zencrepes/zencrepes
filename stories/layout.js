@@ -5,10 +5,13 @@ import { Button } from '@storybook/react/demo';
 
 import General from '../imports/ui/layouts/General/index.js';
 
-storiesOf('Layout', module)
+storiesOf('Layouts', module)
     .add('General', () => (
         <General><h4>General Content</h4></General>
     ))
     .add('Wizard', () => (
-        <h1>To Be Implemented</h1>
+        <h1>Wizard - To Be Implemented</h1>
+    ))
+    .add('Login', () => (
+        <h1>Login - To Be Implemented</h1>
     ));
