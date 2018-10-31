@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 
-import IconButton from 'material-ui/IconButton';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
+import { withStyles } from '@material-ui/core/styles';
 
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import Avatar from '@material-ui/core/Avatar';
 
 import { graphql } from 'react-apollo';
 import { Query } from 'react-apollo';
 import { withApollo } from 'react-apollo';
 
-import { connect } from "react-redux";
-import { GithubCircle, Logout } from 'mdi-material-ui'
+import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
 
 import GET_USER_DATA from '../../../graphql/getUser.graphql';
 
+import styles from "./styles.jsx";
+
+/*
 const styles = {
     root: {
         flexGrow: 1,
@@ -35,10 +42,9 @@ const styles = {
         justifyContent: 'center',
     },
 };
+*/
 
-
-
-class UserMenu extends React.Component {
+class UserMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -133,6 +139,23 @@ class UserMenu extends React.Component {
                             </ListItemIcon>
                             <ListItemText primary={name} />
                         </ListItem>
+                        <NavLink
+                            to="/settings"
+                            className={classes.item}
+                            activeClassName="active"
+                            key={"settings"}
+                        >
+                            <ListItem button className={classes.itemLink}>
+                                <ListItemIcon className={classes.itemIcon}>
+                                    <Settings />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={"Settings"}
+                                    className={classes.itemText}
+                                    disableTypography={true}
+                                />
+                            </ListItem>
+                        </NavLink>
                         <ListItem onClick={this.logout} button>
                             <ListItemIcon>
                                 <Logout />
@@ -158,5 +181,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip
 });
 
-//export default connect(null, mapDispatch)(withData(withStyles(styles)(UserMenu)));
 export default connect(null, mapDispatch)(withApollo(withStyles(styles)(UserMenu)));

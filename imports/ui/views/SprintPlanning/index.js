@@ -4,12 +4,15 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
+import General from '../../layouts/General/index.js';
+
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
+/*
 import Sidebar from '../../components/Sidebar/index.js';
 import Footer from '../../components/Footer/Footer.js';
 import Header from '../../components/Header/index.js';
-
+*/
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
 import QuerySelect from '../../components/Query/Select/index.js';
@@ -32,7 +35,6 @@ import CreateMilestones from '../../data/CreateMilestones.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
 
-
 class SprintPlanning extends Component {
     constructor(props) {
         super(props);
@@ -48,50 +50,35 @@ class SprintPlanning extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.wrapper}>
-                <Sidebar
-                    logoText={"Zen Crepes"}
-                    handleDrawerToggle={this.handleDrawerToggle}
-                    open={this.state.mobileOpen}
-                    color="blue"
-                />
-                <div className={classes.mainPanel} ref="mainPanel">
-                    <Header
-                        handleDrawerToggle={this.handleDrawerToggle}
-                        pageName={"Sprint Planning"}
-                    />
-                    <div className={classes.content}>
-                        <div className={classes.container}>
-                            <IssuesFetch />
-                            <CreateSprint />
-                            <CreateMilestones />
-                            <ViewToolbar />
-                            <StatsBar />
-                            <GridContainer>
-                                <GridItem xs={12} sm={6} md={4}>
-                                    <Actions />
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={4}>
-                                    <VelocityWeeks/>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={4}>
-                                    <DaysToCompletion/>
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={6} md={4}>
-                                    <Assignees />
-                                    <Repositories />
-                                    <Labels />
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={8}>
-                                    <Issues />
-                                </GridItem>
-                            </GridContainer>
-                        </div>
-                    </div>
-                    <Footer />
-                </div>
+            <div className={classes.root}>
+                <General>
+                    <IssuesFetch />
+                    <CreateSprint />
+                    <CreateMilestones />
+                    <ViewToolbar />
+                    <StatsBar />
+                    <GridContainer>
+                        <GridItem xs={12} sm={6} md={4}>
+                            <Actions />
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={4}>
+                            <VelocityWeeks/>
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={4}>
+                            <DaysToCompletion/>
+                        </GridItem>
+                    </GridContainer>
+                    <GridContainer>
+                        <GridItem xs={12} sm={6} md={4}>
+                            <Assignees />
+                            <Repositories />
+                            <Labels />
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={8}>
+                            <Issues />
+                        </GridItem>
+                    </GridContainer>
+                </General>
             </div>
         );
     }

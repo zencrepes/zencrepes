@@ -13,6 +13,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import styles from "./styles.jsx";
 
+import HeaderToolbar from '../../components/Header/Toolbar/index.js';
+import FooterToolbar from '../../components/Footer/Toolbar/index.js';
+
 class General extends Component {
     constructor (props) {
         super(props);
@@ -29,17 +32,13 @@ class General extends Component {
                     alignItems="flex-start"
                 >
                     <Grid item xs={12} sm className={classes.fullWidth}>
-                        <AppBar position="static">
-                            <Toolbar>
-                                <Typography variant="h6" color="inherit" className={classes.grow}>
-                                    zCrepes
-                                </Typography>
-                                <Button color="inherit">Login</Button>
-                            </Toolbar>
-                        </AppBar>
+                        <HeaderToolbar />
                     </Grid>
                     <Grid item xs={12} sm className={classes.fullWidth}>
                         {children}
+                    </Grid>
+                    <Grid item xs={12} sm className={classes.fullWidth}>
+                        <FooterToolbar />
                     </Grid>
                 </Grid>
             </div>

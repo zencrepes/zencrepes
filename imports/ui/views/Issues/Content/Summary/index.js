@@ -52,8 +52,9 @@ class Summary extends Component {
                     direction="row"
                     justify="flex-start"
                     alignItems="flex-start"
+                    spacing={8}
                 >
-                    <Grid item xs={12} sm={6} md={6}>
+                    <Grid item xs={12} sm={6} md={3}>
                         {remainingWorkRepos.length > 0 &&
                             <RemainingWork
                                 defaultPoints={defaultPoints}
@@ -63,7 +64,23 @@ class Summary extends Component {
                             />
                         }
                     </Grid>
-                    <Grid item xs={12} sm={6} md={6}>
+                    <Grid item xs={12} sm={6} md={3}>
+                        {velocity !== {} &&
+                            <VelocityDays
+                                velocity={velocity}
+                                defaultPoints={defaultPoints}
+                            />
+                        }
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                        {velocity !== {} &&
+                            <VelocityWeeks
+                                velocity={velocity}
+                                defaultPoints={defaultPoints}
+                            />
+                        }
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
                         {velocity !== {} &&
                             <DaysToCompletion
                                 velocity={velocity}
@@ -72,6 +89,7 @@ class Summary extends Component {
                         }
                     </Grid>
                 </Grid>
+                /*
                 <Grid
                     container
                     direction="row"
@@ -95,6 +113,7 @@ class Summary extends Component {
                         }
                     </Grid>
                 </Grid>
+                */
             </div>
         );
     }
