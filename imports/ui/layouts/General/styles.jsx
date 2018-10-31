@@ -4,7 +4,7 @@ const style = theme => ({
 
     fullWidth :{
         width: '100%',
-    }
+    },
 });
 
 export default style;
