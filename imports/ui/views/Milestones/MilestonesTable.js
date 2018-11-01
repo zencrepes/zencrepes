@@ -11,11 +11,11 @@ import SquareIcon from 'mdi-react/SquareIcon';
 import PencilIcon from 'mdi-react/PencilIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 
-import Card from "../../../components/Card/Card";
-import CardHeader from "../../../components/Card/CardHeader";
-import CardBody from "../../../components/Card/CardBody";
+import Card from "../../components/Card/Card";
+import CardHeader from "../../components/Card/CardHeader";
+import CardBody from "../../components/Card/CardBody";
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 import TableActionButtons from './TableActionButtons.js';
 
@@ -37,7 +37,7 @@ import {
     TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import {cfgMilestones} from "../../../data/Minimongo";
+import {cfgMilestones} from "../../data/Minimongo";
 
 const styles = theme => ({
     root: {

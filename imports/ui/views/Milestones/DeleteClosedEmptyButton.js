@@ -8,8 +8,8 @@ import {connect} from "react-redux";
 import Button from '@material-ui/core/Button';
 import Snackbar from "@material-ui/core/Snackbar";
 
-import {buildMongoSelector} from "../../../utils/mongo";
-import {cfgIssues} from "../../../data/Minimongo";
+import {buildMongoSelector} from "../../utils/mongo";
+import {cfgIssues} from "../../data/Minimongo";
 
 const styles = theme => ({
     root: {

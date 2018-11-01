@@ -89,31 +89,6 @@ class Summary extends Component {
                         }
                     </Grid>
                 </Grid>
-                /*
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                >
-                    <Grid item xs={12} sm={6} md={6}>
-                        {velocity !== {} &&
-                            <VelocityDays
-                                velocity={velocity}
-                                defaultPoints={defaultPoints}
-                            />
-                        }
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={6}>
-                        {velocity !== {} &&
-                            <VelocityWeeks
-                                velocity={velocity}
-                                defaultPoints={defaultPoints}
-                            />
-                        }
-                    </Grid>
-                </Grid>
-                */
             </div>
         );
     }

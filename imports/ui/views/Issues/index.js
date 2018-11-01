@@ -20,14 +20,7 @@ import IssuesContent from './Content/index.js';
 class Issues extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            mobileOpen: false,
-        };
     }
-
-    handleDrawerToggle = () => {
-        this.setState({ mobileOpen: !this.state.mobileOpen });
-    };
 
     componentDidMount() {
         const { initIssues } = this.props;

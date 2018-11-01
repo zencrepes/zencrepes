@@ -17,10 +17,9 @@ import Burndown from './views/Burndown/index.js';
 import SprintPlanning from './views/SprintPlanning/index.js';
 import Settings from './views/Settings/index.js';;
 import LabelsList from './views/Labels/List/index.js';
-import LabelsView from './views/Labels/View/index.js';
 import LabelEdit from './views/Labels/Edit/index.js';
 
-import MilestonesList from './views/Milestones/List/index.js';
+import Milestones from './views/Milestones/index.js';
 import Issues from './views/Issues/index.js';
 
 import Index from './Index.js';
@@ -76,9 +75,8 @@ class App extends Component {
                                         <Authenticated exact path="/burndown" component={Burndown} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/sprint" component={SprintPlanning} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels" component={LabelsList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels/view/:name" component={LabelsView} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/milestones" component={MilestonesList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     </Switch>
                                 </div>
