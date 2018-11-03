@@ -11,12 +11,11 @@ import SquareIcon from 'mdi-react/SquareIcon';
 import PencilIcon from 'mdi-react/PencilIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 
-import Card from "../../../components/Card/Card";
-import CardHeader from "../../../components/Card/CardHeader";
-import CardBody from "../../../components/Card/CardBody";
+import Card from "../../components/Card/Card";
+import CardHeader from "../../components/Card/CardHeader";
+import CardBody from "../../components/Card/CardBody";
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
-
+import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 import {
     // State or Local Processing Plugins
@@ -192,49 +191,41 @@ class LabelsTable extends Component {
         const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
-            <Card>
-                <CardHeader color="success">
-                    <h4 className={classes.cardTitleWhite}>Labels</h4>
-                    <p className={classes.cardCategoryWhite}>
-                        Grouped by labels over all repositories
-                    </p>
-                </CardHeader>
-                <CardBody>
-                    <Grid
-                        rows={this.formatData()}
-                        columns={columns}
-                    >
-                        <PagingState
-                            currentPage={currentPage}
-                            onCurrentPageChange={this.changeCurrentPage}
-                            pageSize={pageSize}
-                            onPageSizeChange={this.changePageSize}
-                        />
-                        <ColorsTypeProvider
-                            for={colorsColumns}
-                        />
-                        <DescriptionsTypeProvider
-                            for={descriptionsColumns}
-                        />
-                        <ReposTypeProvider
-                            for={reposColumns}
-                        />
-                        <IssuesTypeProvider
-                            for={issuesColumns}
-                        />
-                        <EditLabelTypeProvider
-                            for={editLabelColumns}
-                        />
-                        <IntegratedPaging />
-                        <Table columnExtensions={tableColumnExtensions} />
-                        <TableHeaderRow />
-                        <Toolbar />
-                        <PagingPanel
-                            pageSizes={pageSizes}
-                        />
-                    </Grid>
-                </CardBody>
-            </Card>
+            <div className={classes.root}>
+                <Grid
+                    rows={this.formatData()}
+                    columns={columns}
+                >
+                    <PagingState
+                        currentPage={currentPage}
+                        onCurrentPageChange={this.changeCurrentPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={this.changePageSize}
+                    />
+                    <ColorsTypeProvider
+                        for={colorsColumns}
+                    />
+                    <DescriptionsTypeProvider
+                        for={descriptionsColumns}
+                    />
+                    <ReposTypeProvider
+                        for={reposColumns}
+                    />
+                    <IssuesTypeProvider
+                        for={issuesColumns}
+                    />
+                    <EditLabelTypeProvider
+                        for={editLabelColumns}
+                    />
+                    <IntegratedPaging />
+                    <Table columnExtensions={tableColumnExtensions} />
+                    <TableHeaderRow />
+                    <Toolbar />
+                    <PagingPanel
+                        pageSizes={pageSizes}
+                    />
+                </Grid>
+            </div>
         );
     }
 }
@@ -243,13 +234,4 @@ LabelsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-
-});
-
-const mapState = state => ({
-    labels: state.labelsView.labels,
-});
-
-
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(LabelsTable));
+export default withStyles(dashboardStyle)(LabelsTable);

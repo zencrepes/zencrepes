@@ -8,15 +8,16 @@ import {connect} from "react-redux";
 import Button from '@material-ui/core/Button';
 import Snackbar from "@material-ui/core/Snackbar";
 
-import {buildMongoSelector} from "../../../utils/mongo";
-import {cfgIssues} from "../../../data/Minimongo";
+import {buildMongoSelector} from "../../utils/mongo";
+import {cfgIssues} from "../../data/Minimongo";
 
 const styles = theme => ({
     root: {
         textAlign: 'right'
     },
 });
-class ButtonRefresh extends Component {
+
+class Refresh extends Component {
     constructor (props) {
         super(props);
     }
@@ -42,7 +43,7 @@ class ButtonRefresh extends Component {
     };
 }
 
-ButtonRefresh.propTypes = {
+Refresh.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -54,4 +55,4 @@ const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsFetch.setLoadFlag,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(ButtonRefresh));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));

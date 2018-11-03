@@ -181,49 +181,41 @@ class MilestonesTable extends Component {
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
-            <Card>
-                <CardHeader color="success">
-                    <h4 className={classes.cardTitleWhite}>Labels</h4>
-                    <p className={classes.cardCategoryWhite}>
-                        Milestones
-                    </p>
-                </CardHeader>
-                <CardBody>
-                    <Grid
-                        rows={this.formatData()}
-                        columns={columns}
-                    >
-                        <PagingState
-                            currentPage={currentPage}
-                            onCurrentPageChange={this.changeCurrentPage}
-                            pageSize={pageSize}
-                            onPageSizeChange={this.changePageSize}
-                        />
-                        <StatesTypeProvider
-                            for={statesColumns}
-                        />
-                        <ReposTypeProvider
-                            for={reposColumns}
-                        />
-                        <IssuesTypeProvider
-                            for={issuesColumns}
-                        />
-                        <ActionsTypeProvider
-                            for={actionsColumns}
-                        />
-                        <EditLabelTypeProvider
-                            for={editLabelColumns}
-                        />
-                        <IntegratedPaging />
-                        <Table columnExtensions={tableColumnExtensions} />
-                        <TableHeaderRow />
-                        <Toolbar />
-                        <PagingPanel
-                            pageSizes={pageSizes}
-                        />
-                    </Grid>
-                </CardBody>
-            </Card>
+            <div className={classes.root}>
+                <Grid
+                    rows={this.formatData()}
+                    columns={columns}
+                >
+                    <PagingState
+                        currentPage={currentPage}
+                        onCurrentPageChange={this.changeCurrentPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={this.changePageSize}
+                    />
+                    <StatesTypeProvider
+                        for={statesColumns}
+                    />
+                    <ReposTypeProvider
+                        for={reposColumns}
+                    />
+                    <IssuesTypeProvider
+                        for={issuesColumns}
+                    />
+                    <ActionsTypeProvider
+                        for={actionsColumns}
+                    />
+                    <EditLabelTypeProvider
+                        for={editLabelColumns}
+                    />
+                    <IntegratedPaging />
+                    <Table columnExtensions={tableColumnExtensions} />
+                    <TableHeaderRow />
+                    <Toolbar />
+                    <PagingPanel
+                        pageSizes={pageSizes}
+                    />
+                </Grid>
+            </div>
         );
     }
 }
