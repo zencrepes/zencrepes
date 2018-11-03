@@ -6,10 +6,14 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
+import Grid from '@material-ui/core/Grid';
+
 import Clear from './Clear.js';
+import Query from './Query.js';
 
 const styles = theme => ({
     root: {
+        margin: '10px',
 //        display: 'flex',
 //        flexDirection: 'column',
 //        height: '50px',
@@ -41,13 +45,26 @@ class IssuesQuery extends Component {
     };
 
     render() {
-        const { classes, query } = this.props;
+        const { classes, query, facets } = this.props;
         return (
             <div className={classes.root}>
-                <div className={classes.query}>
-                    <span>Query: {JSON.stringify(query)}</span>
-                </div>
-                <Clear clearQuery={this.clearQuery}/>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm container>
+                        <Query
+                            query={query}
+                            facets={facets}
+                        />
+                    </Grid>
+                    <Grid item >
+                        <Clear clearQuery={this.clearQuery}/>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
@@ -59,6 +76,7 @@ IssuesQuery.propTypes = {
 
 const mapState = state => ({
     query: state.issuesView.query,
+    facets: state.issuesView.facets,
 });
 
 const mapDispatch = dispatch => ({

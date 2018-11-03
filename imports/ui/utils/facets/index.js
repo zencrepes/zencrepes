@@ -5,7 +5,8 @@ import {
     getLastDay,
     populateOpen,
 } from '../shared.js';
-import {cfgIssues} from "../../data/Minimongo";
+
+//import {cfgIssues} from "../../data/Minimongo";
 
 const aggregationsModel = {
     repos: {
