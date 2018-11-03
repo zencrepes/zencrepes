@@ -8,7 +8,7 @@ export default {
         loadSuccess: false,     // Was data successfully loaded
         loadedCount: 0,         // Number of items loaded or updated
 
-        loadRepos: [],
+        loadRepos: [],          // Array of repos id
 
         iterateTotal: 0,        // To show progress, total number of iterations
         iterateCurrent: 0,      // To show progress, current iterations status

@@ -10,6 +10,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import PointsSwitch from './PointsSwitch.js';
+import RefreshAll from './RefreshAll.js';
+import RefreshSelected from './RefreshSelected.js';
 
 const styles = theme => ({
     root: {
@@ -21,6 +23,9 @@ const styles = theme => ({
         display: 'flex',
         */
     },
+    toolbarButtons: {
+        flex: 1,
+    },
 });
 
 
@@ -30,15 +35,33 @@ class Actions extends Component {
     }
 
     render() {
-        const { classes, selectedTab } = this.props;
+        const {
+            classes,
+            setDefaultPoints,
+            defaultPoints,
+            setLoadFlag,
+            setLoadRepos,
+            facets
+        } = this.props;
         return (
             <div className={classes.root}>
                 <AppBar position="static" color="primary" className={classes.appBar}>
                     <Toolbar>
                         <div className={classes.toolbarButtons}>
-                            <span>Buttons</span>
+                            <RefreshAll
+                                setLoadFlag={setLoadFlag}
+                                setLoadRepos={setLoadRepos}
+                            />
+                            <RefreshSelected
+                                setLoadFlag={setLoadFlag}
+                                setLoadRepos={setLoadRepos}
+                                facets={facets}
+                            />
                         </div>
-                        <PointsSwitch />
+                        <PointsSwitch
+                            defaultPoints={defaultPoints}
+                            setDefaultPoints={setDefaultPoints}
+                        />
                     </Toolbar>
                 </AppBar>
             </div>
@@ -51,11 +74,16 @@ Actions.propTypes = {
 };
 
 const mapState = state => ({
+    defaultPoints: state.issuesView.defaultPoints,
 
+    facets: state.issuesView.facets,
 });
 
 const mapDispatch = dispatch => ({
+    setDefaultPoints: dispatch.issuesView.setDefaultPoints,
 
+    setLoadFlag: dispatch.issuesFetch.setLoadFlag,
+    setLoadRepos: dispatch.issuesFetch.setLoadRepos,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Actions));

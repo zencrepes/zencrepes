@@ -10,8 +10,10 @@ import Clear from './Clear.js';
 
 const styles = theme => ({
     root: {
-        height: '50px',
-        position: 'relative',
+//        display: 'flex',
+//        flexDirection: 'column',
+//        height: '50px',
+//        position: 'relative',
 
         /*
         flexGrow: 1,
@@ -43,7 +45,7 @@ class IssuesQuery extends Component {
         return (
             <div className={classes.root}>
                 <div className={classes.query}>
-                    <h4>Query: {JSON.stringify(query)}</h4>
+                    <span>Query: {JSON.stringify(query)}</span>
                 </div>
                 <Clear clearQuery={this.clearQuery}/>
             </div>

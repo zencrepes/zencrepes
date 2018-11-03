@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
     root: {
-        textAlign: 'right'
     },
 });
 class Clear extends Component {
@@ -20,11 +19,9 @@ class Clear extends Component {
     render() {
         const { classes, clearQuery } = this.props;
         return (
-            <div className={classes.root}>
-                <Button variant="raised" color="default" onClick={clearQuery}>
-                    Clear
-                </Button>
-            </div>
+            <Button variant="raised" color="default" onClick={clearQuery}>
+                Clear
+            </Button>
         )
     };
 }

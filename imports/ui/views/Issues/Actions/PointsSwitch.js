@@ -43,12 +43,4 @@ PointsSwitch.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-    setDefaultPoints: dispatch.issuesView.setDefaultPoints,
-});
-
-const mapState = state => ({
-    defaultPoints: state.issuesView.defaultPoints,
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(PointsSwitch));
+export default withStyles(styles)(PointsSwitch);

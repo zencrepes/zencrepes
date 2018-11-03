@@ -12,8 +12,9 @@ import styles from './styles.jsx';
 
 import General from '../../layouts/General/index.js';
 
-import Actions from './Actions/index.js';
+import IssuesFetch from '../../data/Issues/Fetch/index.js';
 
+import Actions from './Actions/index.js';
 import IssuesFacets from './Facets/index.js';
 import IssuesQuery from './Query/index.js';
 import IssuesTabs from './Tabs/index.js';
@@ -34,6 +35,7 @@ class Issues extends Component {
         return (
             <div className={classes.root}>
                 <General>
+                    <IssuesFetch />
                     <Actions />
                     <Grid
                         container
