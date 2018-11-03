@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 
 import Clear from './Clear.js';
-import Query from './Query.js';
+import Filters from './Filters/index.js';
 
 const styles = theme => ({
     root: {
@@ -56,7 +56,7 @@ class IssuesQuery extends Component {
                     spacing={8}
                 >
                     <Grid item xs={12} sm container>
-                        <Query
+                        <Filters
                             query={query}
                             facets={facets}
                         />

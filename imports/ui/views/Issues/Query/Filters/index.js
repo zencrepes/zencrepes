@@ -8,8 +8,6 @@ import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
 
-import Clear from './Clear.js';
-
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -33,25 +31,20 @@ const styles = theme => ({
 });
 
 
-class Query extends Component {
+class Filters extends Component {
     constructor (props) {
         super(props);
     }
 
     getActiveFacets = () => {
         const { query, facets } = this.props;
-        let activeFacets = facets.filter((facet) => {
-            let nestedFacetKey = facet.key + '.edges';
-            if (query[facet.key] !== undefined || query[nestedFacetKey] !== undefined) {
-                return true;
-            }
-        }).map((facet) => {
+        let activeFacets = facets.filter(facet => query[facet.key] !== undefined || query[facet.key + '.edges'] !== undefined).map((facet) => {
             console.log(facet);
             let values = [];
             if (facet.nested === false) {
                 values = query[facet.key]['$in'];
             } else {
-//                values = query[facet.key]['elemMatch'];
+                values = query[facet.key + '.edges']['$elemMatch']['node.' + facet.nestedKey]['$in'];
             }
             return {...facet, values: values}
         });
@@ -60,30 +53,39 @@ class Query extends Component {
 
     render() {
         const { classes, query, facets } = this.props;
-        console.log(this.getActiveFacets());
+
+        const activeFacets = this.getActiveFacets();
+        console.log(activeFacets);
         console.log(query);
         console.log(facets);
 
-/*        console.log(JSON.stringify(query));
+
+        console.log(JSON.stringify(query));
+        /*
         console.log(facets);
         console.log(JSON.stringify(facets.map((facet) => {
-            return {
-                key: facet.key,
-                name: facet.name,
-                nested: facet.nested,
-                values: facet.values,
-            }
-        })));*/
+            const { values, ...noValues } = facet;
+            return noValues
+        })));
+        */
         return (
             <div className={classes.root}>
+                {activeFacets.map(facet => (
+                    <div>
+                    <span>Facet Name: {facet.name} </span> <br />
+                    <span>Facet Values: </span> {facet.values.map(value => (
+                        <span>{value}, </span>
+                    ))}
+                    </div>
+                ))}
                 <span>Query: {JSON.stringify(query)}</span>
             </div>
         );
     }
 }
 
-Query.propTypes = {
+Filters.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Query);
+export default withStyles(styles)(Filters);
