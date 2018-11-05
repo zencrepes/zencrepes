@@ -88,7 +88,6 @@ class Filters extends Component {
                         </Grid>
                     ))}
                 </Grid>
-                <span>Query: {JSON.stringify(query)}</span>
             </div>
         );
     }

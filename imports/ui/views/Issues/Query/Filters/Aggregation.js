@@ -63,10 +63,6 @@ class Aggregation extends Component {
         if (collapsed) {
             facetsValues = currentFacet.values.slice(0, 2);
         }
-
-        console.log(facets.slice(-1)[0].name);
-        console.log(currentFacet.name);
-
         return (
             <div className={classes.root}>
                 <span>{currentFacet.name} </span>

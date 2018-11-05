@@ -17,7 +17,7 @@ import Filters from './Filters/index.js';
 const styles = theme => ({
     root: {
         margin: '10px',
-        boder: '1px',
+        border: `1px solid ${theme.palette.divider}`,
 //        display: 'flex',
 //        flexDirection: 'column',
 //        height: '50px',
@@ -50,6 +50,7 @@ class IssuesQuery extends Component {
 
     render() {
         const { classes, query, facets } = this.props;
+        console.log(query);
         return (
             <div className={classes.root}>
                 <Grid
@@ -70,8 +71,20 @@ class IssuesQuery extends Component {
                         />
                     </Grid>
                     <Grid item >
-                        <Clear clearQuery={this.clearQuery}/>
-                        <MongoFilter clearQuery={this.clearQuery}/>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={0}
+                        >
+                            <Grid item >
+                                <Clear clearQuery={this.clearQuery}/>
+                            </Grid>
+                            <Grid item >
+                                <MongoFilter query={query}/>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </div>
