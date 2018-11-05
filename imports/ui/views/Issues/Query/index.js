@@ -9,11 +9,15 @@ import { connect } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 
 import Clear from './Clear.js';
+import Open from './Open.js';
+import Save from './Save.js';
+import MongoFilter from './MongoFilter.js';
 import Filters from './Filters/index.js';
 
 const styles = theme => ({
     root: {
         margin: '10px',
+        boder: '1px',
 //        display: 'flex',
 //        flexDirection: 'column',
 //        height: '50px',
@@ -55,6 +59,10 @@ class IssuesQuery extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
+                    <Grid item >
+                        <Open clearQuery={this.clearQuery}/>
+                        <Save clearQuery={this.clearQuery}/>
+                    </Grid>
                     <Grid item xs={12} sm container>
                         <Filters
                             query={query}
@@ -63,6 +71,7 @@ class IssuesQuery extends Component {
                     </Grid>
                     <Grid item >
                         <Clear clearQuery={this.clearQuery}/>
+                        <MongoFilter clearQuery={this.clearQuery}/>
                     </Grid>
                 </Grid>
             </div>

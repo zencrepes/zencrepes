@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
 
+import Aggregation from './Aggregation.js';
+
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -58,8 +60,6 @@ class Filters extends Component {
         console.log(activeFacets);
         console.log(query);
         console.log(facets);
-
-
         console.log(JSON.stringify(query));
         /*
         console.log(facets);
@@ -70,14 +70,24 @@ class Filters extends Component {
         */
         return (
             <div className={classes.root}>
-                {activeFacets.map(facet => (
-                    <div>
-                    <span>Facet Name: {facet.name} </span> <br />
-                    <span>Facet Values: </span> {facet.values.map(value => (
-                        <span>{value}, </span>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={0}
+                >
+                    {activeFacets.map(facet => (
+                        <Grid item >
+                            <Aggregation
+                                key={facet.name}
+                                query={query}
+                                facets={activeFacets}
+                                currentFacet={facet}
+                            />
+                        </Grid>
                     ))}
-                    </div>
-                ))}
+                </Grid>
                 <span>Query: {JSON.stringify(query)}</span>
             </div>
         );

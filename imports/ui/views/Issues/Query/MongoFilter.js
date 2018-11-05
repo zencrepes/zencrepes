@@ -6,13 +6,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import HelpIcon from '@material-ui/icons/Help';
+
 
 const styles = theme => ({
     root: {
     },
 });
-class Clear extends Component {
+class MongoFilter extends Component {
     constructor (props) {
         super(props);
     }
@@ -20,15 +21,15 @@ class Clear extends Component {
     render() {
         const { classes, clearQuery } = this.props;
         return (
-            <IconButton className={classes.button} aria-label="Delete" onClick={clearQuery}>
-                <DeleteIcon />
+            <IconButton className={classes.button} aria-label="Help" onClick={clearQuery}>
+                <HelpIcon />
             </IconButton>
         )
     };
 }
 
-Clear.propTypes = {
+MongoFilter.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Clear);
+export default withStyles(styles)(MongoFilter);
