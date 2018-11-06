@@ -54,13 +54,16 @@ class Filters extends Component {
     }
 
     render() {
-        const { classes, query, facets } = this.props;
+        const { classes, query, queries, facets } = this.props;
+        const foundQuery = queries.filter((currentQuery) => currentQuery.filters === JSON.stringify(query));
 
         const activeFacets = this.getActiveFacets();
+/*
         console.log(activeFacets);
         console.log(query);
         console.log(facets);
         console.log(JSON.stringify(query));
+        */
         /*
         console.log(facets);
         console.log(JSON.stringify(facets.map((facet) => {
@@ -68,6 +71,15 @@ class Filters extends Component {
             return noValues
         })));
         */
+
+        /*
+                            {foundQuery.length > 0 &&
+                                <Grid item key="saved" className={classes.savedQuery}>
+                                    <span>Saved query: {foundQuery[0].name} - </span>
+                                </Grid>
+                            }
+                            */
+
         return (
             <div className={classes.root}>
                 <Grid
@@ -77,10 +89,10 @@ class Filters extends Component {
                     alignItems="flex-start"
                     spacing={0}
                 >
+
                     {activeFacets.map(facet => (
-                        <Grid item >
+                        <Grid item key={facet.name}>
                             <Aggregation
-                                key={facet.name}
                                 query={query}
                                 facets={activeFacets}
                                 currentFacet={facet}

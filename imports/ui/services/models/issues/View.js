@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { cfgIssues } from '../../../data/Minimongo.js';
+import { cfgIssues, cfgQueries } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/index.js';
@@ -10,6 +10,7 @@ export default {
     state: {
         issues: [],
         facets: [],
+        queries: [],
 
         selectedTab: 0, // Selected tab to be displayed
 
@@ -32,6 +33,7 @@ export default {
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
+        setQueries(state, payload) {return { ...state, queries: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
 
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
@@ -53,6 +55,7 @@ export default {
         async initIssues(payload, rootState) {
             this.refreshFacets();
             this.refreshIssues();
+            this.refreshQueries();
 
             this.setShouldBurndownDataReload(true);
             this.refreshSummary();
@@ -110,6 +113,22 @@ export default {
             ,"org.name":{"$in":["Human Cancer Models Initiative - Catalog","Kids First Data Resource Center"]}}
             */
             this.updateQuery(query);
+        },
+
+        async refreshQueries(payload, rootState) {
+            console.log(cfgQueries.find({}).fetch());
+            this.setQueries(cfgQueries.find({}).fetch());
+        },
+
+        async saveQuery(queryName, rootState) {
+            if (cfgQueries.find({filters: JSON.stringify(rootState.issuesView.query)}).count() === 0) {
+                await cfgQueries.insert({
+                    name: queryName,
+                    filters: JSON.stringify(rootState.issuesView.query),
+                });
+
+            }
+            this.refreshQueries();
         },
 
         async refreshIssues(payload, rootState) {

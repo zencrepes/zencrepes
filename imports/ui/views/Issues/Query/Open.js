@@ -19,9 +19,9 @@ class Open extends Component {
     }
 
     render() {
-        const { classes, clearQuery } = this.props;
+        const { classes, onClick } = this.props;
         return (
-            <IconButton className={classes.button} aria-label="Open" onClick={clearQuery}>
+            <IconButton className={classes.button} aria-label="Open" onClick={onClick}>
                 <FolderOpenIcon />
             </IconButton>
         )

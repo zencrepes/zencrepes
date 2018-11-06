@@ -14,6 +14,9 @@ import Save from './Save.js';
 import MongoFilter from './MongoFilter.js';
 import Filters from './Filters/index.js';
 
+import QuerySave from './Save/index.js';
+import QueryManage from './Manage/index.js';
+
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -41,6 +44,10 @@ const styles = theme => ({
 class IssuesQuery extends Component {
     constructor (props) {
         super(props);
+        this.state={
+            openSaveQueryDialog: false,
+            openManageQueryDialog: false,
+        }
     }
 
     clearQuery = () => {
@@ -48,9 +55,46 @@ class IssuesQuery extends Component {
         updateQuery({});
     };
 
+    openQuery = () => {
+        console.log('openQuery');
+    };
+
+    setOpenSaveQueryDialog = (state) => {
+        console.log('setOpenSaveQueryDialog');
+        this.setState({ openSaveQueryDialog: state });
+    }
+
+    openSaveQueryDialog = () => {
+        console.log('openSaveQueryDialog');
+        this.setState({ openSaveQueryDialog: true });
+    };
+
+    closeSaveQueryDialog = () => {
+        console.log('closeSaveQueryDialog');
+        this.setState({ openSaveQueryDialog: false });
+    };
+
+    setOpenManageQueryDialog = (state) => {
+        console.log('setOpenManageQueryDialog');
+        this.setState({ openManageQueryDialog: state });
+    }
+
+    openManageQueryDialog = () => {
+        console.log('openManageQueryDialog');
+        this.setState({ openManageQueryDialog: true });
+    };
+
+    closeManageQueryDialog = () => {
+        console.log('closeManageQueryDialog');
+        this.setState({ openManageQueryDialog: false });
+    };
+
+
+
     render() {
-        const { classes, query, facets } = this.props;
+        const { classes, query, facets, saveQuery, queries } = this.props;
         console.log(query);
+
         return (
             <div className={classes.root}>
                 <Grid
@@ -61,12 +105,33 @@ class IssuesQuery extends Component {
                     spacing={8}
                 >
                     <Grid item >
-                        <Open clearQuery={this.clearQuery}/>
-                        <Save clearQuery={this.clearQuery}/>
+                        <Open
+                            onClick={this.openManageQueryDialog}
+                        />
+                        <QueryManage
+                            queries={queries}
+                            loadQuery={saveQuery}
+                            deleteQuery={saveQuery}
+                            openManageQueryDialog={this.state.openManageQueryDialog}
+                            setOpenManageQueryDialog={this.setOpenManageQueryDialog}
+                        />
+                        <Save
+                            queries={queries}
+                            query={query}
+                            onClick={this.openSaveQueryDialog}
+                        />
+                        <QuerySave
+                            query={query}
+                            queries={queries}
+                            saveQuery={saveQuery}
+                            openSaveQueryDialog={this.state.openSaveQueryDialog}
+                            setOpenSaveQueryDialog={this.setOpenSaveQueryDialog}
+                        />
                     </Grid>
                     <Grid item xs={12} sm container>
                         <Filters
                             query={query}
+                            queries={queries}
                             facets={facets}
                         />
                     </Grid>
@@ -79,7 +144,7 @@ class IssuesQuery extends Component {
                             spacing={0}
                         >
                             <Grid item >
-                                <Clear clearQuery={this.clearQuery}/>
+                                <Clear onClick={this.clearQuery}/>
                             </Grid>
                             <Grid item >
                                 <MongoFilter query={query}/>
@@ -98,11 +163,13 @@ IssuesQuery.propTypes = {
 
 const mapState = state => ({
     query: state.issuesView.query,
+    queries: state.issuesView.queries,
     facets: state.issuesView.facets,
 });
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
+    saveQuery: dispatch.issuesView.saveQuery,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
