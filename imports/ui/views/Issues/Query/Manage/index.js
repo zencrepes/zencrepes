@@ -10,7 +10,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
-import QueriesTable from './QueriesTable.js';
+import QueriesTable from './Table/index.js';
 
 const styles = theme => ({
     root: {
@@ -32,7 +32,7 @@ class QueryManage extends Component {
         const { classes, queries, openManageQueryDialog, loadQuery, deleteQuery } = this.props;
         if (openManageQueryDialog) {
             return (
-                <Dialog aria-labelledby="simple-dialog-title" open={openManageQueryDialog}>
+                <Dialog aria-labelledby="simple-dialog-title" open={openManageQueryDialog} maxWidth="lg">
                     <DialogTitle id="simple-dialog-title">Query Manager</DialogTitle>
                     <DialogContent>
                         <QueriesTable
