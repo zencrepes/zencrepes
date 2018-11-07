@@ -66,7 +66,6 @@ export default {
             this.setQuery(query);
 
             this.setShouldBurndownDataReload(true);
-
             this.refreshFacets();
             this.refreshIssues();
             this.refreshSummary();

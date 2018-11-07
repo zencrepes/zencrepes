@@ -94,6 +94,8 @@ class TermFacet extends Component {
             facetsData = facet.values.slice(0, 5);
         }
 
+        console.log(facet);
+        console.log(selectedValues);
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>

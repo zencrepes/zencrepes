@@ -31,13 +31,17 @@ class Query extends Component {
         super(props);
     }
 
-    render() {
-        const { classes, query } = this.props;
+    openQuery = () => {
+        const { query, loadQuery } = this.props;
+        loadQuery(query);
+    }
 
+    render() {
+        const { classes, query, loadQuery } = this.props;
 
         return (
             <TableRow>
-                <TableCell padding="none"><Open /></TableCell>
+                <TableCell padding="none"><Open onClick={this.openQuery}/></TableCell>
                 <TableCell scope="row">
                     {query.name}
                 </TableCell>

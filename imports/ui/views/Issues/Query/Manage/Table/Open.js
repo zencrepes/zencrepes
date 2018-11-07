@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const styles = theme => ({
     root: {
@@ -22,7 +21,7 @@ class Open extends Component {
         const { classes, onClick } = this.props;
         return (
             <IconButton className={classes.button} aria-label="Open" onClick={onClick}>
-                <FolderOpenIcon />
+                <AddCircleIcon />
             </IconButton>
         )
     };

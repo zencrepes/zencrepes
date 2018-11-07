@@ -55,8 +55,12 @@ class IssuesQuery extends Component {
         updateQuery({});
     };
 
-    openQuery = () => {
-        console.log('openQuery');
+    loadQuery = (query) => {
+        const { updateQuery } = this.props;
+        console.log('loadQuery');
+        console.log(query);
+        updateQuery(JSON.parse(query.filters));
+
     };
 
     setOpenSaveQueryDialog = (state) => {
@@ -110,7 +114,7 @@ class IssuesQuery extends Component {
                         />
                         <QueryManage
                             queries={queries}
-                            loadQuery={saveQuery}
+                            loadQuery={this.loadQuery}
                             deleteQuery={saveQuery}
                             openManageQueryDialog={this.state.openManageQueryDialog}
                             setOpenManageQueryDialog={this.setOpenManageQueryDialog}

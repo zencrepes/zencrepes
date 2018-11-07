@@ -14,7 +14,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import TablePaginationActions from './TablePaginationActions.js';
 import Query from './Query.js';
 
 const styles = theme => ({
@@ -52,7 +51,7 @@ class QueriesTable extends Component {
 
 
     render() {
-        const { classes, queries } = this.props;
+        const { classes, queries, loadQuery } = this.props;
         const { rowsPerPage, page } = this.state;
 
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, queries.length - page * rowsPerPage);
@@ -70,9 +69,8 @@ class QueriesTable extends Component {
                     </TableHead>
                     <TableBody>
                         {queries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(query => {
-                            console.log(query);
                             return (
-                                <Query query={query} key={query._id} />
+                                <Query query={query} key={query._id} loadQuery={loadQuery} />
                             );
                         })}
                     </TableBody>
