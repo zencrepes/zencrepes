@@ -72,7 +72,7 @@ export default {
             this.refreshVelocity();
         },
 
-        async addRemoveQuery(value, rootState, facet) {
+        async addRemoveQuery(valueName, rootState, facet) {
             console.log('addRemoveQuery');
             let query = rootState.issuesView.query;
 
@@ -80,29 +80,29 @@ export default {
             let facetKey = facet.key;
             if (facet.nested === false) {
                 if (query[facetKey] === undefined) {
-                    query[facetKey] = {"$in": [value.name]};
-                } else if (query[facetKey]['$in'].includes(value.name)) {
+                    query[facetKey] = {"$in": [valueName]};
+                } else if (query[facetKey]['$in'].includes(valueName)) {
                     // Remove element from array
-                    query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== value.name);
+                    query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== valueName);
                     if (query[facetKey]['$in'].length === 0) {
                         delete query[facetKey];
                     }
                 } else {
-                    query[facetKey]['$in'].push(value.name);
+                    query[facetKey]['$in'].push(valueName);
                 }
             } else {
                 facetKey = facetKey + '.edges';
                 let nestedKey = 'node.' + facet.nestedKey;
                 if (query[facetKey] === undefined) {
                     query[facetKey] = {'$elemMatch': {}};
-                    query[facetKey]['$elemMatch'][nestedKey] = {"$in": [value.name]};
-                } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(value.name)) {
-                    query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== value.name);
+                    query[facetKey]['$elemMatch'][nestedKey] = {"$in": [valueName]};
+                } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(valueName)) {
+                    query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== valueName);
                     if (query[facetKey]['$elemMatch'][nestedKey]['$in'].length === 0) {
                         delete query[facetKey];
                     }
                 } else {
-                    query[facetKey]['$elemMatch'][nestedKey]['$in'].push(value.name);
+                    query[facetKey]['$elemMatch'][nestedKey]['$in'].push(valueName);
                 }
             }
             /*

@@ -51,10 +51,10 @@ class Filters extends Component {
             return {...facet, values: values}
         });
         return activeFacets;
-    }
+    };
 
     render() {
-        const { classes, query, queries, facets } = this.props;
+        const { classes, query, queries, facets, updateQuery } = this.props;
         const foundQuery = queries.filter((currentQuery) => currentQuery.filters === JSON.stringify(query));
 
         const activeFacets = this.getActiveFacets();
@@ -75,6 +75,7 @@ class Filters extends Component {
                                 query={query}
                                 facets={activeFacets}
                                 currentFacet={facet}
+                                updateQuery={updateQuery}
                             />
                         </Grid>
                     ))}

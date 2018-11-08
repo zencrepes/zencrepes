@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
-import { connect } from "react-redux";
 
-import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 import Button from 'material-ui/Button';
 
 import Value from './Value.js';
@@ -14,18 +10,6 @@ import Value from './Value.js';
 const styles = theme => ({
     root: {
         marginLeft: '5px',
-//        display: 'flex',
-//        flexDirection: 'column',
-//        height: '50px',
-//        position: 'relative',
-
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
     },
     query: {
         flex: 1,
@@ -56,7 +40,7 @@ class Aggregation extends Component {
     };
 
     render() {
-        const { classes, query, facets, currentFacet } = this.props;
+        const { classes, query, facets, currentFacet, updateQuery } = this.props;
         const { collapsed } = this.state;
 
         let facetsValues = currentFacet.values;
@@ -77,8 +61,9 @@ class Aggregation extends Component {
                         key={value}
                         query={query}
                         facets={facets}
-                        currentFacets={currentFacet}
+                        currentFacet={currentFacet}
                         value={value}
+                        updateQuery={updateQuery}
                     />
                 ))}
                 <ExpandButton collapsed={collapsed} length={currentFacet.values.length} classes={classes} onClick={this.collapseValues}/>

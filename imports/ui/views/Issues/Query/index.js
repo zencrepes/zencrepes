@@ -60,6 +60,11 @@ class IssuesQuery extends Component {
         deleteQuery(query);
     };
 
+    updateQuery = (valueName, facet) => {
+        const { addRemoveQuery } = this.props;
+        addRemoveQuery(valueName, facet)
+    };
+
     setOpenSaveQueryDialog = (state) => {
         console.log('setOpenSaveQueryDialog');
         this.setState({ openSaveQueryDialog: state });
@@ -137,6 +142,7 @@ class IssuesQuery extends Component {
                             query={query}
                             queries={queries}
                             facets={facets}
+                            updateQuery={this.updateQuery}
                         />
                     </Grid>
                     <Grid item >
@@ -175,6 +181,7 @@ const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
     saveQuery: dispatch.issuesView.saveQuery,
     deleteQuery: dispatch.issuesView.deleteQuery,
+    addRemoveQuery: dispatch.issuesView.addRemoveQuery,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
