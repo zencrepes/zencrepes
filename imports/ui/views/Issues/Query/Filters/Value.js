@@ -38,7 +38,12 @@ class Value extends Component {
     }
 
     handleDelete = () => {
+        const { query, facets, currentFacet, value } = this.props;
         console.log('delete');
+        console.log(query);
+        console.log(facets);
+        console.log(currentFacet);
+        console.log(value);        
     }
 
     render() {

@@ -114,8 +114,12 @@ export default {
             this.updateQuery(query);
         },
 
+        async deleteQuery(query, rootState) {
+            await cfgQueries.remove({'_id': query._id});
+            this.refreshQueries();
+        },
+
         async refreshQueries(payload, rootState) {
-            console.log(cfgQueries.find({}).fetch());
             this.setQueries(cfgQueries.find({}).fetch());
         },
 
@@ -125,7 +129,6 @@ export default {
                     name: queryName,
                     filters: JSON.stringify(rootState.issuesView.query),
                 });
-
             }
             this.refreshQueries();
         },
@@ -200,4 +203,3 @@ export default {
         },
     }
 };
-

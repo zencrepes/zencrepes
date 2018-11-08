@@ -19,15 +19,10 @@ class Save extends Component {
     }
 
     render() {
-        const { classes, onClick, query, queries } = this.props;
+      const { classes, onClick } = this.props;
 
-        let disabled = false;
-        if (queries.filter((currentQuery) => currentQuery.filters === JSON.stringify(query)).length > 0) {
-            disabled = true;
-        }
-
-        return (
-            <IconButton disabled={disabled} className={classes.button} aria-label="Open" onClick={onClick}>
+      return (
+            <IconButton className={classes.button} aria-label="Open" onClick={onClick}>
                 <SaveIcon />
             </IconButton>
         )

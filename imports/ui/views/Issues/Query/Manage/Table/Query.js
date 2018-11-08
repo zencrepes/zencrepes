@@ -36,17 +36,22 @@ class Query extends Component {
         loadQuery(query);
     }
 
+    deleteQuery = () => {
+        const { query, deleteQuery } = this.props;
+        deleteQuery(query);
+    }
+
     render() {
         const { classes, query, loadQuery } = this.props;
 
         return (
             <TableRow>
-                <TableCell padding="none"><Open onClick={this.openQuery}/></TableCell>
+                <TableCell padding="none"><Open onClick={this.openQuery} /></TableCell>
                 <TableCell scope="row">
                     {query.name}
                 </TableCell>
                 <TableCell>{query.filters}</TableCell>
-                <TableCell padding="none"><Delete /></TableCell>
+                <TableCell padding="none"><Delete onClick={this.deleteQuery} /></TableCell>
             </TableRow>
         );
     }

@@ -21,18 +21,6 @@ const styles = theme => ({
     root: {
         margin: '10px',
         border: `1px solid ${theme.palette.divider}`,
-//        display: 'flex',
-//        flexDirection: 'column',
-//        height: '50px',
-//        position: 'relative',
-
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
     },
     query: {
         flex: 1,
@@ -57,10 +45,19 @@ class IssuesQuery extends Component {
 
     loadQuery = (query) => {
         const { updateQuery } = this.props;
-        console.log('loadQuery');
-        console.log(query);
         updateQuery(JSON.parse(query.filters));
+        this.setState({ openManageQueryDialog: false });
+    };
 
+    saveQuery = (queryName) => {
+        const { saveQuery } = this.props;
+        saveQuery(queryName);
+        this.setState({ openSaveQueryDialog: false });
+    };
+
+    deleteQuery = (query) => {
+        const { deleteQuery } = this.props;
+        deleteQuery(query);
     };
 
     setOpenSaveQueryDialog = (state) => {
@@ -93,11 +90,10 @@ class IssuesQuery extends Component {
         this.setState({ openManageQueryDialog: false });
     };
 
-
-
     render() {
-        const { classes, query, facets, saveQuery, queries } = this.props;
+        const { classes, query, facets, queries } = this.props;
         console.log(query);
+        console.log(facets);
 
         return (
             <div className={classes.root}>
@@ -108,30 +104,34 @@ class IssuesQuery extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item >
-                        <Open
-                            onClick={this.openManageQueryDialog}
-                        />
-                        <QueryManage
-                            queries={queries}
-                            loadQuery={this.loadQuery}
-                            deleteQuery={saveQuery}
-                            openManageQueryDialog={this.state.openManageQueryDialog}
-                            setOpenManageQueryDialog={this.setOpenManageQueryDialog}
-                        />
-                        <Save
-                            queries={queries}
-                            query={query}
-                            onClick={this.openSaveQueryDialog}
-                        />
-                        <QuerySave
-                            query={query}
-                            queries={queries}
-                            saveQuery={saveQuery}
-                            openSaveQueryDialog={this.state.openSaveQueryDialog}
-                            setOpenSaveQueryDialog={this.setOpenSaveQueryDialog}
-                        />
-                    </Grid>
+                    {queries.length > 0 &&
+                        <Grid item >
+                            <Open
+                                onClick={this.openManageQueryDialog}
+                            />
+                            <QueryManage
+                                queries={queries}
+                                loadQuery={this.loadQuery}
+                                deleteQuery={this.deleteQuery}
+                                openManageQueryDialog={this.state.openManageQueryDialog}
+                                setOpenManageQueryDialog={this.setOpenManageQueryDialog}
+                            />
+                        </Grid>
+                    }
+                    {queries.filter((currentQuery) => currentQuery.filters === JSON.stringify(query)).length === 0 &&
+                      <Grid item >
+                          <Save
+                              onClick={this.openSaveQueryDialog}
+                          />
+                          <QuerySave
+                              query={query}
+                              queries={queries}
+                              saveQuery={this.saveQuery}
+                              openSaveQueryDialog={this.state.openSaveQueryDialog}
+                              setOpenSaveQueryDialog={this.setOpenSaveQueryDialog}
+                          />
+                      </Grid>
+                    }
                     <Grid item xs={12} sm container>
                         <Filters
                             query={query}
@@ -174,6 +174,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
     saveQuery: dispatch.issuesView.saveQuery,
+    deleteQuery: dispatch.issuesView.deleteQuery,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));

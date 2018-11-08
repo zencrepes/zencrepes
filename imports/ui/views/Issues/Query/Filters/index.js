@@ -58,28 +58,7 @@ class Filters extends Component {
         const foundQuery = queries.filter((currentQuery) => currentQuery.filters === JSON.stringify(query));
 
         const activeFacets = this.getActiveFacets();
-/*
         console.log(activeFacets);
-        console.log(query);
-        console.log(facets);
-        console.log(JSON.stringify(query));
-        */
-        /*
-        console.log(facets);
-        console.log(JSON.stringify(facets.map((facet) => {
-            const { values, ...noValues } = facet;
-            return noValues
-        })));
-        */
-
-        /*
-                            {foundQuery.length > 0 &&
-                                <Grid item key="saved" className={classes.savedQuery}>
-                                    <span>Saved query: {foundQuery[0].name} - </span>
-                                </Grid>
-                            }
-                            */
-
         return (
             <div className={classes.root}>
                 <Grid

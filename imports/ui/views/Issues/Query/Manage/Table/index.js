@@ -51,7 +51,7 @@ class QueriesTable extends Component {
 
 
     render() {
-        const { classes, queries, loadQuery } = this.props;
+        const { classes, queries, loadQuery, deleteQuery } = this.props;
         const { rowsPerPage, page } = this.state;
 
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, queries.length - page * rowsPerPage);
@@ -70,7 +70,12 @@ class QueriesTable extends Component {
                     <TableBody>
                         {queries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(query => {
                             return (
-                                <Query query={query} key={query._id} loadQuery={loadQuery} />
+                                <Query
+                                  query={query}
+                                  key={query._id}
+                                  loadQuery={loadQuery}
+                                  deleteQuery={deleteQuery}
+                                />
                             );
                         })}
                     </TableBody>

@@ -38,6 +38,7 @@ class QueryManage extends Component {
                         <QueriesTable
                             queries={queries}
                             loadQuery={loadQuery}
+                            deleteQuery={deleteQuery}
                         />
                     </DialogContent>
                     <DialogActions>

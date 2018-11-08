@@ -87,15 +87,12 @@ class TermFacet extends Component {
         }
 
         let group = 'abcd';
-        let currentFilters = [];
 
         let facetsData = facet.values;
         if (collapsed) {
             facetsData = facet.values.slice(0, 5);
         }
 
-        console.log(facet);
-        console.log(selectedValues);
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
@@ -125,13 +122,4 @@ TermFacet.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-    addFilterRefresh: dispatch.data.addFilterRefresh,
-    removeFilterRefresh: dispatch.data.removeFilterRefresh,
-});
-
-const mapState = state => ({
-    currentFilters: state.data.filters,
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(TermFacet));
+export default withStyles(styles)(TermFacet);

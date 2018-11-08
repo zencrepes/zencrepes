@@ -80,7 +80,7 @@ class QuerySave extends Component {
     };
 
     render() {
-        const { classes, query, openSaveQueryDialog, setOpenSaveQueryDialog } = this.props;
+        const { classes, openSaveQueryDialog, setOpenSaveQueryDialog } = this.props;
         const { queryNameError, queryNameHelperText } = this.state;
         if (openSaveQueryDialog) {
             return (
@@ -116,22 +116,10 @@ class QuerySave extends Component {
         }
 
     };
-}
+};
 
 QuerySave.propTypes = {
     classes: PropTypes.object.isRequired,
-    openSaveQuery: PropTypes.bool.isRequired,
-    filters: PropTypes.object.isRequired,
-    setOpenSaveQuery: PropTypes.func.isRequired,
 };
 
-const mapState = state => ({
-    openSaveQuery: state.queries.openSaveQuery,
-    filters: state.queries.filters,
-});
-
-const mapDispatch = dispatch => ({
-    setOpenSaveQuery: dispatch.queries.setOpenSaveQuery,
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(QuerySave));
+export default withStyles(styles)(QuerySave);
