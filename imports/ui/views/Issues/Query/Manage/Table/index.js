@@ -51,7 +51,7 @@ class QueriesTable extends Component {
 
 
     render() {
-        const { classes, queries, loadQuery, deleteQuery } = this.props;
+        const { classes, queries, facets, loadQuery, deleteQuery } = this.props;
         const { rowsPerPage, page } = this.state;
 
         return (
@@ -71,6 +71,7 @@ class QueriesTable extends Component {
                                 <Query
                                   query={query}
                                   key={query._id}
+                                  facets={facets}
                                   loadQuery={loadQuery}
                                   deleteQuery={deleteQuery}
                                 />

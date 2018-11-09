@@ -13,6 +13,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Delete from './Delete.js';
 import Open from './Open.js';
 
+import Filters from '../../Filters/index.js';
+import Grid from "@material-ui/core/Grid/Grid";
+
 const styles = theme => ({
     root: {
         /*
@@ -42,7 +45,7 @@ class Query extends Component {
     };
 
     render() {
-        const { classes, query, loadQuery } = this.props;
+        const { classes, query, facets, loadQuery } = this.props;
 
         return (
             <TableRow>
@@ -50,7 +53,13 @@ class Query extends Component {
                 <TableCell scope="row">
                     {query.name}
                 </TableCell>
-                <TableCell>{query.filters}</TableCell>
+                <TableCell>
+                    <Filters
+                        query={JSON.parse(query.filters)}
+                        facets={facets}
+                        updateQuery={null}
+                    />
+                </TableCell>
                 <TableCell padding="none"><Delete onClick={this.deleteQuery} /></TableCell>
             </TableRow>
         );

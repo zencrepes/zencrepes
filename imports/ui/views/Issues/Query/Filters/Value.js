@@ -23,10 +23,17 @@ class Value extends Component {
     };
 
     render() {
-        const { classes, value } = this.props;
-        return (
-            <Chip onDelete={this.handleDelete} variant="outlined" label={value} className={classes.root} />
-        );
+        const { classes, value, updateQuery } = this.props;
+        if (updateQuery === null) {
+            return (
+                <Chip variant="outlined" label={value} className={classes.root} />
+            );
+        } else {
+            return (
+                <Chip onDelete={this.handleDelete} variant="outlined" label={value} className={classes.root} />
+            );
+
+        }
     }
 }
 

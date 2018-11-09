@@ -29,7 +29,7 @@ class QueryManage extends Component {
     };
 
     render() {
-        const { classes, queries, openManageQueryDialog, loadQuery, deleteQuery } = this.props;
+        const { classes, queries, facets, openManageQueryDialog, loadQuery, deleteQuery } = this.props;
         if (openManageQueryDialog) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openManageQueryDialog} maxWidth="md">
@@ -37,6 +37,7 @@ class QueryManage extends Component {
                     <DialogContent>
                         <QueriesTable
                             queries={queries}
+                            facets={facets}
                             loadQuery={loadQuery}
                             deleteQuery={deleteQuery}
                         />

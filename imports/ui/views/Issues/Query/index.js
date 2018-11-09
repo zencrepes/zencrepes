@@ -117,6 +117,7 @@ class IssuesQuery extends Component {
                             />
                             <QueryManage
                                 queries={queries}
+                                facets={facets}
                                 loadQuery={this.loadQuery}
                                 deleteQuery={this.deleteQuery}
                                 openManageQueryDialog={this.state.openManageQueryDialog}
@@ -140,7 +141,6 @@ class IssuesQuery extends Component {
                     <Grid item xs={12} sm container>
                         <Filters
                             query={query}
-                            queries={queries}
                             facets={facets}
                             updateQuery={this.updateQuery}
                         />

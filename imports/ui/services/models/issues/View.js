@@ -75,8 +75,6 @@ export default {
 
         async addRemoveQuery(valueName, rootState, facet) {
             console.log('addRemoveQuery');
-            console.log(valueName);
-            console.log(facet);
             let query = rootState.issuesView.query;
 
             //1- Mutate the query to the corresponding state
