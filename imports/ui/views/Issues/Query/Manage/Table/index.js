@@ -54,8 +54,6 @@ class QueriesTable extends Component {
         const { classes, queries, loadQuery, deleteQuery } = this.props;
         const { rowsPerPage, page } = this.state;
 
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, queries.length - page * rowsPerPage);
-
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>

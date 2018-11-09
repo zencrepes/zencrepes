@@ -38,10 +38,8 @@ class Filters extends Component {
         super(props);
     }
 
-    getActiveFacets = () => {
-        const { query, facets } = this.props;
+    getActiveFacets = (query, facets) => {
         let activeFacets = facets.filter(facet => query[facet.key] !== undefined || query[facet.key + '.edges'] !== undefined).map((facet) => {
-            console.log(facet);
             let values = [];
             if (facet.nested === false) {
                 values = query[facet.key]['$in'];
@@ -57,7 +55,7 @@ class Filters extends Component {
         const { classes, query, queries, facets, updateQuery } = this.props;
         const foundQuery = queries.filter((currentQuery) => currentQuery.filters === JSON.stringify(query));
 
-        const activeFacets = this.getActiveFacets();
+        const activeFacets = this.getActiveFacets(query, facets);
         console.log(activeFacets);
         return (
             <div className={classes.root}>

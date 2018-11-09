@@ -12,8 +12,6 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
-//import { cfgQueries } from '../../../../data/Minimongo.js';
-
 const styles = theme => ({
     root: {
     },

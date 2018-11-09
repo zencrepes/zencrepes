@@ -32,13 +32,14 @@ const styles = theme => ({
 class IssuesQuery extends Component {
     constructor (props) {
         super(props);
-        this.state={
+        this.state = {
             openSaveQueryDialog: false,
             openManageQueryDialog: false,
         }
     }
 
     clearQuery = () => {
+        console.log('clearQuery');
         const { updateQuery } = this.props;
         updateQuery({});
     };
@@ -68,7 +69,7 @@ class IssuesQuery extends Component {
     setOpenSaveQueryDialog = (state) => {
         console.log('setOpenSaveQueryDialog');
         this.setState({ openSaveQueryDialog: state });
-    }
+    };
 
     openSaveQueryDialog = () => {
         console.log('openSaveQueryDialog');
@@ -83,7 +84,7 @@ class IssuesQuery extends Component {
     setOpenManageQueryDialog = (state) => {
         console.log('setOpenManageQueryDialog');
         this.setState({ openManageQueryDialog: state });
-    }
+    };
 
     openManageQueryDialog = () => {
         console.log('openManageQueryDialog');
@@ -97,7 +98,7 @@ class IssuesQuery extends Component {
 
     render() {
         const { classes, query, facets, queries } = this.props;
-        console.log(query);
+        console.log('Render - IssuesQuery: ' + JSON.stringify(query));
         console.log(facets);
 
         return (
@@ -129,7 +130,6 @@ class IssuesQuery extends Component {
                               onClick={this.openSaveQueryDialog}
                           />
                           <QuerySave
-                              query={query}
                               queries={queries}
                               saveQuery={this.saveQuery}
                               openSaveQueryDialog={this.state.openSaveQueryDialog}

@@ -34,12 +34,12 @@ class Query extends Component {
     openQuery = () => {
         const { query, loadQuery } = this.props;
         loadQuery(query);
-    }
+    };
 
     deleteQuery = () => {
         const { query, deleteQuery } = this.props;
         deleteQuery(query);
-    }
+    };
 
     render() {
         const { classes, query, loadQuery } = this.props;

@@ -63,6 +63,7 @@ export default {
         },
 
         async updateQuery(query, rootState) {
+            console.log('updateQuery: ' + JSON.stringify(query));
             this.setQuery(query);
 
             this.setShouldBurndownDataReload(true);
@@ -74,6 +75,8 @@ export default {
 
         async addRemoveQuery(valueName, rootState, facet) {
             console.log('addRemoveQuery');
+            console.log(valueName);
+            console.log(facet);
             let query = rootState.issuesView.query;
 
             //1- Mutate the query to the corresponding state
@@ -146,7 +149,7 @@ export default {
             let openedIssues = cfgIssues.find(openedIssuesFilter).fetch();
 
             let repos = [];
-            statesGroup = _.groupBy(openedIssues, 'repo.name');
+            let statesGroup = _.groupBy(openedIssues, 'repo.name');
             Object.keys(statesGroup).forEach(function(key) {
                 repos.push({
                     count: statesGroup[key].length,
@@ -166,8 +169,7 @@ export default {
         async refreshFacets(payload, rootState) {
             let t0 = performance.now();
 
-            let query = rootState.issuesView.query;
-            let updatedFacets = buildFacets(query, cfgIssues);
+            let updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.issuesView.query)), cfgIssues);
             this.setFacets(updatedFacets);
 
             var t1 = performance.now();
@@ -179,8 +181,7 @@ export default {
 
             this.setShouldBurndownDataReload(false);
 
-            let mongoFilter = rootState.issuesView.query;
-            let burndownData = await refreshBurndown(mongoFilter, cfgIssues);
+            let burndownData = await refreshBurndown(JSON.parse(JSON.stringify(rootState.issuesView.query)), cfgIssues);
 
             this.setBurndown(burndownData);
 
@@ -193,8 +194,7 @@ export default {
 
             this.setShouldVelocityDataReload(false);
 
-            let mongoFilter = rootState.issuesView.query;
-            let velocityData = await refreshVelocity(mongoFilter, cfgIssues);
+            let velocityData = await refreshVelocity(JSON.parse(JSON.stringify(rootState.issuesView.query)), cfgIssues);
 
             this.setVelocity(velocityData);
 

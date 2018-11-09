@@ -69,8 +69,8 @@ class TermFacet extends Component {
     };
 
     render() {
-        const { classes, facet, query, addRemoveQuery } = this.props;
-        const { collapsed, selectAll } = this.state;
+        const { classes, facet, query } = this.props;
+        const { collapsed } = this.state;
 
         let selectedValues = [];
         let facetKey = facet.key;
@@ -85,8 +85,6 @@ class TermFacet extends Component {
                 selectedValues = query[facetKey]['$elemMatch'][nestedKey]['$in'];
             }
         }
-
-        let group = 'abcd';
 
         let facetsData = facet.values;
         if (collapsed) {
