@@ -2,26 +2,30 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
-
-import { CalendarClock } from 'mdi-material-ui';
-
-import GridItem from '../../../components/Grid/GridItem.js';
-import GridContainer from '../../../components/Grid/GridContainer.js';
-
-
 import PropTypes from "prop-types";
-import Card from "../../../components/Card/Card";
-import CardHeader from "../../../components/Card/CardHeader";
-import CardIcon from "../../../components/Card/CardIcon";
-import {ContentCopy, DateRange} from "@material-ui/icons";
-import CardFooter from "../../../components/Card/CardFooter";
-import CardBody from "../../../components/Card/CardBody";
-import {cfgIssues} from "../../../data/Minimongo";
 
 import CloseSprint from './CloseSprint';
 import Refresh from './Refresh';
-//import { getAssigneesRepartition } from '../../../utils/repartition/index.js';
+import Select from './Select';
+import Create from './Create';
+
+import AppBar from "@material-ui/core/AppBar/AppBar";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+
+const styles = theme => ({
+    root: {
+        /*
+        flexGrow: 1,
+        zIndex: 1,
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        */
+    },
+    toolbarButtons: {
+        flex: 1,
+    },
+});
 
 class Actions extends Component {
     constructor(props) {
@@ -39,30 +43,24 @@ class Actions extends Component {
         const { classes, selectedSprintName, assignees } = this.props;
         //let assignees = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
         return (
-            <Card>
-                <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                        <CalendarClock />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>Actions</p>
-                </CardHeader>
-                <CardBody>
-                    <Refresh />
-                    <CloseSprint />
-                </CardBody>
-                <CardFooter stats>
-                    <div className={classes.stats}>
-                        Various actions to be performed
-                    </div>
-                </CardFooter>
-            </Card>
+            <div className={classes.root}>
+                <AppBar position="static" color="primary" className={classes.appBar}>
+                    <Toolbar>
+                        <div className={classes.toolbarButtons}>
+                            <Select />
+                            <Refresh />
+                            <CloseSprint />
+                        </div>
+                        <Create />
+                    </Toolbar>
+                </AppBar>
+            </div>
         );
     }
 }
 
 Actions.propTypes = {
     classes: PropTypes.object,
-
 };
 
 const mapState = state => ({
@@ -70,4 +68,4 @@ const mapState = state => ({
     assignees: state.sprintsView.assignees,
 });
 
-export default connect(mapState, null)(withStyles(dashboardStyle)(Actions));
+export default connect(mapState, null)(withStyles(styles)(Actions));

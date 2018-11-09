@@ -55,11 +55,10 @@ class SprintPlanning extends Component {
                     <IssuesFetch />
                     <CreateSprint />
                     <CreateMilestones />
-                    <ViewToolbar />
-                    <StatsBar />
+                    <Actions />
                     <GridContainer>
                         <GridItem xs={12} sm={6} md={4}>
-                            <Actions />
+                            <StatsBar />
                         </GridItem>
                         <GridItem xs={12} sm={6} md={4}>
                             <VelocityWeeks/>

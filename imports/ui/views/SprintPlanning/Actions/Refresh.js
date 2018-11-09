@@ -13,7 +13,7 @@ import {cfgIssues} from "../../../data/Minimongo";
 
 const styles = theme => ({
     root: {
-        textAlign: 'right'
+
     },
 });
 class Refresh extends Component {
@@ -40,11 +40,9 @@ class Refresh extends Component {
             return null;
         } else {
             return (
-                <div className={classes.root}>
-                    <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshRepos}>
-                        Refresh Issues Repos
-                    </Button>
-                </div>
+                <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshRepos}>
+                    Refresh Issues Repos
+                </Button>
             )
         }
     };

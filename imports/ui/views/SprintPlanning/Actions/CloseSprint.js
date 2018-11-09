@@ -8,16 +8,11 @@ import {connect} from "react-redux";
 import Button from '@material-ui/core/Button';
 import Snackbar from "@material-ui/core/Snackbar";
 
-import {buildMongoSelector} from "../../../utils/mongo";
-
-import {cfgIssues} from "../../../data/Minimongo";
-import {cfgMilestones} from "../../../data/Minimongo";
-
 const styles = theme => ({
     root: {
-        textAlign: 'right'
     },
 });
+
 class CloseSprint extends Component {
     constructor (props) {
         super(props);
@@ -54,23 +49,9 @@ class CloseSprint extends Component {
             return null;
         } else {
             return (
-                <div className={classes.root}>
-                    {!loading &&
-                    <div>
-                        <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
-                            Close Sprint
-                        </Button>
-                    </div>
-                    }
-                    <Snackbar
-                        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                        open={loadSuccess}
-                        ContentProps={{
-                            'aria-describedby': 'message-id',
-                        }}
-                        message={<span id="message-id">Updated {loadedCount} milestones</span>}
-                    />
-                </div>
+                <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
+                    Close Sprint
+                </Button>
             )
         }
     };
