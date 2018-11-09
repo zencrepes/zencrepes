@@ -67,6 +67,8 @@
   "devDependencies": {
     "@storybook/react": "^4.0.0",
     "babel-core": "^6.26.3",
-    "css-loader": "^0.28.11"
+    "css-loader": "^0.28.11",
+    "eslint": "^5.8.0",
+    "eslint-plugin-react": "^7.11.1"
   }
 }
