@@ -12,8 +12,8 @@ import {buildMongoSelector} from "../../../utils/mongo";
 import {cfgIssues} from "../../../data/Minimongo";
 
 const styles = theme => ({
-    root: {
-
+    button: {
+        marginLeft: '10px',
     },
 });
 class Refresh extends Component {

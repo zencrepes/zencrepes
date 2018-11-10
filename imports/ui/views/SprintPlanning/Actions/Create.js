@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
     root: {
-        textAlign: 'right'
+        textAlign: 'right',
     },
 });
 
