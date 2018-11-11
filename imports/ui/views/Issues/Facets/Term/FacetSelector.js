@@ -60,7 +60,7 @@ class FacetSelector extends React.Component {
     };
 
     render() {
-        const { data, classes, selected, clickItem } = this.props;
+        const { data, classes, selected, clickItem, defaultPoints } = this.props;
         //const { value } = this.state;
 
         let facetItem = data.name;
@@ -88,7 +88,7 @@ class FacetSelector extends React.Component {
                     <ListItemText primary={facetItem} className={classes.listItemText} />
                 </Tooltip>
                 <ListItemSecondaryAction>
-                    <Chip label={data.count + ' | ' + data.points} className={classes.chip} />
+                    <Chip label={defaultPoints ? data.points + ' pts' : data.count + ' tkts'} className={classes.chip} />
                 </ListItemSecondaryAction>
             </ListItem>
         );

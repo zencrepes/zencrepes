@@ -69,7 +69,7 @@ class TermFacet extends Component {
     };
 
     render() {
-        const { classes, facet, query } = this.props;
+        const { classes, facet, query, defaultPoints } = this.props;
         const { collapsed } = this.state;
 
         let selectedValues = [];
@@ -87,6 +87,11 @@ class TermFacet extends Component {
         }
 
         let facetsData = facet.values;
+        if (defaultPoints) {
+            facetsData = facetsData.sort((a, b) => b.points - a.points);
+        } else {
+            facetsData = facetsData.sort((a, b) => b.count - a.count);
+        }
         if (collapsed) {
             facetsData = facet.values.slice(0, 5);
         }
@@ -101,6 +106,7 @@ class TermFacet extends Component {
                                 <FacetSelector
                                     data={value}
                                     key={value.name}
+                                    defaultPoints={defaultPoints}
                                     clickItem={this.clickItem}
                                     selected={selectedValues.indexOf(value.name) !== -1}
                                 />

@@ -31,7 +31,7 @@ class IssuesFacets extends Component {
     }
 
     render() {
-        const { classes, facets, query, addRemoveQuery } = this.props;
+        const { classes, facets, query, addRemoveQuery, defaultPoints } = this.props;
         return (
             <div className={classes.root}>
                 {facets.map(facet => {
@@ -39,6 +39,7 @@ class IssuesFacets extends Component {
                         facet={facet}
                         key={facet.name}
                         query={query}
+                        defaultPoints={defaultPoints}
                         addRemoveQuery={addRemoveQuery}
                     />);
                 })}
@@ -54,6 +55,7 @@ IssuesFacets.propTypes = {
 const mapState = state => ({
     facets: state.issuesView.facets,
     query: state.issuesView.query,
+    defaultPoints: state.issuesView.defaultPoints,
 });
 
 const mapDispatch = dispatch => ({

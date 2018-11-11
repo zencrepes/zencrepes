@@ -83,7 +83,7 @@ export const buildFacets = (query, cfgIssues) => {
     return aggregations.map((facet) => {
         return {
             ...facet,
-            values: buildFacetValues(query, cfgIssues, facet).sort((a, b) => b.count - a.count)
+            values: buildFacetValues(query, cfgIssues, facet)
         };
     });
 };
