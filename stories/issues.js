@@ -5,7 +5,6 @@ import { Button } from '@storybook/react/demo';
 import { Provider } from 'react-redux';
 import { init } from "@rematch/core";
 
-//import Actions from '../imports/ui/views/Issues/Actions/index.js';
 import Filters from '../imports/ui/views/Issues/Query/Filters/index.js';
 import IssuesQuery from '../imports/ui/views/Issues/Query/index.js';
 import Actions from '../imports/ui/views/Issues/Actions/index.js';
@@ -43,9 +42,6 @@ storiesOf('Issues', module)
             query={{}}
             addRemoveQuery={()=>{}}
         />
-    ))
-    .add('Issues - Individual Issue', () => (
-        <h1>To Be Implemented</h1>
     ))
     .add('Issues - List', () => (
         <IssuesList />

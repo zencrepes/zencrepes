@@ -56,6 +56,7 @@ class HeaderToolbar extends Component {
                                 );
                             })}
                         </div>
+
                         <UserMenu />
                     </Toolbar>
                 </AppBar>

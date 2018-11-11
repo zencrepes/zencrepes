@@ -21,28 +21,7 @@ import { withApollo } from 'react-apollo';
 
 import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
 
-import GET_USER_DATA from '../../../graphql/getUser.graphql';
-
 import styles from "./styles.jsx";
-
-/*
-const styles = {
-    root: {
-        flexGrow: 1,
-    },
-    flex: {
-        flex: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
-    row: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-};
-*/
 
 class UserMenu extends Component {
     constructor(props) {
@@ -56,15 +35,12 @@ class UserMenu extends Component {
         }
     }
 
-    componentDidMount() {
-        this.fetchUserData();
-    }
-
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { rateLimit, updateChip } = nextProps;
-        updateChip(rateLimit);
-        return null;
+    componentDidMount(prevProps, prevState, snapshot) {
+        const { connectedUser, setLoadFlag, setLoadUsers } = this.props;
+        if (connectedUser === null) {
+            setLoadUsers([Meteor.user().services.github.username]);
+            setLoadFlag(true);
+        }
     }
 
     handleMenu = event => {
@@ -76,39 +52,19 @@ class UserMenu extends Component {
     };
 
     openGitHub = () => {
-        window.open(this.state.url, '_blank');
+        const { connectedUser } = this.props;
+        window.open(connectedUser.url, '_blank');
     };
 
     logout = () => {
         Meteor.logout();
     };
 
-    fetchUserData = async () => {
-        const { client, updateChip } = this.props;
-
-        let data = await client.query({
-            query: GET_USER_DATA,
-            variables: {login: Meteor.user().services.github.username},
-            fetchPolicy: 'no-cache',
-            errorPolicy: 'ignore',
-        });
-
-        updateChip(data.data.rateLimit);
-
-        this.setState({
-            avatarUrl: data.data.user.avatarUrl,
-            name: data.data.user.name,
-            login: data.data.user.login,
-            url: data.data.user.url,
-        });
-
-    }
-
     render() {
-        const { classes } = this.props;
-        const { anchorEl, login, avatarUrl, name, url } = this.state;
+        const { classes, connectedUser } = this.props;
+        const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-        if (login !== null) {
+        if (connectedUser !== null) {
             return (
                 <div>
                     <IconButton
@@ -117,7 +73,7 @@ class UserMenu extends Component {
                         onClick={this.handleMenu}
                         color="inherit"
                     >
-                        <Avatar alt={name} src={avatarUrl} className={classes.avatar}/>
+                        <Avatar alt={connectedUser.name} src={connectedUser.avatarUrl} className={classes.avatar}/>
                     </IconButton>
                     <Menu
                         id="menu-appbar"
@@ -137,7 +93,7 @@ class UserMenu extends Component {
                             <ListItemIcon>
                                 <GithubCircle />
                             </ListItemIcon>
-                            <ListItemText primary={name} />
+                            <ListItemText primary={connectedUser.name} />
                         </ListItem>
                         <NavLink
                             to="/settings"
@@ -177,8 +133,13 @@ UserMenu.propTypes = {
     updateChip: PropTypes.func,
 };
 
-const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip
+const mapState = state => ({
+    connectedUser: state.usersView.connectedUser,
 });
 
-export default connect(null, mapDispatch)(withApollo(withStyles(styles)(UserMenu)));
+const mapDispatch = dispatch => ({
+    setLoadFlag: dispatch.usersFetch.setLoadFlag,
+    setLoadUsers: dispatch.usersFetch.setLoadUsers,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(UserMenu));

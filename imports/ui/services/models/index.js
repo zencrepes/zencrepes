@@ -44,3 +44,8 @@ export { default as sprintsView } from './sprints/View.js';
 // Burndown
 export { default as burndownView } from './burndown/View.js';
 
+// Users
+export { default as usersFetch } from './users/Fetch.js';
+export { default as usersView } from './users/View.js';
+
+

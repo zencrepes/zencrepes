@@ -30,9 +30,12 @@ import Authenticated from './components/Authenticated/Authenticated.js';
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
 import Repos from './data/Repos.js';
+import UsersFetch from './data/Users/Fetch/index.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
 import Startup from './components/Startup/index.js';
+
+
 
 class App extends Component {
     constructor(props) {
@@ -59,6 +62,7 @@ class App extends Component {
                 <ApolloProviderGithub>
                     <div>
                         <Repos />
+                        <UsersFetch />
                         <QueryManage />
                         <QuerySave />
                         <Router>
