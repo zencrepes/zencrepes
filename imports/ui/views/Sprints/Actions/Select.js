@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withTracker } from 'meteor/react-meteor-data';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -51,16 +50,11 @@ class Select extends Component {
                 id="select-query"
                 select
                 label="Select an open sprint"
+                margin="dense"
                 variant="filled"
                 className={classes.textField}
                 value={selectedSprintName}
                 onChange={this.handleChange('sprint')}
-                SelectProps={{
-                    MenuProps: {
-                        className: classes.menu,
-                    },
-                }}
-                margin="normal"
             >
                 {sprints.map(sprintTitle => (
                     <MenuItem key={sprintTitle} value={sprintTitle}>

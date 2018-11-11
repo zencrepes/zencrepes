@@ -24,7 +24,7 @@ class FooterToolbar extends Component {
                 <AppBar position="static" color="default" >
                     <Toolbar>
                         <Typography variant="subheading" color="inherit" className={classes.grow}>
-                            Build with passion, hosted on <a href="https://github.com/Fgerthoffert/github-agile-view/" >Github</a>...
+                            Build with passion, sources on <a href="https://github.com/Fgerthoffert/github-agile-view/" >Github</a>...
                         </Typography>
                     </Toolbar>
                 </AppBar>

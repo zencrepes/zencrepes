@@ -4,22 +4,26 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {connect} from "react-redux";
+import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import Snackbar from "@material-ui/core/Snackbar";
 
-import {buildMongoSelector} from "../../../utils/mongo";
-import {cfgIssues} from "../../../data/Minimongo";
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 const styles = theme => ({
-    button: {
-        marginLeft: '10px',
+    root: {
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    },
+    iconSmall: {
+        fontSize: 20,
     },
 });
 class Refresh extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     refreshRepos = () => {
@@ -34,17 +38,13 @@ class Refresh extends Component {
     };
 
     render() {
-        const { classes, loading, milestones } = this.props;
-
-        if (milestones.length === 0 || loading === true) {
-            return null;
-        } else {
-            return (
-                <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshRepos}>
-                    Refresh Issues Repos
-                </Button>
-            )
-        }
+        const { classes } = this.props;
+        return (
+            <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshRepos}>
+                <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                Repos in Sprint
+            </Button>
+        )
     };
 }
 

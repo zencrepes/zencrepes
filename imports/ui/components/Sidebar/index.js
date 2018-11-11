@@ -31,7 +31,7 @@ class Sidebar extends Component {
         const routes = [
             {path: '/issues', icon: (<ViewDashboard />), text: 'Issues', key: 'issues'},
             {path: '/dashboard', icon: (<ViewDashboard />), text: 'Dashboard', key: 'dash'},
-            {path: '/sprint', icon: (<RunFast />), text: 'Sprints', key: 'sprint'},
+            {path: '/sprints', icon: (<RunFast />), text: 'Sprints', key: 'sprint'},
             {path: '/search', icon: (<TableLarge />), text: 'Search', key: 'search'},
             {path: '/velocity', icon: (<ChartLine />), text: 'Velocity', key: 'velocity'},
             {path: '/burndown', icon: (<ChartHistogram />), text: 'Burndown', key: 'burndown'},

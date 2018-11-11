@@ -182,9 +182,9 @@ class CreateMilestones extends Component {
 
     render() {
         const {loadSuccess, loadedCount} = this.props;
-        console.log('Render CreateMilestones');
-        console.log(loadSuccess);
-        console.log(loadedCount);
+//        console.log('Render CreateMilestones');
+//        console.log(loadSuccess);
+//        console.log(loadedCount);
         return (
             <Snackbar
                 anchorOrigin={{vertical: 'top', horizontal: 'center'}}

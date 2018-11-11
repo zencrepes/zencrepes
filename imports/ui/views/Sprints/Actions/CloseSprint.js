@@ -17,7 +17,6 @@ const styles = theme => ({
 class CloseSprint extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

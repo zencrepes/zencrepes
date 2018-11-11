@@ -30,7 +30,7 @@ class DaysToCompletion extends Component {
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
-        console.log(dataset);
+//        console.log(dataset);
         let effort = 0;
         if (dataset !== undefined ) {
             let filteredValues = dataset.filter(v => v[metric].effort !== undefined)

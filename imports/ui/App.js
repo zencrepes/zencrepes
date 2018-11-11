@@ -14,7 +14,7 @@ import Dashboard from './views/Dashboard/index.js';
 import Search from './views/Search/index.js';
 import Velocity from './views/Velocity/index.js';
 import Burndown from './views/Burndown/index.js';
-import SprintPlanning from './views/SprintPlanning/index.js';
+import Sprints from './views/Sprints/index.js';
 import Settings from './views/Settings/index.js';;
 import Labels from './views/Labels/index.js';
 import LabelEdit from './views/Labels/Edit/index.js';
@@ -77,7 +77,7 @@ class App extends Component {
                                         <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/burndown" component={Burndown} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/sprint" component={SprintPlanning} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />

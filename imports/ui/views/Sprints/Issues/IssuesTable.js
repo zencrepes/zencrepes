@@ -95,8 +95,6 @@ class IssuesTable extends Component {
         const { classes, issues } = this.props;
         const { columns, linkColumns, assigneesColumns, tableColumnExtensions} = this.state;
 
-        console.log(issues);
-
         return (
             <div className={classes.root}>
                 <Grid

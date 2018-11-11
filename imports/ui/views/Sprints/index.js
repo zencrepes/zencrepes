@@ -35,7 +35,7 @@ import CreateMilestones from '../../data/CreateMilestones.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
 
-class SprintPlanning extends Component {
+class Sprints extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -83,9 +83,9 @@ class SprintPlanning extends Component {
     }
 }
 
-SprintPlanning.propTypes = {
+Sprints.propTypes = {
     classes: PropTypes.object,
 
 };
 
-export default connect(null, null)(withRouter(withStyles(dashboardStyle)(SprintPlanning)));
+export default connect(null, null)(withRouter(withStyles(dashboardStyle)(Sprints)));
