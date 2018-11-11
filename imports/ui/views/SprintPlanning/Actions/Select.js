@@ -12,6 +12,9 @@ const styles = theme => ({
     root: {
         width: '200px',
     },
+    textField: {
+        width: '200px',
+    }
 });
 
 class Select extends Component {
