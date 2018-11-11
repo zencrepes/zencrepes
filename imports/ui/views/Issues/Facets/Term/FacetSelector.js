@@ -88,7 +88,7 @@ class FacetSelector extends React.Component {
                     <ListItemText primary={facetItem} className={classes.listItemText} />
                 </Tooltip>
                 <ListItemSecondaryAction>
-                    <Chip label={data.issues.length + ' | ' + data.points} className={classes.chip} />
+                    <Chip label={data.count + ' | ' + data.points} className={classes.chip} />
                 </ListItemSecondaryAction>
             </ListItem>
         );
@@ -99,13 +99,5 @@ FacetSelector.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-    addFilterRefresh: dispatch.data.addFilterRefresh,
-    removeFilterRefresh: dispatch.data.removeFilterRefresh,
-});
 
-const mapState = state => ({
-    queryValues: state.data.filters,
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(FacetSelector));
+export default withStyles(styles)(FacetSelector);

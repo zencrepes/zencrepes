@@ -42,7 +42,6 @@ IssuesList.propTypes = {
 
 const mapState = state => ({
     issues: state.issuesView.issues,
-
 });
 
 const mapDispatch = dispatch => ({

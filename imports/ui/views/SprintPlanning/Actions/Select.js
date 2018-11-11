@@ -48,6 +48,7 @@ class Select extends Component {
                 id="select-query"
                 select
                 label="Select an open sprint"
+                variant="filled"
                 className={classes.textField}
                 value={selectedSprintName}
                 onChange={this.handleChange('sprint')}

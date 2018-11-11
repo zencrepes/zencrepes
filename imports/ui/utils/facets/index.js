@@ -83,7 +83,7 @@ export const buildFacets = (query, cfgIssues) => {
     return aggregations.map((facet) => {
         return {
             ...facet,
-            values: buildFacetValues(query, cfgIssues, facet).sort((a, b) => b.issues.length - a.issues.length)
+            values: buildFacetValues(query, cfgIssues, facet).sort((a, b) => b.count - a.count)
         };
     });
 };
@@ -149,7 +149,7 @@ const buildFacetValues = (query, cfgIssues, facet) => {
         .map(([name, content]) => {
             return {
                 name: name,
-                issues: Object.values(content),
+                //issues: Object.values(content),
                 count: Object.values(content).length,
                 points: Object.values(content).map(i => i.points).reduce((acc, points) => acc + points, 0)
             }
