@@ -30,6 +30,8 @@ import Labels from './Labels/index.js';
 import Issues from './Issues/index.js';
 import Actions from './Actions/index.js';
 
+import CurrentCompletion from './CurrentCompletion/index.js';
+
 import CreateSprint from './CreateSprint/index.js';
 import CreateMilestones from '../../data/CreateMilestones.js';
 
@@ -48,7 +50,7 @@ class Sprints extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, issues } = this.props;
         return (
             <div className={classes.root}>
                 <General>
@@ -58,7 +60,9 @@ class Sprints extends Component {
                     <Actions />
                     <GridContainer>
                         <GridItem xs={12} sm={6} md={4}>
-                            <StatsBar />
+                            <CurrentCompletion
+                                issues={issues}
+                            />
                         </GridItem>
                         <GridItem xs={12} sm={6} md={4}>
                             <VelocityWeeks/>
@@ -88,4 +92,10 @@ Sprints.propTypes = {
 
 };
 
-export default connect(null, null)(withRouter(withStyles(dashboardStyle)(Sprints)));
+const mapState = state => ({
+    repositories: state.sprintsView.repositories,
+    assignees: state.sprintsView.assignees,
+    issues: state.sprintsView.issues,
+});
+
+export default connect(mapState, null)(withRouter(withStyles(dashboardStyle)(Sprints)));

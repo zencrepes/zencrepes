@@ -12,8 +12,6 @@ export default {
             this.setUsers(payload);
             const connectedUser = payload.filter(user => user.login === Meteor.user().services.github.username)[0];
             this.setConnectedUser(connectedUser);
-            console.log(JSON.stringify(payload));
-            console.log(JSON.stringify(connectedUser));
         },
     }
 };

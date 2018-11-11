@@ -35,13 +35,6 @@ class Actions extends Component {
         super(props);
     }
 
-    /*
-    getAssignees = () => {
-        const { sprintName } = this.props;
-        let assigneesRepartition = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
-        return assigneesRepartition;
-    };
-*/
     render() {
         const { classes, selectedSprintName, assignees, setLoadFlag, setLoadRepos } = this.props;
         //let assignees = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
