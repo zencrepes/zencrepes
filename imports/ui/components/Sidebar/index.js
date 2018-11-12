@@ -74,7 +74,7 @@ class Sidebar extends Component {
 
         var brand = (
             <div className={classes.logo}>
-                <a href="/dashboard" className={classes.logoLink}>
+                <a href="/issues" className={classes.logoLink}>
                     <div className={classes.logoImage}>
                         <img src="/crepe-32.png" />
                     </div>

@@ -63,7 +63,7 @@ class Login extends Component {
                                 <Card className={classes[this.state.cardAnimation]}>
                                     <div>
                                         <div className={classes.logo}>
-                                            <a href="/dashboard" className={classes.logoLink}>
+                                            <a href="/issues" className={classes.logoLink}>
                                                 <div className={classes.logoImage}>
                                                     <img src="/crepe-32.png" />
                                                 </div>

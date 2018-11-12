@@ -10,10 +10,6 @@ import {connect} from "react-redux";
 
 import Login from './views/Login/index.js';
 import Wizard from './views/Wizard/index.js';
-import Dashboard from './views/Dashboard/index.js';
-import Search from './views/Search/index.js';
-import Velocity from './views/Velocity/index.js';
-import Burndown from './views/Burndown/index.js';
 import Sprints from './views/Sprints/index.js';
 import Settings from './views/Settings/index.js';;
 import Labels from './views/Labels/index.js';
@@ -72,11 +68,7 @@ class App extends Component {
                                         <Route exact name="index" path="/" component={Index} />
                                         <Public path="/login" component={Login} {...props} {...state} />
                                         <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/burndown" component={Burndown} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
