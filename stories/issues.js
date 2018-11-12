@@ -10,8 +10,9 @@ import IssuesQuery from '../imports/ui/views/Issues/Query/index.js';
 import Actions from '../imports/ui/views/Issues/Actions/index.js';
 
 import TermFacet from '../imports/ui/views/Issues/Facets/Term/index.js';
-
 import IssuesList from '../imports/ui/views/Issues/Content/IssuesList/index.js';
+import Burndown from '../imports/ui/views/Issues/Content/Burndown/index.js';
+import Velocity from '../imports/ui/views/Issues/Content/Velocity/index.js';
 
 // The *.mock.js files contains static redux stores configuration with no external dependencies (such as minimongo).
 import * as models from "../imports/ui/services/models/index.mock.js";
@@ -47,9 +48,9 @@ storiesOf('Issues', module)
         <IssuesList />
     ))
     .add('Chart - Velocity', () => (
-        <h1>To Be Implemented</h1>
+        <Velocity />
     ))
     .add('Chart - Burndown', () => (
-        <h1>To Be Implemented</h1>
+        <Burndown />
     ))
 ;
