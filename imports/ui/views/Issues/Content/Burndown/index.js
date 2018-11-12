@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import Paper from '@material-ui/core/Paper';
 import uuidv1 from "uuid/v1";
 
-import HighchartsVelocity from './HighchartsVelocity.js';
+import BurndownChart from './Chart.js';
 
 const styles = theme => ({
     root: {
@@ -73,7 +73,7 @@ class Burndown extends Component {
         const { classes } = this.props;
         return (
             <Paper className={classes.root} elevation={1}>
-                <HighchartsVelocity data={this.getVelocityHighcharts()} />
+                <BurndownChart data={this.getVelocityHighcharts()} />
             </Paper>
         );
     }

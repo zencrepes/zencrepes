@@ -21,7 +21,7 @@ const styles = theme => ({
     },
 });
 
-class HighchartsVelocity extends Component {
+class VelocityChart extends Component {
     constructor(props) {
         super(props);
 
@@ -81,25 +81,9 @@ class HighchartsVelocity extends Component {
     }
 }
 
-HighchartsVelocity.propTypes = {
+VelocityChart.propTypes = {
     //classes: PropTypes.object.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-
-});
-
-
-const mapState = state => ({
-
-});
-
-
-export default
-    connect(mapState, mapDispatch)
-    (
-        withHighcharts(
-            HighchartsVelocity, Highcharts
-        )
-    );
+export default withHighcharts(VelocityChart, Highcharts);
 

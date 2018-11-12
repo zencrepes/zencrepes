@@ -4,12 +4,21 @@ import PropTypes from "prop-types";
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+
+/*
+import Card from "../../../components/Card/Card";
+import CardHeader from "../../../components/Card/CardHeader";
+import CardBody from "../../../components/Card/CardBody";
+ */
+
+import Grid from '@material-ui/core/Grid';
+
+import GaugeChart from './GaugeChart.js';
 
 const styles = theme => ({
     root: {
+        margin: '10px'
         /*
         flexGrow: 1,
         zIndex: 1,
@@ -22,6 +31,7 @@ const styles = theme => ({
         flex: 1,
     },
 });
+
 
 class CurrentCompletion extends Component {
     constructor(props) {
@@ -42,17 +52,39 @@ class CurrentCompletion extends Component {
             .reduce((acc, points) => acc + points, 0);
 
         return (
-            <Card>
+            <Card className={classes.root}>
                 <CardHeader>
-                    <span>Card Header</span>
+                    <h4 className={classes.cardTitleWhite}>Completion Status</h4>
+                    <p className={classes.cardCategoryWhite}>
+                        Repartition of colors amongst selected repositories
+                    </p>
                 </CardHeader>
                 <CardContent>
-                    <i>Completed Issues: {completedIssues} / {issues.length}</i> <br />
-                    <i>Completed Points: {completedPoints} / {totalPoints}</i>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm={6} md={6}>
+                            <GaugeChart
+                                title={"Issues Count"}
+                                legend={"Issues"}
+                                completed={completedIssues}
+                                max={issues.length}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                            <GaugeChart
+                                title={"Points"}
+                                legend={"Points"}
+                                completed={completedPoints}
+                                max={totalPoints}
+                            />
+                        </Grid>
+                    </Grid>
                 </CardContent>
-                <CardActions>
-                    <span>Card Actions</span>
-                </CardActions>
             </Card>
         );
     }

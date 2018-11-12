@@ -54,7 +54,6 @@ IssuesContent.propTypes = {
 
 const mapState = state => ({
     selectedTab: state.issuesView.selectedTab,
-
 });
 
 const mapDispatch = dispatch => ({
