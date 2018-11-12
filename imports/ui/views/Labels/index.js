@@ -12,7 +12,7 @@ import General from '../../layouts/General/index.js';
 import LabelsFetch from '../../data/Labels/Fetch/index.js';
 
 import LabelsTable from './LabelsTable.js';
-import Refresh from './Refresh.js';
+import Actions from "./Actions/index.js";
 
 class Labels extends Component {
     constructor(props) {
@@ -30,7 +30,7 @@ class Labels extends Component {
         return (
             <div className={classes.root}>
                 <General>
-                    <Refresh />
+                    <Actions />
                     <LabelsFetch loadModal={false} />
                     <LabelsTable labels={labels}/>
                 </General>
