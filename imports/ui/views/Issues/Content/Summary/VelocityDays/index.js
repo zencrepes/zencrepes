@@ -30,7 +30,7 @@ class VelocityDays extends Component {
 
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: new Date(v.date).getDate().toString(), y: v[metric].velocity}
+                return {x: new Date(v.date).getDate().toString(), y: v.completion[metric].velocity}
             });
             return [{id: 'rolling', data: dataset}];
         } else {
@@ -45,7 +45,7 @@ class VelocityDays extends Component {
 
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: new Date(v.date).getDate().toString(), y: v[metric].count}
+                return {x: new Date(v.date).getDate().toString(), y: v.completion[metric].count}
             });
             return dataset;
         } else {
@@ -70,7 +70,7 @@ class VelocityDays extends Component {
     getLastDayCompleted(dataset) {
         let idx = dataset.length - 1;
         if (idx >= 0) {
-            return dataset[idx].issues.count;
+            return dataset[idx].completion.issues.count;
         } else {
             return '-';
         }

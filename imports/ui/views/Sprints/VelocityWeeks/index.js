@@ -5,9 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
 
-import {ContentCopy, DateRange} from "@material-ui/icons";
 import { RunFast } from 'mdi-material-ui';
-
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
@@ -32,7 +30,7 @@ class VelocityWeeks extends Component {
 
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v[metric].velocity}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.completion[metric].velocity}
             });
             return [{id: 'rolling', data: dataset}];
         } else {
@@ -47,7 +45,7 @@ class VelocityWeeks extends Component {
 
         if (dataset.length > 0 ) {
             dataset = dataset.map((v) => {
-                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v[metric].count}
+                return {x: getWeekYear(new Date(v.weekStart)).toString(), y: v.completion[metric].count}
             });
             return dataset;
         } else {
@@ -72,7 +70,7 @@ class VelocityWeeks extends Component {
     getThisWeekCompleted(dataset) {
         let idx = dataset.length - 1;
         if (idx >= 0) {
-            return dataset[idx].issues.count;
+            return dataset[idx].completion.issues.count;
         } else {
             return '-';
         }

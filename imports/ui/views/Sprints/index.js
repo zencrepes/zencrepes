@@ -20,6 +20,8 @@ import QuerySelect from '../../components/Query/Select/index.js';
 //import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
 //import DataLoader from './DataLoader.js';
 import VelocityWeeks from './VelocityWeeks/index.js';
+//import VelocityWeeksb from './VelocityWeeksb/index.js';
+
 import DaysToCompletion from './DaysToCompletion/index.js';
 
 import StatsBar from './StatsBar/index.js';
@@ -50,7 +52,8 @@ class Sprints extends Component {
     };
 
     render() {
-        const { classes, issues } = this.props;
+        const { classes, issues, labels, velocity } = this.props;
+        console.log(velocity);
         return (
             <div className={classes.root}>
                 <General>
@@ -62,10 +65,11 @@ class Sprints extends Component {
                         <GridItem xs={12} sm={6} md={4}>
                             <CurrentCompletion
                                 issues={issues}
+                                labels={labels}
                             />
                         </GridItem>
                         <GridItem xs={12} sm={6} md={4}>
-                            <VelocityWeeks/>
+                            <VelocityWeeks />
                         </GridItem>
                         <GridItem xs={12} sm={6} md={4}>
                             <DaysToCompletion/>
@@ -96,6 +100,7 @@ const mapState = state => ({
     repositories: state.sprintsView.repositories,
     assignees: state.sprintsView.assignees,
     issues: state.sprintsView.issues,
+    velocity: state.sprintsView.velocity,
 });
 
 export default connect(mapState, null)(withRouter(withStyles(dashboardStyle)(Sprints)));

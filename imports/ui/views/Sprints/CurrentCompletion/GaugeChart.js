@@ -25,7 +25,8 @@ const styles = theme => ({
 
 const options = {
     chart: {
-        type: 'solidgauge'
+        type: 'solidgauge',
+        height: 200
     },
 
     title: null,
@@ -57,10 +58,6 @@ const options = {
         lineWidth: 0,
         minorTickInterval: null,
         tickAmount: 1,
-        title: {
-            y: -70,
-            text: 'Speed'
-        },
         labels: {
             y: 16
         },
@@ -86,32 +83,37 @@ class GaugeChart extends Component {
         super(props);
     }
 
+    getLegend = () => {
+        const { completed, max } = this.props;
+        return completed + " / " + max;
+    };
+
     render() {
         const { classes, title, completed, max, legend } = this.props;
         const updatedOptions = {
             ...options,
             yAxis: {
                 ...options.yAxis,
-                title: {y: -70, text: title},
+                title: {
+                    y: -70,
+                    text: title
+                },
                 max: max,
             },
             series: [{
                 name: 'blank',
                 data: [completed],
                 dataLabels: {
+                    formatter: this.getLegend,
+                    /*
                     format:'<div style="text-align:center"><span style="font-size:25px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y} {x}</span><br/>' +
                         '<span style="font-size:12px;color:silver">{legend}</span></div>'
+                        */
                 },
                 tooltip: {
                     valueSuffix: ' km/h'
                 }
-                /*
-        format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-            ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
-            '<span style="font-size:12px;color:silver">Issues</span></div>'
-
-                 */
             }]
         };
         return (

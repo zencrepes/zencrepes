@@ -31,6 +31,7 @@ class Velocity extends Component {
 
     prepareDataset() {
         const { velocity } = this.props;
+        console.log(JSON.stringify(velocity));
         if (velocity['weeks'] !== undefined ) {
             return velocity['weeks'];
         } else {
@@ -42,8 +43,8 @@ class Velocity extends Component {
         let issuesCount = [];
         let storyPoints = [];
         velocity.forEach((v) => {
-            issuesCount.push([new Date(v.weekStart).getTime(), Math.round(v.issues.velocity, 1)]);
-            storyPoints.push([new Date(v.weekStart).getTime(), Math.round(v.points.velocity, 1)]);
+            issuesCount.push([new Date(v.weekStart).getTime(), Math.round(v.completion.issues.velocity, 1)]);
+            storyPoints.push([new Date(v.weekStart).getTime(), Math.round(v.completion.points.velocity, 1)]);
         });
         if (issuesCount.length === 0) {
             return [];

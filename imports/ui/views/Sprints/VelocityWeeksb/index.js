@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
-
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
 
-import Grid from '@material-ui/core/Grid';
-import { Run } from 'mdi-material-ui';
+import PropTypes from "prop-types";
+
 import { RunFast } from 'mdi-material-ui';
 
-import dashboardStyle from "../../../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
-import Card from "../../../../../components/Card/Card";
-import CardHeader from "../../../../../components/Card/CardHeader";
-import CardIcon from "../../../../../components/Card/CardIcon";
-import CardFooter from "../../../../../components/Card/CardFooter";
-import CardBody from "../../../../../components/Card/CardBody";
-import VelocityBar from "../../../../../components/Charts/VelocityBar";
-import VelocityLine from "../../../../../components/Charts/VelocityLine";
-import {getWeekYear} from "../../../../../utils/velocity";
+import Card from "../../../components/Card/Card";
+import CardHeader from "../../../components/Card/CardHeader";
+import CardIcon from "../../../components/Card/CardIcon";
+import CardFooter from "../../../components/Card/CardFooter";
+import CardBody from "../../../components/Card/CardBody";
+import VelocityBar from "../../../components/Charts/VelocityBar";
+import VelocityLine from "../../../components/Charts/VelocityLine";
+import {getWeekYear} from "../../../utils/velocity";
 
-class VelocityWeeks extends Component {
+import CombinationChart from "./CombinationChart.js";
+
+class VelocityWeeksb extends Component {
     constructor(props) {
         super(props);
     }
@@ -103,12 +103,13 @@ class VelocityWeeks extends Component {
                     </h3>
                 </CardHeader>
                 <CardBody>
-                    <VelocityBar data={this.getVelocityBar(dataset)} />
-                    <VelocityLine data={this.getVelocityLine(dataset)} />
+                    <CombinationChart
+                        dataset={dataset}
+                    />
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
-                        Velocity over the past 20 weeks
+                        Team velocity (current assignees) over the past 20 weeks
                     </div>
                 </CardFooter>
             </Card>
@@ -116,8 +117,13 @@ class VelocityWeeks extends Component {
     }
 }
 
-VelocityWeeks.propTypes = {
-    classes: PropTypes.object.isRequired,
+VelocityWeeksb.propTypes = {
+    classes: PropTypes.object,
 };
 
-export default withStyles(dashboardStyle)(VelocityWeeks);
+const mapState = state => ({
+    velocity: state.sprintsView.velocity,
+    defaultPoints: true,
+});
+
+export default connect(mapState, null)(withStyles(dashboardStyle)(VelocityWeeksb));
