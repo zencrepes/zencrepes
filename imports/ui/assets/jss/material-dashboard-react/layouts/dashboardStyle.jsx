@@ -54,7 +54,11 @@ const appStyle = theme => ({
     Results :{
         gridArea: 'Results',
         paddingLeft: '10px',
+    },
+    fullWidth :{
+        width: '100%',
     }
+
 });
 
 export default appStyle;

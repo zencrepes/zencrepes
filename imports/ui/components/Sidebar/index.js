@@ -15,7 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
 import Divider from '@material-ui/core/Divider';
 
-import { Settings, TableLarge, ChartLine, ChartHistogram, ViewDashboard, Label, AutoFix } from 'mdi-material-ui';
+import { Settings, TableLarge, ChartLine, ChartHistogram, ViewDashboard, Label, AutoFix, RunFast } from 'mdi-material-ui';
 
 import GitRequests from '../Github/GitRequests.js'
 
@@ -29,12 +29,15 @@ class Sidebar extends Component {
     render() {
         const { classes, open, logoText } = this.props;
         const routes = [
+            {path: '/issues', icon: (<ViewDashboard />), text: 'Issues', key: 'issues'},
             {path: '/dashboard', icon: (<ViewDashboard />), text: 'Dashboard', key: 'dash'},
+            {path: '/sprints', icon: (<RunFast />), text: 'Sprints', key: 'sprint'},
             {path: '/search', icon: (<TableLarge />), text: 'Search', key: 'search'},
             {path: '/velocity', icon: (<ChartLine />), text: 'Velocity', key: 'velocity'},
             {path: '/burndown', icon: (<ChartHistogram />), text: 'Burndown', key: 'burndown'},
             {divider: true, key: 'configdivider'},
             {path: '/labels', icon: (<Label />), text: 'Labels', key: 'labels'},
+            {path: '/milestones', icon: (<RunFast />), text: 'Milestones', key: 'milestones'},
             {path: '/settings', icon: (<Settings />), text: 'Settings', key: 'settings'},
             {path: '/wizard', icon: (<AutoFix />), text: 'Setup Wizard', key: 'wizard'},
         ];
@@ -71,7 +74,7 @@ class Sidebar extends Component {
 
         var brand = (
             <div className={classes.logo}>
-                <a href="/dashboard" className={classes.logoLink}>
+                <a href="/issues" className={classes.logoLink}>
                     <div className={classes.logoImage}>
                         <img src="/crepe-32.png" />
                     </div>

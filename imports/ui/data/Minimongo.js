@@ -1,4 +1,3 @@
-
 export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
 //export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
 window.repos = cfgSources;
@@ -15,3 +14,6 @@ export const cfgQueries = new Mongo.Collection('cfgQueries', {connection: null})
 //export const localCfgQueries = new PersistentMinimongo2(cfgQueries, 'GAV-Queries');
 window.queries = cfgQueries;
 
+export const cfgMilestones = new Mongo.Collection('cfgMilestones', {connection: null});
+//export const localCfgQueries = new PersistentMinimongo2(cfgQueries, 'GAV-Queries');
+window.milestones = cfgMilestones;

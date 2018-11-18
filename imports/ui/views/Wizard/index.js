@@ -48,7 +48,7 @@ class Wizard extends Component {
         const { activeStep, setActiveStep, steps, history } = this.props;
         if (activeStep === steps.length -1) { // User clicked on finish
             setActiveStep(0);
-            history.push('/dashboard');
+            history.push('/issues');
         } else {
             setActiveStep(activeStep + 1);
         }

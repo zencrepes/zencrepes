@@ -43,14 +43,19 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
           milestone {
             id
             createdAt
+            updatedAt
             closedAt
-            number
-            url
-            title
-            state
+            description
             dueOn
+            issues (first: 1) {
+              totalCount
+            }
+            number
+            state
+            title
+            url
           }
-          assignees(first: 1) {
+          assignees(first: 4) {
             totalCount
             edges {
               node {

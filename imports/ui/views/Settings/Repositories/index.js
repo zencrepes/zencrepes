@@ -20,6 +20,8 @@ import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
 import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
 import Selects from '../../../components/Settings/Load/Selects.js';
 
+import IssuesFetch from '../../../data/Issues/Fetch/index.js';
+
 import Actions from './Actions.js';
 
 class Repositories extends Component {
@@ -38,6 +40,7 @@ class Repositories extends Component {
                     <ScanOrgs />
                     <ScanOrgRepos />
                     <ScanRepo />
+                    <IssuesFetch />
                 </GridItem>
                 <GridItem xs={12} sm={6} md={6}>
                     <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />

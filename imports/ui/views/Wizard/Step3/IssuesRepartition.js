@@ -41,7 +41,7 @@ class IssuesRepartition extends Component {
     };
 
     render() {
-        const { classes, loading } = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
                 <Card>
@@ -88,7 +88,6 @@ IssuesRepartition.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchReposContent.loading,
 
 });
 

@@ -89,7 +89,7 @@ Actions.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.githubFetchReposContent.loading,
+    loading: state.issuesFetch.loading,
 });
 
 const mapDispatch = dispatch => ({

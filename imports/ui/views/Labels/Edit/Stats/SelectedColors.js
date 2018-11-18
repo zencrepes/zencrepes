@@ -27,42 +27,21 @@ const styles = theme => ({
 class SelectedColors extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            colors: [],
-        };
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        let updatedColors = this.buildDataset();
-        if (!_.isEqual(updatedColors, prevState.colors)) {
-            this.setState({colors: updatedColors});
-        }
     }
 
     buildDataset() {
-        const { selectedRepos, setNewColor } = this.props;
-
-        //let colorElements = _.groupBy(selectedRepos.filter(r => r.label !== undefined).map(repo => repo.label), 'color');
-        let colorElements = _.groupBy(selectedRepos, 'label.color');
+        const { selectedRepos, selectedLabels, setNewColor } = this.props;
+        let colorElements = _.groupBy(selectedLabels, 'color');
         let colors = Object.keys(colorElements).map(idx => {
-            let name = "#" + idx;
-            let color = "#" + idx;
-            if (idx === 'undefined') {
-                name = 'No color set';
-                color = 'hsl(331, 70%, 50%)';
-            }
             return {
                 items: colorElements[idx],
                 count: colorElements[idx].length,
-                name: name,
-                color: color,
+                name: "#" + idx,
+                color: "#" + idx,
             }
         });
         colors = _.sortBy(colors, [function(o) {return o.count;}]);
         colors = colors.reverse();
-
-        setNewColor(colors[0].color);
-
         return colors.map((c) => {
             return {id: c.name, label: c.name, value: c.count, color: c.color};
         })
@@ -70,8 +49,6 @@ class SelectedColors extends Component {
 
     render() {
         const { classes, setNewColor } = this.props;
-        const { colors } = this.state;
-        //console.log(this.buildDataset());
         return (
             <Card>
                 <CardHeader color="success">
@@ -82,7 +59,7 @@ class SelectedColors extends Component {
                 </CardHeader>
                 <CardBody style={{height: "150px"}}>
                     <ResponsivePie
-                        data={colors}
+                        data={this.buildDataset()}
                         margin={{
                             "top": 0,
                             "right": 200,
@@ -142,16 +119,15 @@ class SelectedColors extends Component {
 
 SelectedColors.propTypes = {
     classes: PropTypes.object.isRequired,
-
 };
 
 const mapState = state => ({
-    selectedRepos: state.labelsconfiguration.selectedRepos,
-
+    selectedRepos: state.labelsEdit.selectedRepos,
+    selectedLabels: state.labelsEdit.selectedLabels,
 });
 
 const mapDispatch = dispatch => ({
-    setNewColor: dispatch.labelsconfiguration.setNewColor,
+    setNewColor: dispatch.labelsEdit.setNewColor,
 
 });
 

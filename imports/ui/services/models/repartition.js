@@ -1,8 +1,10 @@
 import { cfgIssues } from '../../data/Minimongo.js';
 
 import { getFirstDay, getLastDay, initObject, populateObject, populateOpen, populateClosed, populateTicketsPerDay, populateTicketsPerWeek } from '../../utils/velocity/index.js';
+import { getAssigneesRepartition } from '../../utils/repartition/index.js';
 import {buildMongoSelector} from "../../utils/mongo/index.js";
 
+/*
 const getAssignees = (issues) => {
     console.log('getAssignees');
 
@@ -42,7 +44,7 @@ const getAssignees = (issues) => {
     //{header: 'Assignees', group: 'assignees', type: 'text', nested: 'login', nullName: 'UNASSIGNED', nullFilter: {'assignees.totalCount': { $eq : 0 }}, data: [] },
 
 };
-
+*/
 const openedIssues = (mongoFilter) => {
     let updatedFilter = Object.assign({}, mongoFilter);
     if (updatedFilter['state'] !== undefined) {delete updatedFilter['state'];}
@@ -81,7 +83,7 @@ export default {
             //console.log('Start Loading');
 
             //Build an aggregate by assignee
-            let assignees = getAssignees(cfgIssues.find(openedIssues(mongoSelector)).fetch());
+            let assignees = getAssigneesRepartition(cfgIssues.find(openedIssues(mongoSelector)).fetch());
             assignees = assignees.map((assignee) => {
                 //console.log('-----');
                 //console.log('Repartition - processing: ' + assignee.login);

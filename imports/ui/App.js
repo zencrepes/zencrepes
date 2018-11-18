@@ -10,14 +10,13 @@ import {connect} from "react-redux";
 
 import Login from './views/Login/index.js';
 import Wizard from './views/Wizard/index.js';
-import Dashboard from './views/Dashboard/index.js';
-import Search from './views/Search/index.js';
-import Velocity from './views/Velocity/index.js';
-import Burndown from './views/Burndown/index.js';
+import Sprints from './views/Sprints/index.js';
 import Settings from './views/Settings/index.js';;
-import LabelsList from './views/Labels/List/index.js';
-import LabelsView from './views/Labels/View/index.js';
-import LabelsEdit from './views/Labels/Edit/index.js';
+import Labels from './views/Labels/index.js';
+import LabelEdit from './views/Labels/Edit/index.js';
+
+import Milestones from './views/Milestones/index.js';
+import Issues from './views/Issues/index.js';
 
 import Index from './Index.js';
 
@@ -27,10 +26,12 @@ import Authenticated from './components/Authenticated/Authenticated.js';
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
 import Repos from './data/Repos.js';
-import FetchReposContent from './data/FetchReposContent.js';
+import UsersFetch from './data/Users/Fetch/index.js';
 import QueryManage from './components/Query/Manage/index.js';
 import QuerySave from './components/Query/Save/index.js';
 import Startup from './components/Startup/index.js';
+
+
 
 class App extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class App extends Component {
                 <ApolloProviderGithub>
                     <div>
                         <Repos />
-                        <FetchReposContent />
+                        <UsersFetch />
                         <QueryManage />
                         <QuerySave />
                         <Router>
@@ -67,14 +68,12 @@ class App extends Component {
                                         <Route exact name="index" path="/" component={Index} />
                                         <Public path="/login" component={Login} {...props} {...state} />
                                         <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/dashboard" component={Dashboard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/search" component={Search} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/velocity" component={Velocity} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/burndown" component={Burndown} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels" component={LabelsList} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels/view/:name" component={LabelsView} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelsEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     </Switch>
                                 </div>
                             ) : ''}

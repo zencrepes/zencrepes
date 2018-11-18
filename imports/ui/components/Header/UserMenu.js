@@ -1,44 +1,29 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 
-import IconButton from 'material-ui/IconButton';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
+import { withStyles } from '@material-ui/core/styles';
 
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import Avatar from '@material-ui/core/Avatar';
 
 import { graphql } from 'react-apollo';
 import { Query } from 'react-apollo';
 import { withApollo } from 'react-apollo';
 
-import { connect } from "react-redux";
-import { GithubCircle, Logout } from 'mdi-material-ui'
+import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
 
-import GET_USER_DATA from '../../../graphql/getUser.graphql';
+import styles from "./styles.jsx";
 
-const styles = {
-    root: {
-        flexGrow: 1,
-    },
-    flex: {
-        flex: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
-    row: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-};
-
-
-
-class UserMenu extends React.Component {
+class UserMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,15 +35,12 @@ class UserMenu extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.fetchUserData();
-    }
-
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { rateLimit, updateChip } = nextProps;
-        updateChip(rateLimit);
-        return null;
+    componentDidMount(prevProps, prevState, snapshot) {
+        const { connectedUser, setLoadFlag, setLoadUsers } = this.props;
+        if (connectedUser === null) {
+            setLoadUsers([Meteor.user().services.github.username]);
+            setLoadFlag(true);
+        }
     }
 
     handleMenu = event => {
@@ -70,42 +52,19 @@ class UserMenu extends React.Component {
     };
 
     openGitHub = () => {
-        window.open(this.state.url, '_blank');
+        const { connectedUser } = this.props;
+        window.open(connectedUser.url, '_blank');
     };
 
     logout = () => {
         Meteor.logout();
     };
 
-    fetchUserData = async () => {
-        const { client, updateChip } = this.props;
-
-        console.log('fetchUserData');
-        let data = await client.query({
-            query: GET_USER_DATA,
-            variables: {login: Meteor.user().services.github.username},
-            fetchPolicy: 'no-cache',
-            errorPolicy: 'ignore',
-        });
-
-        updateChip(data.data.rateLimit);
-
-        console.log(data);
-
-        this.setState({
-            avatarUrl: data.data.user.avatarUrl,
-            name: data.data.user.name,
-            login: data.data.user.login,
-            url: data.data.user.url,
-        });
-
-    }
-
     render() {
-        const { classes } = this.props;
-        const { anchorEl, login, avatarUrl, name, url } = this.state;
+        const { classes, connectedUser } = this.props;
+        const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-        if (login !== null) {
+        if (connectedUser !== null) {
             return (
                 <div>
                     <IconButton
@@ -114,7 +73,7 @@ class UserMenu extends React.Component {
                         onClick={this.handleMenu}
                         color="inherit"
                     >
-                        <Avatar alt={name} src={avatarUrl} className={classes.avatar}/>
+                        <Avatar alt={connectedUser.name} src={connectedUser.avatarUrl} className={classes.avatar}/>
                     </IconButton>
                     <Menu
                         id="menu-appbar"
@@ -134,8 +93,25 @@ class UserMenu extends React.Component {
                             <ListItemIcon>
                                 <GithubCircle />
                             </ListItemIcon>
-                            <ListItemText primary={name} />
+                            <ListItemText primary={connectedUser.name} />
                         </ListItem>
+                        <NavLink
+                            to="/settings"
+                            className={classes.item}
+                            activeClassName="active"
+                            key={"settings"}
+                        >
+                            <ListItem button className={classes.itemLink}>
+                                <ListItemIcon className={classes.itemIcon}>
+                                    <Settings />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={"Settings"}
+                                    className={classes.itemText}
+                                    disableTypography={true}
+                                />
+                            </ListItem>
+                        </NavLink>
                         <ListItem onClick={this.logout} button>
                             <ListItemIcon>
                                 <Logout />
@@ -157,9 +133,13 @@ UserMenu.propTypes = {
     updateChip: PropTypes.func,
 };
 
-const mapDispatch = dispatch => ({
-    updateChip: dispatch.chip.updateChip
+const mapState = state => ({
+    connectedUser: state.usersView.connectedUser,
 });
 
-//export default connect(null, mapDispatch)(withData(withStyles(styles)(UserMenu)));
-export default connect(null, mapDispatch)(withApollo(withStyles(styles)(UserMenu)));
+const mapDispatch = dispatch => ({
+    setLoadFlag: dispatch.usersFetch.setLoadFlag,
+    setLoadUsers: dispatch.usersFetch.setLoadUsers,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(UserMenu));

@@ -15,6 +15,7 @@ import { cfgLabels } from "../../data/Minimongo.js";
 import { cfgQueries } from "../../data/Minimongo.js";
 import { cfgSources } from "../../data/Minimongo.js";
 import { cfgIssues } from "../../data/Minimongo.js";
+import { cfgMilestones } from "../../data/Minimongo.js";
 
 const styles = theme => ({
     root: {
@@ -34,9 +35,11 @@ class Startup extends Component {
             loadedSources,
             loadedLabels,
             loadedQueries,
+            loadedMilestones,
             issuesCount,
             labelsCount,
             queriesCount,
+            milestonesCount,
             sourcesCount
         } = this.props;
 
@@ -49,6 +52,7 @@ class Startup extends Component {
                         Labels: {labelsCount} {loadedLabels && <i>- Complete</i>} <br />
                         Queries: {queriesCount} {loadedQueries && <i>- Complete</i>} <br />
                         Repos: {sourcesCount} {loadedSources && <i>- Complete</i>} <br />
+                        Milestones: {milestonesCount} {loadedMilestones && <i>- Complete</i>} <br />
                     </div>
                 </DialogContent>
             </Dialog>
@@ -65,6 +69,7 @@ const mapState = state => ({
     loadedSources: state.startup.loadedSources,
     loadedLabels: state.startup.loadedLabels,
     loadedQueries: state.startup.loadedQueries,
+    loadedMilestones: state.startup.loadedMilestones,
 });
 
 export default
@@ -75,6 +80,7 @@ export default
             labelsCount: cfgLabels.find({}).count(),
             queriesCount: cfgQueries.find({}).count(),
             sourcesCount: cfgSources.find({}).count(),
+            milestonesCount: cfgMilestones.find({}).count(),
         }})
         (
             withStyles(styles)(Startup)

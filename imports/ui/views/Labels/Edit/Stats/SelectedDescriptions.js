@@ -55,8 +55,8 @@ class SelectedDescriptions extends Component {
     }
 
     buildDataset() {
-        const { selectedRepos } = this.props;
-        let descriptionsElements = _.groupBy(selectedRepos, 'label.description');
+        const { selectedLabels } = this.props;
+        let descriptionsElements = _.groupBy(selectedLabels, 'description');
         let descriptions = Object.keys(descriptionsElements).map(idx => {
             return {
                 items: descriptionsElements[idx],
@@ -72,7 +72,7 @@ class SelectedDescriptions extends Component {
         const { classes } = this.props;
         const { columns, tableColumnExtensions} = this.state;
 
-        console.log(this.buildDataset());
+        //console.log(this.buildDataset());
         return (
             <Card>
                 <CardHeader color="success">
@@ -101,7 +101,7 @@ SelectedDescriptions.propTypes = {
 };
 
 const mapState = state => ({
-    selectedRepos: state.labelsconfiguration.selectedRepos,
+    selectedLabels: state.labelsEdit.selectedLabels,
 
 });
 
