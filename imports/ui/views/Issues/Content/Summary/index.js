@@ -10,8 +10,11 @@ import Grid from '@material-ui/core/Grid';
 
 import DaysToCompletion from './DaysToCompletion/index.js';
 import RemainingWork from './RemainingWork/index.js';
-import VelocityDays from './VelocityDays/index.js';
-import VelocityWeeks from './VelocityWeeks/index.js';
+//import VelocityDays from './VelocityDays/index.js';
+//import VelocityWeeks from './VelocityWeeks/index.js';
+
+import VelocityWeeks from '../../../../components/Cards/VelocityWeeks/index.js';
+import VelocityDays from '../../../../components/Cards/VelocityDays/index.js';
 
 const styles = theme => ({
     root: {
@@ -54,7 +57,7 @@ class Summary extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={6}>
                         {remainingWorkRepos.length > 0 &&
                             <RemainingWork
                                 defaultPoints={defaultPoints}
@@ -64,15 +67,31 @@ class Summary extends Component {
                             />
                         }
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={6}>
                         {velocity !== {} &&
-                            <VelocityDays
-                                velocity={velocity}
-                                defaultPoints={defaultPoints}
-                            />
+                        <DaysToCompletion
+                            velocity={velocity}
+                            defaultPoints={defaultPoints}
+                        />
                         }
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={6}>
+                        {velocity !== {} &&
+                        <VelocityDays
+                            velocity={velocity}
+                            defaultPoints={defaultPoints}
+                        />
+                        }
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
                         {velocity !== {} &&
                             <VelocityWeeks
                                 velocity={velocity}
@@ -80,14 +99,7 @@ class Summary extends Component {
                             />
                         }
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        {velocity !== {} &&
-                            <DaysToCompletion
-                                velocity={velocity}
-                                defaultPoints={defaultPoints}
-                            />
-                        }
-                    </Grid>
+
                 </Grid>
             </div>
         );

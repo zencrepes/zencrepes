@@ -9,16 +9,18 @@ import { RunFast } from 'mdi-material-ui';
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
-import Card from "../../../components/Card/Card";
-import CardHeader from "../../../components/Card/CardHeader";
-import CardIcon from "../../../components/Card/CardIcon";
-import CardFooter from "../../../components/Card/CardFooter";
-import CardBody from "../../../components/Card/CardBody";
-import VelocityBar from "../../../components/Charts/VelocityBar";
-import VelocityLine from "../../../components/Charts/VelocityLine";
-import {getWeekYear} from "../../../utils/velocity";
+import Card from "../../Card/Card";
+import CardHeader from "../../Card/CardHeader";
+import CardIcon from "../../Card/CardIcon";
+import CardFooter from "../../Card/CardFooter";
+import CardBody from "../../Card/CardBody";
+import VelocityBar from "../../Charts/VelocityBar";
+import VelocityLine from "../../Charts/VelocityLine";
+import {getWeekYear} from "../../../utils/velocity/index";
 
-class VelocityWeeks extends Component {
+import CombinationChart from "./CombinationChart.js";
+
+class VelocityDays extends Component {
     constructor(props) {
         super(props);
     }
@@ -55,22 +57,22 @@ class VelocityWeeks extends Component {
 
     buildDataset() {
         const { velocity } = this.props;
-        if (velocity['weeks'] !== undefined ) {
+        if (velocity['days'] !== undefined ) {
             let startPos = 0;
-            let endPos = velocity['weeks'].length;
-            if (velocity['weeks'].length > 16) {
-                startPos = velocity['weeks'].length - 16;
+            let endPos = velocity['days'].length;
+            if (velocity['days'].length > 16) {
+                startPos = velocity['days'].length - 16;
             }
-            return velocity['weeks'].slice(startPos, endPos);
+            return velocity['days'].slice(startPos, endPos);
         } else {
             return [];
         }
     }
 
-    getThisWeekCompleted(dataset) {
+    getTodayCompleted(dataset) {
         let idx = dataset.length - 1;
         if (idx >= 0) {
-            return dataset[idx].completion.issues.count;
+            return dataset[idx].completion.points.count;
         } else {
             return '-';
         }
@@ -87,7 +89,10 @@ class VelocityWeeks extends Component {
 
 
     render() {
-        const { classes } = this.props;
+        const { classes, defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
         let dataset = this.buildDataset();
         return (
             <Card>
@@ -95,18 +100,20 @@ class VelocityWeeks extends Component {
                     <CardIcon color="info">
                         <RunFast />
                     </CardIcon>
-                    <p className={classes.cardCategory}>Completed this week</p>
+                    <p className={classes.cardCategory}>Completed today</p>
                     <h3 className={classes.cardTitle}>
-                        {this.getThisWeekCompleted(dataset)} {this.getDefaultRemainingTxtShrt()}
+                        {this.getTodayCompleted(dataset)} {this.getDefaultRemainingTxtShrt()}
                     </h3>
                 </CardHeader>
                 <CardBody>
-                    <VelocityBar data={this.getVelocityBar(dataset)} />
-                    <VelocityLine data={this.getVelocityLine(dataset)} />
+                    <CombinationChart
+                        dataset={dataset}
+                        metric={metric}
+                    />
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
-                        Team velocity (current assignees) over the past 20 weeks
+                        Team velocity (current assignees) over the past 16 days
                     </div>
                 </CardFooter>
             </Card>
@@ -114,13 +121,8 @@ class VelocityWeeks extends Component {
     }
 }
 
-VelocityWeeks.propTypes = {
+VelocityDays.propTypes = {
     classes: PropTypes.object,
 };
 
-const mapState = state => ({
-    velocity: state.sprintsView.velocity,
-    defaultPoints: true,
-});
-
-export default connect(mapState, null)(withStyles(dashboardStyle)(VelocityWeeks));
+export default withStyles(dashboardStyle)(VelocityDays);

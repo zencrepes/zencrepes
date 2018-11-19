@@ -27,10 +27,11 @@ class IssuesList extends Component {
     }
 
     render() {
-        const { classes, issues } = this.props;
+        const { classes, filteredIssues } = this.props;
+        console.log('render issue list');
         return (
             <div className={classes.root}>
-                <IssuesTable issues={issues} />
+                <IssuesTable filteredIssues={filteredIssues} />
             </div>
         );
     }
@@ -41,7 +42,7 @@ IssuesList.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.issuesView.issues,
+    filteredIssues: state.issuesView.filteredIssues,
 });
 
 const mapDispatch = dispatch => ({

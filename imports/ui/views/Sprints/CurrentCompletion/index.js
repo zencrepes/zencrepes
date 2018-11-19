@@ -13,7 +13,6 @@ import CardBody from "../../../components/Card/CardBody";
  */
 
 import Grid from '@material-ui/core/Grid';
-
 import GaugeChart from './GaugeChart.js';
 
 const styles = theme => ({

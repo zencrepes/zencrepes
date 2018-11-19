@@ -8,7 +8,6 @@ import headerStyle from "../../../assets/jss/material-dashboard-react/components
 
 import Select from "./Select.js";
 import Create from './Create.js';
-import SimpleView from "../../../components/Query/SimpleView/index";
 //import SprintsSelect from "../../components/Sprints/Select";
 
 import AppBar from "@material-ui/core/AppBar";

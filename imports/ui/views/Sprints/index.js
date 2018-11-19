@@ -8,19 +8,13 @@ import General from '../../layouts/General/index.js';
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
-/*
-import Sidebar from '../../components/Sidebar/index.js';
-import Footer from '../../components/Footer/Footer.js';
-import Header from '../../components/Header/index.js';
-*/
 import GridItem from '../../components/Grid/GridItem.js';
 import GridContainer from '../../components/Grid/GridContainer.js';
-import QuerySelect from '../../components/Query/Select/index.js';
 
 //import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
 //import DataLoader from './DataLoader.js';
-import VelocityWeeks from './VelocityWeeks/index.js';
-//import VelocityWeeksb from './VelocityWeeksb/index.js';
+//import VelocityWeeks from './VelocityWeeks/index.js';
+import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 
 import DaysToCompletion from './DaysToCompletion/index.js';
 
@@ -38,6 +32,8 @@ import CreateSprint from './CreateSprint/index.js';
 import CreateMilestones from '../../data/CreateMilestones.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
+
+import ErrorBoundary from '../../ErrorBoundary.js';
 
 class Sprints extends Component {
     constructor(props) {
@@ -63,13 +59,18 @@ class Sprints extends Component {
                     <Actions />
                     <GridContainer>
                         <GridItem xs={12} sm={6} md={4}>
-                            <CurrentCompletion
-                                issues={issues}
-                                labels={labels}
-                            />
+                            <ErrorBoundary>
+                                <CurrentCompletion
+                                    issues={issues}
+                                    labels={labels}
+                                />
+                            </ErrorBoundary>
                         </GridItem>
                         <GridItem xs={12} sm={6} md={4}>
-                            <VelocityWeeks />
+                            <VelocityWeeks
+                                velocity={velocity}
+                                defaultPoints={true}
+                            />
                         </GridItem>
                         <GridItem xs={12} sm={6} md={4}>
                             <DaysToCompletion/>

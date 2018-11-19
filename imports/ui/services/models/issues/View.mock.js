@@ -6,6 +6,8 @@ const mockVelocity = JSON.parse("{\"days\":[{\"date\":\"2016-10-06T00:00:00.000Z
 export default {
     state: {
         issues: mockIssues,
+        filteredIssues: mockIssues,
+        filteredIssuesSearch: '',
         facets: [],
         queries: [],
 
@@ -29,6 +31,8 @@ export default {
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
+        setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
+        setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
         setQueries(state, payload) {return { ...state, queries: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
@@ -51,6 +55,28 @@ export default {
     effects: {
         async initIssues(payload, rootState) {
             console.log('initIssues');
+        },
+
+        async searchIssues(searchString, rootState) {
+            let issues = rootState.issuesView.issues;
+            console.log('SearchString: ' + searchString);
+            console.log(searchString.length);
+            if (searchString.length === 0) {
+                console.log('Clear Issues');
+                this.setFilteredIssues(issues);
+            } else {
+                console.log('Filter Issues');
+                const filteredIssues = issues.filter((issue) => {
+                    if (issue.repo.name === searchString) {
+                        console.log(issue.repo.name);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                this.setFilteredIssues(filteredIssues);
+            }
+            this.setFilteredIssuesSearch(searchString);
         },
 
         async updateQuery(query, rootState) {

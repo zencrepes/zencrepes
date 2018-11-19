@@ -5,8 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-require('highcharts/highcharts-more')(Highcharts);
-require('highcharts/modules/solid-gauge')(Highcharts);
+//require('highcharts/highcharts-more')(Highcharts);
 
 const styles = theme => ({
     root: {
@@ -23,7 +22,7 @@ const styles = theme => ({
     },
 });
 
-class GaugeChart extends Component {
+class CombinationChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -34,19 +33,19 @@ class GaugeChart extends Component {
     };
 
     render() {
-        const { classes, dataset } = this.props;
+        const { classes, dataset, metric } = this.props;
         console.log(dataset);
-        const updatedOptions = {
+        let updatedOptions = {
             title: null,
             xAxis: {
-                categories: dataset.map(week => new Date(week.weekStart).toDateString()),
+                categories: dataset.map(day => new Date(day.date).toDateString()),
                 type: 'datetime',
                 dateTimeLabelFormats: {
                     day: '%e. %b'
                 }
             },
             yAxis: {
-                title: 'Points'
+                title: metric
             },
             plotOptions: {
                 column: {
@@ -59,10 +58,10 @@ class GaugeChart extends Component {
             },
             series: [{
                 type: 'column',
-                name: 'Actual Completion',
-                data: dataset.map((week) => {
-                    if (week.completion.points.count - week.scopeChangeCompletion.points.count > 0) {
-                        return week.completion.points.count - week.scopeChangeCompletion.points.count;
+                name: 'Daily completion',
+                data: dataset.map((day) => {
+                    if (day.completion[metric].count - day.scopeChangeCompletion[metric].count > 0) {
+                        return day.completion[metric].count - day.scopeChangeCompletion[metric].count;
                     } else {
                         return 0;
                     }
@@ -70,14 +69,23 @@ class GaugeChart extends Component {
             }, {
                 type: 'column',
                 name: 'Scope Change',
-                data: dataset.map(week => week.scopeChangeCompletion.points.count)
+                data: dataset.map(day => day.scopeChangeCompletion[metric].count)
             }, {
                 type: 'spline',
-                name: 'Rolling Average',
-                data: dataset.map(week => week.completion.points.velocity),
+                name: 'Completion evolution',
+                data: dataset.map(day => day.completion[metric].velocity),
                 marker: {
                     lineWidth: 2,
                     lineColor: Highcharts.getOptions().colors[3],
+                    fillColor: 'white'
+                }
+            }, {
+                type: 'spline',
+                name: 'Scope change evolution',
+                data: dataset.map(day => day.scopeChangeCompletion[metric].velocity),
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[4],
                     fillColor: 'white'
                 }
             }],
@@ -96,8 +104,8 @@ class GaugeChart extends Component {
     }
 }
 
-GaugeChart.propTypes = {
+CombinationChart.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(GaugeChart);
+export default withStyles(styles)(CombinationChart);

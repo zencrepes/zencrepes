@@ -9,18 +9,18 @@ import { RunFast } from 'mdi-material-ui';
 
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
-import Card from "../../../components/Card/Card";
-import CardHeader from "../../../components/Card/CardHeader";
-import CardIcon from "../../../components/Card/CardIcon";
-import CardFooter from "../../../components/Card/CardFooter";
-import CardBody from "../../../components/Card/CardBody";
-import VelocityBar from "../../../components/Charts/VelocityBar";
-import VelocityLine from "../../../components/Charts/VelocityLine";
-import {getWeekYear} from "../../../utils/velocity";
+import Card from "../../Card/Card";
+import CardHeader from "../../Card/CardHeader";
+import CardIcon from "../../Card/CardIcon";
+import CardFooter from "../../Card/CardFooter";
+import CardBody from "../../Card/CardBody";
+import VelocityBar from "../../Charts/VelocityBar";
+import VelocityLine from "../../Charts/VelocityLine";
+import {getWeekYear} from "../../../utils/velocity/index";
 
 import CombinationChart from "./CombinationChart.js";
 
-class VelocityWeeksb extends Component {
+class VelocityWeeks extends Component {
     constructor(props) {
         super(props);
     }
@@ -72,7 +72,7 @@ class VelocityWeeksb extends Component {
     getThisWeekCompleted(dataset) {
         let idx = dataset.length - 1;
         if (idx >= 0) {
-            return dataset[idx].completion.issues.count;
+            return dataset[idx].completion.points.count;
         } else {
             return '-';
         }
@@ -89,7 +89,10 @@ class VelocityWeeksb extends Component {
 
 
     render() {
-        const { classes } = this.props;
+        const { classes, defaultPoints } = this.props;
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
         let dataset = this.buildDataset();
         return (
             <Card>
@@ -105,11 +108,12 @@ class VelocityWeeksb extends Component {
                 <CardBody>
                     <CombinationChart
                         dataset={dataset}
+                        metric={metric}
                     />
                 </CardBody>
                 <CardFooter stats>
                     <div className={classes.stats}>
-                        Team velocity (current assignees) over the past 20 weeks
+                        Team velocity (current assignees) over the past 16 weeks
                     </div>
                 </CardFooter>
             </Card>
@@ -117,13 +121,8 @@ class VelocityWeeksb extends Component {
     }
 }
 
-VelocityWeeksb.propTypes = {
+VelocityWeeks.propTypes = {
     classes: PropTypes.object,
 };
 
-const mapState = state => ({
-    velocity: state.sprintsView.velocity,
-    defaultPoints: true,
-});
-
-export default connect(mapState, null)(withStyles(dashboardStyle)(VelocityWeeksb));
+export default withStyles(dashboardStyle)(VelocityWeeks);

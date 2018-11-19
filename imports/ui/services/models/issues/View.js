@@ -9,6 +9,8 @@ import { refreshVelocity } from '../../../utils/velocity/index.js';
 export default {
     state: {
         issues: [],
+        filteredIssues: [],
+        filteredIssuesSearch: '',
         facets: [],
         queries: [],
 
@@ -32,6 +34,8 @@ export default {
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
+        setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
+        setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
         setQueries(state, payload) {return { ...state, queries: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
@@ -137,6 +141,20 @@ export default {
         async refreshIssues(payload, rootState) {
             let issues = cfgIssues.find(rootState.issuesView.query).fetch();
             this.setIssues(issues);
+            this.setFilteredIssues(issues);
+            this.setFilteredIssuesSearch('');
+        },
+
+        async searchIssues(searchString, rootState) {
+            let issues = rootState.issuesView.issues;
+            this.setFilteredIssues(issues.filter((issue) => {
+                if (issue.repo.name === searchString) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }));
+            this.setFilteredIssuesSearch(searchString);
         },
 
         async refreshSummary(payload, rootState) {

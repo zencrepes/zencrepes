@@ -17,6 +17,9 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TablePaginationActions from './TablePaginationActions.js';
 import Issue from './Issue.js';
 
+import Header from './Header/index.js';
+
+
 const styles = theme => ({
     root: {
         /*
@@ -47,23 +50,20 @@ class IssuesTable extends Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
-
     render() {
-        const { classes, issues } = this.props;
+        const { classes, filteredIssues } = this.props;
         const { rowsPerPage, page } = this.state;
 
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, issues.length - page * rowsPerPage);
+        const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredIssues.length - page * rowsPerPage);
 
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{issues.length} Issues</TableCell>
-                        </TableRow>
-                    </TableHead>
+                    <Header
+                        filteredIssues={filteredIssues}
+                    />
                     <TableBody>
-                        {issues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(issue => {
+                        {filteredIssues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(issue => {
                             return (
                                 <Issue issue={issue} key={issue.id} />
                             );
@@ -78,7 +78,7 @@ class IssuesTable extends Component {
                         <TableRow>
                             <TablePagination
                                 colSpan={3}
-                                count={issues.length}
+                                count={filteredIssues.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 onChangePage={this.handleChangePage}
@@ -97,12 +97,4 @@ IssuesTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesTable));
+export default withStyles(styles)(IssuesTable);
