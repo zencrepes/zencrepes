@@ -36,13 +36,22 @@ class CombinationChart extends Component {
         const { classes, dataset, metric } = this.props;
         console.log(dataset);
         let updatedOptions = {
+            chart: {
+                height: 300,
+            },
             title: null,
             xAxis: {
-                categories: dataset.map(week => new Date(week.weekStart).toDateString()),
+                categories: dataset.map(week => new Date(week.weekStart)),
                 type: 'datetime',
-                dateTimeLabelFormats: {
-                    day: '%e. %b'
-                }
+                labels: {
+                    format: '{value:%b. %e}'
+                },
+            },
+            tooltip: {
+                formatter: function () {
+                    return Highcharts.dateFormat('%B %e, %Y', this.x) + '<br/>' +
+                        this.series.name + ':' + Highcharts.numberFormat(this.y);
+                },
             },
             yAxis: {
                 title: metric
@@ -54,11 +63,15 @@ class CombinationChart extends Component {
                         enabled: true,
                         color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
                     }
+                },
+                series: {
+                    pointPadding: 0,
+                    groupPadding: 0,
                 }
             },
             series: [{
                 type: 'column',
-                name: 'Weekly completion',
+                name: 'Completed',
                 data: dataset.map((week) => {
                     if (week.completion[metric].count - week.scopeChangeCompletion[metric].count > 0) {
                         return week.completion[metric].count - week.scopeChangeCompletion[metric].count;
@@ -72,7 +85,7 @@ class CombinationChart extends Component {
                 data: dataset.map(week => week.scopeChangeCompletion[metric].count)
             }, {
                 type: 'spline',
-                name: 'Completion evolution',
+                name: 'Velocity',
                 data: dataset.map(week => week.completion[metric].velocity),
                 marker: {
                     lineWidth: 2,
@@ -81,7 +94,7 @@ class CombinationChart extends Component {
                 }
             }, {
                 type: 'spline',
-                name: 'Scope change evolution',
+                name: 'SC Evo.',
                 data: dataset.map(week => week.scopeChangeCompletion[metric].velocity),
                 marker: {
                     lineWidth: 2,
