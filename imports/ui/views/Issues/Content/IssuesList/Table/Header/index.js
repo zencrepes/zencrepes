@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
-import Search from "./Search";
+//import Search from "./Search";
 import Table from "@material-ui/core/Table/Table";
 import Grid from "@material-ui/core/Grid/Grid";
 import IssuesFacets from "../../../../Facets";
@@ -46,7 +46,7 @@ class Header extends Component {
                                 <span>{filteredIssues.length} Issues</span>
                             </Grid>
                             <Grid item xs={12} sm container>
-                                <Search />
+
                             </Grid>
                         </Grid>
                     </TableCell>
