@@ -42,8 +42,15 @@ const styles = theme => ({
     issueTitle: {
         fontSize: '16px',
         color: '#000000!important',
+        textDecoration: "none",
+    },
+    authorLink: {
+        textDecoration: "none",
+        fontSize: '12px',
+        color: '#586069!important',
     },
     issueSubTitle: {
+        textDecoration: "none",
         fontSize: '12px',
         color: '#586069!important',
     },
@@ -57,12 +64,12 @@ const styles = theme => ({
     iconOpen: {
         margin: theme.spacing.unit,
         fontSize: 20,
-        color: green[800],
+        color: red[800],
     },
     iconClosed: {
         margin: theme.spacing.unit,
         fontSize: 20,
-        color: red[800],
+        color: green[800],
     },
     iconSprint: {
         margin: theme.spacing.unit,
@@ -115,10 +122,10 @@ class Issue extends Component {
                                 spacing={8}
                             >
                                 <Grid item >
-                                    <a href="#" className={classes.repoName}>{issue.org.login}/{issue.repo.name}</a>
+                                    <a href={issue.repo.url} className={classes.repoName} target="_blank">{issue.org.login}/{issue.repo.name}</a>
                                 </Grid>
-                                <Grid item xs={12} sm container className={classes.issueTitle}>
-                                    {issue.title}
+                                <Grid item xs={12} sm container >
+                                    <a href={issue.url} className={classes.issueTitle} target="_blank">{issue.title}</a>
                                 </Grid>
                             </Grid>
                             <Grid
@@ -129,7 +136,7 @@ class Issue extends Component {
                                 spacing={8}
                             >
                                 <Grid item className={classes.issueSubTitle}>
-                                    #{issue.number} opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment> by #{issue.author.login}
+                                    <a href={issue.url} className={classes.issueSubTitle} target="_blank">#{issue.number}</a> opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a>
                                 </Grid>
                                 <Grid item xs={12} sm container className={classes.sprintName}>
                                     {issue.milestone !== null &&
