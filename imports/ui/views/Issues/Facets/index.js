@@ -32,6 +32,7 @@ class IssuesFacets extends Component {
 
     render() {
         const { classes, facets, query, addRemoveQuery, defaultPoints } = this.props;
+        console.log(facets);
         return (
             <div className={classes.root}>
                 {facets.map(facet => {

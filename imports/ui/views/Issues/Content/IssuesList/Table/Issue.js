@@ -21,6 +21,7 @@ import red from '@material-ui/core/colors/red';
 import Button from '@material-ui/core/Button';
 
 import Moment from 'react-moment';
+import {primaryColor} from "../../../../../assets/jss/material-dashboard-react/material-dashboard-react";
 
 const styles = theme => ({
     root: {
@@ -36,6 +37,7 @@ const styles = theme => ({
         color: '#586069!important',
         fontSize: '16px',
         marginRight: '5px',
+        textDecoration: "none",
     },
     issueTitle: {
         fontSize: '16px',
@@ -72,7 +74,7 @@ const styles = theme => ({
         marginTop: 10,
         padding: 5,
         border: "1px solid #eeeeee",
-    }
+    },
 });
 
 
@@ -112,8 +114,8 @@ class Issue extends Component {
                                 alignItems="flex-start"
                                 spacing={8}
                             >
-                                <Grid item className={classes.repoName}>
-                                    <a href="#">{issue.org.login}/{issue.repo.name}</a>
+                                <Grid item >
+                                    <a href="#" className={classes.repoName}>{issue.org.login}/{issue.repo.name}</a>
                                 </Grid>
                                 <Grid item xs={12} sm container className={classes.issueTitle}>
                                     {issue.title}

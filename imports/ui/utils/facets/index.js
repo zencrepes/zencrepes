@@ -121,24 +121,25 @@ const buildFacetValues = (query, cfgIssues, facet) => {
             if (issue[facet.key].totalCount === 0) {
                 let pushObj = {};
                 pushObj[facet.nestedKey] = facet.nullValue;
-                allValues.push(pushObj);
+                allValues.push({...pushObj, issue: issue});
             } else {
                 issue[facet.key].edges.map((nestedValue) => {
                     if (nestedValue.node[facet.nestedKey] === null || nestedValue.node[facet.nestedKey] === '' || nestedValue.node[facet.nestedKey] === undefined ) {
                         //console.log({...nestedValue.node, name: nestedValue.node.login});
                         allValues.push({...nestedValue.node, name: nestedValue.node.login});
                     } else {
-                        allValues.push(nestedValue.node);
+                        allValues.push({...nestedValue.node, issue: issue});
                     }
                 })
             }
         });
-        //console.log(allValues);
         statesGroup = _.groupBy(allValues, facet.nestedKey);
     } else {
+        console.log(facetQuery);
+        //statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
         statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
     }
-    //console.log(statesGroup);
+    console.log(statesGroup);
     // If the key is 'undefined', replace with default facet name
     if (statesGroup['undefined'] !== undefined) {
         statesGroup[facet.nullName] = statesGroup['undefined'];
@@ -151,7 +152,10 @@ const buildFacetValues = (query, cfgIssues, facet) => {
                 name: name,
                 //issues: Object.values(content),
                 count: Object.values(content).length,
-                points: Object.values(content).map(i => i.points).reduce((acc, points) => acc + points, 0)
+                points: Object.values(content).map((node) => {
+                    if (node.issue !== undefined) { return node.issue.points;}
+                    else {return node.points;}
+                }).reduce((acc, points) => acc + points, 0)
             }
         });
 

@@ -23,7 +23,14 @@ class Filters extends Component {
      * getActiveFacets() parse query and returns facets contained in that query
      */
     getActiveFacets = (query, facets) => {
-        return facets.filter(facet => query[facet.key] !== undefined || query[facet.key + '.edges'] !== undefined).map((facet) => {
+        return facets.filter((facet) => {
+            if (query[facet.key] !== undefined || query[facet.key + '.edges'] !== undefined) {
+                return true;
+            } else {
+                return false;
+            }
+        }).map((facet) => {
+            console.log(facet);
             if (facet.nested === false) {
                 return {...facet, values: query[facet.key]['$in']};
             } else {
@@ -44,7 +51,6 @@ class Filters extends Component {
                     alignItems="flex-start"
                     spacing={0}
                 >
-
                     {activeFacets.map(facet => (
                         <Grid item key={facet.name}>
                             <Aggregation
