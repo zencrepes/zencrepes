@@ -8,14 +8,7 @@ import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
 
-import dashboardStyle from "../../../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
-
-import { Worker } from 'mdi-material-ui';
-import Card from "../../../../../components/Card/Card";
-import CardHeader from "../../../../../components/Card/CardHeader";
-import CardIcon from "../../../../../components/Card/CardIcon";
-import CardFooter from "../../../../../components/Card/CardFooter";
-import CardBody from "../../../../../components/Card/CardBody";
+import CustomCard from "../../../../../components/CustomCard/index.js";
 
 import ReposTreemap from "./ReposTreemap";
 
@@ -67,25 +60,13 @@ class RemainingWork extends Component {
         const { classes, defaultPoints, remainingWorkPoints, remainingWorkRepos, remainingWorkCount  } = this.props;
 
         return (
-            <Card>
-                <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                        <Worker />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>Remaining {this.getDefaultRemainingTxt()}</p>
-                    <h3 className={classes.cardTitle}>
-                        {this.getDefaultRemaining()} {this.getDefaultRemainingTxtShrt()}
-                    </h3>
-                </CardHeader>
-                <CardBody>
-                    <ReposTreemap repos={remainingWorkRepos} defaultPoints={defaultPoints}/>
-                </CardBody>
-                <CardFooter stats>
-                    <div className={classes.stats}>
-                        Work repartition by repository
-                    </div>
-                </CardFooter>
-            </Card>
+            <CustomCard
+                headerTitle="Remaining work distribution"
+                headerFactTitle={"Remaining " + this.getDefaultRemainingTxt()}
+                headerFactValue={this.getDefaultRemaining() + " " + this.getDefaultRemainingTxtShrt()}
+            >
+                <ReposTreemap repos={remainingWorkRepos} defaultPoints={defaultPoints}/>
+            </CustomCard>
         );
     }
 }
@@ -94,4 +75,4 @@ RemainingWork.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(dashboardStyle)(RemainingWork);
+export default withStyles(styles)(RemainingWork);

@@ -6,7 +6,7 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
-import IssuesTable from './Table/index.js';
+import IssuesTable from '../../../../components/IssuesTable/index.js';
 
 const styles = theme => ({
     root: {

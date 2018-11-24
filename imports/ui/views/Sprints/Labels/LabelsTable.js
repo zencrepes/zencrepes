@@ -61,7 +61,7 @@ class LabelsTable extends Component {
                     <Table columnExtensions={tableColumnExtensions} />
                     <TableHeaderRow />
                 </Grid>
-                <i>*Issues with multiple assignees are counted multiple times</i>
+                <i>*Issues with multiple labels are counted multiple times</i>
             </div>
         );
     }

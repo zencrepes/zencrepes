@@ -18,6 +18,8 @@ import VelocityBar from "../../Charts/VelocityBar";
 import VelocityLine from "../../Charts/VelocityLine";
 import {getWeekYear} from "../../../utils/velocity/index";
 
+import CustomCard from '../../CustomCard/index.js';
+
 import CombinationChart from "./CombinationChart.js";
 
 class VelocityDays extends Component {
@@ -95,28 +97,16 @@ class VelocityDays extends Component {
 
         let dataset = this.buildDataset();
         return (
-            <Card>
-                <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                        <RunFast />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>Completed today</p>
-                    <h3 className={classes.cardTitle}>
-                        {this.getTodayCompleted(dataset)} {this.getDefaultRemainingTxtShrt()}
-                    </h3>
-                </CardHeader>
-                <CardBody>
-                    <CombinationChart
-                        dataset={dataset}
-                        metric={metric}
-                    />
-                </CardBody>
-                <CardFooter stats>
-                    <div className={classes.stats}>
-                        Team velocity (current assignees) over the past 16 days
-                    </div>
-                </CardFooter>
-            </Card>
+            <CustomCard
+                headerTitle="Velocity over 16 days"
+                headerFactTitle="Completed today"
+                headerFactValue={this.getTodayCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
+            >
+                <CombinationChart
+                    dataset={dataset}
+                    metric={metric}
+                />
+            </CustomCard>
         );
     }
 }

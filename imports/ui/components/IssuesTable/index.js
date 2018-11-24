@@ -38,7 +38,7 @@ class IssuesTable extends Component {
         super(props);
         this.state = {
             page: 0,
-            rowsPerPage: 100,
+            rowsPerPage: 25,
         };
     }
 

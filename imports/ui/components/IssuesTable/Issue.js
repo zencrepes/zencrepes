@@ -21,7 +21,6 @@ import red from '@material-ui/core/colors/red';
 import Button from '@material-ui/core/Button';
 
 import Moment from 'react-moment';
-import {primaryColor} from "../../../../../assets/jss/material-dashboard-react/material-dashboard-react";
 
 const styles = theme => ({
     root: {

@@ -77,13 +77,19 @@ class Sprints extends Component {
                         </GridItem>
                     </GridContainer>
                     <GridContainer>
+                        <GridItem xs={12} sm={6} md={12}>
+                            <Issues />
+                        </GridItem>
+                    </GridContainer>
+                    <GridContainer>
                         <GridItem xs={12} sm={6} md={4}>
                             <Assignees />
-                            <Repositories />
-                            <Labels />
                         </GridItem>
-                        <GridItem xs={12} sm={6} md={8}>
-                            <Issues />
+                        <GridItem xs={12} sm={6} md={4}>
+                            <Repositories />
+                        </GridItem>
+                        <GridItem xs={12} sm={6} md={4}>
+                            <Labels />
                         </GridItem>
                     </GridContainer>
                 </General>

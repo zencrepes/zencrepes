@@ -9,7 +9,6 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 //import Search from "./Search";
 import Table from "@material-ui/core/Table/Table";
 import Grid from "@material-ui/core/Grid/Grid";
-import IssuesFacets from "../../../../Facets";
 
 const styles = theme => ({
     root: {
