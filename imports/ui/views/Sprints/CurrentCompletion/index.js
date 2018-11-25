@@ -13,7 +13,6 @@ const styles = theme => ({
     }
 });
 
-
 class CurrentCompletion extends Component {
     constructor(props) {
         super(props);

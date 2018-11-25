@@ -4,16 +4,10 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
+import Grid from '@material-ui/core/Grid';
+
 import General from '../../layouts/General/index.js';
 
-import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
-
-import GridItem from '../../components/Grid/GridItem.js';
-import GridContainer from '../../components/Grid/GridContainer.js';
-
-//import OverallVelocityWeeks from './OverallVelocityWeeks/index.js';
-//import DataLoader from './DataLoader.js';
-//import VelocityWeeks from './VelocityWeeks/index.js';
 import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 
 import DaysToCompletion from './DaysToCompletion/index.js';
@@ -25,6 +19,7 @@ import Repositories from './Repositories/index.js';
 import Labels from './Labels/index.js';
 import Issues from './Issues/index.js';
 import Actions from './Actions/index.js';
+import Summary from './Summary/index.js';
 
 import CurrentCompletion from './CurrentCompletion/index.js';
 
@@ -34,6 +29,11 @@ import CreateMilestones from '../../data/CreateMilestones.js';
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
 
 import ErrorBoundary from '../../ErrorBoundary.js';
+
+const styles = theme => ({
+    root: {
+    }
+});
 
 class Sprints extends Component {
     constructor(props) {
@@ -57,41 +57,70 @@ class Sprints extends Component {
                     <CreateSprint />
                     <CreateMilestones />
                     <Actions />
-                    <GridContainer>
-                        <GridItem xs={12} sm={6} md={4}>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm={6} md={8}>
+                            <Summary />
+                        </Grid>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm={6} md={4}>
                             <ErrorBoundary>
                                 <CurrentCompletion
                                     issues={issues}
                                     labels={labels}
                                 />
                             </ErrorBoundary>
-                        </GridItem>
-                        <GridItem xs={12} sm={6} md={4}>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
                             <VelocityWeeks
                                 velocity={velocity}
                                 defaultPoints={true}
                             />
-                        </GridItem>
-                        <GridItem xs={12} sm={6} md={4}>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
                             <DaysToCompletion/>
-                        </GridItem>
-                    </GridContainer>
-                    <GridContainer>
-                        <GridItem xs={12} sm={6} md={12}>
+                        </Grid>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm={12} md={12}>
                             <Issues />
-                        </GridItem>
-                    </GridContainer>
-                    <GridContainer>
-                        <GridItem xs={12} sm={6} md={4}>
+                        </Grid>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm={6} md={4}>
                             <Assignees />
-                        </GridItem>
-                        <GridItem xs={12} sm={6} md={4}>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
                             <Repositories />
-                        </GridItem>
-                        <GridItem xs={12} sm={6} md={4}>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
                             <Labels />
-                        </GridItem>
-                    </GridContainer>
+                        </Grid>
+                    </Grid>
                 </General>
             </div>
         );
@@ -110,4 +139,4 @@ const mapState = state => ({
     velocity: state.sprintsView.velocity,
 });
 
-export default connect(mapState, null)(withRouter(withStyles(dashboardStyle)(Sprints)));
+export default connect(mapState, null)(withRouter(withStyles(styles)(Sprints)));

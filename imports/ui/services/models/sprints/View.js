@@ -24,7 +24,13 @@ import {
 export default {
     state: {
         sprints: [],
-        selectedSprintTitle: 'No Sprint Selected',
+        selectedSprintTitle: null,
+        selectedSprintDescription: null,
+        selectedSprintDueDate: null,
+        editSprint: false,
+        editSprintTitle: null,
+        editSprintDescription: null,
+        editSprintDueDate: null,
 
         assignees: [],
         availableAssignees: [],
@@ -55,6 +61,12 @@ export default {
     reducers: {
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setSelectedSprintTitle(state, payload) {return { ...state, selectedSprintTitle: payload };},
+        setSelectedSprintDescription(state, payload) {return { ...state, selectedSprintDescription: payload };},
+        setSelectedSprintDueDate(state, payload) {return { ...state, selectedSprintDueDate: payload };},
+        setEditSprint(state, payload) {return { ...state, editSprint: payload };},
+        setEditSprintTitle(state, payload) {return { ...state, editSprintTitle: payload };},
+        setEditSprintDescription(state, payload) {return { ...state, editSprintDescription: payload };},
+        setEditSprintDueDate(state, payload) {return { ...state, editSprintDueDate: payload };},
 
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
@@ -132,6 +144,8 @@ export default {
             this.setMilestones(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch());
 
             this.updateVelocity(assignees);
+
+            this.updateDescriptionDate();
         },
 
         async updateVelocity(assignees, rootState) {
@@ -154,6 +168,24 @@ export default {
             dataObject = populateTicketsPerWeek(dataObject);
 
             this.setVelocity(dataObject);
+        },
+
+        async updateDescriptionDate(payload, rootState) {
+            console.log(rootState.sprintsView.milestones);
+
+            /*
+            this.setSelectedSprintDescription('# Live demo\n' +
+                '\n' +
+                'Changes are automatically rendered as you type.\n' +
+                '\n' +
+                '* Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)\n' +
+                '* Renders actual, "native" React DOM elements\n' +
+                '* Allows you to escape or skip HTML (try toggling the checkboxes above)\n' +
+                '* If you escape or skip the HTML, no `dangerouslySetInnerHTML` is used! Yay!\n' +
+                '\n');
+                */
+            this.setSelectedSprintDescription(rootState.sprintsView.milestones[0].description);
+            this.setSelectedSprintDueDate(rootState.sprintsView.milestones[0].dueOn);
         },
 
         async updateAvailableAssigneesFilter(payload, rootState) {

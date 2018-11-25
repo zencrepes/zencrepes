@@ -39,7 +39,7 @@ class GaugeChart extends Component {
         const options = {
             chart: {
                 type: 'solidgauge',
-                height: 200
+                height: 300,
             },
 
             title: null,

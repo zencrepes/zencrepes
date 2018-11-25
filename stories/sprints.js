@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { init } from "@rematch/core";
 
 import Actions from '../imports/ui/views/Sprints/Actions/index.js';
+import Summary from '../imports/ui/views/Sprints/Summary/index.js';
 import CurrentCompletion from '../imports/ui/views/Sprints/CurrentCompletion/index.js';
 
 // The *.mock.js files contains static redux stores configuration with no external dependencies (such as minimongo).
@@ -27,6 +28,9 @@ storiesOf('Sprints', module)
     .addDecorator(story => <Provider store={store}>{story()}</Provider>)
     .add('Action Bar', () => (
         <Actions />
+    ))
+    .add('Summary', () => (
+        <Summary />
     ))
     .add('Current Completion', () => (
         <CurrentCompletion
