@@ -25,9 +25,29 @@ class Issues extends Component {
         super(props);
     }
 
+    //https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     componentDidMount() {
-        const { initIssues } = this.props;
-        initIssues();
+        const { updateQuery } = this.props;
+        const params = new URLSearchParams(this.props.location.search);
+        const queryUrl = params.get('q');
+        if (queryUrl === null) {
+            updateQuery({});
+        } else {
+            updateQuery(JSON.parse(queryUrl));
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { updateQuery } = this.props;
+        const params = new URLSearchParams(this.props.location.search);
+        const queryUrl = params.get('q');
+
+        const oldParams = new URLSearchParams(prevProps.location.search);
+        const oldQueryUrl = oldParams.get('q');
+
+        if (queryUrl !== oldQueryUrl) {
+            updateQuery(JSON.parse(queryUrl));
+        }
     };
 
     render() {
@@ -78,7 +98,7 @@ Issues.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    initIssues: dispatch.issuesView.initIssues,
+    updateQuery: dispatch.issuesView.updateQuery,
 });
 
 export default connect(null, mapDispatch)(withRouter(withStyles(styles)(Issues)));

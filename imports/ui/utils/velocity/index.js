@@ -156,15 +156,17 @@ export const initObject = (firstDay, lastDay) => {
         if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
             initObject['days'][currentDate.toJSON().slice(0, 10)] = {
                 date: currentDate.toJSON(),
-                issues: {count: 0, velocity: 0},
-                points: {count: 0, velocity: 0},
+//                issues: {count: 0, velocity: 0},
+//                points: {count: 0, velocity: 0},
                 completion: {
                     issues: {count: 0, velocity: 0},
                     points: {count: 0, velocity: 0},
+                    list: [],
                 },
                 scopeChangeCompletion: {
                     issues: {count: 0, velocity: 0},
                     points: {count: 0, velocity: 0},
+                    list: [],
                 }
             };
         }
@@ -185,10 +187,12 @@ export const initObject = (firstDay, lastDay) => {
                 completion: {
                     issues: {count: 0, velocity: 0},
                     points: {count: 0, velocity: 0},
+                    list: [],
                 },
                 scopeChangeCompletion: {
                     issues: {count: 0, velocity: 0},
                     points: {count: 0, velocity: 0},
+                    list: [],
                 }
             };
         }
@@ -227,21 +231,24 @@ export const calculateAverageVelocity = (array, category, indexValue) => {
 */
 export const populateObject = (dataObject, issues) => {
     issues.forEach((issue) => {
-        if (dataObject['days'][issue.closedAt.slice(0, 10)] !== undefined) {
-            dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['issues']['count']++;
-            if (issue.points !== null) {
-                dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['points']['count'] += issue.points;
-            }
-
-            //Calculating if scope changed for this issue
-            if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length !== 0) {
-                dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['issues']['count']++;
+        if (issue.closedAt !== null) {
+            if (dataObject['days'][issue.closedAt.slice(0, 10)] !== undefined) {
+                dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['issues']['count']++;
+                dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['list'].push(issue);
                 if (issue.points !== null) {
-                    dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['points']['count'] += issue.points;
+                    dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['points']['count'] += issue.points;
+                }
+
+                //Calculating if scope changed for this issue
+                if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length !== 0) {
+                    dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['issues']['count']++;
+                    dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['list'].push(issue);
+                    if (issue.points !== null) {
+                        dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['points']['count'] += issue.points;
+                    }
                 }
             }
-        }
-        if (issue.closedAt !== null) {
+
             let closedDate = new Date(issue.closedAt);
             let closedMonthDay = closedDate.getDate();
             if (closedDate.getDay() !== 0) {closedMonthDay = closedMonthDay - closedDate.getDay();}
@@ -249,6 +256,7 @@ export const populateObject = (dataObject, issues) => {
             let closedWeek = new Date(closedDate.getFullYear(), closedDate.getMonth(), closedMonthDay );
             if (dataObject['weeks'][closedWeek] !== undefined) {
                 dataObject['weeks'][closedWeek]['completion']['issues']['count']++;
+                dataObject['weeks'][closedWeek]['completion']['list'].push(issue);
                 if (issue.points !== null) {
                     dataObject['weeks'][closedWeek]['completion']['points']['count'] += issue.points;
                 }
@@ -256,6 +264,7 @@ export const populateObject = (dataObject, issues) => {
                 //Calculating if scope changed for this issue
                 if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length !== 0) {
                     dataObject['weeks'][closedWeek]['scopeChangeCompletion']['issues']['count']++;
+                    dataObject['weeks'][closedWeek]['scopeChangeCompletion']['list'].push(issue);
                     if (issue.points !== null) {
                         dataObject['weeks'][closedWeek]['scopeChangeCompletion']['points']['count'] += issue.points;
                     }

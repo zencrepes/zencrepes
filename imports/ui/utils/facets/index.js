@@ -9,6 +9,13 @@ import {
 //import {cfgIssues} from "../../data/Minimongo";
 
 const aggregationsModel = {
+    ids: {
+        key: 'id',
+        name: 'Id',
+        nested: false,
+        aggregations: {},
+        hiddenFacet: true,
+    },
     repos: {
         key: 'repo.name',
         name: 'Repositories',
@@ -81,9 +88,13 @@ export const buildFacets = (query, cfgIssues) => {
     });
 
     return aggregations.map((facet) => {
+        let facetValues = {};
+        if (facet.hiddenFacet === undefined) {
+            facetValues = buildFacetValues(query, cfgIssues, facet);
+        }
         return {
             ...facet,
-            values: buildFacetValues(query, cfgIssues, facet)
+            values: facetValues
         };
     });
 };

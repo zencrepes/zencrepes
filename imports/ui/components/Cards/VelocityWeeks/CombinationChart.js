@@ -5,17 +5,13 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 //require('highcharts/highcharts-more')(Highcharts);
 
 const styles = theme => ({
     root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
+
     },
     toolbarButtons: {
         flex: 1,
@@ -32,6 +28,25 @@ class CombinationChart extends Component {
         return completed + " / " + max;
     };
 
+    clickBar = (event) => {
+        console.log(event.point);
+        if (event.point.issues !== undefined && event.point.issues.length > 0) {
+            const issues = event.point.issues;
+            const issuesArrayQuery = issues.map(issue => issue.id);
+            const query = {'id': {'$in': issuesArrayQuery}};
+            this.props.history.push({
+                pathname: '/issues',
+                search: '?q=' + JSON.stringify(query),
+                state: { detail: query }
+            });
+        }
+    };
+
+    /*
+    formatTooltip = (tooltip) => {
+        console.log(tooltip);
+    };
+    */
     render() {
         const { classes, dataset, metric } = this.props;
         console.log(dataset);
@@ -48,6 +63,7 @@ class CombinationChart extends Component {
                 },
             },
             tooltip: {
+                //formatter: this.formatTooltip
                 formatter: function () {
                     return Highcharts.dateFormat('%B %e, %Y', this.x) + '<br/>' +
                         this.series.name + ':' + Highcharts.numberFormat(this.y);
@@ -67,6 +83,9 @@ class CombinationChart extends Component {
                 series: {
                     pointPadding: 0,
                     groupPadding: 0,
+                    events: {
+                        click: this.clickBar
+                    }
                 }
             },
             series: [{
@@ -74,7 +93,10 @@ class CombinationChart extends Component {
                 name: 'Completed',
                 data: dataset.map((week) => {
                     if (week.completion[metric].count - week.scopeChangeCompletion[metric].count > 0) {
-                        return week.completion[metric].count - week.scopeChangeCompletion[metric].count;
+                        return {
+                            y: week.completion[metric].count - week.scopeChangeCompletion[metric].count,
+                            issues: week.completion.list,
+                        };
                     } else {
                         return 0;
                     }
@@ -82,7 +104,12 @@ class CombinationChart extends Component {
             }, {
                 type: 'column',
                 name: 'Scope Change',
-                data: dataset.map(week => week.scopeChangeCompletion[metric].count)
+                data: dataset.map((week) => {
+                    return {
+                        y: week.scopeChangeCompletion[metric].count,
+                        issues: week.scopeChangeCompletion.list,
+                    }
+                })
             }, {
                 type: 'spline',
                 name: 'Velocity',
@@ -121,4 +148,5 @@ CombinationChart.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(CombinationChart);
+//export default withStyles(styles)(CombinationChart);
+export default withRouter(withStyles(styles)(CombinationChart));

@@ -56,27 +56,20 @@ export default {
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
     },
     effects: {
-        async initIssues(payload, rootState) {
-            this.refreshFacets();
-            this.refreshIssues();
-            this.refreshQueries();
-
-            this.setShouldBurndownDataReload(true);
-            this.refreshSummary();
-            this.refreshVelocity();
-        },
-
         async updateQuery(query, rootState) {
             console.log('updateQuery: ' + JSON.stringify(query));
             this.setQuery(query);
 
-            this.setShouldBurndownDataReload(true);
+            this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
+
+            this.setShouldBurndownDataReload(true);
             this.refreshSummary();
             this.refreshVelocity();
         },
 
+        // TODO - Removed, this was moved to the view component
         async addRemoveQuery(valueName, rootState, facet) {
             console.log('addRemoveQuery');
             let query = rootState.issuesView.query;

@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import CustomCard from "../../../components/CustomCard/index.js";
 
 import Edit from './Edit/index.js';
+import CloseSprint from './CloseSprint.js';
 
 const styles = theme => ({
     root: {
@@ -89,11 +90,24 @@ class Summary extends Component {
                         )}
                     </Grid>
                     <Grid item >
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={8}
+                        >
                         {!editSprint &&
-                            <Button onClick={this.openEditSprint} color="primary" autoFocus>
-                                Edit
-                            </Button>
+                            <Grid item >
+                                <Button variant="raised" color="primary" onClick={this.openEditSprint} autoFocus>
+                                    Edit Sprint
+                                </Button>
+                            </Grid>
                         }
+                            <Grid item >
+                                <CloseSprint />
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </CustomCard>

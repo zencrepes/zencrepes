@@ -17,6 +17,9 @@ import Filters from './Filters/index.js';
 import QuerySave from './Save/index.js';
 import QueryManage from './Manage/index.js';
 
+import { addRemoveFromQuery } from "../../../utils/query/index.js";
+import {withRouter} from "react-router-dom";
+
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -39,9 +42,11 @@ class IssuesQuery extends Component {
     }
 
     clearQuery = () => {
-        console.log('clearQuery');
-        const { updateQuery } = this.props;
-        updateQuery({});
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q={}',
+            state: { detail: '{}' }
+        });
     };
 
     loadQuery = (query) => {
@@ -62,8 +67,13 @@ class IssuesQuery extends Component {
     };
 
     updateQuery = (valueName, facet) => {
-        const { addRemoveQuery } = this.props;
-        addRemoveQuery(valueName, facet)
+        const { query } = this.props;
+        const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + JSON.stringify(modifiedQuery),
+            state: { detail: modifiedQuery }
+        });
     };
 
     setOpenSaveQueryDialog = (state) => {
@@ -181,7 +191,7 @@ const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
     saveQuery: dispatch.issuesView.saveQuery,
     deleteQuery: dispatch.issuesView.deleteQuery,
-    addRemoveQuery: dispatch.issuesView.addRemoveQuery,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
+export default withRouter(connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery)));
+

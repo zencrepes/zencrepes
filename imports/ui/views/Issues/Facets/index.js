@@ -6,6 +6,9 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
+import { withRouter, Link } from 'react-router-dom';
+
+import { addRemoveFromQuery } from '../../../utils/query/index.js';
 import TermFacet from './Term/index.js';
 
 const styles = theme => ({
@@ -30,18 +33,29 @@ class IssuesFacets extends Component {
         super(props);
     }
 
+    addRemoveQuery = (valueName, facet) => {
+        const { query } = this.props;
+        const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + JSON.stringify(modifiedQuery),
+            state: { detail: modifiedQuery }
+        });
+    };
+
     render() {
         const { classes, facets, query, addRemoveQuery, defaultPoints } = this.props;
         console.log(facets);
         return (
             <div className={classes.root}>
-                {facets.map(facet => {
+                {facets.filter(facet => facet.hiddenFacet === undefined).map(facet => {
                     return ( <TermFacet
                         facet={facet}
                         key={facet.name}
                         query={query}
                         defaultPoints={defaultPoints}
-                        addRemoveQuery={addRemoveQuery}
+                        //addRemoveQuery={addRemoveQuery}
+                        addRemoveQuery={this.addRemoveQuery}
                     />);
                 })}
             </div>
@@ -63,4 +77,4 @@ const mapDispatch = dispatch => ({
     addRemoveQuery: dispatch.issuesView.addRemoveQuery,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesFacets));
+export default withRouter(connect(mapState, mapDispatch)(withStyles(styles)(IssuesFacets)));

@@ -135,7 +135,14 @@ class Issue extends Component {
                                 spacing={8}
                             >
                                 <Grid item className={classes.issueSubTitle}>
-                                    <a href={issue.url} className={classes.issueSubTitle} target="_blank">#{issue.number}</a> opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a>
+                                    <span><a href={issue.url} className={classes.issueSubTitle} target="_blank">#{issue.number}</a> </span>
+                                    <span>opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment></span>
+                                    <span> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a></span>
+                                    {issue.closedAt !== null ? (
+                                        <span>, closed on <Moment format="ddd MMM D, YYYY">{issue.closedAt}</Moment></span>
+                                    ) : (
+                                        <span>, last updated on <Moment format="ddd MMM D, YYYY">{issue.updatedAt}</Moment></span>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm container className={classes.sprintName}>
                                     {issue.milestone !== null &&
