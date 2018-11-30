@@ -19,15 +19,24 @@ const styles = theme => ({
         marginBottom: '10px',
     },
     card: {
-        padding: '0px',
+        borderLeft: '4px solid rgb(43, 56, 143)',
+        borderTop: '1px solid #ccc',
+        background: '#fafafa',
     },
     cardContent: {
         padding: '0px',
-    },
-    cardHeader: {
-        padding: '5px',
     }
 });
+
+const cardHeaderStyle = {
+    padding: '5px 2px 5px 5px',
+    fontSize: '1rem',
+    fontWeight: '300',
+};
+
+const cardContentStyle = {
+    padding: '0px',
+};
 
 const ExpandButton = (props) => {
     if (props.collapsed && props.length > 5) {
@@ -99,8 +108,11 @@ class TermFacet extends Component {
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
-                    <CardHeader title={facet.name} className={classes.cardHeader} />
-                    <CardContent className={classes.cardContent}>
+                    <CardHeader
+                        title={facet.name}
+                        style={cardHeaderStyle}
+                    />
+                    <CardContent style={cardContentStyle}>
                         <List dense={this.state.dense}>
                             {facetsData.map(value => (
                                 <FacetSelector
@@ -121,7 +133,12 @@ class TermFacet extends Component {
         );
     }
 }
-
+//                    <CardHeader title={facet.name} className={classes.cardHeader} />
+/*
+classes={{
+                            root: classes.cardHeader
+                        }}
+ */
 TermFacet.propTypes = {
     classes: PropTypes.object.isRequired,
 };

@@ -17,6 +17,7 @@ const styles = theme => ({
     listItem: {
         padding: '0px',
         height: '20px',
+        borderBottom: '1px dashed #e6e6e6',
     },
     listItemText: {
         padding: '0px',
@@ -25,8 +26,10 @@ const styles = theme => ({
         height: '18px',
     },
     checkbox: {
-        height: '18px',
-        width: '25px',
+        height: '15px',
+        width: '15px',
+        color: '#166aa2',
+        padding: '5px',
     }
 });
 

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
 import { connect } from "react-redux";
 
 import { withRouter, Link } from 'react-router-dom';
@@ -14,16 +12,9 @@ import TermFacet from './Term/index.js';
 const styles = theme => ({
     root: {
         width: '250px',
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-    progress: {
-        margin: 10,
+        paddingBottom: '10px',
+        borderRight: '1px solid #ccc',
+        borderBottom: '1px solid #ccc',
     },
 });
 
