@@ -11,7 +11,7 @@ import {
 const aggregationsModel = {
     ids: {
         key: 'id',
-        name: 'Id',
+        name: 'Issue Id',
         nested: false,
         aggregations: {},
         hiddenFacet: true,

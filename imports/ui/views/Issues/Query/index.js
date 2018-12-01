@@ -50,8 +50,12 @@ class IssuesQuery extends Component {
     };
 
     loadQuery = (query) => {
-        const { updateQuery } = this.props;
-        updateQuery(JSON.parse(query.filters));
+        console.log(query.filters);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + query.filters,
+            state: { detail: query.filters }
+        });
         this.setState({ openManageQueryDialog: false });
     };
 
@@ -188,7 +192,6 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    updateQuery: dispatch.issuesView.updateQuery,
     saveQuery: dispatch.issuesView.saveQuery,
     deleteQuery: dispatch.issuesView.deleteQuery,
 });

@@ -13,24 +13,31 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Grid from '@material-ui/core/Grid';
+
+import red from '@material-ui/core/colors/red';
+import blue from '@material-ui/core/colors/blue';
+
 
 const styles = theme => ({
     root: {
         marginBottom: '10px',
-    },
-    card: {
-        borderLeft: '4px solid rgb(43, 56, 143)',
-        borderTop: '1px solid #ccc',
-        background: '#fafafa',
     },
     cardContent: {
         padding: '0px',
     }
 });
 
+const cardStyle = {
+    borderLeft: '4px solid ' + blue[900],
+    borderTop: '1px solid #ccc',
+    borderRadius: '0px',
+    background: '#fafafa',
+}
+
 const cardHeaderStyle = {
     padding: '5px 2px 5px 5px',
-    fontSize: '1rem',
+    fontSize: '1.2rem',
     fontWeight: '300',
 };
 
@@ -107,11 +114,10 @@ class TermFacet extends Component {
 
         return (
             <div className={classes.root}>
-                <Card className={classes.card}>
-                    <CardHeader
-                        title={facet.name}
-                        style={cardHeaderStyle}
-                    />
+                <Card style={cardStyle}>
+                    <CardContent style={cardHeaderStyle}>
+                        <span>{facet.name}</span>
+                    </CardContent>
                     <CardContent style={cardContentStyle}>
                         <List dense={this.state.dense}>
                             {facetsData.map(value => (
@@ -126,7 +132,19 @@ class TermFacet extends Component {
                         </List>
                     </CardContent>
                     <CardActions>
-                        <ExpandButton collapsed={collapsed} length={facet.values.length} classes={classes} onClick={this.collapseFacet}/>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={8}
+                        >
+                            <Grid item xs={12} sm container>
+                            </Grid>
+                            <Grid item>
+                                <ExpandButton collapsed={collapsed} length={facet.values.length} classes={classes} onClick={this.collapseFacet}/>
+                            </Grid>
+                        </Grid>
                     </CardActions>
                 </Card>
             </div>

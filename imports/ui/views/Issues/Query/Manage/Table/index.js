@@ -48,8 +48,7 @@ class QueriesTable extends Component {
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
     };
-
-
+    
     render() {
         const { classes, queries, facets, loadQuery, deleteQuery } = this.props;
         const { rowsPerPage, page } = this.state;

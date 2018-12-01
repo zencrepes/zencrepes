@@ -10,6 +10,8 @@ import Chip from 'material-ui/Chip';
 import { withStyles } from 'material-ui/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import blue from '@material-ui/core/colors/blue';
+
 const styles = theme => ({
     root: {
 
@@ -28,7 +30,7 @@ const styles = theme => ({
     checkbox: {
         height: '15px',
         width: '15px',
-        color: '#166aa2',
+        color: blue[500],
         padding: '5px',
     }
 });

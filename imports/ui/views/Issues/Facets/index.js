@@ -12,9 +12,10 @@ import TermFacet from './Term/index.js';
 const styles = theme => ({
     root: {
         width: '250px',
-        paddingBottom: '10px',
-        borderRight: '1px solid #ccc',
-        borderBottom: '1px solid #ccc',
+        marginTop: '10px',
+//        paddingBottom: '10px',
+//        borderRight: '1px solid #ccc',
+//        borderBottom: '1px solid #ccc',
     },
 });
 
