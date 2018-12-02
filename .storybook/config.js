@@ -6,6 +6,7 @@ function loadStories() {
     require('../stories/sprints.js');
     require('../stories/labels.js');
     require('../stories/cards.js');
+    require('../stories/milestones.js');
 }
 
 configure(loadStories, module);

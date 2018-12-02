@@ -24,7 +24,7 @@ class LoadModal extends Component {
     }
 
     render() {
-        const { classes, loading, loadedCount } = this.props;
+        const { classes, loading } = this.props;
 
         return (
             <div className={classes.root}>

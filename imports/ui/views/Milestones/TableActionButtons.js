@@ -34,18 +34,20 @@ class TableActionButtons extends Component {
 
     closeSprint = () => {
         console.log('closeSprint');
-        const { milestonesdata, setLoadFlag, setMilestones, setAction } = this.props;
+        const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() !== 'closed'));
         setAction('close');
-        setLoadFlag(true);
+        setStageFlag(true);
+        setVerifFlag(true);
     };
 
     deleteClosedEmpty = () => {
         console.log('deleteClosedEmpty');
-        const { milestonesdata, setLoadFlag, setMilestones, setAction } = this.props;
+        const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
         setAction('deleteClosedEmpty');
-        setLoadFlag(true);
+        setStageFlag(true);
+        setVerifFlag(true);
     };
 
     render() {
@@ -77,7 +79,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
     setLoading: dispatch.milestonesEdit.setLoading,
     setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
 

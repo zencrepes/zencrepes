@@ -1,0 +1,25 @@
+query ($org_name: String!, $repo_name: String!, $milestone_number: Int!){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  repository(owner:$org_name, name:$repo_name) {
+    milestone(number: $milestone_number) {
+      id
+      createdAt
+      updatedAt
+      closedAt
+      description
+      dueOn
+      issues (first: 1) {
+        totalCount
+      }
+      number
+      state
+      title
+      url
+    }
+  }
+}
