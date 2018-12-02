@@ -19,7 +19,8 @@ class ApplyButton extends Component {
     }
 
     apply = () => {
-        const { setLoadFlag, setStageFlag } = this.props;
+        const { setLoadFlag, setStageFlag, milestones } = this.props;
+        console.log(milestones);
         setStageFlag(false);
         setLoadFlag(true);
     };
@@ -53,7 +54,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
-    setStageFlag: dispatch.milestonesEdit.setMilestones,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ApplyButton));

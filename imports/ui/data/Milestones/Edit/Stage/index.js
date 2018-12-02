@@ -32,13 +32,6 @@ class Stage extends Component {
         setStageFlag(false);
     };
 
-    removeMilestone = (deleteMilestone) => {
-        const { milestones, setMilestones } = this.props;
-        setMilestones(
-            milestones.filter(milestone => milestone.id !== deleteMilestone.id)
-        );
-    };
-
     render() {
         const { classes, stageFlag, milestones, action } = this.props;
 
@@ -52,7 +45,6 @@ class Stage extends Component {
                         <StageTable
                             milestones={milestones}
                             action={action}
-                            removeMilestone={this.removeMilestone}
                         />
                     </DialogContent>
                     <DialogActions>

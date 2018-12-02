@@ -60,8 +60,8 @@ class StageTable extends Component {
     }
 
     render() {
-        const { classes, milestones, action, removeMilestone } = this.props;
-
+        const { classes, milestones, action } = this.props;
+        console.log(milestones);
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>
@@ -121,10 +121,7 @@ class StageTable extends Component {
                                         />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <RemoveButton
-                                            milestone={milestone}
-                                            removeMilestone={removeMilestone}
-                                        />
+                                        <RemoveButton />
                                     </TableCell>
                                 </TableRow>
                             );
