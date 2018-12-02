@@ -19,6 +19,7 @@ class CloseSprint extends Component {
         super(props);
     }
 
+    /*
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { loadSuccess, setLoadSuccess, loadedCount, setLoadedCount, updateAvailableSprints, updateSelectedSprint } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
@@ -33,13 +34,16 @@ class CloseSprint extends Component {
             }
         }
     };
+    */
 
     closeSprint = () => {
         console.log('closeSprint');
-        const { milestones, setLoadFlag, setMilestones, setAction } = this.props;
+        const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, updateAvailableSprints } = this.props;
+        setOnSuccess(updateAvailableSprints);
         setMilestones(milestones);
         setAction('close');
-        setLoadFlag(true);
+        setStageFlag(true);
+        setVerifFlag(true);
     };
 
     render() {
@@ -73,14 +77,15 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
-    setLoading: dispatch.milestonesEdit.setLoading,
-    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
 
     setMilestones: dispatch.milestonesEdit.setMilestones,
     setAction: dispatch.milestonesEdit.setAction,
 
     setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
+
+    setOnSuccess: dispatch.milestonesEdit.setOnSuccess,
 
     updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
     updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,

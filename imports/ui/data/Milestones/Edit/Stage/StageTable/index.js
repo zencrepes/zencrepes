@@ -121,7 +121,9 @@ class StageTable extends Component {
                                         />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <RemoveButton />
+                                        <RemoveButton
+                                            milestone={milestone}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             );

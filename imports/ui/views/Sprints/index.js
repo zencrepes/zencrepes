@@ -24,9 +24,10 @@ import Summary from './Summary/index.js';
 import CurrentCompletion from './CurrentCompletion/index.js';
 
 import CreateSprint from './CreateSprint/index.js';
-import CreateMilestones from '../../data/CreateMilestones.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
+
+import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 
 import ErrorBoundary from '../../ErrorBoundary.js';
 
@@ -55,7 +56,7 @@ class Sprints extends Component {
                 <General>
                     <IssuesFetch />
                     <CreateSprint />
-                    <CreateMilestones />
+                    <MilestonesEdit />
                     <Actions />
                     <Grid
                         container

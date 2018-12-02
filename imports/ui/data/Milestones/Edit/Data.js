@@ -39,7 +39,7 @@ class Data extends Component {
 
     load = async () => {
         console.log('MilestonesEdit - Start load');
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, setLoadedCount, milestones, action, incrementLoadedCount, updateMilestones } = this.props;
+        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, setLoadedCount, milestones, action, incrementLoadedCount, updateMilestones, onSuccess } = this.props;
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
@@ -117,6 +117,10 @@ class Data extends Component {
         setLoadSuccess(true);
         setLoading(false);
         updateMilestones();
+        if (onSuccess !== null && onSuccess !== undefined) {
+            console.log(onSuccess);
+            onSuccess();
+        }
     };
 
     render() {
@@ -132,6 +136,8 @@ const mapState = state => ({
     loadFlag: state.milestonesEdit.loadFlag,
     loading: state.milestonesEdit.loading,
     action: state.milestonesEdit.action,
+
+    onSuccess: state.milestonesEdit.onSuccess,
 
     milestones: state.milestonesEdit.milestones,
 });

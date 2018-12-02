@@ -96,6 +96,7 @@ export default {
     },
     effects: {
         async updateAvailableSprints(payload, rootState) {
+            console.log('updateAvailableSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
             this.setSprints(sprints);
         },

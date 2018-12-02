@@ -25,6 +25,9 @@ class RemoveButton extends Component {
 
     remove = () => {
         const { milestone, milestones, setMilestones, verifiedMilestones, setVerifiedMilestones } = this.props;
+        console.log(milestone);
+        console.log(milestones);
+        console.log(verifiedMilestones);
         setMilestones(
             milestones.filter(ms => ms.id !== milestone.id)
         );

@@ -14,6 +14,8 @@ export default {
         milestones: [],         // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
         verifiedMilestones: [], // Array of milestones that were updated in GitHub
 
+        onSuccess: null,        // Function to be executed at successful completion
+
         loadedCount: 0,
     },
     reducers: {
@@ -37,6 +39,8 @@ export default {
         setAction(state, payload) {return { ...state, action: payload };},
 
         setMilestones(state, payload) {return { ...state, milestones: payload };},
+
+        setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
 
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
         incrementLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},
