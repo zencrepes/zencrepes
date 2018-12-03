@@ -52,6 +52,7 @@ class VerifState extends Component {
 
     render() {
         const { classes, milestone, verifiedMilestones } = this.props;
+        console.log(verifiedMilestones);
         const milestoneCheck = verifiedMilestones.filter(ms => ms.id === milestone.id);
         if (milestoneCheck.length === 0) {
             return (

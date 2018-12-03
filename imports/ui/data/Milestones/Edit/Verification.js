@@ -46,7 +46,7 @@ class Verification extends Component {
                         id: milestone.id,
                         error: true,
                         errorMsg: 'This milestone doesn\'t exist in Github currently. Was it deleted ?',
-                    })
+                    });
                     await cfgMilestones.remove({'id': milestone.id});
                 } else {
                     if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
