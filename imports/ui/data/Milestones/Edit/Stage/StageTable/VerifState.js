@@ -53,7 +53,9 @@ class VerifState extends Component {
     render() {
         const { classes, milestone, verifiedMilestones } = this.props;
         console.log(verifiedMilestones);
+        console.log(milestone);
         const milestoneCheck = verifiedMilestones.filter(ms => ms.id === milestone.id);
+        console.log(milestoneCheck);
         if (milestoneCheck.length === 0) {
             return (
                 <CircularProgress
