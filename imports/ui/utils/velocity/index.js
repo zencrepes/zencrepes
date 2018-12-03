@@ -153,7 +153,8 @@ export const initObject = (firstDay, lastDay) => {
     let currentDate = firstDay;
     while(currentDate < lastDay) {
         currentDate.setDate(currentDate.getDate() + 1);
-        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+        // Initially was filtering out weekends, but that's better to keep it in
+        //if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
             initObject['days'][currentDate.toJSON().slice(0, 10)] = {
                 date: currentDate.toJSON(),
 //                issues: {count: 0, velocity: 0},
@@ -169,7 +170,7 @@ export const initObject = (firstDay, lastDay) => {
                     list: [],
                 }
             };
-        }
+        //}
 
         //let currentWeekYear = currentDate.getFullYear()*100 + getWeekYear(currentDate);
         //http://lifelongprogrammer.blogspot.com/2014/06/js-get-first-last-day-of-current-week-month.html

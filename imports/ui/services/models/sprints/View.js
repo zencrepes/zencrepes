@@ -95,17 +95,26 @@ export default {
 
     },
     effects: {
+        async refreshSprints(payload, rootState) {
+            console.log('refreshSprints');
+            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+            this.setSprints(sprints);
+            this.updateSelectedSprint(sprints[0]);
+        },
+
         async updateAvailableSprints(payload, rootState) {
             console.log('updateAvailableSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
             this.setSprints(sprints);
         },
+
         async updateSelectedSprint(selectedSprintTitle, rootState) {
             await this.setSelectedSprintTitle(selectedSprintTitle);
             this.updateView();
         },
 
         async updateView(payload, rootState) {
+            console.log('Sprints - updateView');
             /*
             console.log('Update Sprint');
             console.log(selectedSprintTitle);

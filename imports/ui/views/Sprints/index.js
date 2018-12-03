@@ -26,6 +26,7 @@ import CurrentCompletion from './CurrentCompletion/index.js';
 import CreateSprint from './CreateSprint/index.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
+import IssuesEdit from '../../data/Issues/Edit/index.js';
 
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 
@@ -55,6 +56,7 @@ class Sprints extends Component {
             <div className={classes.root}>
                 <General>
                     <IssuesFetch />
+                    <IssuesEdit />
                     <CreateSprint />
                     <MilestonesEdit />
                     <Actions />

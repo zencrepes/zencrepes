@@ -8,13 +8,6 @@ import {connect} from "react-redux";
 
 const styles = theme => ({
     root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
     },
 });
 
@@ -25,9 +18,6 @@ class RemoveButton extends Component {
 
     remove = () => {
         const { milestone, milestones, setMilestones, verifiedMilestones, setVerifiedMilestones } = this.props;
-        console.log(milestone);
-        console.log(milestones);
-        console.log(verifiedMilestones);
         setMilestones(
             milestones.filter(ms => ms.id !== milestone.id)
         );

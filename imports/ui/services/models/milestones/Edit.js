@@ -6,7 +6,7 @@ export default {
         loadSuccess: false,     // Was data successfully loaded
         stageFlag: false,       // Boolean to trigger the staging of the action. Gives an opportunity for review before actually loading
 
-        verifFlag: false,       // Flag to trigger verification agains GitHub
+        verifFlag: false,       // Flag to trigger verification against GitHub
         verifying: false,       // Boolean to indicate verification is currently taking place
 
         action: null,           // Action to be performed, create or delete

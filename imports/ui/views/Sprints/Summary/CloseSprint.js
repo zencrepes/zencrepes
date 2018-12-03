@@ -38,8 +38,8 @@ class CloseSprint extends Component {
 
     closeSprint = () => {
         console.log('closeSprint');
-        const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, updateAvailableSprints } = this.props;
-        setOnSuccess(updateAvailableSprints);
+        const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, refreshSprints } = this.props;
+        setOnSuccess(refreshSprints);
         setMilestones(milestones);
         setAction('close');
         setStageFlag(true);
@@ -89,6 +89,7 @@ const mapDispatch = dispatch => ({
 
     updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
     updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,
+    refreshSprints: dispatch.sprintsView.refreshSprints,
 });
 
 

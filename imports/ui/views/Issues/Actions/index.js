@@ -10,6 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import PointsSwitch from './PointsSwitch.js';
 import RefreshAll from './RefreshAll.js';
 import RefreshSelected from './RefreshSelected.js';
+import RefreshIssues from './RefreshIssues.js';
 
 const styles = theme => ({
     root: {
@@ -55,6 +56,7 @@ class Actions extends Component {
                                 setLoadRepos={setLoadRepos}
                                 facets={facets}
                             />
+                            <RefreshIssues />
                         </div>
                         <PointsSwitch
                             defaultPoints={defaultPoints}

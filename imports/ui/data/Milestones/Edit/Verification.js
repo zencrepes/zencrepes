@@ -11,8 +11,6 @@ import { cfgMilestones } from '../../Minimongo.js';
 class Verification extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
-        this.errorRetry = 0;
     }
 
     componentDidUpdate = (prevProps, prevState, snapshot) => {
@@ -49,6 +47,7 @@ class Verification extends Component {
                         error: true,
                         errorMsg: 'This milestone doesn\'t exist in Github currently. Was it deleted ?',
                     })
+                    await cfgMilestones.remove({'id': milestone.id});
                 } else {
                     if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
                         insVerifiedMilestones({
