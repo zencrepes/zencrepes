@@ -88,7 +88,7 @@ class DaysToCompletion extends Component {
         const { classes, velocity } = this.props;
         return (
             <CustomCard
-                headerTitle="Remaining work"
+                headerTitle="Forecast"
                 headerFactTitle="Days to Completion"
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
             >

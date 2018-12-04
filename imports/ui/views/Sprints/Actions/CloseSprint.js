@@ -36,10 +36,11 @@ class CloseSprint extends Component {
 */
     closeSprint = () => {
         console.log('closeSprint');
-        const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, updateAvailableSprints } = this.props;
+        const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, updateAvailableSprints, setVerifying } = this.props;
         setOnSuccess(updateAvailableSprints);
         setMilestones(milestones);
         setAction('close');
+        setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
     };
@@ -77,6 +78,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setStageFlag: dispatch.milestonesEdit.setStageFlag,
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
+    setVerifying: dispatch.milestonesEdit.setVerifying,
 
     setMilestones: dispatch.milestonesEdit.setMilestones,
     setAction: dispatch.milestonesEdit.setAction,

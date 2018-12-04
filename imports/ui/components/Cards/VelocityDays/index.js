@@ -62,8 +62,8 @@ class VelocityDays extends Component {
         if (velocity['days'] !== undefined ) {
             let startPos = 0;
             let endPos = velocity['days'].length;
-            if (velocity['days'].length > 16) {
-                startPos = velocity['days'].length - 16;
+            if (velocity['days'].length > 30) {
+                startPos = velocity['days'].length - 30;
             }
             return velocity['days'].slice(startPos, endPos);
         } else {
@@ -98,7 +98,7 @@ class VelocityDays extends Component {
         let dataset = this.buildDataset();
         return (
             <CustomCard
-                headerTitle="Velocity over 16 days"
+                headerTitle="Velocity over 30 days"
                 headerFactTitle="Completed today"
                 headerFactValue={this.getTodayCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
             >

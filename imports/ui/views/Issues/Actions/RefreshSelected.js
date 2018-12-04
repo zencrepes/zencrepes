@@ -20,7 +20,6 @@ const styles = theme => ({
     iconSmall: {
         fontSize: 20,
     },
-
 });
 class RefreshSelected extends Component {
 

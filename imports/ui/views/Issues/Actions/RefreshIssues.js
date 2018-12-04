@@ -14,6 +14,12 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 const styles = theme => ({
     root: {
     },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    },
+    iconSmall: {
+        fontSize: 20,
+    },
 });
 class RefreshIssues extends Component {
     constructor (props) {
@@ -21,9 +27,10 @@ class RefreshIssues extends Component {
     }
 
     refreshFull = () => {
-        const { setStageFlag, setVerifFlag, setIssues, setAction, issues, setOnSuccess, updateView } = this.props;
+        const { setStageFlag, setVerifFlag, setIssues, setAction, issues, setOnSuccess, updateView, setVerifying } = this.props;
         setIssues(issues);
         setAction('refresh');
+        setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
         setOnSuccess(updateView);
@@ -52,6 +59,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setStageFlag: dispatch.issuesEdit.setStageFlag,
     setVerifFlag: dispatch.issuesEdit.setVerifFlag,
+    setVerifying: dispatch.issuesEdit.setVerifying,
 
     setIssues: dispatch.issuesEdit.setIssues,
     setAction: dispatch.issuesEdit.setAction,

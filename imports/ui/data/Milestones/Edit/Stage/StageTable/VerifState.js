@@ -36,7 +36,6 @@ const styles = theme => ({
     errorMessage: {
         fontSize: 10,
         color: red[800],
-
     },
     circularProgress: {
         color: '#6798e5',

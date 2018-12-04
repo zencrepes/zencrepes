@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import Verification from './Verification.js';
-import LoadSnackbar from './LoadSnackbar.js';
+import LoadSnackbar from './LoadSnackbar/index.js';
 import Notifications from './Notifications.js';
 
 class IssuesEdit extends Component {

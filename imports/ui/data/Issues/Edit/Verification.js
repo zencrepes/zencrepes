@@ -26,56 +26,57 @@ class Verification extends Component {
     load = async () => {
         const { setVerifying, issues, setVerifiedIssues, insVerifiedIssues, client, onSuccess, setVerifyingMsg, setVerifySuccess } = this.props;
         setVerifySuccess(false);
-        setVerifying(true);
         setVerifiedIssues([]);
         setVerifyingMsg('About pull data from ' + issues.length + ' issues');
 //        for (let issue of issues) {
         for (const [idx, issue] of issues.entries()) {
-            let baseMsg = (idx+1) + '/' + issues.length + ' - Processing issue: ' + issue.org.login + '/' + issue.repo.name + '#' + issue.number;
-            setVerifyingMsg(baseMsg);
-            let data = {};
-            try {
-                data = await client.query({
-                    query: GET_GITHUB_SINGLE_MILESTONE,
-                    variables: {org_name: issue.org.login, repo_name: issue.repo.name, issue_number: issue.number},
-                    fetchPolicy: 'no-cache',
-                    errorPolicy: 'ignore',
-                });
-            }
-            catch (error) {
-                console.log(error);
-            }
-            if (data.data !== null) {
-                if (data.data.repository.issue.updatedAt === issue.updatedAt) {
-                    insVerifiedIssues({
-                        ...data.data.repository.issue,
-                        updated: false,
-                    })
-                } else {
-                    insVerifiedIssues({
-                        ...data.data.repository.issue,
-                        updated: true,
-                    });
-                    let issueObj = JSON.parse(JSON.stringify(data.data.repository.issue)); //TODO - Replace this with something better to copy object
-                    if (issueObj.labels !== undefined) {
-                        //Get points from labels
-                        // Regex to test: SP:[.\d]
-                        let pointsExp = RegExp('SP:[.\\d]');
-                        for (let [key, currentLabel] of Object.entries(issueObj.labels.edges)) {
-                            if (pointsExp.test(currentLabel.node.name)) {
-                                let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                                console.log('This issue has ' + points + ' story points');
-                                issueObj['points'] = points;
-                            }
-                        }
-                    }
-                    await cfgIssues.upsert({
-                        id: data.data.repository.issue.id
-                    }, {
-                        $set: issueObj
+            if (this.props.verifying) {
+                let baseMsg = (idx+1) + '/' + issues.length + ' - Fetching issue: ' + issue.org.login + '/' + issue.repo.name + '#' + issue.number;
+                setVerifyingMsg(baseMsg);
+                let data = {};
+                try {
+                    data = await client.query({
+                        query: GET_GITHUB_SINGLE_MILESTONE,
+                        variables: {org_name: issue.org.login, repo_name: issue.repo.name, issue_number: issue.number},
+                        fetchPolicy: 'no-cache',
+                        errorPolicy: 'ignore',
                     });
                 }
-                this.props.updateChip(data.data.rateLimit);
+                catch (error) {
+                    console.log(error);
+                }
+                if (data.data !== null) {
+                    if (data.data.repository.issue.updatedAt === issue.updatedAt) {
+                        insVerifiedIssues({
+                            ...data.data.repository.issue,
+                            updated: false,
+                        })
+                    } else {
+                        insVerifiedIssues({
+                            ...data.data.repository.issue,
+                            updated: true,
+                        });
+                        let issueObj = JSON.parse(JSON.stringify(data.data.repository.issue)); //TODO - Replace this with something better to copy object
+                        if (issueObj.labels !== undefined) {
+                            //Get points from labels
+                            // Regex to test: SP:[.\d]
+                            let pointsExp = RegExp('SP:[.\\d]');
+                            for (let [key, currentLabel] of Object.entries(issueObj.labels.edges)) {
+                                if (pointsExp.test(currentLabel.node.name)) {
+                                    let points = parseInt(currentLabel.node.name.replace('SP:', ''));
+                                    console.log('This issue has ' + points + ' story points');
+                                    issueObj['points'] = points;
+                                }
+                            }
+                        }
+                        await cfgIssues.upsert({
+                            id: data.data.repository.issue.id
+                        }, {
+                            $set: issueObj
+                        });
+                    }
+                    this.props.updateChip(data.data.rateLimit);
+                }
             }
         }
         setVerifying(false);
@@ -94,6 +95,7 @@ Verification.propTypes = {
 
 const mapState = state => ({
     verifFlag: state.issuesEdit.verifFlag,
+    verifying: state.issuesEdit.verifying,
 
     issues: state.issuesEdit.issues,
     onSuccess: state.issuesEdit.onSuccess,

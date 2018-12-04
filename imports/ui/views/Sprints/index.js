@@ -20,6 +20,7 @@ import Labels from './Labels/index.js';
 import Issues from './Issues/index.js';
 import Actions from './Actions/index.js';
 import Summary from './Summary/index.js';
+import RemainingPoints from './RemainingPoints/index.js';
 
 import CurrentCompletion from './CurrentCompletion/index.js';
 
@@ -50,8 +51,7 @@ class Sprints extends Component {
     };
 
     render() {
-        const { classes, issues, labels, velocity } = this.props;
-        console.log(velocity);
+        const { classes, issues, labels, velocity, assignees } = this.props;
         return (
             <div className={classes.root}>
                 <General>
@@ -70,6 +70,12 @@ class Sprints extends Component {
                         <Grid item xs={12} sm={6} md={8}>
                             <Summary />
                         </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <RemainingPoints
+                                assignees={assignees}
+                                issues={issues}
+                            />
+                        </Grid>
                     </Grid>
                     <Grid
                         container
@@ -79,12 +85,10 @@ class Sprints extends Component {
                         spacing={8}
                     >
                         <Grid item xs={12} sm={6} md={4}>
-                            <ErrorBoundary>
-                                <CurrentCompletion
-                                    issues={issues}
-                                    labels={labels}
-                                />
-                            </ErrorBoundary>
+                            <CurrentCompletion
+                                issues={issues}
+                                labels={labels}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <VelocityWeeks
@@ -93,7 +97,7 @@ class Sprints extends Component {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
-                            <DaysToCompletion/>
+                            <DaysToCompletion />
                         </Grid>
                     </Grid>
                     <Grid

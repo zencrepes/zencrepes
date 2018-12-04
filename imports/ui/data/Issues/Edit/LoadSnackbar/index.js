@@ -7,6 +7,8 @@ import {connect} from "react-redux";
 
 import Snackbar from "@material-ui/core/Snackbar";
 
+import LoadMessage from './LoadMessage.js';
+
 const styles = theme => ({
     root: {
     },
@@ -27,7 +29,11 @@ class LoadSnackbar extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={verifyingMsg}
+                    message={
+                        <LoadMessage
+                            message={verifyingMsg}
+                        />
+                    }
                 />
             </div>
         );

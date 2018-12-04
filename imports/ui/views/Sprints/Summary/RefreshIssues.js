@@ -21,10 +21,11 @@ class RefreshIssues extends Component {
     }
 
     refreshFull = () => {
-        const { setStageFlag, setVerifFlag, setIssues, setAction, issues, setOnSuccess, updateView } = this.props;
+        const { setStageFlag, setVerifFlag, setIssues, setAction, issues, setOnSuccess, updateView, setVerifying } = this.props;
         setIssues(issues);
         setAction('refresh');
         setStageFlag(true);
+        setVerifying(true);
         setVerifFlag(true);
         setOnSuccess(updateView);
     };
@@ -52,12 +53,14 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setStageFlag: dispatch.issuesEdit.setStageFlag,
     setVerifFlag: dispatch.issuesEdit.setVerifFlag,
+    setVerifying: dispatch.issuesEdit.setVerifying,
 
     setIssues: dispatch.issuesEdit.setIssues,
     setAction: dispatch.issuesEdit.setAction,
     setOnSuccess: dispatch.issuesEdit.setOnSuccess,
 
     updateView: dispatch.sprintsView.updateView,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(RefreshIssues));
