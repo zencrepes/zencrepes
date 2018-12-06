@@ -27,11 +27,18 @@ class IssuesList extends Component {
     }
 
     render() {
-        const { classes, filteredIssues } = this.props;
+        const { classes, filteredIssues, pagination } = this.props;
         console.log('render issue list');
+        let dispPagination = pagination;
+        if (pagination === undefined) {
+            dispPagination = true;
+        }
         return (
             <div className={classes.root}>
-                <IssuesTable filteredIssues={filteredIssues} />
+                <IssuesTable
+                    pagination={dispPagination}
+                    filteredIssues={filteredIssues}
+                />
             </div>
         );
     }

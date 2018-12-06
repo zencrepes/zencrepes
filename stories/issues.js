@@ -44,8 +44,15 @@ storiesOf('Issues', module)
             addRemoveQuery={()=>{}}
         />
     ))
-    .add('Issues - List', () => (
-        <IssuesList />
+    .add('Issues - List (pagination)', () => (
+        <IssuesList
+            pagination={true}
+        />
+    ))
+    .add('Issues - List (no pagination)', () => (
+        <IssuesList
+            pagination={false}
+        />
     ))
     .add('Chart - Velocity', () => (
         <Velocity />

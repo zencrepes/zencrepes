@@ -25,7 +25,10 @@ class Issues extends Component {
                 headerFactTitle="Issues in Sprint"
                 headerFactValue={issues.length}
             >
-                <IssuesTable filteredIssues={issues} />
+                <IssuesTable
+                    filteredIssues={issues}
+                    pagination={false}
+                />
             </CustomCard>
         );
     }

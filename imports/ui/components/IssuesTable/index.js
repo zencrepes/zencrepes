@@ -51,10 +51,18 @@ class IssuesTable extends Component {
     };
 
     render() {
-        const { classes, filteredIssues } = this.props;
+        const { classes, filteredIssues, pagination } = this.props;
         const { rowsPerPage, page } = this.state;
 
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredIssues.length - page * rowsPerPage);
+        let emptyRows = 0;
+        let issues = filteredIssues;
+        if (pagination === true) {
+            emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredIssues.length - page * rowsPerPage);
+            issues = filteredIssues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+            if (issues.length < rowsPerPage) {
+                emptyRows = 0;
+            }
+        }
 
         return (
             <div className={classes.root}>
@@ -63,7 +71,7 @@ class IssuesTable extends Component {
                         filteredIssues={filteredIssues}
                     />
                     <TableBody>
-                        {filteredIssues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(issue => {
+                        {issues.map(issue => {
                             return (
                                 <Issue issue={issue} key={issue.id} />
                             );
@@ -74,19 +82,21 @@ class IssuesTable extends Component {
                             </TableRow>
                         )}
                     </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                colSpan={3}
-                                count={filteredIssues.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
+                    {pagination === true &&
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    colSpan={3}
+                                    count={filteredIssues.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={this.handleChangePage}
+                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    }
                 </Table>
             </div>
         );
