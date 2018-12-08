@@ -23,59 +23,69 @@ class Verification extends Component {
     };
 
     load = async () => {
-        const { setVerifying, milestones, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
+        const { setVerifying, setVerifyingMsg, milestones, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
         setVerifiedMilestones([]);
-        for (let milestone of milestones) {
-            let data = {};
-            try {
-                data = await client.query({
-                    query: GET_GITHUB_SINGLE_MILESTONE,
-                    variables: {org_name: milestone.org.login, repo_name: milestone.repo.name, milestone_number: milestone.number},
-                    fetchPolicy: 'no-cache',
-                    errorPolicy: 'ignore',
-                });
-            }
-            catch (error) {
-                console.log(error);
-            }
-            console.log(data);
-            if (data.data !== null) {
-                if (data.data.repository.milestone === null) {
-                    // The milestone doesn't exist anymore on GitHub.
-                    insVerifiedMilestones({
-                        id: milestone.id,
-                        error: true,
-                        errorMsg: 'This milestone doesn\'t exist in Github currently. Was it deleted ?',
-                    });
-                    await cfgMilestones.remove({'id': milestone.id});
-                } else {
-                    if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
-                        insVerifiedMilestones({
-                            ...data.data.repository.milestone,
-                            error: false,
-                        })
-                    }
-                    else if (data.data.repository.milestone.updatedAt !== milestone.updatedAt) {
-                        insVerifiedMilestones({
-                            ...data.data.repository.milestone,
-                            error: true,
-                            errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
-                        })
-
-                    } else if (data.data.repository.milestone.issues.totalCount !== milestone.issues.totalCount) {
-                        insVerifiedMilestones({
-                            ...data.data.repository.milestone,
-                            error: true,
-                            errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
-                        })
-                    }
-                    await cfgMilestones.upsert({
-                        id: data.data.repository.milestone.id
-                    }, {
-                        $set: data.data.repository.milestone
+        setVerifyingMsg('About pull data from ' + milestones.length + ' milestones');
+//        for (let milestone of milestones) {
+        for (const [idx, milestone] of milestones.entries()) {
+            if (this.props.verifying) {
+                let baseMsg = (idx+1) + '/' + milestones.length + ' - Fetching milestone: ' + milestone.org.login + '/' + milestone.repo.name + '#' + milestone.number;
+                setVerifyingMsg(baseMsg);
+                let data = {};
+                try {
+                    data = await client.query({
+                        query: GET_GITHUB_SINGLE_MILESTONE,
+                        variables: {
+                            org_name: milestone.org.login,
+                            repo_name: milestone.repo.name,
+                            milestone_number: milestone.number
+                        },
+                        fetchPolicy: 'no-cache',
+                        errorPolicy: 'ignore',
                     });
                 }
-                this.props.updateChip(data.data.rateLimit);
+                catch (error) {
+                    console.log(error);
+                }
+                console.log(data);
+                if (data.data !== null) {
+                    if (data.data.repository.milestone === null) {
+                        // The milestone doesn't exist anymore on GitHub.
+                        insVerifiedMilestones({
+                            id: milestone.id,
+                            error: true,
+                            errorMsg: 'This milestone doesn\'t exist in Github currently. Was it deleted ?',
+                        });
+                        await cfgMilestones.remove({'id': milestone.id});
+                    } else {
+                        if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
+                            insVerifiedMilestones({
+                                ...data.data.repository.milestone,
+                                error: false,
+                            })
+                        }
+                        else if (data.data.repository.milestone.updatedAt !== milestone.updatedAt) {
+                            insVerifiedMilestones({
+                                ...data.data.repository.milestone,
+                                error: true,
+                                errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
+                            })
+
+                        } else if (data.data.repository.milestone.issues.totalCount !== milestone.issues.totalCount) {
+                            insVerifiedMilestones({
+                                ...data.data.repository.milestone,
+                                error: true,
+                                errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
+                            })
+                        }
+                        await cfgMilestones.upsert({
+                            id: data.data.repository.milestone.id
+                        }, {
+                            $set: data.data.repository.milestone
+                        });
+                    }
+                    this.props.updateChip(data.data.rateLimit);
+                }
             }
         }
         setVerifying(false);
@@ -100,6 +110,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
     setVerifying: dispatch.milestonesEdit.setVerifying,
+    setVerifyingMsg: dispatch.milestonesEdit.setVerifyingMsg,
     setVerifiedMilestones: dispatch.milestonesEdit.setVerifiedMilestones,
     insVerifiedMilestones: dispatch.milestonesEdit.insVerifiedMilestones,
 

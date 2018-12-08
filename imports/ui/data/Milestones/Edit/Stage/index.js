@@ -15,6 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import StageTable from './StageTable/index.js';
 
 import ApplyButton from './ApplyButton.js';
+import CancelButton from './CancelButton.js';
 
 const styles = theme => ({
     root: {
@@ -25,12 +26,6 @@ class Stage extends Component {
     constructor (props) {
         super(props);
     }
-
-    cancel = () => {
-        const { setStageFlag, setMilestones } = this.props;
-        setMilestones([]);
-        setStageFlag(false);
-    };
 
     render() {
         const { classes, stageFlag, milestones, action } = this.props;
@@ -48,9 +43,7 @@ class Stage extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="raised" color="primary" className={classes.button} onClick={this.cancel}>
-                            Cancel
-                        </Button>
+                        <CancelButton />
                         <ApplyButton />
                     </DialogActions>
                 </Dialog>

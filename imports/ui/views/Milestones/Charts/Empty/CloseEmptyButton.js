@@ -4,50 +4,43 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {connect} from "react-redux";
-import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import Snackbar from "@material-ui/core/Snackbar";
 
-import RefreshIcon from '@material-ui/icons/Refresh';
-
 const styles = theme => ({
     root: {
-    },
-    leftIcon: {
-        marginRight: theme.spacing.unit,
-    },
-    iconSmall: {
-        fontSize: 20,
+        textAlign: 'right'
     },
 });
-class RefreshMilestones extends Component {
+class ClosedEmptyButton extends Component {
     constructor (props) {
         super(props);
     }
 
-    refreshFull = () => {
-        const { setStageFlag, setVerifFlag, setMilestones, setAction, milestones, setOnSuccess, updateView, setVerifying } = this.props;
-        setMilestones(milestones);
-        setAction('refresh');
+    deleteClosedEmpty = () => {
+        console.log('deleteClosedEmpty');
+        const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnCancel, setOnSuccess, updateView } = this.props;
+        setMilestones(milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
+        setAction('deleteClosedEmpty');
         setVerifying(true);
+        setStageFlag(true);
         setVerifFlag(true);
         setOnSuccess(updateView);
+        setOnCancel(updateView);
     };
 
     render() {
         const { classes } = this.props;
-
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshFull}>
-                <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                Milestones
+            <Button variant="raised" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+                Delete Empty
             </Button>
-        )
+        );
     };
 }
 
-RefreshMilestones.propTypes = {
+ClosedEmptyButton.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -59,12 +52,19 @@ const mapDispatch = dispatch => ({
     setStageFlag: dispatch.milestonesEdit.setStageFlag,
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
     setVerifying: dispatch.milestonesEdit.setVerifying,
+    setLoading: dispatch.milestonesEdit.setLoading,
+    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
 
     setMilestones: dispatch.milestonesEdit.setMilestones,
     setAction: dispatch.milestonesEdit.setAction,
+
+    setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
+
+    setOnCancel: dispatch.milestonesEdit.setOnCancel,
     setOnSuccess: dispatch.milestonesEdit.setOnSuccess,
 
     updateView: dispatch.milestonesView.updateView,
+
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(RefreshMilestones));
+export default connect(mapState, mapDispatch)(withStyles(styles)(ClosedEmptyButton));

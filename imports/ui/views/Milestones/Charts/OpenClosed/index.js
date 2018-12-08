@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
@@ -28,14 +29,14 @@ class OpenClosed extends Component {
     }
 
     render() {
-        const { classes, velocity } = this.props;
+        const { classes, milestones } = this.props;
         return (
             <CustomCard
-                headerTitle="Open vs Closed milestones"
-                headerFactTitle="ABC"
-                headerFactValue=" def"
+                headerTitle="Open vs Closed"
+                headerFactTitle=""
+                headerFactValue=""
             >
-                <span>Breakdown open/closed</span>
+                <span>Some text</span>
             </CustomCard>
         );
     }
@@ -45,4 +46,8 @@ OpenClosed.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(OpenClosed);
+const mapState = state => ({
+    milestones: state.milestonesView.milestones,
+});
+
+export default withRouter(connect(mapState, null)(withStyles(styles)(OpenClosed)));

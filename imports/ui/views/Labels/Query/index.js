@@ -27,7 +27,7 @@ const styles = theme => ({
 });
 
 
-class MilestonesQuery extends Component {
+class LabelsQuery extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -38,7 +38,7 @@ class MilestonesQuery extends Component {
 
     clearQuery = () => {
         this.props.history.push({
-            pathname: '/milestones',
+            pathname: '/labels',
             search: '?q={}',
             state: { detail: '{}' }
         });
@@ -47,7 +47,7 @@ class MilestonesQuery extends Component {
     loadQuery = (query) => {
         console.log(query.filters);
         this.props.history.push({
-            pathname: '/milestones',
+            pathname: '/labels',
             search: '?q=' + query.filters,
             state: { detail: query.filters }
         });
@@ -69,7 +69,7 @@ class MilestonesQuery extends Component {
         const { query } = this.props;
         const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
         this.props.history.push({
-            pathname: '/milestones',
+            pathname: '/labels',
             search: '?q=' + JSON.stringify(modifiedQuery),
             state: { detail: modifiedQuery }
         });
@@ -148,14 +148,14 @@ class MilestonesQuery extends Component {
     }
 }
 
-MilestonesQuery.propTypes = {
+LabelsQuery.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    query: state.milestonesView.query,
-    facets: state.milestonesView.facets,
+    query: state.labelsView.query,
+    facets: state.labelsView.facets,
 });
 
-export default withRouter(connect(mapState, null)(withStyles(styles)(MilestonesQuery)));
+export default withRouter(connect(mapState, null)(withStyles(styles)(LabelsQuery)));
 

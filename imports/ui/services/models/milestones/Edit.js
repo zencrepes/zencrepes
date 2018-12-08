@@ -8,6 +8,7 @@ export default {
 
         verifFlag: false,       // Flag to trigger verification against GitHub
         verifying: false,       // Boolean to indicate verification is currently taking place
+        verifyingMsg: null,     // Message to be displayed while issues are being verified
 
         action: null,           // Action to be performed, create or delete
 
@@ -15,6 +16,7 @@ export default {
         verifiedMilestones: [], // Array of milestones that were updated in GitHub
 
         onSuccess: null,        // Function to be executed at successful completion
+        onCancel: () => {},         // Function to be executed if user cancel stage
 
         loadedCount: 0,
     },
@@ -28,6 +30,7 @@ export default {
 
         setVerifFlag(state, payload) {return { ...state, verifFlag: payload };},
         setVerifying(state, payload) {return { ...state, verifying: payload };},
+        setVerifyingMsg(state, payload) {return { ...state, verifyingMsg: payload };},
         setVerifiedMilestones(state, payload) {return { ...state, verifiedMilestones: payload };},
 
         insVerifiedMilestones(state, payload) {
@@ -41,6 +44,7 @@ export default {
         setMilestones(state, payload) {return { ...state, milestones: payload };},
 
         setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
+        setOnCancel(state, payload) {return { ...state, onCancel: payload };},
 
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
         incrementLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},

@@ -26,15 +26,15 @@ const aggregationsModel = {
         nested: false,
         aggregations: {}
     },
-    states: {
-        key: 'state',
-        name: 'States',
+    name: {
+        key: 'name',
+        name: 'Names',
         nested: false,
         aggregations: {}
     },
-    titles: {
-        key: 'title',
-        name: 'Titles',
+    color: {
+        key: 'color',
+        name: 'Colors',
         nested: false,
         aggregations: {}
     },

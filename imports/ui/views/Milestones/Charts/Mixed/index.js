@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 
 import CustomCard from "../../../../components/CustomCard/index.js";
+import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
     root: {
@@ -27,15 +28,38 @@ class Mixed extends Component {
         super(props);
     }
 
+
+
     render() {
         const { classes, milestones } = this.props;
+
+        const byTitle = _.groupBy(milestones, 'title');
+        console.log(byTitle);
+
+        const byState = Object.entries(byTitle)
+            .filter(([name, content]) => {
+                let closedMilestones = content.filter(milestone => milestone.state === 'CLOSED');
+                let openMilestones = content.filter(milestone => milestone.state === 'OPEN');
+                if (closedMilestones.length > 0 && openMilestones.length > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).map(([name, content]) => {
+                console.log(name);
+                return {
+                    name: name,
+                    milestone: content,
+                }
+            });
+        console.log(byState);
         return (
             <CustomCard
-                headerTitle="With mixed states"
+                headerTitle="Inconsistent States"
                 headerFactTitle="Count"
                 headerFactValue=" def"
             >
-                <span>Milestones with Mixed states</span>
+                <span>Milestones with identical title but different states</span>
             </CustomCard>
         );
     }
@@ -45,4 +69,8 @@ Mixed.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Mixed);
+const mapState = state => ({
+    milestones: state.milestonesView.milestones,
+});
+
+export default withRouter(connect(mapState, null)(withStyles(styles)(Mixed)));

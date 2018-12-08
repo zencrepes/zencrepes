@@ -12,6 +12,8 @@ import LoadSnackbar from './LoadSnackbar.js';
 import Notifications from './Notifications.js';
 import Verification from './Verification.js';
 
+import RefreshSnackbar from './RefreshSnackbar/index.js';
+
 class MilestonesEdit extends Component {
     constructor(props) {
         super(props);
@@ -23,6 +25,7 @@ class MilestonesEdit extends Component {
             <div>
                 <Data />
                 <Verification />
+                <RefreshSnackbar />
                 <Stage />
                 {loadModal &&
                     <LoadModal />

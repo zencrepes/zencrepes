@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import CustomCard from "../../../../components/CustomCard/index.js";
 import {withRouter} from "react-router-dom";
 
+import CloseEmptyButton from './CloseEmptyButton.js';
+
 const styles = theme => ({
     root: {
         /*
@@ -32,11 +34,11 @@ class Empty extends Component {
         const { classes, milestones } = this.props;
         return (
             <CustomCard
-                headerTitle="With no issues"
+                headerTitle="Closed but Empty"
                 headerFactTitle="Count"
-                headerFactValue={milestones.filter(milestone => milestone.issues.totalCount === 0).length}
+                headerFactValue={milestones.filter(m => m.state.toLowerCase() === 'closed').filter(milestone => milestone.issues.totalCount === 0).length}
             >
-                <span>Milestones with 0 issues</span>
+                <CloseEmptyButton />
             </CustomCard>
         );
     }

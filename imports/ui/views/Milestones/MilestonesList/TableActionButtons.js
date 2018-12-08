@@ -51,7 +51,6 @@ class TableActionButtons extends Component {
 
     render() {
         const { classes, loadSuccess, milestonesdata } = this.props;
-        console.log(milestonesdata);
         return (
             <div className={classes.root}>
                 {milestonesdata.states.length > 1 &&
