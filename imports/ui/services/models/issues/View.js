@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { cfgIssues, cfgQueries } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
-import { buildFacets } from '../../../utils/facets/index.js';
+import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
 export default {
