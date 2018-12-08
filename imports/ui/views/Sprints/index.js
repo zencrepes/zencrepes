@@ -13,7 +13,6 @@ import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 import DaysToCompletion from './DaysToCompletion/index.js';
 
 import StatsBar from './StatsBar/index.js';
-import ViewToolbar from './ViewToolbar/index.js';
 import Assignees from './Assignees/index.js';
 import Repositories from './Repositories/index.js';
 import Labels from './Labels/index.js';

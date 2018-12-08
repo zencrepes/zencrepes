@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
 
-import CloseSprint from './CloseSprint';
 import Refresh from './Refresh';
 import Select from './Select';
 import Create from './Create';
@@ -50,7 +49,6 @@ class Actions extends Component {
                             />
                             <Refresh />
                         </div>
-                        <CloseSprint />
                         <Create />
                     </Toolbar>
                 </AppBar>

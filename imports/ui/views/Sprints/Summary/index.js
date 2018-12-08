@@ -40,9 +40,6 @@ class Summary extends Component {
         setEditSprintDescription(selectedSprintDescription);
         setEditSprintDueDate(selectedSprintDueDate);
         setEditSprint(true);
-        console.log(this.props);
-        console.log(this.props);
-        console.log(this.props);
     };
 
     cancelEdit = () => {
