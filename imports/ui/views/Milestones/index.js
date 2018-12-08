@@ -14,12 +14,17 @@ import General from '../../layouts/General/index.js';
 import MilestonesFetch from '../../data/Milestones/Fetch/index.js';
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 
-import MilestonesTable from './MilestonesTable.js';
+import MilestonesList from './MilestonesList/index.js';
 import LoadButton from './LoadButton.js';
 import DeleteClosedEmptyButton from './DeleteClosedEmptyButton.js';
 
 import MilestonesFacets from './Facets/index.js';
 import MilestonesQuery from './Query/index.js';
+import Actions from './Actions/index.js';
+
+import OpenClosed from './Charts/OpenClosed/index.js';
+import Mixed from './Charts/Mixed/index.js';
+import Empty from './Charts/Empty/index.js';
 
 class Milestones extends Component {
     constructor(props) {
@@ -57,6 +62,9 @@ class Milestones extends Component {
         return (
             <div className={classes.root}>
                 <General>
+                    <Actions />
+                    <MilestonesEdit loadModal={true} />
+                    <MilestonesFetch loadModal={false} />
                     <Grid
                         container
                         direction="row"
@@ -86,22 +94,18 @@ class Milestones extends Component {
                                         spacing={8}
                                     >
                                         <Grid item xs={12} sm={12} md={4}>
-                                            <h3>TODO: Chart to display a breakdown of open/closed milestones</h3>
-                                            <LoadButton />
+                                            <OpenClosed />
                                         </Grid>
                                         <Grid item xs={12} sm={12} md={4}>
-                                            <h3>TODO: Chart & Button to show Milestones with a mixed closed/open</h3>
+                                            <Mixed />
                                         </Grid>
                                         <Grid item xs={12} sm={12} md={4}>
-                                            <h3>TODO: Chart & Button to show closed milestones with 0 issues</h3>
-                                            <DeleteClosedEmptyButton />
+                                            <Empty />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <MilestonesEdit loadModal={true} />
-                                    <MilestonesFetch loadModal={false} />
-                                    <MilestonesTable />
+                                    <MilestonesList />
                                 </Grid>
                             </Grid>
                         </Grid>
