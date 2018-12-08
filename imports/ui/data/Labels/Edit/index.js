@@ -9,6 +9,9 @@ import Data from './Data.js';
 import LoadModal from './LoadModal.js';
 import LoadSnackbar from './LoadSnackbar.js';
 import Notifications from './Notifications.js';
+import Verification from './Verification.js';
+
+import RefreshSnackbar from './RefreshSnackbar/index.js';
 
 class LabelsEdit extends Component {
     constructor(props) {
@@ -20,6 +23,8 @@ class LabelsEdit extends Component {
         return (
             <div>
                 <Data />
+                <Verification />
+                <RefreshSnackbar />
                 {loadModal &&
                 <LoadModal />
                 }

@@ -7,6 +7,18 @@ export default {
         loadFlag: false,        // Boolean to trigger issue load
         loadError: false,       // Is there an error during load
         loadSuccess: false,     // Was data successfully loaded
+
+        stageFlag: false,       // Boolean to trigger the staging of the action. Gives an opportunity for review before actually loading
+
+        labels: [],             // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
+        verifiedLabels: [],      // Array of milestones that were updated in GitHub
+
+        verifFlag: false,       // Flag to trigger verification against GitHub
+        verifying: false,       // Boolean to indicate verification is currently taking place
+        verifyingMsg: null,     // Message to be displayed while issues are being verified
+        onSuccess: () => {},    // Function to be executed at successful completion
+        onCancel: () => {},     // Function to be executed if user cancel stage
+
         action: null,               // Action to be performed
         loadedCount: 0,
 
@@ -31,6 +43,24 @@ export default {
         setLoading(state, payload) {return { ...state, loading: payload };},
         setLoadError(state, payload) {return { ...state, loadError: payload };},
         setLoadSuccess(state, payload) {return { ...state, loadSuccess: payload };},
+
+        setStageFlag(state, payload) {return { ...state, stageFlag: payload };},
+
+        setLabels(state, payload) {return { ...state, labels: payload };},
+
+        setVerifFlag(state, payload) {return { ...state, verifFlag: payload };},
+        setVerifying(state, payload) {return { ...state, verifying: payload };},
+        setVerifyingMsg(state, payload) {return { ...state, verifyingMsg: payload };},
+        setVerifiedLabels(state, payload) {return { ...state, verifiedLabels: payload };},
+        insVerifiedLabels(state, payload) {
+            let newArray = state.verifiedLabels.slice();
+            newArray.splice(newArray.length, 0, payload);
+            return { ...state, verifiedLabels: newArray};
+        },
+
+        setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
+        setOnCancel(state, payload) {return { ...state, onCancel: payload };},
+
         setAction(state, payload) {return { ...state, action: payload };},
 
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},

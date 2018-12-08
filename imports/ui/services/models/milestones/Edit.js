@@ -15,7 +15,7 @@ export default {
         milestones: [],         // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
         verifiedMilestones: [], // Array of milestones that were updated in GitHub
 
-        onSuccess: null,        // Function to be executed at successful completion
+        onSuccess: () => {},        // Function to be executed at successful completion
         onCancel: () => {},         // Function to be executed if user cancel stage
 
         loadedCount: 0,

@@ -60,7 +60,7 @@ class FacetSelector extends React.Component {
         if (facetItem.length > 20) {
             facetItem = facetItem.slice(0, 25) + '...';
         }
-        
+
         return (
             <ListItem
                 key={data.name}

@@ -25,7 +25,7 @@ export default {
         },
         async updateView(payload, rootState) {
             this.refreshFacets();
-            this.refreshMilestones();
+            this.refreshLabels();
         },
         async refreshFacets(payload, rootState) {
             console.log('refreshFacets');
@@ -37,8 +37,8 @@ export default {
             const t1 = performance.now();
             console.log("refreshFacets - took " + (t1 - t0) + " milliseconds.");
         },
-        async refreshMilestones(payload, rootState) {
-            console.log('refreshMilestones');
+        async refreshLabels(payload, rootState) {
+            console.log('refreshLabels');
             const labels = cfgLabels.find(rootState.labelsView.query).fetch();
             this.setLabels(labels);
         },

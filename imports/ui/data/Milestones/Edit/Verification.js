@@ -23,7 +23,7 @@ class Verification extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, milestones, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
+        const { setVerifying, setVerifyingMsg, milestones, onSuccess, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
         setVerifiedMilestones([]);
         setVerifyingMsg('About pull data from ' + milestones.length + ' milestones');
 //        for (let milestone of milestones) {
@@ -89,6 +89,7 @@ class Verification extends Component {
             }
         }
         setVerifying(false);
+        onSuccess();
     };
 
     render() {
@@ -105,6 +106,7 @@ const mapState = state => ({
     verifying: state.milestonesEdit.verifying,
 
     milestones: state.milestonesEdit.milestones,
+    onSuccess: state.milestonesEdit.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
