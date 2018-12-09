@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { cfgMilestones, cfgIssues } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues, cfgSources } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
@@ -20,6 +20,7 @@ import {
     populateTicketsPerDay,
     populateTicketsPerWeek
 } from "../../../utils/velocity/index.js";
+import {cfgLabels} from "../../../data/Minimongo";
 
 export default {
     state: {
@@ -43,6 +44,9 @@ export default {
         filteredAvailableRepositories: [],
         availableRepositoryFilter: '',
         openAddRepository: false,
+        addReposAvailable: [],
+        addReposSelected: [],
+        allRepos: [],           //All repos, unfiltered
 
         labels: [],
 
@@ -80,7 +84,12 @@ export default {
         setFilteredAvailableRepositories(state, payload) {return { ...state, filteredAvailableRepositories: JSON.parse(JSON.stringify(payload)) };},
         setAvailableRepositoriesFilter(state, payload) {return { ...state, availableRepositoriesFilter: payload };},
 
+        setAddReposAvailable(state, payload) {return { ...state, addReposAvailable: payload };},
+        setAddReposSelected(state, payload) {return { ...state, addReposSelected: payload };},
+        setAllRepos(state, payload) {return { ...state, allRepos: payload };},
+
         setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
+
         setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
@@ -112,6 +121,49 @@ export default {
             await this.setSelectedSprintTitle(selectedSprintTitle);
             this.updateView();
         },
+
+        async addRepoUpdateSelected(selectedRepos, rootState) {
+            console.log('addRepoUpdateSelected');
+            console.log(selectedRepos);
+            this.setAddReposSelected(selectedRepos);
+        },
+
+        async createSprint(payload, rootState) {
+            this.setSelectedSprintTitle(null);
+            this.setSelectedSprintDescription(null);
+            this.setSelectedSprintDueDate(null);
+
+            this.setEditSprintTitle('New Sprint');
+            this.setEditSprintDescription(null);
+            this.setEditSprintDueDate(new Date());
+            this.setEditSprint(true);
+
+            this.setLabels([]);
+            this.setIssues([]);
+            this.setRepositories([]);
+            this.setVelocity([]);
+            this.setAssignees([]);
+            this.setMilestones([]);
+
+            const allRepos = cfgSources.find({active: true}).fetch();
+            this.setAllRepos(allRepos);
+
+            this.setAddReposAvailable(allRepos.map((repo) => {
+                return {
+                    value: repo.id,
+                    label: repo.org.login + "/" + repo.name
+                }
+            }));
+            this.setAddReposSelected([]);
+        },
+
+        async saveSprint(payload, rootState) {
+            this.setSelectedSprintTitle(rootState.sprintsView.editSprintTitle);
+            this.setSelectedSprintDescription(rootState.sprintsView.editSprintDescription);
+            this.setSelectedSprintDueDate(rootState.sprintsView.editSprintDueDate);
+            this.setEditSprint(false);
+        },
+
 
         async updateView(payload, rootState) {
             console.log('Sprints - updateView');

@@ -30,6 +30,7 @@ export { default as waffle } from './waffle.js';
 export { default as milestonesView } from './milestones/View.js';
 export { default as milestonesEdit } from './milestones/Edit.js';
 export { default as milestonesFetch } from './milestones/Fetch.js';
+export { default as milestonesCreate } from './milestones/Create.js';
 
 // Labels
 export { default as labelsView } from './labels/View.js';

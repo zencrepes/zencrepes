@@ -96,7 +96,7 @@ export default {
             allRepos = _.sortBy(allRepos, 'label');
             this.setAllRepos(allRepos);
 
-            selectedRepos = cfgLabels.find({name: labelName}).map(label => label.repo).map(repo => repo.id);
+            const selectedRepos = cfgLabels.find({name: labelName}).map(label => label.repo).map(repo => repo.id);
             console.log(cfgLabels.find({name: labelName}).fetch());
             console.log(selectedRepos);
             this.updateSelectedRepos(selectedRepos);

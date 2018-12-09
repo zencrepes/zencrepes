@@ -19,23 +19,6 @@ class CloseSprint extends Component {
         super(props);
     }
 
-    /*
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { loadSuccess, setLoadSuccess, loadedCount, setLoadedCount, updateAvailableSprints, updateSelectedSprint } = this.props;
-        if (prevProps.loadSuccess === false && loadSuccess === true) {
-            //Set timer to actually set back success to false (and remove snackbar)
-            setTimeout(() => {
-                setLoadSuccess(false);
-                setLoadedCount(0);
-            }, 2000);
-            if (loadedCount > 0) {
-                updateAvailableSprints();
-                updateSelectedSprint(null);
-            }
-        }
-    };
-    */
-
     closeSprint = () => {
         console.log('closeSprint');
         const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, refreshSprints, setVerifying } = this.props;

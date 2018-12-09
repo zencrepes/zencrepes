@@ -13,6 +13,10 @@ import CustomCard from "../../../components/CustomCard/index.js";
 import Edit from './Edit/index.js';
 import CloseSprint from './CloseSprint.js';
 import RefreshIssues from './RefreshIssues.js';
+import AddRepositoryButton from './AddRepositoryButton.js';
+
+import AddRepository from './AddRepository/index.js';
+
 
 const styles = theme => ({
     root: {
@@ -48,7 +52,13 @@ class Summary extends Component {
     };
 
     saveEdit = () => {
-        console.log('cancelEdit');
+        const { milestones, saveSprint } = this.props;
+
+        if (milestones.length > 0) {
+            //TODO - To be implemented
+            console.log('Some milestones need to be changed, pending implementation');
+        }
+        saveSprint();
     };
 
     render() {
@@ -70,6 +80,7 @@ class Summary extends Component {
                 headerFactTitle="Due date"
                 headerFactValue={<Moment format="ddd MMM D, YYYY">{selectedSprintDueDate}</Moment> }
             >
+                <AddRepository />
                 <Grid
                     container
                     direction="row"
@@ -108,6 +119,9 @@ class Summary extends Component {
                             <Grid item >
                                 <RefreshIssues />
                             </Grid>
+                            <Grid item >
+                                <AddRepositoryButton />
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -125,6 +139,7 @@ const mapDispatch = dispatch => ({
     setEditSprintTitle: dispatch.sprintsView.setEditSprintTitle,
     setEditSprintDescription: dispatch.sprintsView.setEditSprintDescription,
     setEditSprintDueDate: dispatch.sprintsView.setEditSprintDueDate,
+    saveSprint: dispatch.sprintsView.saveSprint,
 });
 
 const mapState = state => ({
@@ -132,6 +147,9 @@ const mapState = state => ({
     selectedSprintDescription: state.sprintsView.selectedSprintDescription,
     selectedSprintTitle: state.sprintsView.selectedSprintTitle,
     selectedSprintDueDate: state.sprintsView.selectedSprintDueDate,
+
+    milestones: state.sprintsView.milestones,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Summary));

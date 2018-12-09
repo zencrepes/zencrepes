@@ -29,7 +29,6 @@ class Repositories extends Component {
                 headerFactTitle="Count"
                 headerFactValue={repositories.length}
             >
-                <AddRepository />
                 <RepositoriesTable repositories={repositories} />
                 <AddButton />
             </CustomCard>

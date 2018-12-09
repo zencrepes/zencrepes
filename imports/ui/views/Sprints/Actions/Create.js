@@ -19,26 +19,16 @@ class Create extends Component {
         this.state = {};
     }
 
-    openEditSprint = () => {
-        console.log('openEditSprint');
-        const {
-            setEditSprint,
-            setEditSprintTitle,
-            setEditSprintDescription,
-            setEditSprintDueDate,
-        } = this.props;
-
-        setEditSprintTitle('New Sprint');
-        setEditSprintDescription('');
-        setEditSprintDueDate(new Date());
-        setEditSprint(true);
+    createSprint = () => {
+        const {createSprint} = this.props;
+        createSprint();
     };
 
     render() {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Button variant="raised" color="primary" className={classes.button} onClick={this.openEditSprint}>
+                <Button variant="raised" color="primary" className={classes.button} onClick={this.createSprint}>
                     Create New Sprint
                 </Button>
             </div>
@@ -50,15 +40,8 @@ Create.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapState = state => ({
-
-});
-
 const mapDispatch = dispatch => ({
-    setEditSprint: dispatch.sprintsView.setEditSprint,
-    setEditSprintTitle: dispatch.sprintsView.setEditSprintTitle,
-    setEditSprintDescription: dispatch.sprintsView.setEditSprintDescription,
-    setEditSprintDueDate: dispatch.sprintsView.setEditSprintDueDate,
+    createSprint: dispatch.sprintsView.createSprint,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Create));
+export default connect(null, mapDispatch)(withStyles(styles)(Create));
