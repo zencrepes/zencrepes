@@ -62,25 +62,42 @@ class Data extends Component {
         for (let repo of repos) {
             let result = false;
             try {
-                result = await this.octokit.issues.createMilestone({
+                let createPayload = {
                     owner: repo.org.login,
                     repo: repo.name,
                     title: milestoneTitle,
-                    description: milestoneDescription,
-                    due_on: milestoneDueDate.toISOString(),
-                });
+                };
+                if (milestoneDescription !== null) {
+                    createPayload = {
+                        ...createPayload,
+                        description: milestoneDescription,
+                    }
+                }
+                if (milestoneDueDate !== null) {
+                    createPayload = {
+                        ...createPayload,
+                        due_on: milestoneDueDate.toISOString(),
+                    }
+                }
+                result = await this.octokit.issues.createMilestone(createPayload);
             }
             catch (error) {
                 console.log(error);
             }
             console.log(result);
             if (result !== false) {
+                const milestoneObj = {
+                    ...result.data,
+                    repo: repo,
+                    org: repo.org,
+                }
                 setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-/*                    await cfgLabels.upsert({
-                    id: labelObj.id
+                console.log(milestoneObj);
+                await cfgMilestones.upsert({
+                    id: milestoneObj.id
                 }, {
-                    $set: labelObj
-                });*/
+                    $set: milestoneObj
+                });
             }
             incrementLoadedCount(1);
         }

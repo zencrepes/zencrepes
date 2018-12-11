@@ -11,6 +11,8 @@ import SquareIcon from 'mdi-react/SquareIcon';
 import PencilIcon from 'mdi-react/PencilIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 
+import EditIcon from '@material-ui/icons/Edit';
+
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
@@ -98,7 +100,7 @@ const IssuesTypeProvider = props => (
 );
 
 const EditLabelFormatter = ({ value }) => {
-    return <Link to={"/labels/edit/" + value + "/all"}><EyeIcon /></Link>;
+    return <Link to={"/labels/edit/" + value + "/all"}><EditIcon /></Link>;
 };
 
 const EditLabelTypeProvider = props => (

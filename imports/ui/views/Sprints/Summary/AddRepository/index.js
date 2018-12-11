@@ -59,11 +59,10 @@ class AddRepository extends Component {
         } = this.props;
 
         setOpenAddRepository(false);
-        const selectedRepos = allRepos.filter((repo) => {
-            const repoFound = addReposSelected.filter((r) => {
-                return (r === repo.id ? false : true);
-            });
-            return (repoFound.length === 1 ? false : true);
+
+        const selectedRepos = addReposSelected.map((r) => {
+            const repoFound = allRepos.filter(repo => r === repo.id);
+            return repoFound[0];
         });
         setRepos(selectedRepos);
         setMilestoneTitle(selectedSprintTitle);

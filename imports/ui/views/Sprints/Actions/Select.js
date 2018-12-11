@@ -21,6 +21,7 @@ class Select extends Component {
         super(props);
     }
 
+    /*
     componentDidMount() {
         console.log('Sprint Planning - componentDidMount');
         const { sprints, updateAvailableSprints } = this.props;
@@ -36,7 +37,7 @@ class Select extends Component {
             updateView();
         }
     }
-
+*/
     handleChange = name => event => {
         const { updateSelectedSprint } = this.props;
         console.log('Dashboard - QueryPicker - handleChange');
@@ -45,24 +46,28 @@ class Select extends Component {
 
     render() {
         const { classes, selectedSprintName, sprints } = this.props;
-        return (
-            <TextField className={classes.root}
-                id="select-query"
-                select
-                label="Select an open sprint"
-                margin="dense"
-                variant="filled"
-                className={classes.textField}
-                value={selectedSprintName}
-                onChange={this.handleChange('sprint')}
-            >
-                {sprints.map(sprintTitle => (
-                    <MenuItem key={sprintTitle} value={sprintTitle}>
-                        {sprintTitle}
-                    </MenuItem>
-                ))}
-            </TextField>
-        );
+        if (selectedSprintName === null) {
+            return null
+        } else {
+            return (
+                <TextField className={classes.root}
+                           id="select-query"
+                           select
+                           label="Select an open sprint"
+                           margin="dense"
+                           variant="filled"
+                           className={classes.textField}
+                           value={selectedSprintName}
+                           onChange={this.handleChange('sprint')}
+                >
+                    {sprints.map(sprintTitle => (
+                        <MenuItem key={sprintTitle} value={sprintTitle}>
+                            {sprintTitle}
+                        </MenuItem>
+                    ))}
+                </TextField>
+            );
+        }
     }
 }
 

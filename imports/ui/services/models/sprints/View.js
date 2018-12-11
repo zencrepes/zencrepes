@@ -104,6 +104,15 @@ export default {
 
     },
     effects: {
+        async initView(payload, rootState) {
+            console.log('Sprints - initView');
+            this.refreshSprints();
+
+            const allRepos = cfgSources.find({active: true}).fetch();
+            this.setAllRepos(allRepos);
+
+            this.updateView();
+        },
         async refreshSprints(payload, rootState) {
             console.log('refreshSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
@@ -145,16 +154,26 @@ export default {
             this.setAssignees([]);
             this.setMilestones([]);
 
-            const allRepos = cfgSources.find({active: true}).fetch();
-            this.setAllRepos(allRepos);
+            this.setAddReposSelected([]);
+        },
 
-            this.setAddReposAvailable(allRepos.map((repo) => {
+        async updateAvailableRepos(payload, rootState) {
+            const selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
+            const milestones = cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch()
+            const includedRepos = milestones.map((ms) => ms.repo);
+            const allRepos = cfgSources.find({active: true}).fetch();
+            const availableRepos = _.differenceBy(allRepos, includedRepos, 'id');
+
+            console.log(includedRepos);
+            console.log(allRepos);
+            console.log(availableRepos);
+
+            this.setAddReposAvailable(availableRepos.map((repo) => {
                 return {
                     value: repo.id,
                     label: repo.org.login + "/" + repo.name
                 }
             }));
-            this.setAddReposSelected([]);
         },
 
         async saveSprint(payload, rootState) {
@@ -189,7 +208,7 @@ export default {
             this.setFilteredAvailableAssignees(assigneesDifference);
             this.setAvailableAssigneesFilter('');
 
-            let repositories = getRepositoriesRepartition(cfgIssues.find(currentSprintFilter).fetch());
+            let repositories = getRepositoriesRepartition(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch(), cfgIssues.find(currentSprintFilter).fetch());
             this.setRepositories(repositories);
 
             let labels = getLabelsRepartition(cfgIssues.find(currentSprintFilter).fetch());
@@ -208,6 +227,8 @@ export default {
             this.updateVelocity(assignees);
 
             this.updateDescriptionDate();
+
+            this.updateAvailableRepos();
         },
 
         async updateVelocity(assignees, rootState) {
@@ -246,8 +267,16 @@ export default {
                 '* If you escape or skip the HTML, no `dangerouslySetInnerHTML` is used! Yay!\n' +
                 '\n');
                 */
-            this.setSelectedSprintDescription(rootState.sprintsView.milestones[0].description);
-            this.setSelectedSprintDueDate(rootState.sprintsView.milestones[0].dueOn);
+            if (rootState.sprintsView.milestones[0] !== undefined) {
+                this.setSelectedSprintDescription(rootState.sprintsView.milestones[0].description);
+            } else {
+                this.setSelectedSprintDescription(null);
+            }
+            if (rootState.sprintsView.milestones[0] !== undefined) {
+                this.setSelectedSprintDueDate(new Date(rootState.sprintsView.milestones[0].dueOn));
+            } else {
+                this.setSelectedSprintDueDate(null);
+            }
         },
 
         async updateAvailableAssigneesFilter(payload, rootState) {

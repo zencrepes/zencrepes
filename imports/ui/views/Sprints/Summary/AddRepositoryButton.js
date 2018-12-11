@@ -23,7 +23,8 @@ class AddRepositoryButton extends Component {
 
     addClick = () => {
         console.log('addClick');
-        const { setOpenAddRepository } = this.props;
+        const { setOpenAddRepository, setAddReposSelected } = this.props;
+        setAddReposSelected([]);
         setOpenAddRepository(true);
         /*
         const { setLoadFlag } = this.props;
@@ -57,6 +58,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setOpenAddRepository: dispatch.sprintsView.setOpenAddRepository,
+    setAddReposSelected: dispatch.sprintsView.setAddReposSelected,
 
 });
 

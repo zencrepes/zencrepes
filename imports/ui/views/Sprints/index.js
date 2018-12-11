@@ -41,13 +41,11 @@ const styles = theme => ({
 class Sprints extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            mobileOpen: false
-        };
     }
 
-    handleDrawerToggle = () => {
-        this.setState({ mobileOpen: !this.state.mobileOpen });
+    componentDidMount() {
+        const { initView } = this.props;
+        initView();
     };
 
     render() {
@@ -141,10 +139,13 @@ Sprints.propTypes = {
 };
 
 const mapState = state => ({
-    repositories: state.sprintsView.repositories,
     assignees: state.sprintsView.assignees,
     issues: state.sprintsView.issues,
     velocity: state.sprintsView.velocity,
 });
 
-export default connect(mapState, null)(withRouter(withStyles(styles)(Sprints)));
+const mapDispatch = dispatch => ({
+    initView: dispatch.sprintsView.initView,
+});
+
+export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Sprints)));
