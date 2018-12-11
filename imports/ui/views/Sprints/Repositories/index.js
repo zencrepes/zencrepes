@@ -23,7 +23,7 @@ class Repositories extends Component {
         const { classes, repositories } = this.props;
         return (
             <CustomCard
-                headerTitle="Repositores"
+                headerTitle="Milestones"
                 headerFactTitle="Count"
                 headerFactValue={repositories.length}
             >
