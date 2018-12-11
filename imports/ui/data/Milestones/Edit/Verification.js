@@ -28,6 +28,7 @@ class Verification extends Component {
         setVerifyingMsg('About pull data from ' + milestones.length + ' milestones');
 //        for (let milestone of milestones) {
         for (const [idx, milestone] of milestones.entries()) {
+            console.log(milestone);
             if (this.props.verifying) {
                 let baseMsg = (idx+1) + '/' + milestones.length + ' - Fetching milestone: ' + milestone.org.login + '/' + milestone.repo.name + '#' + milestone.number;
                 setVerifyingMsg(baseMsg);
@@ -75,7 +76,7 @@ class Verification extends Component {
                             insVerifiedMilestones({
                                 ...data.data.repository.milestone,
                                 error: true,
-                                errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
+                                errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. issues Counts are are different',
                             })
                         }
                         await cfgMilestones.upsert({

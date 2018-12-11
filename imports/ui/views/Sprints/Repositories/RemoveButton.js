@@ -17,8 +17,16 @@ class RemoveButton extends Component {
     }
 
     remove = () => {
-        const { repo } = this.props;
-        console.log(repo);
+        const { milestone } = this.props;
+        console.log(milestone);
+
+        const { setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnSuccess, updateView } = this.props;
+        setMilestones([milestone]);
+        setOnSuccess(updateView);
+        setAction('delete');
+        setVerifying(true);
+        setStageFlag(true);
+        setVerifFlag(true);
     };
 
     render() {
@@ -41,8 +49,20 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setRepos: dispatch.milestonesCreate.setRepos,
-    setVerifiedRepos: dispatch.milestonesCreate.setVerifiedRepos,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
+    setVerifying: dispatch.milestonesEdit.setVerifying,
+    setLoading: dispatch.milestonesEdit.setLoading,
+    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
+
+    setMilestones: dispatch.milestonesEdit.setMilestones,
+    setAction: dispatch.milestonesEdit.setAction,
+
+    setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
+    setOnSuccess: dispatch.milestonesEdit.setOnSuccess,
+
+    updateView: dispatch.sprintsView.updateView,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(RemoveButton));

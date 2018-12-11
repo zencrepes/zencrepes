@@ -71,7 +71,7 @@ class Data extends Component {
                         $set: {state: 'CLOSED'}
                     });
                 }
-            } else if (action === 'deleteClosedEmpty') {
+            } else if (action === 'delete') {
                 try {
                     console.log(milestone);
                     result = await this.octokit.issues.deleteMilestone({

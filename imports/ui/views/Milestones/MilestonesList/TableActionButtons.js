@@ -43,7 +43,7 @@ class TableActionButtons extends Component {
         console.log('deleteClosedEmpty');
         const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
-        setAction('deleteClosedEmpty');
+        setAction('delete');
         setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);

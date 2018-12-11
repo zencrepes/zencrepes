@@ -134,8 +134,9 @@ export const getRepositoriesRepartition = (milestones, issues) => {
     const repos = milestones.map((ms) => {
         let issuesList = issues.filter(issue => ms.repo.id === issue.repo.is);
         return {
-            ...ms.repo,
+            ...ms,
             issues: {
+                totalCount: ms.issues.totalCount,
                 list: issuesList,
                 count: issuesList.length
             },

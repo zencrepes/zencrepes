@@ -34,7 +34,7 @@ const styles = theme => ({
 });
 
 const DeleteLabelFormatter = ({ value }) => {
-    return <RemoveButton repo={value} />;
+    return <RemoveButton milestone={value} />;
 };
 
 const DeleteLabelTypeProvider = props => (
@@ -52,10 +52,10 @@ class RepositoriesTable extends Component {
         this.state = {
             columns: [
                 { name: 'orglogin', title: 'Org', getCellValue: row => (row.org.login) },
-                { name: 'name', title: 'Repo' },
+                { name: 'name', title: 'Repo', getCellValue: row => (row.repo.name) },
                 { name: 'issues', title: 'Issues', getCellValue: row => (row.issues ? row.issues.count : undefined)},
                 { name: 'points', title: 'Points', getCellValue: row => (row.issues ? row.points.count : undefined)},
-                { name: 'delete', title: 'Delete', getCellValue: row => row},
+                { name: 'delete', title: 'Del', getCellValue: row => row},
             ],
             tableColumnExtensions: [
                 { columnName: 'issues', width: 70 },
