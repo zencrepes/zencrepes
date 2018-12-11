@@ -6,8 +6,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import RepositoriesTable from './RepositoriesTable.js';
-import AddButton from './AddButton.js';
-import AddRepository from './AddRepository/index.js';
 
 import CustomCard from "../../../components/CustomCard/index.js";
 
@@ -30,7 +28,6 @@ class Repositories extends Component {
                 headerFactValue={repositories.length}
             >
                 <RepositoriesTable repositories={repositories} />
-                <AddButton />
             </CustomCard>
         );
     }

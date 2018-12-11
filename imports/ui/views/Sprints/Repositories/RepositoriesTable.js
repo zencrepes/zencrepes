@@ -26,10 +26,24 @@ import {
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
+import RemoveButton from './RemoveButton.js';
+
 const styles = theme => ({
     root: {
     },
 });
+
+const DeleteLabelFormatter = ({ value }) => {
+    return <RemoveButton repo={value} />;
+};
+
+const DeleteLabelTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={DeleteLabelFormatter}
+        {...props}
+    />
+);
+
 
 class RepositoriesTable extends Component {
     constructor(props) {
@@ -41,17 +55,20 @@ class RepositoriesTable extends Component {
                 { name: 'name', title: 'Repo' },
                 { name: 'issues', title: 'Issues', getCellValue: row => (row.issues ? row.issues.count : undefined)},
                 { name: 'points', title: 'Points', getCellValue: row => (row.issues ? row.points.count : undefined)},
+                { name: 'delete', title: 'Delete', getCellValue: row => row},
             ],
             tableColumnExtensions: [
                 { columnName: 'issues', width: 70 },
                 { columnName: 'points', width: 70 },
-            ]
+                { columnName: 'delete', width: 60 },
+            ],
+            deleteLabelColumns: ['delete'],
         };
     }
 
     render() {
         const { classes, repositories } = this.props;
-        const { columns, tableColumnExtensions} = this.state;
+        const { columns, tableColumnExtensions, deleteLabelColumns} = this.state;
 
         return (
             <div className={classes.root}>
@@ -59,6 +76,9 @@ class RepositoriesTable extends Component {
                     rows={repositories}
                     columns={columns}
                 >
+                    <DeleteLabelTypeProvider
+                        for={deleteLabelColumns}
+                    />
                     <Table columnExtensions={tableColumnExtensions} />
                     <TableHeaderRow />
                 </Grid>
