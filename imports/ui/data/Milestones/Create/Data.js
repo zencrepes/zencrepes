@@ -6,6 +6,9 @@ import { withApollo } from 'react-apollo';
 
 import { cfgMilestones } from "../../Minimongo";
 
+import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
+
+
 import GitHubApi from '@octokit/rest';
 
 class Data extends Component {
@@ -86,18 +89,38 @@ class Data extends Component {
             }
             console.log(result);
             if (result !== false) {
-                const milestoneObj = {
-                    ...result.data,
-                    repo: repo,
-                    org: repo.org,
-                }
                 setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                console.log(milestoneObj);
-                await cfgMilestones.upsert({
-                    id: milestoneObj.id
-                }, {
-                    $set: milestoneObj
-                });
+                // From the milestone number, fetch single milestone data from Github through the Graphql API
+                let data = {};
+                try {
+                    data = await client.query({
+                        query: GET_GITHUB_SINGLE_MILESTONE,
+                        variables: {
+                            org_name: repo.org.login,
+                            repo_name: repo.name,
+                            milestone_number: result.data.number
+                        },
+                        fetchPolicy: 'no-cache',
+                        errorPolicy: 'ignore',
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                console.log(data);
+                if (data.data !== null) {
+                    const milestoneObj = {
+                        ...data.data.repository.milestone,
+                        repo: repo,
+                        org: repo.org,
+                    };
+                    console.log(milestoneObj);
+                    await cfgMilestones.upsert({
+                        id: milestoneObj.id
+                    }, {
+                        $set: milestoneObj
+                    });
+                }
             }
             incrementLoadedCount(1);
         }

@@ -133,6 +133,8 @@ export const getRepositories = (issues) => {
 export const getRepositoriesRepartition = (milestones, issues) => {
     const repos = milestones.map((ms) => {
         let issuesList = issues.filter(issue => ms.repo.id === issue.repo.id);
+        console.log(ms);
+        console.log(issuesList);
         return {
             ...ms,
             issues: {

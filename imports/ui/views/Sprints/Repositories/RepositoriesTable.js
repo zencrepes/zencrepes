@@ -91,9 +91,9 @@ class RepositoriesTable extends Component {
                 { name: 'delete', title: 'Del', getCellValue: row => row},
             ],
             tableColumnExtensions: [
-                { columnName: 'state', width: 70 },
-                { columnName: 'issues', width: 70 },
-                { columnName: 'points', width: 70 },
+                { columnName: 'state', width: 55 },
+                { columnName: 'issues', width: 55, align: 'right' },
+                { columnName: 'points', width: 55, align: 'right' },
                 { columnName: 'delete', width: 60 },
             ],
             deleteColumns: ['delete'],
