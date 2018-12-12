@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
-import GET_GITHUB_SINGLE_REPO from '../../../../graphql/getSingleRepo.graphql';
-import GET_GITHUB_MILESTONES from '../../../../graphql/getMilestones.graphql';
+import GET_GITHUB_SINGLE_MILESTONE from '../../../../../graphql/getSingleMilestone.graphql';
+import GET_GITHUB_SINGLE_REPO from '../../../../../graphql/getSingleRepo.graphql';
+import GET_GITHUB_MILESTONES from '../../../../../graphql/getMilestones.graphql';
 
-import { cfgMilestones } from '../../Minimongo.js';
-import {cfgSources} from "../../Minimongo";
-import calculateQueryIncrement from "../../utils/calculateQueryIncrement";
+import { cfgMilestones } from '../../../Minimongo.js';
+import {cfgSources} from "../../../Minimongo";
+import calculateQueryIncrement from "../../../utils/calculateQueryIncrement";
 
-class Verification extends Component {
+class Staging extends Component {
     constructor (props) {
         super(props);
         this.syncedMilestones = [];
@@ -29,7 +29,7 @@ class Verification extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, repos, onSuccess, setVerifiedRepos, insVerifiedRepos, client, milestoneTitle } = this.props;
+        const { setVerifying, setVerifyingMsg, repos, onStagingSuccess, setVerifiedRepos, insVerifiedRepos, client, milestoneTitle } = this.props;
         setVerifiedRepos([]);
         setVerifyingMsg('About verify data about from ' + repos.length + ' repos');
 //        for (let milestone of milestones) {
@@ -90,8 +90,8 @@ class Verification extends Component {
             }
         }
         setVerifying(false);
-        console.log(onSuccess);
-        onSuccess();
+        console.log(onStagingSuccess);
+        onStagingSuccess();
     };
 
 
@@ -173,7 +173,7 @@ class Verification extends Component {
     }
 }
 
-Verification.propTypes = {
+Staging.propTypes = {
 
 };
 
@@ -184,7 +184,7 @@ const mapState = state => ({
     milestoneTitle: state.milestonesCreate.milestoneTitle,
 
     repos: state.milestonesCreate.repos,
-    onSuccess: state.milestonesCreate.onSuccess,
+    onStagingSuccess: state.milestonesCreate.onStagingSuccess,
 });
 
 const mapDispatch = dispatch => ({
@@ -197,4 +197,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(Verification));
+export default connect(mapState, mapDispatch)(withApollo(Staging));

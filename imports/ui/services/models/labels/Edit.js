@@ -16,8 +16,11 @@ export default {
         verifFlag: false,       // Flag to trigger verification against GitHub
         verifying: false,       // Boolean to indicate verification is currently taking place
         verifyingMsg: null,     // Message to be displayed while issues are being verified
-        onSuccess: () => {},    // Function to be executed at successful completion
-        onCancel: () => {},     // Function to be executed if user cancel stage
+
+        onSuccess: () => {},        // Function to be executed at successful completion
+        onCancel: () => {},         // Function to be executed if user cancel stage
+        onStagingSuccess: () => {}, // Function to be executed if successful stage
+        onStagingCancel: () => {},  // Function to be executed if staging is cancelled
 
         action: null,               // Action to be performed
         loadedCount: 0,
@@ -60,6 +63,8 @@ export default {
 
         setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
         setOnCancel(state, payload) {return { ...state, onCancel: payload };},
+        setOnStagingSuccess(state, payload) {return { ...state, onStagingSuccess: payload };},
+        setOnStagingCancel(state, payload) {return { ...state, onStagingCancel: payload };},
 
         setAction(state, payload) {return { ...state, action: payload };},
 

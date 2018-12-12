@@ -12,6 +12,9 @@ import SprintDescription from './SprintDescription.js';
 import SprintDueDate from './SprintDueDate.js';
 import SprintTitle from './SprintTitle.js';
 
+import CancelButton from './CancelButton.js';
+import SaveButton from './SaveButton.js';
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -23,15 +26,9 @@ class Edit extends Component {
         super(props);
     }
 
-    saveChanges = () => {
-
-    };
-
     render() {
         const {
             classes,
-            saveEdit,
-            cancelEdit,
         } = this.props;
 
         return (
@@ -61,12 +58,8 @@ class Edit extends Component {
                     <Grid item xs={12} sm container>
                     </Grid>
                     <Grid item >
-                        <Button onClick={cancelEdit} color="primary" autoFocus>
-                            Cancel
-                        </Button>
-                        <Button onClick={saveEdit} color="primary" autoFocus>
-                            Save
-                        </Button>
+                        <CancelButton />
+                        <SaveButton />
                     </Grid>
                 </Grid>
             </div>

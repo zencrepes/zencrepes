@@ -17,8 +17,14 @@ export default {
 
         onSuccess: () => {},        // Function to be executed at successful completion
         onCancel: () => {},         // Function to be executed if user cancel stage
+        onStagingSuccess: () => {}, // Function to be executed if successful stage
+        onStagingCancel: () => {},  // Function to be executed if staging is cancelled
 
         loadedCount: 0,
+
+        editMilestoneTitle: null,
+        editMilestoneDescription: null,
+        editMilestoneDueDate: null,
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -45,9 +51,16 @@ export default {
 
         setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
         setOnCancel(state, payload) {return { ...state, onCancel: payload };},
+        setOnStagingSuccess(state, payload) {return { ...state, onStagingSuccess: payload };},
+        setOnStagingCancel(state, payload) {return { ...state, onStagingCancel: payload };},
 
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
         incrementLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},
+
+        setEditMilestoneTitle(state, payload) {return { ...state, editMilestoneTitle: payload };},
+        setEditMilestoneDescription(state, payload) {return { ...state, editMilestoneDescription: payload };},
+        setEditMilestoneDueDate(state, payload) {return { ...state, editMilestoneDueDate: payload };},
+
     },
     effects: {
 

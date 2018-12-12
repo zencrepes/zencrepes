@@ -46,21 +46,6 @@ class Summary extends Component {
         setEditSprint(true);
     };
 
-    cancelEdit = () => {
-        const { setEditSprint } = this.props;
-        setEditSprint(false);
-    };
-
-    saveEdit = () => {
-        const { milestones, saveSprint } = this.props;
-
-        if (milestones.length > 0) {
-            //TODO - To be implemented
-            console.log('Some milestones need to be changed, pending implementation');
-        }
-        saveSprint();
-    };
-
     render() {
         const {
             classes,
@@ -90,10 +75,7 @@ class Summary extends Component {
                 >
                     <Grid item xs={12} sm container>
                         {editSprint ? (
-                            <Edit
-                                saveEdit={this.saveEdit}
-                                cancelEdit={this.cancelEdit}
-                            />
+                            <Edit />
                         ) : (
                             <ReactMarkdown source={selectedSprintDescription} />
                         )}

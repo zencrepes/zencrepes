@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
+import GET_GITHUB_SINGLE_MILESTONE from '../../../../../graphql/getSingleMilestone.graphql';
 
-import { cfgMilestones } from '../../Minimongo.js';
+import { cfgMilestones } from '../../../Minimongo.js';
 
-class Verification extends Component {
+class Staging extends Component {
     constructor (props) {
         super(props);
     }
@@ -23,7 +23,7 @@ class Verification extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, milestones, onSuccess, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
+        const { setVerifying, setVerifyingMsg, milestones, onStagingSuccess, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
         setVerifiedMilestones([]);
         setVerifyingMsg('About pull data from ' + milestones.length + ' milestones');
 //        for (let milestone of milestones) {
@@ -90,7 +90,7 @@ class Verification extends Component {
             }
         }
         setVerifying(false);
-        onSuccess();
+        onStagingSuccess();
     };
 
     render() {
@@ -98,7 +98,7 @@ class Verification extends Component {
     }
 }
 
-Verification.propTypes = {
+Staging.propTypes = {
 
 };
 
@@ -107,7 +107,7 @@ const mapState = state => ({
     verifying: state.milestonesEdit.verifying,
 
     milestones: state.milestonesEdit.milestones,
-    onSuccess: state.milestonesEdit.onSuccess,
+    onStagingSuccess: state.milestonesEdit.onStagingSuccess,
 });
 
 const mapDispatch = dispatch => ({
@@ -120,4 +120,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(Verification));
+export default connect(mapState, mapDispatch)(withApollo(Staging));

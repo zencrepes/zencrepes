@@ -8,7 +8,7 @@ import GET_GITHUB_SINGLE_LABEL from '../../../../graphql/getSingleLabel.graphql'
 
 import { cfgLabels } from '../../Minimongo.js';
 
-class Verification extends Component {
+class Staging extends Component {
     constructor (props) {
         super(props);
     }
@@ -97,7 +97,7 @@ class Verification extends Component {
     }
 }
 
-Verification.propTypes = {
+Staging.propTypes = {
 
 };
 
@@ -119,4 +119,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(Verification));
+export default connect(mapState, mapDispatch)(withApollo(Staging));

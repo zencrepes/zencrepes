@@ -15,6 +15,8 @@ export default {
 
         onSuccess: () => {},        // Function to be executed at successful completion
         onCancel: () => {},         // Function to be executed if user cancel stage
+        onStagingSuccess: () => {}, // Function to be executed if successful stage
+        onStagingCancel: () => {},  // Function to be executed if staging is cancelled
 
         milestoneTitle: null,
         milestoneDescription: null,
@@ -45,6 +47,8 @@ export default {
 
         setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
         setOnCancel(state, payload) {return { ...state, onCancel: payload };},
+        setOnStagingSuccess(state, payload) {return { ...state, onStagingSuccess: payload };},
+        setOnStagingCancel(state, payload) {return { ...state, onStagingCancel: payload };},
 
         setMilestoneTitle(state, payload) {return { ...state, milestoneTitle: payload };},
         setMilestoneDescription(state, payload) {return { ...state, milestoneDescription: payload };},
