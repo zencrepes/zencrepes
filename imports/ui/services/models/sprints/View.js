@@ -144,7 +144,7 @@ export default {
 
             this.setEditSprintTitle('New Sprint');
             this.setEditSprintDescription(null);
-            this.setEditSprintDueDate(new Date());
+            this.setEditSprintDueDate(new Date().toISOString());
             this.setEditSprint(true);
 
             this.setLabels([]);
@@ -273,7 +273,7 @@ export default {
                 this.setSelectedSprintDescription(null);
             }
             if (rootState.sprintsView.milestones[0] !== undefined) {
-                this.setSelectedSprintDueDate(new Date(rootState.sprintsView.milestones[0].dueOn));
+                this.setSelectedSprintDueDate(rootState.sprintsView.milestones[0].dueOn);
             } else {
                 this.setSelectedSprintDueDate(null);
             }

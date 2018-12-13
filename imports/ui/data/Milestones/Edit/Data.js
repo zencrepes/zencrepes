@@ -126,11 +126,13 @@ class Data extends Component {
                     }
                 }
                 if (editMilestoneDueDate !== null) {
+                    console.log(editMilestoneDueDate);
                     updatePayload = {
                         ...updatePayload,
-                        due_on: editMilestoneDueDate.toISOString(),
+                        due_on: editMilestoneDueDate,
                     }
                 }
+                console.log(updatePayload);
                 try {
                     result = await this.octokit.issues.updateMilestone(updatePayload);
                 }

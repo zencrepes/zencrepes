@@ -45,7 +45,7 @@ class ApplyButton extends Component {
         let hasChanged = false;
         if (selectedSprintDescription !== editSprintDescription) {hasChanged = true;}
         if (selectedSprintTitle !== editSprintTitle) {hasChanged = true;}
-        if (selectedSprintDueDate.toISOString() !== editSprintDueDate.toISOString()) {hasChanged = true;}
+        if (selectedSprintDueDate !== editSprintDueDate) {hasChanged = true;}
         if (milestones.length > 0 && hasChanged === true) {
             //TODO - To be implemented
             console.log('Some milestones need to be changed, pending implementation');

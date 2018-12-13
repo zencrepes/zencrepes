@@ -59,11 +59,14 @@ class Summary extends Component {
         console.log(selectedSprintDueDate);
         console.log(editSprint);
 
+        // More on moment/time:
+        // https://maggiepint.com/2016/05/14/moment-js-shows-the-wrong-date/
+        // https://momentjs.com/docs/#/parsing/string-format/
         return (
             <CustomCard
                 headerTitle={selectedSprintTitle}
                 headerFactTitle="Due date"
-                headerFactValue={<Moment format="ddd MMM D, YYYY">{selectedSprintDueDate}</Moment> }
+                headerFactValue={<Moment format="ddd MMM D, YYYY LLL">{selectedSprintDueDate}</Moment> }
             >
                 <AddRepository />
                 <Grid

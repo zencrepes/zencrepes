@@ -79,7 +79,7 @@ class Data extends Component {
                 if (milestoneDueDate !== null) {
                     createPayload = {
                         ...createPayload,
-                        due_on: milestoneDueDate.toISOString(),
+                        due_on: milestoneDueDate,
                     }
                 }
                 result = await this.octokit.issues.createMilestone(createPayload);

@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
+//import * as moment from 'moment';
+
 const styles = theme => ({
     root: {
     }
@@ -26,14 +28,24 @@ class SprintDueDate extends Component {
 
     changeSprintEndDate = name => event => {
         const { setEditSprintDueDate } = this.props;
-        let newSprintEndDate = event.target.value;
+        console.log(event.target.value);
+        let newSprintEndDate = null;
+        try {
+            var moment = require('moment');
+            newSprintEndDate = moment(event.target.value, "YYYY-MM-DD").toISOString();
+        }
+        catch (error) {
+            console.log(error);
+        }
         console.log(newSprintEndDate);
         setEditSprintDueDate(newSprintEndDate);
     };
 
     render() {
         const { classes, editSprintDueDate } = this.props;
+        console.log(editSprintDueDate);
         let endDate = new Date(editSprintDueDate);
+        console.log(endDate);
         let formattedSprintEndDate = endDate.getFullYear() + "-" + (endDate.getMonth()+1 < 10 ? '0' : '') + (endDate.getMonth()+1) + "-" + (endDate.getDate() < 10 ? '0' : '') + (endDate.getDate());
         return (
             <div className={classes.root}>
