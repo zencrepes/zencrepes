@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { GithubCircle } from 'mdi-material-ui'
 import { Link } from 'react-router-dom';

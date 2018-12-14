@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -32,7 +32,7 @@ class SprintDueDate extends Component {
         let newSprintEndDate = null;
         try {
             var moment = require('moment');
-            newSprintEndDate = moment(event.target.value, "YYYY-MM-DD").toISOString();
+            newSprintEndDate = moment(event.target.value, "YYYY-MM-DD").add(4, 'hours').toISOString();
         }
         catch (error) {
             console.log(error);

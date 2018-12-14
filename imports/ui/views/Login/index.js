@@ -1,28 +1,69 @@
-/*
-Note: Most of this page design has been copied over from:
-https://github.com/creativetimofficial/material-kit-react/blob/master/src/views/LoginPage/LoginPage.jsx
- */
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-// core components
-import Footer from "../../components/Footer/FooterAnonymous.js";
-
-import GridContainer from "../../components/Grid/GridContainer.js";
-import GridItem from "../../components/Grid/GridItem.js";
-import Card from "../../components/Card/Card.js";
-import CardHeader from "../../components/Card/CardHeader.js";
-import CardFooter from "../../components/Card/CardFooter.js";
-
-import loginPageStyle from "../../assets/jss/material-kit-react/views/loginPage.jsx";
-import loginViewStyle from "../../assets/jss/thatapp/views/login.jsx";
+import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import GitHubLogin from './GitHubLogin.js';
 
-//import background from "../../assets/img/newyork.jpg";
+const styles = theme => ({
+    '@global': {
+        body: {
+            backgroundColor: theme.palette.common.white,
+        },
+    },
+    appBar: {
+        position: 'relative',
+    },
+    toolbarTitle: {
+        flex: 1,
+    },
+    layout: {
+        width: 'auto',
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
+            width: 900,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+    },
+    title: {
+        fontSize: '52px',
+        lineHeight: 1.3,
+    },
+    underline: {
+        margin: '18px 0',
+        width: '100px',
+        borderWidth: '2px',
+        borderColor: '#27A0B6',
+        borderTopStyle: 'solid',
+    },
+    subtitle: {
+        fontSize: '20px',
+        fontFamily: 'Roboto',
+        fontWeight: 400,
+        lineHeight: 1.5,
+    },
+    paragraph: {
+        color: '#898989',
+        lineHeight: 1.75,
+        fontSize: '16px',
+        margin: '0 0 10px',
+        fontFamily: 'Roboto',
+        fontWeight: 400,
+    },
+    secondTitle: {
+        fontSize: '20px',
+        lineHeight: 1.1,
+        fontWeight: 600,
+        letterSpacing: '.75px',
+    }
+});
 
 class Login extends Component {
     constructor(props) {
@@ -46,59 +87,45 @@ class Login extends Component {
 
     render() {
         const { classes } = this.props;
+
         return (
-            <div>
-                <div
-                    className={classes.pageHeader}
-                    style={{
-                        //backgroundImage: "url(" + background + ")",
-                        backgroundImage: "url(/newyork.jpg)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "top center"
-                    }}
-                >
-                    <div className={classes.container}>
-                        <GridContainer justify="center">
-                            <GridItem xs={12} sm={12} md={4}>
-                                <Card className={classes[this.state.cardAnimation]}>
-                                    <div>
-                                        <div className={classes.logo}>
-                                            <a href="/issues" className={classes.logoLink}>
-                                                <div className={classes.logoImage}>
-                                                    <img src="/crepe-32.png" />
-                                                </div>
-                                                Zen Crepes
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className={classes.gitButton}>
-                                        <GitHubLogin />
-                                    </div>
-                                    <Typography className={classes.divider}>
-                                        Manage and cleanup projects across Github Organizations & Repositories
-                                    </Typography>
-                                </Card>
-                            </GridItem>
-                        </GridContainer>
-                    </div>
-                    <Footer whiteFont />
-                </div>
-            </div>
+            <React.Fragment>
+                <CssBaseline />
+                <AppBar position="static" color="default" className={classes.appBar}>
+                    <Toolbar>
+                        <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
+                            ZenCrepes
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <main className={classes.layout}>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={40}
+                    >
+                        <Grid item xs={12} sm={6} md={8}>
+                            <h1 className={classes.title}>Log in to ZenCrepes</h1>
+                            <div>
+                                <hr className={classes.underline} />
+                            </div>
+                            <p className={classes.subtitle}>Agile analytics and management over GitHub organizations & repositories made easy!</p>
+                            <p className={classes.paragraph}>Data is yours! ZenCrepes is <b><u>entirely client-side</u></b>, we don't see any of your data, none!</p>
+                            <p className={classes.paragraph}>ZenCrepes operates across repositories and organizations and facilitates batch modifications. Welcome consistency!</p>
+                            <p className={classes.paragraph}>If you update content, ZenCrepes will first stage the update and <b><u>you'll get to confirm
+                                any changes</u></b> before pushing to GitHub.</p>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <h4 className={classes.secondTitle}>Get Started</h4>
+                            <GitHubLogin />
+                        </Grid>
+                    </Grid>
+                </main>
+            </React.Fragment>
         );
     }
+
 }
-export default withStyles(loginViewStyle)(Login);
-
-/*
-                                        <CardHeader color="primary" className={classes.cardHeader}>
-                                            <div className={classes.socialLine}>
-                                                <GitHubLogin />
-                                            </div>
-                                        </CardHeader>
-
-                                        <CardFooter className={classes.cardFooter}>
-                                            <Button color="primary" className={classes.button}>
-                                                Learn more
-                                            </Button>
-                                        </CardFooter>
- */
+export default withStyles(styles)(Login);

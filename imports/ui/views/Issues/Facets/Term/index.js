@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import List from 'material-ui/List';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
 
 import FacetSelector from './FacetSelector.js';
 

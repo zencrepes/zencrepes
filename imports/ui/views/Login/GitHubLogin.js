@@ -15,7 +15,7 @@ import { GithubCircle } from 'mdi-material-ui'
 const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
-        maxWidth: '150px',
+        width: '100%',
     },
     leftIcon: {
         marginRight: theme.spacing.unit,
@@ -54,9 +54,9 @@ class GitHubLogin extends Component {
     render() {
         const { classes, callback } = this.props;
         return (
-            <Button variant="raised" className={classes.button} onClick={() => this.handleLogin(callback)}>
+            <Button variant="contained" className={classes.button} onClick={() => this.handleLogin(callback)}>
                 <GithubCircle className={classNames(classes.leftIcon, classes.iconSmall)} />
-                Login
+                Log In with GitHub
             </Button>
         );
     }

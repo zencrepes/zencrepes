@@ -5,8 +5,6 @@ import { withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
 
-import { RunFast } from 'mdi-material-ui';
-
 import dashboardStyle from "../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 import Card from "../../Card/Card";

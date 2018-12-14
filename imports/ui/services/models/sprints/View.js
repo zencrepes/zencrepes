@@ -116,6 +116,7 @@ export default {
         async refreshSprints(payload, rootState) {
             console.log('refreshSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
             this.updateSelectedSprint(sprints[0]);
         },
@@ -123,6 +124,7 @@ export default {
         async updateAvailableSprints(payload, rootState) {
             console.log('updateAvailableSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
         },
 
@@ -220,7 +222,9 @@ export default {
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
 
-            this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+            if (selectedSprintTitle !== null) {
+                this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+            }
 
             this.setMilestones(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch());
 
@@ -229,6 +233,8 @@ export default {
             this.updateDescriptionDate();
 
             this.updateAvailableRepos();
+
+            this.updateAvailableSprints();
         },
 
         async updateVelocity(assignees, rootState) {
