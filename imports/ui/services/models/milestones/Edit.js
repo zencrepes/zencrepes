@@ -1,3 +1,5 @@
+import {cfgMilestones, cfgSources} from "../../../data/Minimongo";
+
 export default {
     state: {
         loading: false,         // Boolean to indicate issues are currently loading
@@ -14,6 +16,8 @@ export default {
 
         milestones: [],         // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
         verifiedMilestones: [], // Array of milestones that were updated in GitHub
+        allMilestones: [],      // Array of all milestones with the same title
+        query: {},              // Query used to filter down the milestone
 
         onSuccess: () => {},        // Function to be executed at successful completion
         onCancel: () => {},         // Function to be executed if user cancel stage
@@ -25,6 +29,11 @@ export default {
         editMilestoneTitle: null,
         editMilestoneDescription: null,
         editMilestoneDueDate: null,
+
+        selectedMilestoneTitle: null,
+        selectedMilestoneDescription: null,
+        selectedMilestoneDueDate: null,
+
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -48,6 +57,8 @@ export default {
         setAction(state, payload) {return { ...state, action: payload };},
 
         setMilestones(state, payload) {return { ...state, milestones: payload };},
+        setAllMilestones(state, payload) {return { ...state, allMilestones: payload };},
+        setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
 
         setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
         setOnCancel(state, payload) {return { ...state, onCancel: payload };},
@@ -61,8 +72,83 @@ export default {
         setEditMilestoneDescription(state, payload) {return { ...state, editMilestoneDescription: payload };},
         setEditMilestoneDueDate(state, payload) {return { ...state, editMilestoneDueDate: payload };},
 
+        setSelectedMilestoneTitle(state, payload) {return { ...state, selectedMilestoneTitle: payload };},
+        setSelectedMilestoneDescription(state, payload) {return { ...state, selectedMilestoneDescription: payload };},
+        setSelectedMilestoneDueDate(state, payload) {return { ...state, selectedMilestoneDueDate: payload };},
     },
     effects: {
+        async updateQuery(query, rootState) {
+            console.log('MilestoneEdit - initView');
+            this.setQuery(query);
+
+            const milestoneTitle = query.title;
+            this.setSelectedMilestoneTitle(milestoneTitle);
+            this.setEditMilestoneTitle(milestoneTitle);
+
+            //const milestones = cfgMilestones.find({'title':{'$in':[milestoneTitle]}}).fetch();
+            const milestones = cfgMilestones.find(query).fetch();
+            this.setMilestones(milestones);
+            this.setAllMilestones(cfgMilestones.find({'title':{'$in':[milestoneTitle]}}).fetch());
+
+            // Shortcut, consider first milstone in the array as reference for description and due date
+            if (milestones[0] !== undefined) {
+                this.setSelectedMilestoneDescription(milestones[0].description);
+                this.setEditMilestoneDescription(milestones[0].description);
+            }
+            else {
+                this.setSelectedMilestoneDescription(null);
+                this.setEditMilestoneDescription(null);
+            }
+
+            if (milestones[0] !== undefined) {
+                this.setSelectedMilestoneDueDate(milestones[0].dueOn);
+                this.setEditMilestoneDueDate(milestones[0].dueOn);
+            }
+            else {
+                this.setSelectedMilestoneDueDate(null);
+                this.setEditMilestoneDueDate(null);
+            }
+
+            this.updateView();
+
+        },
+
+        async initView(milestoneTitle, rootState) {
+            console.log('MilestoneEdit - initView');
+            /*
+
+            this.setSelectedMilestoneTitle(milestoneTitle);
+            this.setEditMilestoneTitle(milestoneTitle);
+
+            const milestones = cfgMilestones.find({'title':{'$in':[milestoneTitle]}}).fetch();
+            this.setMilestones(milestones);
+
+            // Shortcut, consider first milstone in the array as reference for description and due date
+            if (milestones[0] !== undefined) {
+                this.setSelectedMilestoneDescription(milestones[0].description);
+                this.setEditMilestoneDescription(milestones[0].description);
+            }
+            else {
+                this.setSelectedMilestoneDescription(null);
+                this.setEditMilestoneDescription(null);
+            }
+
+            if (milestones[0] !== undefined) {
+                this.setSelectedMilestoneDueDate(milestones[0].dueOn);
+                this.setEditMilestoneDueDate(milestones[0].dueOn);
+            }
+            else {
+                this.setSelectedMilestoneDueDate(null);
+                this.setEditMilestoneDueDate(null);
+            }
+*/
+            this.updateView();
+        },
+        async updateView(payload, rootState) {
+            console.log('MilestoneEdit - updateView');
+            const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
+
+        },
 
     }
 };

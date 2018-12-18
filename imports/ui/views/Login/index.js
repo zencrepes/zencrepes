@@ -26,8 +26,8 @@ const styles = theme => ({
         width: 'auto',
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
-            width: 900,
+        [theme.breakpoints.up(1000 + theme.spacing.unit * 3 * 2)]: {
+            width: 1000,
             marginLeft: 'auto',
             marginRight: 'auto',
         },
@@ -54,6 +54,14 @@ const styles = theme => ({
         lineHeight: 1.75,
         fontSize: '16px',
         margin: '0 0 10px',
+        fontFamily: 'Roboto',
+        fontWeight: 400,
+    },
+    paragraphSmall: {
+        color: '#898989',
+        lineHeight: 1,
+        fontSize: '14px',
+        margin: '10px 0 0 10px',
         fontFamily: 'Roboto',
         fontWeight: 400,
     },
@@ -120,6 +128,11 @@ class Login extends Component {
                         <Grid item xs={12} sm={6} md={4}>
                             <h4 className={classes.secondTitle}>Get Started</h4>
                             <GitHubLogin />
+                            <p className={classes.paragraphSmall}>This program is distributed in the hope that it will be useful,
+                                but WITHOUT ANY WARRANTY; without even the implied warranty of
+                                MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                                GNU Affero General Public License for more details.</p>
+                            <p className={classes.paragraphSmall}>By logging in, you are accepting the above-mentioned license.</p>
                         </Grid>
                     </Grid>
                 </main>

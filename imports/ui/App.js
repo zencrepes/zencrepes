@@ -16,6 +16,7 @@ import Labels from './views/Labels/index.js';
 import LabelEdit from './views/Labels/Edit/index.js';
 
 import Milestones from './views/Milestones/index.js';
+import MilestoneEdit from './views/Milestones/Edit/index.js';
 import Issues from './views/Issues/index.js';
 
 import Index from './Index.js';
@@ -70,6 +71,7 @@ class App extends Component {
                                             <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                             <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                             <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                            <Authenticated exact path="/milestones/edit" component={MilestoneEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                             <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         </Switch>
                                     </div>

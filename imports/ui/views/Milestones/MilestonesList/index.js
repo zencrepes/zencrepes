@@ -86,13 +86,13 @@ const ActionsTypeProvider = props => (
 );
 
 
-const EditLabelFormatter = ({ value }) => {
-    return <Link to={"/labels/view/" + value}><EditIcon /></Link>;
+const EditMilestoneFormatter = ({value}) => {
+    return <Link to={"/milestones/edit?q=" + JSON.stringify(value)}><EditIcon /></Link>;
 };
 
-const EditLabelTypeProvider = props => (
+const EditMilestoneTypeProvider = props => (
     <DataTypeProvider
-        formatterComponent={EditLabelFormatter}
+        formatterComponent={EditMilestoneFormatter}
         {...props}
     />
 );
@@ -109,7 +109,7 @@ class MilestonesList extends Component {
 
         this.state = {
             columns: [
-                { name: 'edit', title: 'Edit', getCellValue: row => row.title },
+                { name: 'edit', title: 'Edit', getCellValue: row => row.query },
                 { name: 'title', title: 'Title' },
                 { name: 'repos', title: 'Repos Count', getCellValue: row => row.milestones },
                 { name: 'issues', title: 'Issues Count', getCellValue: row => row.milestones },
@@ -141,7 +141,7 @@ class MilestonesList extends Component {
     }
 
     formatData() {
-        const { milestones } = this.props;
+        const { milestones, query } = this.props;
         let uniqueTitles = _.groupBy(milestones, 'title');
 
         let milestonesdata = [];
@@ -160,6 +160,7 @@ class MilestonesList extends Component {
                 count: uniqueTitles[idx].length,
                 milestones: uniqueTitles[idx],
                 closedNoIssues: uniqueTitles[idx].filter(m => m.issues !== undefined).filter(m => {if (m.issues.totalCount === 0 && m.state.toLowerCase() === 'closed') {return true;}}),
+                query: {...query, title: idx},
                 states: states,
             });
         });
@@ -169,7 +170,7 @@ class MilestonesList extends Component {
     }
 
     render() {
-        const { classes, milestones } = this.props;
+        const { classes, milestones, query } = this.props;
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
@@ -196,8 +197,9 @@ class MilestonesList extends Component {
                     <ActionsTypeProvider
                         for={actionsColumns}
                     />
-                    <EditLabelTypeProvider
+                    <EditMilestoneTypeProvider
                         for={editLabelColumns}
+                        query={query}
                     />
                     <IntegratedPaging />
                     <Table columnExtensions={tableColumnExtensions} />
@@ -219,6 +221,7 @@ MilestonesList.propTypes = {
 
 const mapState = state => ({
     milestones: state.milestonesView.milestones,
+    query: state.milestonesView.query,
 });
 
 const mapDispatch = dispatch => ({
