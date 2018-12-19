@@ -5,7 +5,7 @@ Data is static, no external calls
 
 // Milestones
 //export { default as milestonesView } from './milestones/View.js';
-export { default as milestonesEdit } from './milestones/Edit.js';
+export { default as milestonesEdit } from './milestones/Edit.mock.js';
 //export { default as milestonesFetch } from './milestones/Fetch.js';
 
 // Sprints

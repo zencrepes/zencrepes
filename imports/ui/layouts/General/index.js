@@ -4,17 +4,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
 import styles from "./styles.jsx";
 
-import HeaderToolbar from '../../components/Header/Toolbar/index.js';
-import FooterToolbar from '../../components/Footer/Toolbar/index.js';
+import Header from '../../components/Header/index.js';
+import Footer from '../../components/Footer/index.js';
 
 class General extends Component {
     constructor (props) {
@@ -32,13 +25,13 @@ class General extends Component {
                     alignItems="flex-start"
                 >
                     <Grid item xs={12} sm className={classes.fullWidth}>
-                        <HeaderToolbar />
+                        <Header />
                     </Grid>
                     <Grid item xs={12} sm className={classes.fullWidth}>
                         {children}
                     </Grid>
                     <Grid item xs={12} sm className={classes.fullWidth}>
-                        <FooterToolbar />
+                        <Footer />
                     </Grid>
                 </Grid>
             </div>

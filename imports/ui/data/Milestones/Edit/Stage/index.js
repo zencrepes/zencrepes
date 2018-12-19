@@ -16,7 +16,6 @@ import StageTable from './StageTable/index.js';
 
 import ApplyButton from './ApplyButton.js';
 import CancelButton from './CancelButton.js';
-import Staging from './Staging.js';
 
 const styles = theme => ({
     root: {
@@ -33,7 +32,6 @@ class Stage extends Component {
 
         return (
             <div className={classes.root}>
-                <Staging />
                 <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
                     <DialogTitle id="simple-dialog-title">Review changes before pushing</DialogTitle>
                     <DialogContent>

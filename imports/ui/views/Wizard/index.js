@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import wizardViewStyle from "../../assets/jss/thatapp/views/wizard.jsx";
-import Footer from "../../components/Footer/FooterAnonymous.js";
+import Footer from "../../components/Footer/index.js";
 import GridContainer from "../../components/Grid/GridContainer.js";
 import GridItem from "../../components/Grid/GridItem.js";
 import Card from "../../components/Card/Card.js";

@@ -18,7 +18,6 @@ import Issue from './Issue.js';
 
 import Header from './Header/index.js';
 
-
 const styles = theme => ({
     root: {
         /*

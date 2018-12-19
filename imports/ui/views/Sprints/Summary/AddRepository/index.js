@@ -14,8 +14,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import DualListBox from 'react-dual-listbox';
-import {getRepositories} from "../../../../utils/repartition";
-import {cfgIssues} from "../../../../data/Minimongo";
 
 const styles = theme => ({
     button: {

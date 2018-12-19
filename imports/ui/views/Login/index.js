@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 
-import GitHubLogin from './GitHubLogin.js';
+import GitHubLogin from '../../components/Github/GitHubLogin.js';
+
+import General from '../../layouts/General/index.js';
 
 const styles = theme => ({
     '@global': {
@@ -16,9 +18,11 @@ const styles = theme => ({
             backgroundColor: theme.palette.common.white,
         },
     },
+    /*
     appBar: {
         position: 'relative',
     },
+    */
     toolbarTitle: {
         flex: 1,
     },
@@ -97,15 +101,7 @@ class Login extends Component {
         const { classes } = this.props;
 
         return (
-            <React.Fragment>
-                <CssBaseline />
-                <AppBar position="static" color="default" className={classes.appBar}>
-                    <Toolbar>
-                        <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                            ZenCrepes
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
+            <General>
                 <main className={classes.layout}>
                     <Grid
                     container
@@ -136,7 +132,7 @@ class Login extends Component {
                         </Grid>
                     </Grid>
                 </main>
-            </React.Fragment>
+            </General>
         );
     }
 

@@ -12,8 +12,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import Grid from '@material-ui/core/Grid';
 import { GithubCircle } from 'mdi-material-ui'
-
-//import styles from "./styles.jsx";
+import {Link, withRouter} from "react-router-dom";
+import EditIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 const styles = theme => ({
     toolbarTitle: {
@@ -42,7 +42,7 @@ const styles = theme => ({
     },
 });
 
-class FooterToolbar extends Component {
+class Footer extends Component {
     constructor (props) {
         super(props);
     }
@@ -55,34 +55,24 @@ class FooterToolbar extends Component {
                     <Toolbar>
                         <Grid
                             container
-                            direction="column"
+                            direction="row"
                             justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={0}
+                            alignItems="center"
+                            spacing={8}
                         >
-                            <Grid item >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="flex-start"
-                                    spacing={8}
-                                >
-                                    <Grid item xs={12} sm container>
-                                        <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                                            ZenCrepes
-                                        </Typography>
-                                        <span>More content</span>
-                                    </Grid>
-                                    <Grid item >
-                                        <GithubCircle />
-                                    </Grid>
-                                </Grid>
+                            <Grid item xs={12} sm container>
+                                <Typography variant="subtitle1" color="inherit" noWrap className={classes.toolbarTitle}>
+                                    Agile project management across Github repositories and organizations
+                                </Typography>
                             </Grid>
-                            <Grid item xs={12} sm>
-                                <span className={classes.paragraph}>
-                                    Build with passion, sources on <a href="https://github.com/Fgerthoffert/github-agile-view/" >Github</a>...
-                                </span>
+                            <Grid item >
+                                <Link to={"/about"}>About</Link>
+                            </Grid>
+                            <Grid item >
+                                <Link to={"/terms"}>Terms & Conditions</Link>
+                            </Grid>
+                            <Grid item >
+                                <GithubCircle />
                             </Grid>
                         </Grid>
                     </Toolbar>
@@ -92,8 +82,10 @@ class FooterToolbar extends Component {
     }
 }
 
-FooterToolbar.propTypes = {
+Footer.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FooterToolbar);
+//export default withStyles(styles)(Footer);
+
+export default withRouter(withStyles(styles)(Footer))

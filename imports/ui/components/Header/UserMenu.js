@@ -21,7 +21,23 @@ import { withApollo } from 'react-apollo';
 
 import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
 
-import styles from "./styles.jsx";
+const style = theme => ({
+    root: {
+    },
+
+    appBar: {
+        position: 'relative',
+    },
+    toolbarButtons: {
+        flex: 1,
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    },
+    button: {
+        margin: theme.spacing.unit,
+    },
+});
 
 class UserMenu extends Component {
     constructor(props) {
@@ -142,4 +158,4 @@ const mapDispatch = dispatch => ({
     setLoadUsers: dispatch.usersFetch.setLoadUsers,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(UserMenu));
+export default connect(mapState, mapDispatch)(withStyles(style)(UserMenu));

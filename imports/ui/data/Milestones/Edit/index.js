@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import Data from './Data.js';
 import LoadModal from './LoadModal.js';
 import Stage from './Stage/index.js';
+import Staging from './Stage/Staging.js';
 import LoadSnackbar from './LoadSnackbar.js';
 import Notifications from './Notifications.js';
 
@@ -25,6 +26,7 @@ class MilestonesEdit extends Component {
                 <Data />
                 <RefreshSnackbar />
                 <Stage />
+                <Staging />
                 {loadModal &&
                     <LoadModal />
                 }
