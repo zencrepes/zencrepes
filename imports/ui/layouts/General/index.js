@@ -27,7 +27,7 @@ class General extends Component {
                     <Grid item xs={12} sm className={classes.fullWidth}>
                         <Header />
                     </Grid>
-                    <Grid item xs={12} sm className={classes.fullWidth}>
+                    <Grid item xs={12} sm className={classes.fullWidthCenter}>
                         {children}
                     </Grid>
                     <Grid item xs={12} sm className={classes.fullWidth}>

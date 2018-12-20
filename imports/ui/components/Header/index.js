@@ -31,12 +31,8 @@ import UserMenu from './UserMenu.js';
 const style = theme => ({
     root: {
     },
-
     appBar: {
         position: 'relative',
-    },
-    toolbarButtons: {
-        flex: 1,
     },
     leftIcon: {
         marginRight: theme.spacing.unit,
@@ -44,6 +40,9 @@ const style = theme => ({
     button: {
         margin: theme.spacing.unit,
     },
+    menuLink: {
+        textDecoration: "none",
+    }
 });
 
 class Header extends Component {
@@ -75,7 +74,7 @@ class Header extends Component {
                         >
                             <Grid item >
                                 <Typography variant="h5" color="inherit" noWrap className={classes.toolbarTitle}>
-                                    <Link to={"/issues"}>ZenCrepes</Link>
+                                    <Link to={"/issues"} className={classes.menuLink} >ZenCrepes</Link>
                                 </Typography>
                             </Grid>
                             {authenticated &&
@@ -132,29 +131,3 @@ export default (
         };
     })
     )(withRouter(withStyles(style)(Header)));
-
-
-/*
-            <div className={classes.root}>
-                <AppBar position="static" color="default" className={classes.appBar}>
-                    <Toolbar>
-                        <div className={classes.toolbarButtons}>
-                            {routes.map((route) => {
-                                let buttonColor = 'default';
-                                if (route.key === 'TODO') { // Implement color selection based on path
-                                    buttonColor = 'primary';
-                                }
-                                return (
-                                    <Button color={buttonColor} className={classes.button} component={Link} to={route.path} key={route.key}>
-                                        {route.icon}
-                                        {route.text}
-                                    </Button>
-                                );
-                            })}
-                        </div>
-
-                        <UserMenu />
-                    </Toolbar>
-                </AppBar>
-            </div>
- */

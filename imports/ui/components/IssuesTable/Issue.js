@@ -70,7 +70,6 @@ const styles = theme => ({
         color: green[800],
     },
     iconSprint: {
-        margin: theme.spacing.unit,
         fontSize: 16,
         margin: 0
     },
