@@ -72,21 +72,6 @@ const styles = theme => ({
 class About extends Component {
     constructor(props) {
         super(props);
-
-        // we use this to make the card to appear after the page has been rendered
-        this.state = {
-            cardAnimation: "cardHidden"
-        };
-    }
-
-    componentDidMount() {
-        // we add a hidden class to the card and after 700 ms we delete it and the transition appears
-        setTimeout(
-            function() {
-                this.setState({ cardAnimation: "" });
-            }.bind(this),
-            700
-        );
     }
 
     render() {
@@ -100,7 +85,7 @@ class About extends Component {
                         <hr className={classes.underline} />
                     </div>
                     <p className={classes.subtitle}>Why ZenCrepes?</p>
-                    <p className={classes.paragraph}>GitHub is a great platform, but lacks features for managing projects across multiple organizations and repositories is complex.
+                    <p className={classes.paragraph}>GitHub is a great platform, but managing projects across multiple organizations and repositories is complex.
                     From velocity metrics, to issues searching, it lacks project management features when taken outside of the context of a single repository.
                     </p>
                     <p className={classes.paragraph}>There are third-party tools to provide a project management layer across organizations and repositories, but those also have their own drawbacks
@@ -109,17 +94,17 @@ class About extends Component {
                     <p className={classes.paragraph}>
                         ZenCrepes was built to try to address some of these challenges, while helping to bring consistenty in cross-org, cross-repo projects.
                         ZenCrepes is only built on top of the GitHub API model, all of the data in ZenCrepes is directly hosted on GitHub. <br />
-                        You team can operate with GitHub issues as normal, while the centralized view is available in ZenCrepes.
+                        Your team can operate with GitHub issues as normal, while a centralized view is available in ZenCrepes.
                     </p>
                     <p className={classes.subtitle}>Client-side only</p>
                     <p className={classes.paragraph}>The most challenging aspect, directly impacting the way ZenCrepes is designed and operates, is that ZenCrepes is built as a client-side application.
                     We don't have a duplicate index of GitHub data in our own servers, all happen directly between you and GitHub.</p>
                     <p className={classes.paragraph}>
                         It means that initial load time will be slower (while all issues are loaded in memory),
-                        ZenCrepes cannot be automatically notified about changes happening in GitHub (as you would be otherwise through GitHub hooks),
-                        or browser performance (limited to 1 thread) might result in lags for projects with a very large number of issues.
+                        ZenCrepes cannot be automatically notified about changes happening in GitHub (as you would see otherwise through GitHub hooks),
+                        or browser performance (limited to 1 CPU thread) might result in lags for projects with a very large number of issues.
                     </p>
-                    <p className={classes.paragraph}>Whenever possible, ZenCrepes does only loads newly updated data (for GitHub issues and milestones for example).
+                    <p className={classes.paragraph}>Whenever possible, ZenCrepes only loads newly updated data (for GitHub issues and milestones for example).
                         At other times, everything has to be loaded (such as when refreshing Labels).</p>
                 </main>
             </General>

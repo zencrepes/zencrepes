@@ -28,10 +28,15 @@ class GitRequests extends React.Component {
 
     render() {
         const { classes, limit, cost, remaining, resetAt } = this.props;
-        let tooltipValue = "Tokens: " + remaining + "/" + limit + " (Reset at: " + resetAt + ")";
         return (
             <div className={classes.root}>
-                <span className={classes.legend}>Available GitHub points: {remaining} / 5000, counter will reset on <Moment format="ddd MMM. D">{resetAt}</Moment> at <Moment format="h:mm a">{resetAt}</Moment></span>
+                <span className={classes.legend}>Available GitHub points: {remaining} / 5000
+                    {resetAt !== null &&
+                        <React.Fragment>
+                            , counter will reset on <Moment format="ddd MMM. D">{resetAt}</Moment> at <Moment format="h:mm a">{resetAt}</Moment>
+                        </React.Fragment>
+                    }
+                </span>
                 <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
             </div>
         );
