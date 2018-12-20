@@ -9,11 +9,9 @@ const Public = ({
         path={path}
         exact={exact}
         render={props => (
-            !authenticated ?
-                (React.createElement(component, {
-                    ...props, ...rest, loggingIn, authenticated,
-                })) :
-                (<Redirect to={afterLoginPath || '/issues'} />)
+            React.createElement(component, {
+                ...props, ...rest, loggingIn, authenticated,
+            })
         )}
     />
 );

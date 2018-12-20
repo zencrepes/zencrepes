@@ -60,6 +60,10 @@ export default {
             console.log('updateQuery: ' + JSON.stringify(query));
             this.setQuery(query);
 
+            // Check if the query doesn't return any issues with points, set default back to issues count.
+            const pointsQuery = {...query, points: {$gt: 0}};
+            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);}
+
             this.updateView();
             /*
             this.refreshQueries();

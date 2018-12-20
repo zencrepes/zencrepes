@@ -27,8 +27,6 @@ class CancelButton extends Component {
         const { classes } = this.props;
         return (
             <Button
-                variant="contained"
-                color="primary"
                 className={classes.button}
                 onClick={this.cancel}
             >

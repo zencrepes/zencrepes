@@ -31,12 +31,11 @@ class LoadDialog extends Component {
                     <DialogContent>
                         {reposIssues === 0 ? (
                             <React.Fragment>
-                                You haven't selected repositories, or the repositories you have selected do not contain any issues.
+                                Please select a repository with issues.
                             </React.Fragment>
                         ) : (
                             <React.Fragment>
-                                Do you want to load issues attached to the selected repositories ?<br />
-                                This will likely load {reposIssues} issues.
+                                Do you want to load the {reposIssues} issues attached to the selected repositories ?<br />
                             </React.Fragment>
                         )}
                     </DialogContent>
