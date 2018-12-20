@@ -27,7 +27,7 @@ class Refresh extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.loadLabels}>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.loadLabels}>
                 Load/Refresh Labels
             </Button>
         );

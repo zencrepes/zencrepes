@@ -40,7 +40,7 @@ class Refresh extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshRepos}>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshRepos}>
                 <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Repos in Sprint
             </Button>

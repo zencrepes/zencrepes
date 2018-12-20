@@ -15,7 +15,7 @@ import calculateQueryIncrement from './calculateQueryIncrement.js';
 import {cfgLabels} from "./Minimongo";
 
 /*
-Load data about Github Orgs
+Load data about GitHub Orgs
  */
 class FetchOrgs extends Component {
     constructor (props) {

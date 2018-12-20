@@ -15,7 +15,7 @@ import GitHubApi from '@octokit/rest';
 import Snackbar from "@material-ui/core/Snackbar";
 
 /*
-Load data about Github Orgs
+Load data about GitHub Orgs
  */
 class CreateMilestones extends Component {
     constructor (props) {

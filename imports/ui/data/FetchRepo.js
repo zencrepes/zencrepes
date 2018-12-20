@@ -9,7 +9,7 @@ import GET_GITHUB_SINGLEREPO from '../../graphql/getSingleRepo.graphql';
 import { cfgSources } from './Minimongo.js';
 
 /*
-Load data about Github Orgs
+Load data about GitHub Orgs
  */
 class FetchRepo extends Component {
     constructor (props) {

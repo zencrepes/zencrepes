@@ -52,39 +52,37 @@ class Labels extends Component {
         const { classes, labels } = this.props;
 
         return (
-            <div className={classes.root}>
-                <General>
-                    <Actions />
-                    <LabelsEdit loadModal={true} />
-                    <LabelsFetch loadModal={false} />
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item >
-                            <LabelsFacets />
-                        </Grid>
-                        <Grid item xs={12} sm container>
-                            <Grid
-                                container
-                                direction="column"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                            >
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <LabelsQuery />
-                                </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <LabelsTable labels={labels}/>
-                                </Grid>
+            <General>
+                <Actions />
+                <LabelsEdit loadModal={true} />
+                <LabelsFetch loadModal={false} />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item >
+                        <LabelsFacets />
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <LabelsQuery />
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <LabelsTable labels={labels}/>
                             </Grid>
                         </Grid>
                     </Grid>
-                </General>
-            </div>
+                </Grid>
+            </General>
         );
     }
 }

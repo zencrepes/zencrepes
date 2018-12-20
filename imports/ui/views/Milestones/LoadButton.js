@@ -35,7 +35,7 @@ class LoadButton extends Component {
             <div className={classes.root}>
                 {!loading &&
                 <div>
-                    <Button variant="raised" color="primary" className={classes.button} onClick={this.loadMilestones}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={this.loadMilestones}>
                         Load/Refresh Milestones
                     </Button>
                 </div>

@@ -54,12 +54,12 @@ class TableActionButtons extends Component {
         return (
             <div className={classes.root}>
                 {milestonesdata.states.length > 1 &&
-                <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.closeSprint}>
                     Close All
                 </Button>
                 }
                 {milestonesdata.closedNoIssues.length > 0 &&
-                <Button variant="raised" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
                     Delete Empty
                 </Button>
                 }

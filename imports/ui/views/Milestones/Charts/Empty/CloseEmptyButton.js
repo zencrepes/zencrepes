@@ -33,7 +33,7 @@ class ClosedEmptyButton extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
                 Delete Empty
             </Button>
         );

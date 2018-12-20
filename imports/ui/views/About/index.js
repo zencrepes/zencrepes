@@ -113,7 +113,7 @@ class About extends Component {
                     </p>
                     <p className={classes.subtitle}>Client-side only</p>
                     <p className={classes.paragraph}>The most challenging aspect, directly impacting the way ZenCrepes is designed and operates, is that ZenCrepes is built as a client-side application.
-                    We don't have a duplicate index of GitHub data in our own servers, all happen directly between you and Github.</p>
+                    We don't have a duplicate index of GitHub data in our own servers, all happen directly between you and GitHub.</p>
                     <p className={classes.paragraph}>
                         It means that initial load time will be slower (while all issues are loaded in memory),
                         ZenCrepes cannot be automatically notified about changes happening in GitHub (as you would be otherwise through GitHub hooks),

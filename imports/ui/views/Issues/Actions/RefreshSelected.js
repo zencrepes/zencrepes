@@ -42,7 +42,7 @@ class RefreshSelected extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshQuick}>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshQuick}>
                 <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Selected Repos
             </Button>

@@ -54,7 +54,7 @@ class Staging extends Component {
                         insVerifiedLabels({
                             id: label.id,
                             error: true,
-                            errorMsg: 'This label doesn\'t exist in Github currently. Was it deleted ?',
+                            errorMsg: 'This label doesn\'t exist in GitHub currently. Was it deleted ?',
                         });
                         await cfgLabels.remove({'id': label.id});
                     } else {

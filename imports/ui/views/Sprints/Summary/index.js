@@ -98,7 +98,7 @@ class Summary extends Component {
                         >
                         {!editSprint &&
                             <Grid item >
-                                <Button variant="raised" color="primary" onClick={this.openEditSprint} autoFocus>
+                                <Button variant="contained" color="primary" onClick={this.openEditSprint} autoFocus>
                                     Edit Sprint
                                 </Button>
                             </Grid>

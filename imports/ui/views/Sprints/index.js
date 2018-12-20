@@ -51,84 +51,82 @@ class Sprints extends Component {
     render() {
         const { classes, issues, labels, velocity, assignees } = this.props;
         return (
-            <div className={classes.root}>
-                <General>
-                    <IssuesFetch />
-                    <IssuesEdit />
-                    <CreateSprint />
-                    <MilestonesEdit />
-                    <MilestonesCreate />
-                    <Actions />
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item xs={12} sm={6} md={8}>
-                            <Summary />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <RemainingPoints
-                                assignees={assignees}
-                                issues={issues}
-                            />
-                        </Grid>
+            <General>
+                <IssuesFetch />
+                <IssuesEdit />
+                <CreateSprint />
+                <MilestonesEdit />
+                <MilestonesCreate />
+                <Actions />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={8}>
+                        <Summary />
                     </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CurrentCompletion
-                                issues={issues}
-                                labels={labels}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <VelocityWeeks
-                                velocity={velocity}
-                                defaultPoints={true}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <DaysToCompletion />
-                        </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <RemainingPoints
+                            assignees={assignees}
+                            issues={issues}
+                        />
                     </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item xs={12} sm={12} md={12}>
-                            <Issues />
-                        </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={4}>
+                        <CurrentCompletion
+                            issues={issues}
+                            labels={labels}
+                        />
                     </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item xs={12} sm={6} md={4}>
-                            <Assignees />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <Repositories />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <Labels />
-                        </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <VelocityWeeks
+                            velocity={velocity}
+                            defaultPoints={true}
+                        />
                     </Grid>
-                </General>
-            </div>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <DaysToCompletion />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={12} md={12}>
+                        <Issues />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Assignees />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Repositories />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Labels />
+                    </Grid>
+                </Grid>
+            </General>
         );
     }
 }

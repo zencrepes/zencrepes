@@ -68,7 +68,7 @@ class DeleteWarning extends Component {
                         <DialogTitle id="alert-dialog-title">{"Delete Labels"}</DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                You are about to request one or more labels to be delete from Github. Deleting a label will remove it from all issues and pull requests. <br />
+                                You are about to request one or more labels to be delete from GitHub. Deleting a label will remove it from all issues and pull requests. <br />
                                 This cannot be undone !
                             </DialogContentText>
                         </DialogContent>

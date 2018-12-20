@@ -55,7 +55,7 @@ class Staging extends Component {
                         insVerifiedMilestones({
                             id: milestone.id,
                             error: true,
-                            errorMsg: 'This milestone doesn\'t exist in Github currently. Was it deleted ?',
+                            errorMsg: 'This milestone doesn\'t exist in GitHub currently. Was it deleted ?',
                         });
                         await cfgMilestones.remove({'id': milestone.id});
                     } else {

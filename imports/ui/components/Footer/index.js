@@ -15,6 +15,8 @@ import { GithubCircle } from 'mdi-material-ui'
 import {Link, withRouter} from "react-router-dom";
 import EditIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
+import GitRequests from '../Github/GitRequests.js';
+
 const styles = theme => ({
     toolbarTitle: {
         flex: 1,
@@ -55,24 +57,37 @@ class Footer extends Component {
                     <Toolbar>
                         <Grid
                             container
-                            direction="row"
+                            direction="column"
                             justify="flex-start"
                             alignItems="center"
                             spacing={8}
                         >
-                            <Grid item xs={12} sm container>
-                                <Typography variant="subtitle1" color="inherit" noWrap className={classes.toolbarTitle}>
-                                    Agile project management across Github repositories and organizations
-                                </Typography>
+                            <Grid item container >
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-start"
+                                    alignItems="center"
+                                    spacing={8}
+                                >
+                                    <Grid item xs={12} sm container>
+                                        <Typography variant="subtitle1" color="inherit" noWrap className={classes.toolbarTitle}>
+                                            Agile project management across GitHub repositories and organizations
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item >
+                                        <Link to={"/about"}>About</Link>
+                                    </Grid>
+                                    <Grid item >
+                                        <Link to={"/terms"}>Terms & Conditions</Link>
+                                    </Grid>
+                                    <Grid item >
+                                        <GithubCircle />
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item >
-                                <Link to={"/about"}>About</Link>
-                            </Grid>
-                            <Grid item >
-                                <Link to={"/terms"}>Terms & Conditions</Link>
-                            </Grid>
-                            <Grid item >
-                                <GithubCircle />
+                            <Grid item container >
+                                <GitRequests />
                             </Grid>
                         </Grid>
                     </Toolbar>

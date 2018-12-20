@@ -110,7 +110,7 @@ class ScanRepo extends Component {
                                     onChange={this.changeRepoName('name')}
                                     margin="normal"
                                 />
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanRepo}>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.handleScanRepo}>
                                     Add Repo
                                 </Button>
                             </div>

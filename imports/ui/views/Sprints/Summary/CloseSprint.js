@@ -37,7 +37,7 @@ class CloseSprint extends Component {
             return null;
         } else {
             return (
-                <Button variant="raised" color="primary" className={classes.button} onClick={this.closeSprint}>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.closeSprint}>
                     Close Sprint
                 </Button>
             )

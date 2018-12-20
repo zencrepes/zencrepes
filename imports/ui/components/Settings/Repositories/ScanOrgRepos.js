@@ -98,7 +98,7 @@ class ScanOrgRepos extends Component {
                                     onChange={this.handleChange('name')}
                                     margin="normal"
                                 />
-                                <Button color="primary" variant="raised" className={classes.button}
+                                <Button color="primary" variant="contained" className={classes.button}
                                         onClick={this.handleScanOrg}>
                                     Add Org
                                 </Button>

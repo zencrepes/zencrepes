@@ -60,58 +60,56 @@ class Milestones extends Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
-                <General>
-                    <Actions />
-                    <MilestonesEdit loadModal={true} />
-                    <MilestonesFetch loadModal={false} />
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item >
-                            <MilestonesFacets />
-                        </Grid>
-                        <Grid item xs={12} sm container>
-                            <Grid
-                                container
-                                direction="column"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                            >
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <MilestonesQuery />
-                                </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justify="flex-start"
-                                        alignItems="flex-start"
-                                        spacing={8}
-                                    >
-                                        <Grid item xs={12} sm={12} md={4}>
-                                            <OpenClosed />
-                                        </Grid>
-                                        <Grid item xs={12} sm={12} md={4}>
-                                            <Mixed />
-                                        </Grid>
-                                        <Grid item xs={12} sm={12} md={4}>
-                                            <Empty />
-                                        </Grid>
+            <General>
+                <Actions />
+                <MilestonesEdit loadModal={true} />
+                <MilestonesFetch loadModal={false} />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item >
+                        <MilestonesFacets />
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <MilestonesQuery />
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                    spacing={8}
+                                >
+                                    <Grid item xs={12} sm={12} md={4}>
+                                        <OpenClosed />
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={4}>
+                                        <Mixed />
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={4}>
+                                        <Empty />
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <MilestonesList />
-                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <MilestonesList />
                             </Grid>
                         </Grid>
                     </Grid>
-                </General>
-            </div>
+                </Grid>
+            </General>
         );
     }
 }

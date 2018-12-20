@@ -31,7 +31,7 @@ class CancelButton extends Component {
         //The apply button is disabled until all milestones have been verified in GitHub and no errors have been found
         return (
             <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={this.cancel}

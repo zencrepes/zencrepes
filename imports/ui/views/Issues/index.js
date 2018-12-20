@@ -54,42 +54,40 @@ class Issues extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <General>
-                    <IssuesFetch />
-                    <IssuesEdit />
-                    <Actions />
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item >
-                            <IssuesFacets />
-                        </Grid>
-                        <Grid item xs={12} sm container>
-                            <Grid
-                                container
-                                direction="column"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                            >
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <IssuesQuery />
-                                </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <IssuesTabs />
-                                </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <IssuesContent />
-                                </Grid>
+            <General>
+                <IssuesFetch />
+                <IssuesEdit />
+                <Actions />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item >
+                        <IssuesFacets />
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <IssuesQuery />
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <IssuesTabs />
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <IssuesContent />
                             </Grid>
                         </Grid>
                     </Grid>
-                </General>
-            </div>
+                </Grid>
+            </General>
         );
     }
 }

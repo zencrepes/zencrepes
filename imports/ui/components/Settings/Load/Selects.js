@@ -65,7 +65,7 @@ class Selects extends Component {
                     {!loading &&
                         <CardActions className={classes.cardActions} >
                             <div className={classes.actionButtons} >
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.loadIssues}>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.loadIssues}>
                                     BIG LOAD BUTTON
                                 </Button>
                             </div>

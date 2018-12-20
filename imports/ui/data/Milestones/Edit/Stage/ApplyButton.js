@@ -31,7 +31,7 @@ class ApplyButton extends Component {
         //The apply button is disabled until all milestones have been verified in GitHub and no errors have been found
         return (
             <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 disabled={verifiedMilestones.filter(milestone => milestone.error === false).length !== milestones.length}
                 className={classes.button}

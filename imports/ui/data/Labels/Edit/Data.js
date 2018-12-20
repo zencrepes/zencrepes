@@ -86,7 +86,7 @@ class Data extends Component {
                         updateObj['description'] = newDescription;
                     }
                     if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
-                        console.log('Nothing to be changed, not sending a request to Github');
+                        console.log('Nothing to be changed, not sending a request to GitHub');
                     } else {
                         try {
                             result = await this.octokit.issues.updateLabel(updateObj);

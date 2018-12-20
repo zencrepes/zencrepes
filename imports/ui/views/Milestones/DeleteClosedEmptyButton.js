@@ -40,7 +40,7 @@ class DeleteClosedEmptyButton extends Component {
             <div className={classes.root}>
                 {!loading &&
                     <div>
-                        <Button variant="raised" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
                             Deleted closed and empty Milestones
                         </Button>
                     </div>

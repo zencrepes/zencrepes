@@ -37,7 +37,7 @@ class RefreshAll extends Component {
         const { classes } = this.props;
 
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshFull}>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshFull}>
                 <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 All Repos
             </Button>

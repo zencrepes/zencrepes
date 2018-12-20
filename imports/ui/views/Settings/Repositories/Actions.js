@@ -68,10 +68,10 @@ class Actions extends Component {
                     <CardActions className={classes.cardActions} >
                         {!loading &&
                             <div className={classes.actionButtons} >
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.deleteIssues}>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.deleteIssues}>
                                     DELETE ALL ISSUES
                                 </Button>
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.deleteLabels}>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.deleteLabels}>
                                     DELETE ALL LABELS
                                 </Button>
                             </div>

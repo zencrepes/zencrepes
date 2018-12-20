@@ -39,7 +39,7 @@ class AddButton extends Component {
 
         return (
             <div className={classes.root}>
-                <Button variant="raised" color="primary" size="small" className={classes.button} onClick={this.addClick}>
+                <Button variant="contained" color="primary" size="small" className={classes.button} onClick={this.addClick}>
                     Add
                 </Button>
             </div>

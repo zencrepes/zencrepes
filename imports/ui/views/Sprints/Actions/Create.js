@@ -28,7 +28,7 @@ class Create extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Button variant="raised" color="primary" className={classes.button} onClick={this.createSprint}>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.createSprint}>
                     Create New Sprint
                 </Button>
             </div>

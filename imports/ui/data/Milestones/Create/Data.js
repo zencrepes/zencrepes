@@ -90,7 +90,7 @@ class Data extends Component {
             console.log(result);
             if (result !== false) {
                 setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                // From the milestone number, fetch single milestone data from Github through the Graphql API
+                // From the milestone number, fetch single milestone data from GitHub through the Graphql API
                 let data = {};
                 try {
                     data = await client.query({

@@ -43,24 +43,22 @@ class Settings extends Component {
         const { value } = this.state;
 
         return (
-            <div className={classes.root}>
-                <General>
-                    <Tabs
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
-                        <Tab label="Repositories" />
-                        <Tab label="Configure Points" />
-                        <Tab label="Import Points" />
-                    </Tabs>
-                    {value === 0 && <TabContainer><Repositories/></TabContainer>}
-                    {value === 1 && <TabContainer><StoryPoints /></TabContainer>}
-                    {value === 2 && <TabContainer><ImportPoints /></TabContainer>}
-                </General>
-            </div>
+            <General>
+                <Tabs
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                    <Tab label="Repositories" />
+                    <Tab label="Configure Points" />
+                    <Tab label="Import Points" />
+                </Tabs>
+                {value === 0 && <TabContainer><Repositories/></TabContainer>}
+                {value === 1 && <TabContainer><StoryPoints /></TabContainer>}
+                {value === 2 && <TabContainer><ImportPoints /></TabContainer>}
+            </General>
         );
     }
 }

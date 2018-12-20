@@ -8,7 +8,7 @@ const style = theme => ({
 
     fullWidthCenter :{
         width: '100%',
-        minHeight: 'calc(100vh - 130px)',
+//        minHeight: 'calc(100vh - 130px)',
     },
 
 });
