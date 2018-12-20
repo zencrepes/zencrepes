@@ -31,7 +31,7 @@ const styles = theme => ({
     },
 });
 
-class Selects extends Component {
+class Refresh extends Component {
     constructor(props) {
         super(props);
     }
@@ -49,48 +49,37 @@ class Selects extends Component {
     };
 
     render() {
-        const { classes, loading, loadSuccess, issuesLoadedCount  } = this.props;
+        const { classes, loading } = this.props;
         return (
             <div className={classes.root}>
-                <Card>
-                    {loading &&
-                        <CardContent className={classes.cardContent} >
-                            <div className={classes.loading}>
-                                <Button onClick={this.cancelLoad} color="primary" autoFocus>
-                                    Cancel Load
-                                </Button>
-                            </div>
-                        </CardContent>
-                    }
-                    {!loading &&
-                        <CardActions className={classes.cardActions} >
-                            <div className={classes.actionButtons} >
-                                <Button color="primary" variant="contained" className={classes.button} onClick={this.loadIssues}>
-                                    BIG LOAD BUTTON
-                                </Button>
-                            </div>
-                        </CardActions>
-                    }
-                </Card>
+                {loading &&
+                    <div className={classes.loading}>
+                        <Button onClick={this.cancelLoad} color="primary" autoFocus>
+                            Cancel Load
+                        </Button>
+                    </div>
+                }
+                {!loading &&
+                    <div className={classes.actionButtons} >
+                        <Button color="primary" variant="contained" className={classes.button} onClick={this.loadIssues}>
+                            Refresh Issues
+                        </Button>
+                    </div>
+                }
             </div>
         );
     }
 }
 
-Selects.propTypes = {
+Refresh.propTypes = {
     classes: PropTypes.object,
     loading: PropTypes.bool,
-    loadSuccess: PropTypes.bool,
-    issuesLoadedCount: PropTypes.number,
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,
 };
 
 const mapState = state => ({
     loading: state.issuesFetch.loading,
-    loadSuccess: state.issuesFetch.loadSuccess,
-
-    issuesLoadedCount: state.issuesFetch.loadedCount,
 });
 
 const mapDispatch = dispatch => ({
@@ -98,4 +87,4 @@ const mapDispatch = dispatch => ({
     setLoading: dispatch.issuesFetch.setLoading,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Selects));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));

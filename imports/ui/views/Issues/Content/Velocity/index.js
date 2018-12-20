@@ -30,7 +30,6 @@ class Velocity extends Component {
 
     prepareDataset() {
         const { velocity } = this.props;
-        console.log(JSON.stringify(velocity));
         if (velocity['weeks'] !== undefined ) {
             return velocity['weeks'];
         } else {

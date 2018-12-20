@@ -88,7 +88,7 @@ class ScanOrgs extends Component {
                         <CardActions className={classes.cardActions} >
                                 <div className={classes.actionButtons} >
                                     <Button color="primary" variant="contained" className={classes.button} onClick={this.reloadRepos}>
-                                        Add All
+                                        Scan and Add All
                                     </Button>
                                 </div>
                         </CardActions>

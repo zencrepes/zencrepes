@@ -59,12 +59,12 @@ class App extends Component {
             return (
                 <ApolloProviderGithub>
                     <div>
-                        <ErrorBoundary>
                             <Repos />
                             <UsersFetch />
                             <Router>
                                 {!props.loading ? (
                                     <div className="App">
+                                        <ErrorBoundary>
                                         <Switch>
                                             <Route exact name="index" path="/" component={Index} />
                                             <Public path="/login" component={Login} {...props} {...state} />
@@ -79,10 +79,10 @@ class App extends Component {
                                             <Public exact path="/terms" component={Terms} {...props} {...state} />
                                             <Public exact path="/about" component={About} {...props} {...state} />
                                         </Switch>
+                                        </ErrorBoundary>
                                     </div>
                                 ) : ''}
                             </Router>
-                        </ErrorBoundary>
                     </div>
                 </ApolloProviderGithub>
             );

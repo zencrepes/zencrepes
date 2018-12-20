@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 import wizardViewStyle from "../../assets/jss/thatapp/views/wizard.jsx";
 import Footer from "../../components/Footer/index.js";
@@ -104,7 +105,23 @@ const styles = theme => ({
     },
     preText: {
         whiteSpace: 'pre-wrap',
-    }
+    },
+
+    wizardCard: {
+        padding: theme.spacing.unit * 2,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: '30px',
+        marginBottom: '30px',
+        //margin: 'auto',
+        maxWidth: 1000,
+    },
+    wizardCardActions: {
+        display: 'inline',
+    },
+    actionButtons: {
+        textAlign: 'right',
+    },
 });
 
 class Wizard extends Component {
@@ -113,77 +130,64 @@ class Wizard extends Component {
     }
 
     handleNext = () => {
-        const { activeStep, setActiveStep, steps, history } = this.props;
+        const { activeStep, changeActiveStep, steps, history } = this.props;
         if (activeStep === steps.length -1) { // User clicked on finish
-            setActiveStep(0);
+            changeActiveStep(0);
             history.push('/issues');
         } else {
-            setActiveStep(activeStep + 1);
+            changeActiveStep(activeStep + 1);
         }
-
     };
 
     handleBack = () => {
-        const { activeStep, setActiveStep } = this.props;
-        setActiveStep(activeStep - 1);
+        const { activeStep, changeActiveStep } = this.props;
+        changeActiveStep(activeStep - 1);
     };
 
     handleReset = () => {
-        const { setActiveStep } = this.props;
-        setActiveStep(0);
+        const { changeActiveStep } = this.props;
+        changeActiveStep(0);
     };
 
     render() {
-        const { classes, activeStep, steps } = this.props;
+        const { classes, activeStep, steps, issues } = this.props;
         return (
             <General>
-                <main className={classes.layout}>
-                    <h1 className={classes.title}>Initial Setup</h1>
-                    <div>
-                        <hr className={classes.underline} />
-                    </div>
-                </main>
-                <GridContainer justify="center">
-                    <GridItem xs={12} sm={12} md={12}>
-                        <Card className={classes.wizardCard}>
-                            <CardContent>
-                                <div className={classes.wizardStepper}>
-                                    <WizardStepper />
-                                </div>
-                                <div className={classes.wizardCardContent}>
-                                    {{
-                                        0: <Step1 />,
-                                        1: <Step2 />,
-                                        2: <Step3 />,
-                                        3: <Step4 />,
-                                    }[activeStep]}
-                                </div>
-                            </CardContent>
-                            <CardActions className={classes.wizardCardActions}>
-                                <div className={classes.actionButtons}>
-                                    <Button
-                                        disabled={activeStep === 0}
-                                        onClick={this.handleBack}
-                                        className={classes.button}
-                                    >
-                                        Back
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        onClick={this.handleNext}
-                                        className={classes.button}
-                                    >
-                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                    </Button>
-                                </div>
-                                <div>
-                                    <GitRequests />
-                                </div>
-                            </CardActions>
-                        </Card>
-                    </GridItem>
-                </GridContainer>
+                <Card className={classes.wizardCard}>
+                    <CardContent>
+                        <div className={classes.wizardStepper}>
+                            <WizardStepper />
+                        </div>
+                        <div className={classes.wizardCardContent}>
+                            {{
+                                0: <Step1 />,
+                                1: <Step2 />,
+                                2: <Step3 />,
+                                3: <Step4 />,
+                            }[activeStep]}
+                        </div>
+                    </CardContent>
+                    <CardActions className={classes.wizardCardActions}>
+                        <div className={classes.actionButtons}>
+                            <Button
+                                disabled={activeStep === 0}
+                                onClick={this.handleBack}
+                                className={classes.button}
+                            >
+                                Back
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={this.handleNext}
+                                className={classes.button}
+                                disabled={activeStep === steps.length - 1 && issues === 0 ? true : false} // Disable the finish button if no issues
+                            >
+                                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                            </Button>
+                        </div>
+                    </CardActions>
+                </Card>
             </General>
         );
     }
@@ -193,17 +197,18 @@ Wizard.propTypes = {
     classes: PropTypes.object,
     activeStep: PropTypes.number,
     steps: PropTypes.array,
-    setActiveStep: PropTypes.func,
+    changeActiveStep: PropTypes.func,
     history: PropTypes.object,
 };
 
 const mapState = state => ({
-    activeStep: state.wizard.activeStep,
-    steps: state.wizard.steps,
+    activeStep: state.wizardView.activeStep,
+    issues: state.wizardView.issues,
+    steps: state.wizardView.steps,
 });
 
 const mapDispatch = dispatch => ({
-    setActiveStep: dispatch.wizard.setActiveStep,
+    changeActiveStep: dispatch.wizardView.changeActiveStep,
 });
 
 export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Wizard)));

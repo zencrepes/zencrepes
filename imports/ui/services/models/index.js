@@ -21,7 +21,6 @@ export { default as remaining } from './remaining.js';
 
 
 export { default as startup } from './startup.js';
-export { default as wizard } from './wizard.js';
 
 export { default as zenhub } from './zenhub.js';
 export { default as waffle } from './waffle.js';
@@ -52,4 +51,5 @@ export { default as burndownView } from './burndown/View.js';
 export { default as usersFetch } from './users/Fetch.js';
 export { default as usersView } from './users/View.js';
 
-
+//Wizard
+export { default as wizardView } from './wizard/View.js';

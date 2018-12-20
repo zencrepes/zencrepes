@@ -10,8 +10,6 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import {ResponsiveTreeMap} from "@nivo/treemap";
 
-import {cfgIssues} from "../../../data/Minimongo.js";
-
 const styles = theme => ({
     root: {
         margin: '10px',
@@ -30,7 +28,9 @@ class IssuesRepartition extends Component {
     }
 
     buildDataset = () => {
-        let reposGroup = _.groupBy(cfgIssues.find({state: 'OPEN'}).fetch(), 'repo.name');
+        const { issues } = this.props;
+
+        let reposGroup = _.groupBy(issues.filter(issue => issue.state === 'OPEN'), 'repo.name');
         return {
             name: 'repositories'
             , color: 'hsl(67, 70%, 50%)'

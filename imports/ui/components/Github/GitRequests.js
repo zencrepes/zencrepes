@@ -31,7 +31,7 @@ class GitRequests extends React.Component {
         let tooltipValue = "Tokens: " + remaining + "/" + limit + " (Reset at: " + resetAt + ")";
         return (
             <div className={classes.root}>
-                <span className={classes.legend}>Available GitHub points: {remaining} / 5000, counter resets on: <Moment format="ddd MMM. D">{resetAt}</Moment> at <Moment format="h:mm a">{resetAt}</Moment></span>
+                <span className={classes.legend}>Available GitHub points: {remaining} / 5000, counter will reset on <Moment format="ddd MMM. D">{resetAt}</Moment> at <Moment format="h:mm a">{resetAt}</Moment></span>
                 <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
             </div>
         );
