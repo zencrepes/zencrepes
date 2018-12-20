@@ -53,8 +53,8 @@ const styles = theme => ({
         color: '#586069!important',
     },
     avatar: {
-        width: 25,
-        height: 25,
+        width: 35,
+        height: 35,
     },
     chip: {
         marginRight: '5px',

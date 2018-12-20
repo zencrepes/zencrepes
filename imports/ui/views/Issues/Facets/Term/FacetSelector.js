@@ -19,11 +19,13 @@ const styles = theme => ({
 
     },
     listItem: {
+        marginLeft: '5px',
         padding: '0px',
         height: '20px',
         borderBottom: '1px dashed #e6e6e6',
     },
     listItemText: {
+        marginLeft: '5px',
         padding: '0px',
     },
     chip: {
