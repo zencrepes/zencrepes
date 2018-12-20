@@ -53,11 +53,12 @@ const styles = theme => ({
         color: '#586069!important',
     },
     avatar: {
-        width: 10,
-        height: 10,
+        width: 25,
+        height: 25,
     },
     chip: {
         marginRight: '5px',
+        height: 25,
     },
     iconOpen: {
         margin: theme.spacing.unit,

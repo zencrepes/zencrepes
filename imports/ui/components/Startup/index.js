@@ -45,7 +45,7 @@ class Startup extends Component {
 
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                <DialogTitle id="simple-dialog-title">Loading data from localStorage ...</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Loading data from Browser's localStorage ...</DialogTitle>
                 <DialogContent>
                     <div>
                         Issues: {issuesCount} {loadedIssues && <i>- Complete</i>} <br />
