@@ -6,8 +6,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
-import GridItem from '../../../components/Grid/GridItem.js';
-import GridContainer from '../../../components/Grid/GridContainer.js';
 
 import Refresh from './Refresh.js';
 import IssuesRepartition from './IssuesRepartition.js';
@@ -39,14 +37,20 @@ class Step3 extends Component {
                 <p className={classes.paragraph}>
                     This screen provides a breakdown of open issues per repositories. It gets automatically updated as data loads.
                 </p>
-                <GridContainer>
-                    <GridItem xs={12} sm={4} md={2}>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item>
                         <Refresh/>
-                    </GridItem>
-                    <GridItem xs={12} sm={8} md={10}>
+                    </Grid>
+                    <Grid item xs={12} sm container>
                         <IssuesRepartition issues={issues}/>
-                    </GridItem>
-                </GridContainer>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
@@ -57,13 +61,11 @@ Step3.propTypes = {
 };
 
 const mapState = state => ({
-//    issues: state.wizardView.issues
 });
 
 const mapDispatch = dispatch => ({
 });
 
-//export default connect(mapState, mapDispatch)(withStyles(styles)(Step3));
 export default
     connect(mapState, null)
     (

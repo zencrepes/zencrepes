@@ -18,6 +18,7 @@ import { cfgSources } from "../../../data/Minimongo.js";
 const styles = theme => ({
     root: {
         margin: '10px',
+        width: '100%',
     },
     title: {
         fontSize: 14,

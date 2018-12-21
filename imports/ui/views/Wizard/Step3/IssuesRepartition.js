@@ -13,6 +13,7 @@ import {ResponsiveTreeMap} from "@nivo/treemap";
 const styles = theme => ({
     root: {
         margin: '10px',
+        width: '100%',
     },
     treemap: {
         height: '320px'
