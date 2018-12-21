@@ -8,6 +8,8 @@ export default {
 
         loadedOrgs: 0,              // Number of orgs loaded
         loadedRepos: 0,             // Number of repositories loaded
+
+        login: null,                // Login of the username currently connected. Used to fetch his/her repos
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -20,6 +22,8 @@ export default {
 
         setIncrementLoadedOrgs(state, payload) {return { ...state, loadedOrgs: state.loadedOrgs + payload };},
         setIncrementLoadedRepos(state, payload) {return { ...state, loadedRepos: state.loadedRepos + payload };},
+
+        setLogin(state, payload) {return { ...state, login: payload };},
     },
     effects: {
 

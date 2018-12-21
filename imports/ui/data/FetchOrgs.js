@@ -8,6 +8,8 @@ import Promise from 'bluebird';
 
 import GET_GITHUB_REPOS from '../../graphql/getRepos.graphql';
 import GET_GITHUB_ORGS from '../../graphql/getOrgs.graphql';
+//import GET_GITHUB_USER_REPOS from '../../graphql/getUserRepos.graphql';
+import GET_GITHUB_USER_REPOS from '../../graphql/getOrgs.graphql';
 
 import { cfgSources } from './Minimongo.js';
 
@@ -30,9 +32,9 @@ class FetchOrgs extends Component {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('Repos - Initiating load');
-            setLoadFlag(false); // Right away set loadRepositories to false
-            this.resetCounts();         // Reset all counts since those will be refresh by loadIssues
-            this.load();           // Logic to load Issues
+            setLoadFlag(false);     // Right away set loadRepositories to false
+            this.resetCounts();     // Reset all counts since those will be refresh by loadIssues
+            this.load();            // Logic to load Issues
         }
     };
 
@@ -46,7 +48,7 @@ class FetchOrgs extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess } = this.props;
+        const { setLoading, setLoadSuccess, login } = this.props;
 
         setLoading(true);  // Set setLoading to true to indicate repositories are actually loading.
         console.log('Initiate Organizations load');
@@ -54,17 +56,20 @@ class FetchOrgs extends Component {
         console.log('Oranization loaded: ' + this.githubOrgs.length);
 
 
-        console.log('Initiate Repositories load');
+        console.log('Initiate Organizations Repositories load');
         await Promise.map(this.githubOrgs, async (OrgObj): Promise<number> => {
             if (OrgObj !== null) {
                 console.log('Loading Org');
                 console.log(OrgObj);
                 this.orgReposCount[OrgObj.id] = 0;
-                await this.getReposPagination(null, 5, OrgObj);
+                await this.getReposPagination(null, 5, OrgObj, 'org');
             }
         });
+        console.log('Organizations Repositories loaded: ' + this.totalReposCount);
 
-        console.log('Repositories loaded: ' + this.totalReposCount);
+        console.log('Initiate Users own Repositories load');
+        await this.getReposPagination(null, 5, {login: login}, 'user');
+        console.log('Organizations Repositories loaded: ' + this.totalReposCount);
 
         // Remove archived repositories, we don't want to take care of those since no actions are allowed
         cfgSources.remove({'isArchived':true});
@@ -104,15 +109,24 @@ class FetchOrgs extends Component {
         return lastCursor;
     };
 
-    getReposPagination = async (cursor, increment, OrgObj) => {
+    getReposPagination = async (cursor, increment, OrgObj, type) => {
         const { client, updateChip } = this.props;
-
         if (OrgObj !== null) {
-            let data = await client.query({
-                query: GET_GITHUB_REPOS,
-                variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
-                fetchPolicy: 'no-cache',
-            });
+            if (type === 'org') {
+                let data = await client.query({
+                    query: GET_GITHUB_REPOS,
+                    variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
+                    fetchPolicy: 'no-cache',
+                });
+            } else {
+                let data = await client.query({
+                    query: GET_GITHUB_USER_REPOS,
+                    variables: {repo_cursor: cursor, increment: increment, login: OrgObj.login},
+                    fetchPolicy: 'no-cache',
+                });
+                OrgObj = data.data.user;
+                console.log(OrgObj);
+            }
             updateChip(data.data.rateLimit);
             let lastCursor = await this.loadRepositories(data, OrgObj);
             console.log('ORG OBJ: ' + OrgObj.id);
@@ -122,7 +136,7 @@ class FetchOrgs extends Component {
             console.log('Total count: ' + data.data.viewer.organization.repositories.totalCount);
             console.log('Query increment: ' + queryIncrement);
             if (queryIncrement > 0) {
-                await this.getReposPagination(lastCursor, queryIncrement, OrgObj);
+                await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
             }
         }
     };
@@ -165,6 +179,8 @@ FetchOrgs.propTypes = {
 };
 
 const mapState = state => ({
+    login: state.githubFetchOrgs.login,
+
     loading: state.githubFetchOrgs.loading,
     loadFlag: state.githubFetchOrgs.loadFlag,
 

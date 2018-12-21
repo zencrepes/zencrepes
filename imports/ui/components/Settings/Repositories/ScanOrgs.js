@@ -62,7 +62,8 @@ class ScanOrgs extends Component {
     };
 
     reloadRepos = () => {
-        const { setLoadFlag } = this.props;
+        const { setLoadFlag, connectedUser, setLogin } = this.props;
+        setLogin(connectedUser.login);
         setLoadFlag(true);
     };
 
@@ -122,9 +123,12 @@ const mapState = state => ({
     loadSuccess: state.githubFetchOrgs.loadSuccess,
     loadedOrgs: state.githubFetchOrgs.loadedOrgs,
     loadedRepos: state.githubFetchOrgs.loadedRepos,
+
+    connectedUser: state.usersView.connectedUser,
 });
 
 const mapDispatch = dispatch => ({
+    setLogin: dispatch.githubFetchOrgs.setLogin,
     setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
     setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
 });
