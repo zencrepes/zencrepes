@@ -1,4 +1,4 @@
-query ($repo_cursor: String, $increment: Int, login: String){
+query ($repo_cursor: String, $increment: Int, $login: String!){
   rateLimit {
     limit
     cost

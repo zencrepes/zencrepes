@@ -45,8 +45,9 @@ class ScanOrgs extends Component {
     }
 
     componentDidMount() {
-        const { setLoadFlag } = this.props;
+        const { setLoadFlag, connectedUser, setLogin } = this.props;
         if (cfgSources.find({}).count() === 0) {
+            setLogin(connectedUser.login);
             setLoadFlag(true);
         }
     }
