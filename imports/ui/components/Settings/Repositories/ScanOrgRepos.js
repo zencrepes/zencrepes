@@ -15,6 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 const styles = theme => ({
     root: {
         margin: '10px',
+        width: '100%',
     },
     title: {
         fontSize: 14,
@@ -98,7 +99,7 @@ class ScanOrgRepos extends Component {
                                     onChange={this.handleChange('name')}
                                     margin="normal"
                                 />
-                                <Button color="primary" variant="raised" className={classes.button}
+                                <Button color="primary" variant="contained" className={classes.button}
                                         onClick={this.handleScanOrg}>
                                     Add Org
                                 </Button>

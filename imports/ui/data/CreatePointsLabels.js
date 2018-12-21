@@ -14,7 +14,7 @@ import GitHubApi from '@octokit/rest';
 
 
 /*
-Load data about Github Orgs
+Load data about GitHub Orgs
  */
 class CreatePointsLabels extends Component {
     constructor (props) {

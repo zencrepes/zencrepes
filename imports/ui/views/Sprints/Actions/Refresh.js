@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import classNames from 'classnames';
 
@@ -40,7 +40,7 @@ class Refresh extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Button variant="raised" color="primary" className={classes.button} onClick={this.refreshRepos}>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshRepos}>
                 <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Repos in Sprint
             </Button>

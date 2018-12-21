@@ -4,29 +4,38 @@ import PropTypes from 'prop-types';
 
 import { connect } from "react-redux";
 
-import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import Chip from 'material-ui/Chip';
-import { withStyles } from 'material-ui/styles';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
+import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+
+import blue from '@material-ui/core/colors/blue';
 
 const styles = theme => ({
     root: {
 
     },
     listItem: {
+        marginLeft: '5px',
         padding: '0px',
         height: '20px',
+        borderBottom: '1px dashed #e6e6e6',
     },
     listItemText: {
+        marginLeft: '5px',
         padding: '0px',
     },
     chip: {
         height: '18px',
     },
     checkbox: {
-        height: '18px',
-        width: '25px',
+        height: '15px',
+        width: '15px',
+        color: blue[500],
+        padding: '5px',
     }
 });
 
@@ -43,20 +52,6 @@ class FacetSelector extends React.Component {
         console.log('handleToggle');
         const { clickItem } = this.props;
         clickItem(clickedValue);
-        /*
-        //check to handle the situation where the group does not exist yet
-        let valueChecked = {in:[]};
-        if (queryValues[value.group] !== undefined) {
-            valueChecked = queryValues[value.group];
-        }
-        //Check if the value is already in the model, if yes remove, if not add.
-        const currentIndex = valueChecked.in.map((v) => {return v}).indexOf(value.name);
-        if (currentIndex === -1) {
-            addFilterRefresh(value);
-        } else {
-            removeFilterRefresh(value);
-        }
-        */
     };
 
     render() {

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
 import { ResponsiveLine } from '@nivo/line'

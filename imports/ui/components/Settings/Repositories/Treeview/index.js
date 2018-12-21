@@ -17,7 +17,6 @@ import Typography from '@material-ui/core/Typography';
 import Stats from './Stats.js';
 import Tree from './Tree.js';
 import {withRouter} from "react-router-dom";
-import sidebarStyle from "../../../../assets/jss/material-dashboard-react/components/sidebarStyle";
 
 const styles = theme => ({
     root: {

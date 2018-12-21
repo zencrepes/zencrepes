@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import { LinearProgress } from 'material-ui/Progress';
+import { withStyles } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { connect } from "react-redux";
-import Tooltip from 'material-ui/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
+import Moment from 'react-moment';
 
 const styles = {
     root: {
         flexGrow: 1,
     },
+    legend: {
+        fontSize: '11px',
+        fontFamily: 'Roboto',
+    }
 };
 
 class GitRequests extends React.Component {
@@ -19,17 +24,20 @@ class GitRequests extends React.Component {
 
     getBarStatus = (limit, remaining) => {
         return Math.round((limit - remaining) * 100 / limit, 10) ;
-    }
+    };
 
     render() {
         const { classes, limit, cost, remaining, resetAt } = this.props;
-        let tooltipValue = "Tokens: " + remaining + "/" + limit + " (Reset at: " + resetAt + ")";
         return (
             <div className={classes.root}>
-                <Tooltip id="tooltip-bottom" title={tooltipValue} placement="bottom">
-                    <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
-                </Tooltip>
-                Available Github tokens: {remaining} / 5000
+                <span className={classes.legend}>Available GitHub points: {remaining} / 5000
+                    {resetAt !== null &&
+                        <React.Fragment>
+                            , counter will reset on <Moment format="ddd MMM. D">{resetAt}</Moment> at <Moment format="h:mm a">{resetAt}</Moment>
+                        </React.Fragment>
+                    }
+                </span>
+                <LinearProgress variant="determinate" value={this.getBarStatus(limit, remaining)} />
             </div>
         );
     }

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +15,9 @@ import Filters from './Filters/index.js';
 
 import QuerySave from './Save/index.js';
 import QueryManage from './Manage/index.js';
+
+import { addRemoveFromQuery } from "../../../utils/query/index.js";
+import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
     root: {
@@ -39,14 +41,20 @@ class IssuesQuery extends Component {
     }
 
     clearQuery = () => {
-        console.log('clearQuery');
-        const { updateQuery } = this.props;
-        updateQuery({});
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q={}',
+            state: { detail: '{}' }
+        });
     };
 
     loadQuery = (query) => {
-        const { updateQuery } = this.props;
-        updateQuery(JSON.parse(query.filters));
+        console.log(query.filters);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + query.filters,
+            state: { detail: query.filters }
+        });
         this.setState({ openManageQueryDialog: false });
     };
 
@@ -62,8 +70,13 @@ class IssuesQuery extends Component {
     };
 
     updateQuery = (valueName, facet) => {
-        const { addRemoveQuery } = this.props;
-        addRemoveQuery(valueName, facet)
+        const { query } = this.props;
+        const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + JSON.stringify(modifiedQuery),
+            state: { detail: modifiedQuery }
+        });
     };
 
     setOpenSaveQueryDialog = (state) => {
@@ -178,10 +191,9 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    updateQuery: dispatch.issuesView.updateQuery,
     saveQuery: dispatch.issuesView.saveQuery,
     deleteQuery: dispatch.issuesView.deleteQuery,
-    addRemoveQuery: dispatch.issuesView.addRemoveQuery,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery));
+export default withRouter(connect(mapState, mapDispatch)(withStyles(styles)(IssuesQuery)));
+

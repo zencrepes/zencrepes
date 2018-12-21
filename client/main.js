@@ -5,18 +5,10 @@ import { Accounts } from 'meteor/accounts-base';
 
 import { init } from "@rematch/core";
 import { Provider } from "react-redux";
-//import * as models from "../imports/ui/services/models.js";
 
 import * as models from "../imports/ui/services/models/index.js";
 
 import App from '../imports/ui/App.js';
-
-/*
-import { localCfgIssues } from '../imports/ui/data/Minimongo.js';
-import { localCfgSources } from '../imports/ui/data/Minimongo.js';
-import { localCfgQueries } from '../imports/ui/data/Minimongo.js';
-import { localCfgLabels } from '../imports/ui/data/Minimongo.js';
-*/
 
 import { cfgIssues } from '../imports/ui/data/Minimongo.js';
 import { cfgSources } from '../imports/ui/data/Minimongo.js';

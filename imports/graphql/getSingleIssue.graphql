@@ -1,0 +1,70 @@
+query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  repository(owner:$org_name, name:$repo_name) {
+    issue(number: $issue_number) {
+      id
+      createdAt
+      updatedAt
+      closedAt
+      databaseId
+      number
+      url
+      title
+      state
+      author {
+        login
+        avatarUrl
+        url
+      }
+      labels (first: 10) {
+        totalCount
+        edges {
+          node {
+            id
+            color
+            name
+            description
+          }
+        }
+      }
+      milestone {
+        id
+        createdAt
+        updatedAt
+        closedAt
+        description
+        dueOn
+        issues (first: 1) {
+          totalCount
+        }
+        number
+        state
+        title
+        url
+      }
+      assignees(first: 4) {
+        totalCount
+        edges {
+          node {
+            id
+            avatarUrl
+            login
+            name
+            url
+          }
+        }
+      }
+      comments(first: 1) {
+        totalCount
+      }
+      participants(first: 1) {
+        totalCount
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
 import Table from '@material-ui/core/Table';
@@ -20,15 +20,15 @@ import { TableLarge } from 'mdi-material-ui';
 
 import Button from '@material-ui/core/Button';
 
-import { GithubCircle } from 'mdi-material-ui'
-
-import tableStyle from '../../../../assets/jss/material-dashboard-react/components/tableStyle.jsx';
-
 import fibonacci from 'fibonacci-fast';
 
 import { cfgLabels } from "../../../../data/Minimongo.js";
 import {cfgIssues, cfgSources} from "../../../../data/Minimongo";
 
+const styles = theme => ({
+    root: {
+    },
+});
 class ReposTable extends Component {
     constructor(props) {
         super(props);
@@ -125,5 +125,5 @@ const mapState = state => ({
     maxPoints: state.githubLabels.maxPoints,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(tableStyle)(ReposTable));
+export default connect(mapState, mapDispatch)(withStyles(styles)(ReposTable));
 

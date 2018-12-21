@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { GithubCircle } from 'mdi-material-ui'
 import { Link } from 'react-router-dom';
@@ -61,7 +60,7 @@ class LabelsTable extends Component {
                     <Table columnExtensions={tableColumnExtensions} />
                     <TableHeaderRow />
                 </Grid>
-                <i>*Issues with multiple assignees are counted multiple times</i>
+                <i>*Issues with multiple labels are counted multiple times</i>
             </div>
         );
     }

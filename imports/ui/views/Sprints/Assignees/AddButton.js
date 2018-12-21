@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
@@ -39,7 +39,7 @@ class AddButton extends Component {
 
         return (
             <div className={classes.root}>
-                <Button variant="raised" color="primary" size="small" className={classes.button} onClick={this.addClick}>
+                <Button variant="contained" color="primary" size="small" className={classes.button} onClick={this.addClick}>
                     Add
                 </Button>
             </div>

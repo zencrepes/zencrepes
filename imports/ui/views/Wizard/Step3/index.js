@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import {connect} from "react-redux";
+import { withTracker } from 'meteor/react-meteor-data';
 
 import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
-import GridItem from '../../../components/Grid/GridItem.js';
-import GridContainer from '../../../components/Grid/GridContainer.js';
 
-import Selects from '../../../components/Settings/Load/Selects.js';
+import Refresh from './Refresh.js';
 import IssuesRepartition from './IssuesRepartition.js';
 import PropTypes from "prop-types";
 
 import IssuesFetch from '../../../data/Issues/Fetch/index.js';
+
+import LoadDialog from './LoadDialog/index.js';
+import { cfgIssues } from "../../../data/Minimongo";
 
 const styles = theme => ({
     root: {
@@ -24,21 +27,30 @@ class Step3 extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, issues } = this.props;
         return (
             <div>
                 <IssuesFetch />
-                <Typography component="p">
-                    Aside facilitating planning, this tool was also created to facilitate cross-repos and cross-orgs consistency. To do so it needs to load a bunch of data.
-                </Typography>
-                <GridContainer>
-                    <GridItem xs={12} sm={6} md={6}>
-                        <Selects/>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={6}>
-                        <IssuesRepartition />
-                    </GridItem>
-                </GridContainer>
+                {issues.length === 0 &&
+                    <LoadDialog />
+                }
+                <p className={classes.paragraph}>
+                    This screen provides a breakdown of open issues per repositories. It gets automatically updated as data loads.
+                </p>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item>
+                        <Refresh/>
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                        <IssuesRepartition issues={issues}/>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
@@ -48,4 +60,19 @@ Step3.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(Step3);
+const mapState = state => ({
+});
+
+const mapDispatch = dispatch => ({
+});
+
+export default
+    connect(mapState, null)
+    (
+        withTracker(() => {return {
+            issues: cfgIssues.find({}).fetch(),
+        }})
+        (
+            withStyles(styles)(Step3)
+        )
+    );

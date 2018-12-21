@@ -13,6 +13,7 @@ import styles from './styles.jsx';
 import General from '../../layouts/General/index.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
+import IssuesEdit from '../../data/Issues/Edit/index.js';
 
 import Actions from './Actions/index.js';
 import IssuesFacets from './Facets/index.js';
@@ -25,49 +26,68 @@ class Issues extends Component {
         super(props);
     }
 
+    //https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     componentDidMount() {
-        const { initIssues } = this.props;
-        initIssues();
+        const { updateQuery } = this.props;
+        const params = new URLSearchParams(this.props.location.search);
+        const queryUrl = params.get('q');
+        if (queryUrl === null) {
+            updateQuery({});
+        } else {
+            updateQuery(JSON.parse(queryUrl));
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { updateQuery } = this.props;
+        const params = new URLSearchParams(this.props.location.search);
+        const queryUrl = params.get('q');
+
+        const oldParams = new URLSearchParams(prevProps.location.search);
+        const oldQueryUrl = oldParams.get('q');
+
+        if (queryUrl !== oldQueryUrl) {
+            updateQuery(JSON.parse(queryUrl));
+        }
     };
 
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <General>
-                    <IssuesFetch />
-                    <Actions />
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item >
-                            <IssuesFacets />
-                        </Grid>
-                        <Grid item xs={12} sm container>
-                            <Grid
-                                container
-                                direction="column"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                            >
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <IssuesQuery />
-                                </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <IssuesTabs />
-                                </Grid>
-                                <Grid item xs={12} sm className={classes.fullWidth}>
-                                    <IssuesContent />
-                                </Grid>
+            <General>
+                <IssuesFetch />
+                <IssuesEdit />
+                <Actions />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item >
+                        <IssuesFacets />
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <IssuesQuery />
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <IssuesTabs />
+                            </Grid>
+                            <Grid item xs={12} sm className={classes.fullWidth}>
+                                <IssuesContent />
                             </Grid>
                         </Grid>
                     </Grid>
-                </General>
-            </div>
+                </Grid>
+            </General>
         );
     }
 }
@@ -78,7 +98,7 @@ Issues.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    initIssues: dispatch.issuesView.initIssues,
+    updateQuery: dispatch.issuesView.updateQuery,
 });
 
 export default connect(null, mapDispatch)(withRouter(withStyles(styles)(Issues)));

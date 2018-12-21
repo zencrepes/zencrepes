@@ -2,16 +2,12 @@ import _ from 'lodash';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
 import classNames from 'classnames';
-
-import Card from "../../../../components/Card/Card";
-import CardHeader from "../../../../components/Card/CardHeader";
-import CardBody from "../../../../components/Card/CardBody";
 
 import {
     // State or Local Processing Plugins
@@ -31,13 +27,11 @@ import {
     TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import dashboardStyle from "../../../../assets/jss/material-dashboard-react/views/dashboardStyle";
+import CustomCard from "../../../../components/CustomCard";
 
 const styles = theme => ({
     root: {
-        height: '150px'
     },
-
 });
 
 class SelectedDescriptions extends Component {
@@ -74,23 +68,19 @@ class SelectedDescriptions extends Component {
 
         //console.log(this.buildDataset());
         return (
-            <Card>
-                <CardHeader color="success">
-                    <h4 className={classes.cardTitleWhite}>Label Descriptions</h4>
-                    <p className={classes.cardCategoryWhite}>
-                        Repartition of descriptions amongst selected repositories
-                    </p>
-                </CardHeader>
-                <CardBody>
-                    <Grid
-                        rows={this.buildDataset()}
-                        columns={columns}
-                    >
-                        <Table columnExtensions={tableColumnExtensions} />
-                        <TableHeaderRow />
-                    </Grid>
-                </CardBody>
-            </Card>
+            <CustomCard
+                headerTitle="Label Descriptions"
+                headerFactTitle=""
+                headerFactValue=""
+            >
+                <Grid
+                    rows={this.buildDataset()}
+                    columns={columns}
+                >
+                    <Table columnExtensions={tableColumnExtensions} />
+                    <TableHeaderRow />
+                </Grid>
+            </CustomCard>
         );
     }
 }
@@ -109,4 +99,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(SelectedDescriptions));
+export default connect(mapState, mapDispatch)(withStyles(styles)(SelectedDescriptions));

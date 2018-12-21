@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -26,7 +26,7 @@ class LoadMessage extends Component {
 
         return (
             <div>
-                <span id="message-id">Things are loading, {loadedCount} Milestones modified</span>
+                <span id="message-id">Fetching from GitHub, {loadedCount} Milestones</span>
                 <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
             </div>
         );

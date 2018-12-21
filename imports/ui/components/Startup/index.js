@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withTracker } from 'meteor/react-meteor-data';
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -45,7 +45,7 @@ class Startup extends Component {
 
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                <DialogTitle id="simple-dialog-title">Starting up the app ...</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Loading data from browser's localStorage ...</DialogTitle>
                 <DialogContent>
                     <div>
                         Issues: {issuesCount} {loadedIssues && <i>- Complete</i>} <br />

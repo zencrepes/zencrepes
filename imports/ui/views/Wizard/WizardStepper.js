@@ -31,6 +31,7 @@ class WizardStepper extends Component {
 
     render() {
         const { classes, activeStep, steps } = this.props;
+        console.log(activeStep);
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
@@ -57,8 +58,8 @@ WizardStepper.propTypes = {
 };
 
 const mapState = state => ({
-    activeStep: state.wizard.activeStep,
-    steps: state.wizard.steps,
+    activeStep: state.wizardView.activeStep,
+    steps: state.wizardView.steps,
 });
 
 export default connect(mapState, null)(withStyles(styles)(WizardStepper));

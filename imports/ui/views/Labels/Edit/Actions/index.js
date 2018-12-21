@@ -1,8 +1,6 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
@@ -20,16 +18,17 @@ import Dialog, {
     DialogTitle,
 } from '@material-ui/core/Dialog';
 
-import dashboardStyle from "../../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
-
-import Card from "../../../../components/Card/Card";
-import CardHeader from "../../../../components/Card/CardHeader";
-import CardBody from "../../../../components/Card/CardBody";
-
 import LabelColor from './Color.js';
 import LabelName from './Name.js';
 import LabelDescription from './Description.js';
 import DeleteWarning from './DeleteWarning.js';
+
+import CustomCard from "../../../../components/CustomCard";
+
+const styles = theme => ({
+    root: {
+    },
+});
 
 class EditActions extends Component {
     constructor(props) {
@@ -55,31 +54,28 @@ class EditActions extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Card>
-                <CardHeader color="success">
-                    <h4 className={classes.cardTitleWhite}>Actions</h4>
-                    <p className={classes.cardCategoryWhite}>
-                        Apply the following actions to all selected repositories
-                    </p>
-                </CardHeader>
-                <CardBody >
-                    <DeleteWarning />
-                    <List component="nav">
-                        <LabelName />
-                        <Divider />
-                        <LabelColor />
-                        <Divider />
-                        <LabelDescription />
-                        <Divider />
-                        <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.clickSaveLabels()}>
-                            Save
-                        </Button>
-                        <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.clickDeleteLabels()}>
-                            Delete Label
-                        </Button>
-                    </List>
-                </CardBody>
-            </Card>
+            <CustomCard
+                headerTitle="Actions"
+                headerFactTitle=""
+                headerFactValue=""
+                headerSubtitle="Apply the following actions to all selected repositories"
+            >
+                <DeleteWarning />
+                <List component="nav">
+                    <LabelName />
+                    <Divider />
+                    <LabelColor />
+                    <Divider />
+                    <LabelDescription />
+                    <Divider />
+                    <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.clickSaveLabels()}>
+                        Save
+                    </Button>
+                    <Button variant="outlined" color="primary" className={classes.button} onClick={() => this.clickDeleteLabels()}>
+                        Delete Label
+                    </Button>
+                </List>
+            </CustomCard>
         );
     }
 }
@@ -101,4 +97,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(EditActions));
+export default connect(mapState, mapDispatch)(withStyles(styles)(EditActions));

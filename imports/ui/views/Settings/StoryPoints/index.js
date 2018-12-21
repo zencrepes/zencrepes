@@ -4,17 +4,18 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
+import Grid from "@material-ui/core/Grid/Grid";
 
-import GridItem from '../../../components/Grid/GridItem.js';
-import GridContainer from '../../../components/Grid/GridContainer.js';
+import CreatePointsLabels from '../../../data/CreatePointsLabels.js';
 
 import Fibonacci from './Fibonacci.js';
 import EnabledRepos from './EnabledRepos/index.js';
 import SyncLabels from './SyncLabels.js';
 
-import CreatePointsLabels from '../../../data/CreatePointsLabels.js';
-
+const styles = theme => ({
+    root: {
+    },
+});
 class StoryPoints extends Component {
     constructor(props) {
         super(props);
@@ -23,16 +24,22 @@ class StoryPoints extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <GridContainer>
-                <GridItem xs={12} sm={6} md={6}>
+            <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                spacing={8}
+            >
+                <Grid item xs={6} sm container>
                     <Fibonacci />
                     <SyncLabels />
                     <CreatePointsLabels />
-                </GridItem>
-                <GridItem xs={12} sm={6} md={6}>
+                </Grid>
+                <Grid item xs={6} sm container>
                     <EnabledRepos />
-                </GridItem>
-            </GridContainer>
+                </Grid>
+            </Grid>
         );
     }
 }
@@ -41,4 +48,4 @@ StoryPoints.propTypes = {
     classes: PropTypes.object,
 };
 
-export default connect(null, null)(withRouter(withStyles(dashboardStyle)(StoryPoints)));
+export default connect(null, null)(withRouter(withStyles(styles)(StoryPoints)));

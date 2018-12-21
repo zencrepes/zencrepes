@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
@@ -35,7 +35,7 @@ class LoadButton extends Component {
             <div className={classes.root}>
                 {!loading &&
                 <div>
-                    <Button variant="raised" color="primary" className={classes.button} onClick={this.loadMilestones}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={this.loadMilestones}>
                         Load/Refresh Milestones
                     </Button>
                 </div>

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { cfgMilestones, cfgIssues } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues, cfgSources } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
@@ -20,11 +20,18 @@ import {
     populateTicketsPerDay,
     populateTicketsPerWeek
 } from "../../../utils/velocity/index.js";
+import {cfgLabels} from "../../../data/Minimongo";
 
 export default {
     state: {
         sprints: [],
-        selectedSprintTitle: 'No Sprint Selected',
+        selectedSprintTitle: null,
+        selectedSprintDescription: null,
+        selectedSprintDueDate: null,
+        editSprint: false,
+        editSprintTitle: null,
+        editSprintDescription: null,
+        editSprintDueDate: null,
 
         assignees: [],
         availableAssignees: [],
@@ -37,6 +44,9 @@ export default {
         filteredAvailableRepositories: [],
         availableRepositoryFilter: '',
         openAddRepository: false,
+        addReposAvailable: [],
+        addReposSelected: [],
+        allRepos: [],           //All repos, unfiltered
 
         labels: [],
 
@@ -55,6 +65,12 @@ export default {
     reducers: {
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setSelectedSprintTitle(state, payload) {return { ...state, selectedSprintTitle: payload };},
+        setSelectedSprintDescription(state, payload) {return { ...state, selectedSprintDescription: payload };},
+        setSelectedSprintDueDate(state, payload) {return { ...state, selectedSprintDueDate: payload };},
+        setEditSprint(state, payload) {return { ...state, editSprint: payload };},
+        setEditSprintTitle(state, payload) {return { ...state, editSprintTitle: payload };},
+        setEditSprintDescription(state, payload) {return { ...state, editSprintDescription: payload };},
+        setEditSprintDueDate(state, payload) {return { ...state, editSprintDueDate: payload };},
 
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
@@ -68,7 +84,12 @@ export default {
         setFilteredAvailableRepositories(state, payload) {return { ...state, filteredAvailableRepositories: JSON.parse(JSON.stringify(payload)) };},
         setAvailableRepositoriesFilter(state, payload) {return { ...state, availableRepositoriesFilter: payload };},
 
+        setAddReposAvailable(state, payload) {return { ...state, addReposAvailable: payload };},
+        setAddReposSelected(state, payload) {return { ...state, addReposSelected: payload };},
+        setAllRepos(state, payload) {return { ...state, allRepos: payload };},
+
         setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
+
         setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
@@ -83,16 +104,90 @@ export default {
 
     },
     effects: {
-        async updateAvailableSprints(payload, rootState) {
+        async initView(payload, rootState) {
+            console.log('Sprints - initView');
+            this.refreshSprints();
+
+            const allRepos = cfgSources.find({active: true}).fetch();
+            this.setAllRepos(allRepos);
+
+            this.updateView();
+        },
+        async refreshSprints(payload, rootState) {
+            console.log('refreshSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
+            this.setSprints(sprints);
+            this.updateSelectedSprint(sprints[0]);
+        },
+
+        async updateAvailableSprints(payload, rootState) {
+            console.log('updateAvailableSprints');
+            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
         },
+
         async updateSelectedSprint(selectedSprintTitle, rootState) {
             await this.setSelectedSprintTitle(selectedSprintTitle);
             this.updateView();
         },
 
+        async addRepoUpdateSelected(selectedRepos, rootState) {
+            console.log('addRepoUpdateSelected');
+            console.log(selectedRepos);
+            this.setAddReposSelected(selectedRepos);
+        },
+
+        async createSprint(payload, rootState) {
+            this.setSelectedSprintTitle(null);
+            this.setSelectedSprintDescription(null);
+            this.setSelectedSprintDueDate(null);
+
+            this.setEditSprintTitle('New Sprint');
+            this.setEditSprintDescription(null);
+            this.setEditSprintDueDate(new Date().toISOString());
+            this.setEditSprint(true);
+
+            this.setLabels([]);
+            this.setIssues([]);
+            this.setRepositories([]);
+            this.setVelocity([]);
+            this.setAssignees([]);
+            this.setMilestones([]);
+
+            this.setAddReposSelected([]);
+        },
+
+        async updateAvailableRepos(payload, rootState) {
+            const selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
+            const milestones = cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch()
+            const includedRepos = milestones.map((ms) => ms.repo);
+            const allRepos = cfgSources.find({active: true}).fetch();
+            const availableRepos = _.differenceBy(allRepos, includedRepos, 'id');
+
+            console.log(includedRepos);
+            console.log(allRepos);
+            console.log(availableRepos);
+
+            this.setAddReposAvailable(availableRepos.map((repo) => {
+                return {
+                    value: repo.id,
+                    label: repo.org.login + "/" + repo.name
+                }
+            }));
+        },
+
+        async saveSprint(payload, rootState) {
+            this.setSelectedSprintTitle(rootState.sprintsView.editSprintTitle);
+            this.setSelectedSprintDescription(rootState.sprintsView.editSprintDescription);
+            this.setSelectedSprintDueDate(rootState.sprintsView.editSprintDueDate);
+            this.setEditSprint(false);
+        },
+
+
         async updateView(payload, rootState) {
+            console.log('Sprints - updateView');
             /*
             console.log('Update Sprint');
             console.log(selectedSprintTitle);
@@ -115,7 +210,7 @@ export default {
             this.setFilteredAvailableAssignees(assigneesDifference);
             this.setAvailableAssigneesFilter('');
 
-            let repositories = getRepositoriesRepartition(cfgIssues.find(currentSprintFilter).fetch());
+            let repositories = getRepositoriesRepartition(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch(), cfgIssues.find(currentSprintFilter).fetch());
             this.setRepositories(repositories);
 
             let labels = getLabelsRepartition(cfgIssues.find(currentSprintFilter).fetch());
@@ -127,11 +222,19 @@ export default {
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
 
-            this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+            if (selectedSprintTitle !== null) {
+                this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+            }
 
             this.setMilestones(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch());
 
             this.updateVelocity(assignees);
+
+            this.updateDescriptionDate();
+
+            this.updateAvailableRepos();
+
+            this.updateAvailableSprints();
         },
 
         async updateVelocity(assignees, rootState) {
@@ -154,6 +257,32 @@ export default {
             dataObject = populateTicketsPerWeek(dataObject);
 
             this.setVelocity(dataObject);
+        },
+
+        async updateDescriptionDate(payload, rootState) {
+            console.log(rootState.sprintsView.milestones);
+
+            /*
+            this.setSelectedSprintDescription('# Live demo\n' +
+                '\n' +
+                'Changes are automatically rendered as you type.\n' +
+                '\n' +
+                '* Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)\n' +
+                '* Renders actual, "native" React DOM elements\n' +
+                '* Allows you to escape or skip HTML (try toggling the checkboxes above)\n' +
+                '* If you escape or skip the HTML, no `dangerouslySetInnerHTML` is used! Yay!\n' +
+                '\n');
+                */
+            if (rootState.sprintsView.milestones[0] !== undefined) {
+                this.setSelectedSprintDescription(rootState.sprintsView.milestones[0].description);
+            } else {
+                this.setSelectedSprintDescription(null);
+            }
+            if (rootState.sprintsView.milestones[0] !== undefined) {
+                this.setSelectedSprintDueDate(rootState.sprintsView.milestones[0].dueOn);
+            } else {
+                this.setSelectedSprintDueDate(null);
+            }
         },
 
         async updateAvailableAssigneesFilter(payload, rootState) {

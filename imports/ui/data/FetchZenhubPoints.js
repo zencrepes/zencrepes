@@ -10,7 +10,7 @@ import { cfgIssues } from "./Minimongo.js";
 import axios from 'axios';
 
 /*
-Load data about Github Orgs
+Load data about GitHub Orgs
  */
 class FetchZenhubPoints extends Component {
     constructor (props) {

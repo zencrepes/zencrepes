@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';

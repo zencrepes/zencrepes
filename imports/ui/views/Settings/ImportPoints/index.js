@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
-
-import GridItem from '../../../components/Grid/GridItem.js';
-import GridContainer from '../../../components/Grid/GridContainer.js';
+import Grid from "@material-ui/core/Grid/Grid";
 
 import Zenhub from './Zenhub.js';
 import Waffle from './Waffle.js';
 import Push from './Push.js';
+
+const styles = theme => ({
+    root: {
+    },
+});
 
 class ImportPoints extends Component {
     constructor(props) {
@@ -21,17 +23,33 @@ class ImportPoints extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <GridContainer>
-                <GridItem xs={12} sm={6} md={6}>
-                    <Zenhub />
-                </GridItem>
-                <GridItem xs={12} sm={6} md={6}>
-                    <Waffle />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={12}>
-                    <Push />
-                </GridItem>
-            </GridContainer>
+            <React.Fragment>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={6} sm container>
+                        <Zenhub />
+                    </Grid>
+                    <Grid item xs={6} sm container>
+                        <Waffle />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm container>
+                        <Push />
+                    </Grid>
+                </Grid>
+            </React.Fragment>
         );
     }
 }
@@ -40,4 +58,4 @@ ImportPoints.propTypes = {
     classes: PropTypes.object,
 };
 
-export default connect(null, null)(withRouter(withStyles(dashboardStyle)(ImportPoints)));
+export default connect(null, null)(withRouter(withStyles(styles)(ImportPoints)));

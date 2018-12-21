@@ -105,10 +105,10 @@ class SyncLabels extends Component {
                     {!loading &&
                     <CardActions className={classes.cardActions} >
                         <div className={classes.actionButtons} >
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.createLabels}>
+                            <Button color="primary" variant="contained" className={classes.button} onClick={this.createLabels}>
                                 Create Labels
                             </Button>
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.deleteLabel}>
+                            <Button color="primary" variant="contained" className={classes.button} onClick={this.deleteLabel}>
                                 Delete Labels
                             </Button>
                         </div>

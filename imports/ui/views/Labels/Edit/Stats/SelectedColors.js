@@ -2,26 +2,20 @@ import _ from 'lodash';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
 import classNames from 'classnames';
 
-import dashboardStyle from "../../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
-
 import { ResponsivePie } from '@nivo/pie'
-
-import Card from "../../../../components/Card/Card";
-import CardHeader from "../../../../components/Card/CardHeader";
-import CardBody from "../../../../components/Card/CardBody";
+import CustomCard from "../../../../components/CustomCard";
 
 const styles = theme => ({
     root: {
-        height: '150px'
+        height: '150px',
     },
-
 });
 
 class SelectedColors extends Component {
@@ -50,16 +44,15 @@ class SelectedColors extends Component {
     render() {
         const { classes, setNewColor } = this.props;
         return (
-            <Card>
-                <CardHeader color="success">
-                    <h4 className={classes.cardTitleWhite}>Label Colors</h4>
-                    <p className={classes.cardCategoryWhite}>
-                        Repartition of colors amongst selected repositories
-                    </p>
-                </CardHeader>
-                <CardBody style={{height: "150px"}}>
+            <CustomCard
+                headerTitle="Label Colors"
+                headerFactTitle=""
+                headerFactValue=""
+            >
+                <div className={classes.root}>
                     <ResponsivePie
                         data={this.buildDataset()}
+
                         margin={{
                             "top": 0,
                             "right": 200,
@@ -111,12 +104,11 @@ class SelectedColors extends Component {
                             }
                         ]}
                     />
-                </CardBody>
-            </Card>
+                </div>
+            </CustomCard>
         );
     }
 }
-
 SelectedColors.propTypes = {
     classes: PropTypes.object.isRequired,
 };
@@ -131,4 +123,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(SelectedColors));
+export default connect(mapState, mapDispatch)(withStyles(styles)(SelectedColors));

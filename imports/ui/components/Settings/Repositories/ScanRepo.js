@@ -15,6 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 const styles = theme => ({
     root: {
         margin: '10px',
+        width: '100%',
     },
     title: {
         fontSize: 14,
@@ -110,7 +111,7 @@ class ScanRepo extends Component {
                                     onChange={this.changeRepoName('name')}
                                     margin="normal"
                                 />
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.handleScanRepo}>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.handleScanRepo}>
                                     Add Repo
                                 </Button>
                             </div>

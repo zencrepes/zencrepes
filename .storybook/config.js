@@ -5,7 +5,8 @@ function loadStories() {
     require('../stories/issues.js');
     require('../stories/sprints.js');
     require('../stories/labels.js');
-    // You can require as many stories as you need.
+    require('../stories/cards.js');
+    require('../stories/milestones.js');
 }
 
 configure(loadStories, module);

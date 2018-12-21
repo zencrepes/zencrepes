@@ -159,7 +159,7 @@ class Fibonacci extends Component {
                         </Typography>
                         <ListItem>
                             <ListItemText>
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.decFibonacci}>-</Button>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.decFibonacci}>-</Button>
                                 <TextField
                                     id="full-width"
                                     label="To"
@@ -171,7 +171,7 @@ class Fibonacci extends Component {
                                     margin="normal"
                                     onChange={this.handleChange()}
                                 />
-                                <Button color="primary" variant="raised" className={classes.button} onClick={this.incFibonacci}>+</Button>
+                                <Button color="primary" variant="contained" className={classes.button} onClick={this.incFibonacci}>+</Button>
                             </ListItemText>
                         </ListItem>
                         <ListItem >

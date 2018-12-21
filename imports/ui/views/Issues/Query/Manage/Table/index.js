@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Table from '@material-ui/core/Table';
@@ -48,8 +47,7 @@ class QueriesTable extends Component {
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
     };
-
-
+    
     render() {
         const { classes, queries, facets, loadQuery, deleteQuery } = this.props;
         const { rowsPerPage, page } = this.state;

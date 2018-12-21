@@ -6,7 +6,14 @@ import { Button } from '@storybook/react/demo';
 import { Provider } from 'react-redux';
 import { init } from "@rematch/core";
 
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+
 import General from '../imports/ui/layouts/General/index.js';
+import CustomCard from '../imports/ui/components/CustomCard/index.js';
+
+import Terms from '../imports/ui/views/Terms/index.js';
+import About from '../imports/ui/views/About/index.js';
+
 
 // The *.mock.js files contains static redux stores configuration with no external dependencies (such as minimongo).
 import * as models from "../imports/ui/services/models/index.mock.js";
@@ -20,11 +27,21 @@ storiesOf('Layouts', module)
     .addDecorator(story => <Router>{story()}</Router>)
     .addDecorator(story => <Provider store={store}>{story()}</Provider>)
     .add('General', () => (
-            <General><h4>General Content</h4></General>
+        <General><h4>General Content</h4></General>
     ))
-    .add('Wizard', () => (
-        <h1>Wizard - To Be Implemented</h1>
+    .add('Card', () => (
+        <CustomCard
+            headerTitle="This is the card's title"
+            headerIcon={<HourglassEmptyIcon />}
+            headerFactTitle="Completed this week"
+            headerFactValue="9 Pts"
+        >
+            <h4>General Content</h4>
+        </CustomCard>
     ))
-    .add('Login', () => (
-        <h1>Login - To Be Implemented</h1>
+    .add('Terms', () => (
+        <Terms />
+    ))
+    .add('About', () => (
+        <About />
     ));

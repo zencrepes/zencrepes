@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
-import IssuesTable from './Table/index.js';
+import IssuesTable from '../../../../components/IssuesTable/index.js';
 
 const styles = theme => ({
     root: {
@@ -27,10 +26,18 @@ class IssuesList extends Component {
     }
 
     render() {
-        const { classes, issues } = this.props;
+        const { classes, filteredIssues, pagination } = this.props;
+        console.log('render issue list');
+        let dispPagination = pagination;
+        if (pagination === undefined) {
+            dispPagination = true;
+        }
         return (
             <div className={classes.root}>
-                <IssuesTable issues={issues} />
+                <IssuesTable
+                    pagination={dispPagination}
+                    filteredIssues={filteredIssues}
+                />
             </div>
         );
     }
@@ -41,7 +48,7 @@ IssuesList.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.issuesView.issues,
+    filteredIssues: state.issuesView.filteredIssues,
 });
 
 const mapDispatch = dispatch => ({

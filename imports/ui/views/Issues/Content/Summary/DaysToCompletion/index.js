@@ -1,21 +1,14 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
 
-import dashboardStyle from "../../../../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import CustomCard from "../../../../../components/CustomCard/index.js";
 
-import { CalendarClock } from 'mdi-material-ui';
-import Card from "../../../../../components/Card/Card";
-import CardHeader from "../../../../../components/Card/CardHeader";
-import CardIcon from "../../../../../components/Card/CardIcon";
-import {ContentCopy, DateRange} from "@material-ui/icons";
-import CardFooter from "../../../../../components/Card/CardFooter";
-import CardBody from "../../../../../components/Card/CardBody";
 import VelocityBarHorizontal from "./VelocityBarHorizontal.js";
 
 const styles = theme => ({
@@ -105,25 +98,13 @@ class DaysToCompletion extends Component {
     render() {
         const { classes, velocity } = this.props;
         return (
-            <Card>
-                <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                        <CalendarClock />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>Days to Completion</p>
-                    <h3 className={classes.cardTitle}>
-                        {this.getTimeToCompletion(velocity.velocity)} days
-                    </h3>
-                </CardHeader>
-                <CardBody>
-                    <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
-                </CardBody>
-                <CardFooter stats>
-                    <div className={classes.stats}>
-                        Default based on 4 weeks rolling averages
-                    </div>
-                </CardFooter>
-            </Card>
+            <CustomCard
+                headerTitle="Remaining work"
+                headerFactTitle="Days to Completion"
+                headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
+            >
+                <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
+            </CustomCard>
         );
     }
 }
@@ -132,4 +113,4 @@ DaysToCompletion.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(dashboardStyle)(DaysToCompletion);
+export default withStyles(styles)(DaysToCompletion);

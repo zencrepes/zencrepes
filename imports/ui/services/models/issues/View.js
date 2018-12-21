@@ -3,12 +3,14 @@ import _ from 'lodash';
 import { cfgIssues, cfgQueries } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
-import { buildFacets } from '../../../utils/facets/index.js';
+import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
 export default {
     state: {
         issues: [],
+        filteredIssues: [],
+        filteredIssuesSearch: '',
         facets: [],
         queries: [],
 
@@ -32,6 +34,8 @@ export default {
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
+        setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
+        setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
         setQueries(state, payload) {return { ...state, queries: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
@@ -52,69 +56,66 @@ export default {
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
     },
     effects: {
-        async initIssues(payload, rootState) {
-            this.refreshFacets();
-            this.refreshIssues();
-            this.refreshQueries();
-
-            this.setShouldBurndownDataReload(true);
-            this.refreshSummary();
-            this.refreshVelocity();
-        },
-
         async updateQuery(query, rootState) {
             console.log('updateQuery: ' + JSON.stringify(query));
-            this.setQuery(query);
+            if (query === null) {this.setQuery({});}
+            else {this.setQuery(query);}
 
-            this.setShouldBurndownDataReload(true);
+            // Check if the query doesn't return any issues with points, set default back to issues count.
+            const pointsQuery = {...query, points: {$gt: 0}};
+            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);}
+
+            this.updateView();
+        },
+
+        async updateView(payload, rootState) {
+            this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
+
+            this.setShouldBurndownDataReload(true);
             this.refreshSummary();
             this.refreshVelocity();
         },
 
-        async addRemoveQuery(valueName, rootState, facet) {
-            console.log('addRemoveQuery');
-            let query = rootState.issuesView.query;
-
-            //1- Mutate the query to the corresponding state
-            let facetKey = facet.key;
-            if (facet.nested === false) {
-                if (query[facetKey] === undefined) {
-                    query[facetKey] = {"$in": [valueName]};
-                } else if (query[facetKey]['$in'].includes(valueName)) {
-                    // Remove element from array
-                    query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== valueName);
-                    if (query[facetKey]['$in'].length === 0) {
-                        delete query[facetKey];
-                    }
-                } else {
-                    query[facetKey]['$in'].push(valueName);
-                }
-            } else {
-                facetKey = facetKey + '.edges';
-                let nestedKey = 'node.' + facet.nestedKey;
-                if (query[facetKey] === undefined) {
-                    query[facetKey] = {'$elemMatch': {}};
-                    query[facetKey]['$elemMatch'][nestedKey] = {"$in": [valueName]};
-                } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(valueName)) {
-                    query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== valueName);
-                    if (query[facetKey]['$elemMatch'][nestedKey]['$in'].length === 0) {
-                        delete query[facetKey];
-                    }
-                } else {
-                    query[facetKey]['$elemMatch'][nestedKey]['$in'].push(valueName);
-                }
-            }
             /*
-            {
-            "assignees.edges":{"$elemMatch":{"node.login":{"$in":["lepsalex","hlminh2000"]}}}
-            ,"milestone.state":{"$in":["OPEN"]}
-            ,"org.name":{"$in":["Human Cancer Models Initiative - Catalog","Kids First Data Resource Center"]}}
-            */
-            this.updateQuery(query);
-        },
+            // TODO - Removed, this was moved to the view component
+            async addRemoveQuery(valueName, rootState, facet) {
+                console.log('addRemoveQuery');
+                let query = rootState.issuesView.query;
 
+                //1- Mutate the query to the corresponding state
+                let facetKey = facet.key;
+                if (facet.nested === false) {
+                    if (query[facetKey] === undefined) {
+                        query[facetKey] = {"$in": [valueName]};
+                    } else if (query[facetKey]['$in'].includes(valueName)) {
+                        // Remove element from array
+                        query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== valueName);
+                        if (query[facetKey]['$in'].length === 0) {
+                            delete query[facetKey];
+                        }
+                    } else {
+                        query[facetKey]['$in'].push(valueName);
+                    }
+                } else {
+                    facetKey = facetKey + '.edges';
+                    let nestedKey = 'node.' + facet.nestedKey;
+                    if (query[facetKey] === undefined) {
+                        query[facetKey] = {'$elemMatch': {}};
+                        query[facetKey]['$elemMatch'][nestedKey] = {"$in": [valueName]};
+                    } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(valueName)) {
+                        query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== valueName);
+                        if (query[facetKey]['$elemMatch'][nestedKey]['$in'].length === 0) {
+                            delete query[facetKey];
+                        }
+                    } else {
+                        query[facetKey]['$elemMatch'][nestedKey]['$in'].push(valueName);
+                    }
+                }
+                this.updateQuery(query);
+            },
+            */
         async deleteQuery(query, rootState) {
             await cfgQueries.remove({'_id': query._id});
             this.refreshQueries();
@@ -137,6 +138,20 @@ export default {
         async refreshIssues(payload, rootState) {
             let issues = cfgIssues.find(rootState.issuesView.query).fetch();
             this.setIssues(issues);
+            this.setFilteredIssues(issues);
+            this.setFilteredIssuesSearch('');
+        },
+
+        async searchIssues(searchString, rootState) {
+            let issues = rootState.issuesView.issues;
+            this.setFilteredIssues(issues.filter((issue) => {
+                if (issue.repo.name === searchString) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }));
+            this.setFilteredIssuesSearch(searchString);
         },
 
         async refreshSummary(payload, rootState) {

@@ -18,6 +18,7 @@ import { cfgSources } from "../../../data/Minimongo.js";
 const styles = theme => ({
     root: {
         margin: '10px',
+        width: '100%',
     },
     title: {
         fontSize: 14,
@@ -45,8 +46,9 @@ class ScanOrgs extends Component {
     }
 
     componentDidMount() {
-        const { setLoadFlag } = this.props;
+        const { setLoadFlag, connectedUser, setLogin } = this.props;
         if (cfgSources.find({}).count() === 0) {
+            setLogin(connectedUser.login);
             setLoadFlag(true);
         }
     }
@@ -62,7 +64,8 @@ class ScanOrgs extends Component {
     };
 
     reloadRepos = () => {
-        const { setLoadFlag } = this.props;
+        const { setLoadFlag, connectedUser, setLogin } = this.props;
+        setLogin(connectedUser.login);
         setLoadFlag(true);
     };
 
@@ -87,8 +90,8 @@ class ScanOrgs extends Component {
                     {!loading &&
                         <CardActions className={classes.cardActions} >
                                 <div className={classes.actionButtons} >
-                                    <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
-                                        Add All
+                                    <Button color="primary" variant="contained" className={classes.button} onClick={this.reloadRepos}>
+                                        Scan and Add All
                                     </Button>
                                 </div>
                         </CardActions>
@@ -122,9 +125,12 @@ const mapState = state => ({
     loadSuccess: state.githubFetchOrgs.loadSuccess,
     loadedOrgs: state.githubFetchOrgs.loadedOrgs,
     loadedRepos: state.githubFetchOrgs.loadedRepos,
+
+    connectedUser: state.usersView.connectedUser,
 });
 
 const mapDispatch = dispatch => ({
+    setLogin: dispatch.githubFetchOrgs.setLogin,
     setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
     setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
 });

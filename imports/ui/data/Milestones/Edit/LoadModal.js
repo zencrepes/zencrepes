@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
@@ -24,7 +24,7 @@ class LoadModal extends Component {
     }
 
     render() {
-        const { classes, loading, loadedCount } = this.props;
+        const { classes, loading } = this.props;
 
         return (
             <div className={classes.root}>

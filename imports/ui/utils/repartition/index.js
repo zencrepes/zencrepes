@@ -125,12 +125,29 @@ export const getRepositories = (issues) => {
 };
 /*
 *
-* getRepositoriesRepartition() Take a list of issues and returns repartition by repository
+* getRepositoriesRepartition() Take a list of milestones and issues and returns repartition by repository
 *
 * Arguments:
 * - issues: Array of issues
 */
-export const getRepositoriesRepartition = (issues) => {
+export const getRepositoriesRepartition = (milestones, issues) => {
+    const repos = milestones.map((ms) => {
+        let issuesList = issues.filter(issue => ms.repo.id === issue.repo.id);
+        console.log(ms);
+        console.log(issuesList);
+        return {
+            ...ms,
+            issues: {
+                totalCount: ms.issues.totalCount,
+                list: issuesList,
+                count: issuesList.length
+            },
+            points: {
+                count: issuesList.map(issue => issue.points). reduce((acc, count) => acc + count, 0)
+            }
+        }
+    });
+    /*
     let repos = [];
     statesGroup = _.groupBy(issues, (value) => value.repo.name);
     Object.keys(statesGroup).forEach(function(key) {
@@ -148,6 +165,7 @@ export const getRepositoriesRepartition = (issues) => {
             },
         });
     });
+    */
     return repos;
 };
 

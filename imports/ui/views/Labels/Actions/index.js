@@ -8,6 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import Refresh from './Refresh.js';
+import RefreshLabels from './RefreshLabels.js';
 
 const styles = theme => ({
     root: {
@@ -47,6 +48,7 @@ class Actions extends Component {
                             <Refresh
                                 setLoadFlag={setLoadFlag}
                             />
+                            <RefreshLabels />
                         </div>
                     </Toolbar>
                 </AppBar>

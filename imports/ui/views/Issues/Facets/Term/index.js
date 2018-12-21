@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import List from 'material-ui/List';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
 
 import FacetSelector from './FacetSelector.js';
 
@@ -13,21 +13,37 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Grid from '@material-ui/core/Grid';
+
+import red from '@material-ui/core/colors/red';
+import blue from '@material-ui/core/colors/blue';
+
 
 const styles = theme => ({
     root: {
         marginBottom: '10px',
     },
-    card: {
-        padding: '0px',
-    },
     cardContent: {
         padding: '0px',
-    },
-    cardHeader: {
-        padding: '5px',
     }
 });
+
+const cardStyle = {
+    borderLeft: '4px solid ' + blue[900],
+    borderTop: '1px solid #ccc',
+    borderRadius: '0px',
+    background: '#fafafa',
+}
+
+const cardHeaderStyle = {
+    padding: '5px 2px 5px 5px',
+    fontSize: '1.2rem',
+    fontWeight: '300',
+};
+
+const cardContentStyle = {
+    padding: '0px',
+};
 
 const ExpandButton = (props) => {
     if (props.collapsed && props.length > 5) {
@@ -98,9 +114,11 @@ class TermFacet extends Component {
 
         return (
             <div className={classes.root}>
-                <Card className={classes.card}>
-                    <CardHeader title={facet.name} className={classes.cardHeader} />
-                    <CardContent className={classes.cardContent}>
+                <Card style={cardStyle}>
+                    <CardContent style={cardHeaderStyle}>
+                        <span>{facet.name}</span>
+                    </CardContent>
+                    <CardContent style={cardContentStyle}>
                         <List dense={this.state.dense}>
                             {facetsData.map(value => (
                                 <FacetSelector
@@ -114,14 +132,31 @@ class TermFacet extends Component {
                         </List>
                     </CardContent>
                     <CardActions>
-                        <ExpandButton collapsed={collapsed} length={facet.values.length} classes={classes} onClick={this.collapseFacet}/>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={8}
+                        >
+                            <Grid item xs={12} sm container>
+                            </Grid>
+                            <Grid item>
+                                <ExpandButton collapsed={collapsed} length={facet.values.length} classes={classes} onClick={this.collapseFacet}/>
+                            </Grid>
+                        </Grid>
                     </CardActions>
                 </Card>
             </div>
         );
     }
 }
-
+//                    <CardHeader title={facet.name} className={classes.cardHeader} />
+/*
+classes={{
+                            root: classes.cardHeader
+                        }}
+ */
 TermFacet.propTypes = {
     classes: PropTypes.object.isRequired,
 };

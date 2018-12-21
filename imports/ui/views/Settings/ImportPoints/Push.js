@@ -81,7 +81,7 @@ class Push extends Component {
                             Push points to GitHub as labels
                         </Typography>
                         <Typography>
-                            Attach the 'SP:X' label to all issues for which points have been imported from ZenHub or Waffle and push back to Github.
+                            Attach the 'SP:X' label to all issues for which points have been imported from ZenHub or Waffle and push back to GitHub.
                         </Typography>
                         {loading &&
                         <div className={classes.loading}>
@@ -95,7 +95,7 @@ class Push extends Component {
                     {!loading &&
                     <CardActions className={classes.cardActions} >
                         <div className={classes.actionButtons} >
-                            <Button color="primary" variant="raised" className={classes.button} onClick={this.reloadRepos}>
+                            <Button color="primary" variant="contained" className={classes.button} onClick={this.reloadRepos}>
                                 Push Points
                             </Button>
                         </div>
