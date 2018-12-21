@@ -1,13 +1,12 @@
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import { cfgSources } from './Minimongo.js';
 import { cfgIssues } from "./Minimongo.js";
 
 import axios from 'axios';
+import PropTypes from "prop-types";
 
 /*
 Load data about GitHub Orgs
@@ -18,24 +17,24 @@ class FetchWafflePoints extends Component {
         this.repositories = [];
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('FetchZenhubPoints - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     // Component should only be updated if loadflag move from false to true (request to load data).
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         const { loadFlag } = this.props;
         if (!loadFlag && nextProps.loadFlag) {
             return true;
         } else {
             return false;
         }
-    };
+    }
 
     getApiFromBoard = (url) => {
         /*
@@ -62,7 +61,7 @@ class FetchWafflePoints extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadError, setMessage, setLoadSuccess, setLoadedIssues, boardUrl } = this.props;
+        const { setLoading, setLoadError, setLoadSuccess, setLoadedIssues, boardUrl } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -91,7 +90,17 @@ class FetchWafflePoints extends Component {
 }
 
 FetchWafflePoints.propTypes = {
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
+    boardUrl: PropTypes.string,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setMessage: PropTypes.func,
+    setLoadedIssues: PropTypes.func,
+    setIncrementLoadedIssues: PropTypes.func,
 };
 
 const mapState = state => ({

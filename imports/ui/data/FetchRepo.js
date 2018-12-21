@@ -17,14 +17,14 @@ class FetchRepo extends Component {
         this.repositories = [];
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('ScanOrg - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
         const { client, updateChip, setLoading, setLoadError, setLoadSuccess, orgName, repoName, setRepoData } = this.props;
@@ -75,7 +75,17 @@ class FetchRepo extends Component {
 }
 
 FetchRepo.propTypes = {
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
+    orgName: PropTypes.string,
+    repoName: PropTypes.string,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    updateChip: PropTypes.func,
+    setRepoData: PropTypes.func,
 };
 
 const mapState = state => ({

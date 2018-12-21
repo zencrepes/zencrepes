@@ -18,24 +18,24 @@ class FetchZenhubPoints extends Component {
         this.repositories = [];
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('FetchZenhubPoints - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     // Component should only be updated if loadflag move from false to true (request to load data).
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         const { loadFlag } = this.props;
         if (!loadFlag && nextProps.loadFlag) {
             return true;
         } else {
             return false;
         }
-    };
+    }
 
     sleep = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -129,7 +129,7 @@ class FetchZenhubPoints extends Component {
     };
 
     load = async () => {
-        const { client, updateChip, setLoading, setLoadError, setMessage, setLoadSuccess, setLoadedIssues, setRateLimitUsed } = this.props;
+        const { setLoading, setLoadError, setMessage, setLoadSuccess, setLoadedIssues, setRateLimitUsed } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -163,7 +163,23 @@ class FetchZenhubPoints extends Component {
 }
 
 FetchZenhubPoints.propTypes = {
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
+    rateLimitMax: PropTypes.number,
+    rateLimitUsed: PropTypes.number,
+    rateLimitPause: PropTypes.number,
+    token: PropTypes.string,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setMessage: PropTypes.func,
+    setRateLimitUsed: PropTypes.func,
+    setLoadedIssues: PropTypes.func,
+    setIncrementLoadedIssues: PropTypes.func,
+    setPaused: PropTypes.func,
+    updateChip: PropTypes.func,
 };
 
 const mapState = state => ({

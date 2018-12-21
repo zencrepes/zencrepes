@@ -1,17 +1,14 @@
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
 import GET_GITHUB_MILESTONES from '../../graphql/getMilestones.graphql';
 
-import { cfgIssues } from './Minimongo.js';
-import { cfgLabels } from './Minimongo.js';
-import { cfgSources } from './Minimongo.js';
-import { cfgMilestones } from './Minimongo.js';
+import { cfgSources, cfgMilestones } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+import PropTypes from "prop-types";
 
 class FetchReposMilestones extends Component {
     constructor (props) {
@@ -20,7 +17,7 @@ class FetchReposMilestones extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
+    componentDidUpdate = () => {
         const { setLoadFlag, loadFlag, loading} = this.props;
         console.log(loadFlag);
         if (loadFlag === true && loading === false) {
@@ -30,7 +27,7 @@ class FetchReposMilestones extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setLoadError } = this.props;
+        const { setLoading, setLoadSuccess } = this.props;
         setLoading(true);  // Set to true to indicate milestones are actually loading.
 
         for (let repo of cfgSources.find({}).fetch()) {
@@ -78,7 +75,7 @@ class FetchReposMilestones extends Component {
                     if (data.data.repository !== null && data.data.repository.milestones.edges.length > 0) {
                         //data.data.repository.milestones.totalCount;
                         // Refresh the repository with the updated milestones count
-                        let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'milestones.totalCount': data.data.repository.milestones.totalCount}});
+                        cfgSources.update({'id': repoObj.id}, {$set: {'milestones.totalCount': data.data.repository.milestones.totalCount}});
 
                         let lastCursor = await this.ingestMilestones(data, repoObj);
                         let loadedMilestonesCount = cfgMilestones.find({'repo.id': repoObj.id, 'refreshed': true}).count();
@@ -108,7 +105,7 @@ class FetchReposMilestones extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
-        for (let [key, currentMilestone] of Object.entries(data.data.repository.milestones.edges)){
+        for (let currentMilestone of Object.entries(data.data.repository.milestones.edges)){
             console.log('Loading milestone: ' + currentMilestone.node.title);
             let existNode = cfgMilestones.findOne({id: currentMilestone.node.id});
             let exitsNodeUpdateAt = null;
@@ -126,12 +123,6 @@ class FetchReposMilestones extends Component {
                 }
             } else {
                 console.log('New or updated milestone');
-                let nodePinned = false;
-                let nodePoints = null;
-                if (existNode !== undefined) {
-                    nodePinned = existNode.pinned;
-                    nodePoints = existNode.points;
-                }
                 let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
                 milestoneObj['repo'] = repoObj;
                 milestoneObj['org'] = repoObj.org;
@@ -163,7 +154,15 @@ class FetchReposMilestones extends Component {
 }
 
 FetchReposMilestones.propTypes = {
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
 
+
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    incLoadedCount: PropTypes.func,
+    updateChip: PropTypes.func,
 };
 
 const mapState = state => ({

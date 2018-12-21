@@ -13,7 +13,6 @@ import GET_GITHUB_USER_REPOS from '../../graphql/getUserRepos.graphql';
 import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
-import {cfgLabels} from "./Minimongo";
 
 /*
 Load data about GitHub Orgs
@@ -27,7 +26,7 @@ class FetchOrgs extends Component {
         this.state = {};
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('Repos - Initiating load');
@@ -35,7 +34,7 @@ class FetchOrgs extends Component {
             this.resetCounts();     // Reset all counts since those will be refresh by loadIssues
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     resetCounts = () => {
         const { setLoadedOrgs, setLoadedRepos, setLoadSuccess} = this.props;
@@ -99,7 +98,7 @@ class FetchOrgs extends Component {
         const { setIncrementLoadedOrgs } = this.props;
 
         let lastCursor = null;
-        for (let [key, currentOrg] of Object.entries(data.data.viewer.organizations.edges)){
+        for (let currentOrg of Object.entries(data.data.viewer.organizations.edges)){
             this.githubOrgs.push(currentOrg.node);
             lastCursor = currentOrg.cursor;
         }
@@ -149,7 +148,7 @@ class FetchOrgs extends Component {
         const { setIncrementLoadedRepos } = this.props;
 
         let lastCursor = null;
-        for (let [key, currentRepo] of Object.entries(repositories.edges)){
+        for (let currentRepo of Object.entries(repositories.edges)){
             console.log('Inserting: ' + currentRepo.node.name);
             let existNode = cfgSources.findOne({id: currentRepo.node.id});
             let nodeActive = false;
@@ -179,7 +178,20 @@ class FetchOrgs extends Component {
 }
 
 FetchOrgs.propTypes = {
+    login: PropTypes.string,
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    updateChip: PropTypes.func,
+
+    setLoadedOrgs: PropTypes.func,
+    setLoadedRepos: PropTypes.func,
+    setIncrementLoadedOrgs: PropTypes.func,
+    setIncrementLoadedRepos: PropTypes.func,
 };
 
 const mapState = state => ({
