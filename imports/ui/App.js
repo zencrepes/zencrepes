@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import autoBind from 'react-autobind';
 import {connect} from "react-redux";
 
 import Login from './views/Login/index.js';
 import Wizard from './views/Wizard/index.js';
 import Sprints from './views/Sprints/index.js';
-import Settings from './views/Settings/index.js';;
+import Settings from './views/Settings/index.js';
 import Labels from './views/Labels/index.js';
 import LabelEdit from './views/Labels/Edit/index.js';
 
@@ -42,7 +42,7 @@ class App extends Component {
 
     setAfterLoginPath(afterLoginPath) {
         this.setState({ afterLoginPath });
-    };
+    }
 
     render() {
         const { props, state, setAfterLoginPath } = this;
@@ -114,8 +114,7 @@ const mapState = state => ({
 });
 
 export default
-    connect(mapState, null)
-    (
+    connect(mapState, null)(
         withTracker(() => {
             const loggingIn = Meteor.loggingIn();
             const user = Meteor.user();
@@ -134,6 +133,5 @@ export default
                 emailAddress,
                 emailVerified: user && user.emails ? user && user.emails && user.emails[0].verified : true,
             };
-        })
-        (App)
+        })(App)
     );

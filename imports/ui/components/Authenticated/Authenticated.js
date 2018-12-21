@@ -4,11 +4,17 @@ import { Route, Redirect } from 'react-router-dom';
 
 import {cfgSources} from "../../data/Minimongo.js";
 import {cfgIssues} from "../../data/Minimongo.js";
+import autoBind from "react-autobind";
 
 class Authenticated extends React.Component {
+    constructor(props) {
+        super(props);
+        props.setAfterLoginPath(`${window.location.pathname}${window.location.search}`);
+    }
+    /*
     componentWillMount() {
         this.props.setAfterLoginPath(`${window.location.pathname}${window.location.search}`);
-    }
+    }*/
 
     render() {
         const {loggingIn, authenticated, component, path, exact, ...rest} = this.props;
