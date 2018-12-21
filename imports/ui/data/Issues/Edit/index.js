@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
-
-import PropTypes from "prop-types";
 
 import Verification from './Verification.js';
 import LoadSnackbar from './LoadSnackbar/index.js';
@@ -29,12 +24,4 @@ IssuesEdit.propTypes = {
 
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(IssuesEdit);
+export default IssuesEdit;
