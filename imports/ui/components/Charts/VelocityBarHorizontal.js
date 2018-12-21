@@ -1,28 +1,19 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-
-import {
-    withRouter
-} from 'react-router-dom';
-
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 
 import { ResponsiveBar } from '@nivo/bar'
 
-const styles = theme => ({
+const styles = {
     root: {
         height: '150px'
     },
-});
+};
 
 class VelocityBarHorizontal extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     render() {
@@ -118,22 +109,9 @@ class VelocityBarHorizontal extends Component {
 
 VelocityBarHorizontal.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.array,
 };
 
-const mapDispatch = dispatch => ({
-});
+export default withStyles(styles)(VelocityBarHorizontal);
 
-
-const mapState = state => ({
-});
-
-
-export default
-    connect(mapState, mapDispatch)
-    (
-            withRouter
-            (
-                withStyles(styles)(VelocityBarHorizontal)
-            )
-    );
 

@@ -1,30 +1,19 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-
-import {
-    withRouter
-} from 'react-router-dom';
-
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 
 import { ResponsiveLine } from '@nivo/line'
 
-import {getWeekYear} from "../../utils/velocity/index";
-
-const styles = theme => ({
+const styles = {
     root: {
         height: '75px'
     },
-});
+};
 
 class VelocityLine extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     render() {
@@ -77,24 +66,7 @@ class VelocityLine extends Component {
 
 VelocityLine.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.array,
 };
 
-const mapDispatch = dispatch => ({
-
-});
-
-
-const mapState = state => ({
-
-});
-
-
-export default
-    connect(mapState, mapDispatch)
-    (
-            withRouter
-            (
-                withStyles(styles)(VelocityLine)
-            )
-    );
-
+export default withStyles(styles)(VelocityLine);

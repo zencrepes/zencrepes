@@ -1,20 +1,9 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
-
 import PropTypes from "prop-types";
 
 import {getWeekYear} from "../../../utils/velocity/index";
-
 import CustomCard from '../../CustomCard/index.js';
-
 import CombinationChart from "./CombinationChart.js";
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class VelocityDays extends Component {
     constructor(props) {
@@ -81,11 +70,10 @@ class VelocityDays extends Component {
         } else {
             return 'Tkts';
         }
-    };
-
+    }
 
     render() {
-        const { classes, defaultPoints } = this.props;
+        const { defaultPoints } = this.props;
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
@@ -106,7 +94,8 @@ class VelocityDays extends Component {
 }
 
 VelocityDays.propTypes = {
-    classes: PropTypes.object,
+    defaultPoints: PropTypes.bool,
+    velocity: PropTypes.object,
 };
 
-export default withStyles(styles)(VelocityDays);
+export default VelocityDays;

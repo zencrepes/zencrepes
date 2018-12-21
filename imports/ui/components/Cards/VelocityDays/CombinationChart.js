@@ -1,26 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
-import { withStyles } from '@material-ui/core/styles';
-
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-//require('highcharts/highcharts-more')(Highcharts);
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-    toolbarButtons: {
-        flex: 1,
-    },
-});
 
 class CombinationChart extends Component {
     constructor(props) {
@@ -33,7 +15,7 @@ class CombinationChart extends Component {
     };
 
     render() {
-        const { classes, dataset, metric } = this.props;
+        const { dataset, metric } = this.props;
         console.log(dataset);
         let updatedOptions = {
             chart: {
@@ -118,7 +100,10 @@ class CombinationChart extends Component {
 }
 
 CombinationChart.propTypes = {
-    classes: PropTypes.object,
+    completed: PropTypes.number,
+    max: PropTypes.number,
+    dataset: PropTypes.array,
+    metric: PropTypes.string,
 };
 
-export default withStyles(styles)(CombinationChart);
+export default CombinationChart;
