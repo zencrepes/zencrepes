@@ -1,6 +1,6 @@
 # Overview
 
-zCrepes has been created to provide greater insight in a team's operation while using Github issues across multiple organizations and multiple repositories. 
+ZenCrepes has been created to provide greater insight in a team's operation while using Github issues across multiple organizations and multiple repositories. 
 
 It is built around 5 major sections:
 * __Issues__: Using faceted search, quickly visualize metrics of interest over all or a subset of GitHub issues

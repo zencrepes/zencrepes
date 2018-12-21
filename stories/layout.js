@@ -8,7 +8,7 @@ import { init } from "@rematch/core";
 
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
-import General from '../imports/ui/layouts/General/index.js';
+//import General from '../imports/ui/layouts/General/index.js';
 import CustomCard from '../imports/ui/components/CustomCard/index.js';
 
 import Terms from '../imports/ui/views/Terms/index.js';
