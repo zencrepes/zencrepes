@@ -135,7 +135,7 @@ CombinationChart.propTypes = {
     classes: PropTypes.object,
     completed: PropTypes.number,
     max: PropTypes.number,
-    history: PropTypes.array,
+    history: PropTypes.object,
     dataset: PropTypes.array,
     metric: PropTypes.string,
 };

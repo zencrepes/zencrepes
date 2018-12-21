@@ -110,7 +110,7 @@ CustomCard.propTypes = {
     headerTitle: PropTypes.string,
     headerIcon: PropTypes.object,
     headerFactTitle: PropTypes.string,
-    headerFactValue: PropTypes.object,
+    headerFactValue: PropTypes.string,
     children: PropTypes.object,
 };
 

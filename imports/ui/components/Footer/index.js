@@ -6,18 +6,14 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
 import Grid from '@material-ui/core/Grid';
 import { GithubCircle } from 'mdi-material-ui'
 import {Link, withRouter} from "react-router-dom";
-import EditIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 import GitRequests from '../Github/GitRequests.js';
 
-const styles = theme => ({
+const styles = {
     toolbarTitle: {
         flex: 1,
     },
@@ -42,7 +38,7 @@ const styles = theme => ({
         fontFamily: 'Roboto',
         fontWeight: 400,
     },
-});
+};
 
 class Footer extends Component {
     constructor (props) {
@@ -50,7 +46,7 @@ class Footer extends Component {
     }
 
     render() {
-        const { classes, children } = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
                 <AppBar position="static" color="default" >
@@ -100,7 +96,5 @@ class Footer extends Component {
 Footer.propTypes = {
     classes: PropTypes.object.isRequired,
 };
-
-//export default withStyles(styles)(Footer);
 
 export default withRouter(withStyles(styles)(Footer))
