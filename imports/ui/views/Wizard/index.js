@@ -4,43 +4,18 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-
-import wizardViewStyle from "../../assets/jss/thatapp/views/wizard.jsx";
-import Footer from "../../components/Footer/index.js";
-import GridContainer from "../../components/Grid/GridContainer.js";
-import GridItem from "../../components/Grid/GridItem.js";
-import Card from "../../components/Card/Card.js";
-
+import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
-import GitRequests from '../../components/Github/GitRequests.js';
 import General from "../../layouts/General/index.js";
 
 import WizardStepper from './WizardStepper.js';
-
 import Step1 from './Step1/index.js';
 import Step2 from './Step2/index.js';
 import Step3 from './Step3/index.js';
 import Step4 from './Step4/index.js';
 import PropTypes from "prop-types";
-
-/*
-const styles = theme => ({
-    root: {
-        width: '90%',
-    },
-    button: {
-        marginRight: theme.spacing.unit,
-    },
-    instructions: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-    },
-});
-*/
 
 const styles = theme => ({
     '@global': {

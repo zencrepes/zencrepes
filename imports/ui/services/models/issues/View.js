@@ -58,22 +58,14 @@ export default {
     effects: {
         async updateQuery(query, rootState) {
             console.log('updateQuery: ' + JSON.stringify(query));
-            this.setQuery(query);
+            if (query === null) {this.setQuery({});}
+            else {this.setQuery(query);}
 
             // Check if the query doesn't return any issues with points, set default back to issues count.
             const pointsQuery = {...query, points: {$gt: 0}};
             if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);}
 
             this.updateView();
-            /*
-            this.refreshQueries();
-            this.refreshFacets();
-            this.refreshIssues();
-
-            this.setShouldBurndownDataReload(true);
-            this.refreshSummary();
-            this.refreshVelocity();
-            */
         },
 
         async updateView(payload, rootState) {
