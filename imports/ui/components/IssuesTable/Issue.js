@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
 
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from "@material-ui/core/Grid/Grid";
 import Chip from '@material-ui/core/Chip';
@@ -17,20 +14,10 @@ import CheckIcon from '@material-ui/icons/Check';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
-import Button from '@material-ui/core/Button';
 
 import Moment from 'react-moment';
 
 const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
     repoName: {
         color: '#586069!important',
         fontSize: '16px',
@@ -120,10 +107,10 @@ class Issue extends Component {
                                 spacing={8}
                             >
                                 <Grid item >
-                                    <a href={issue.repo.url} className={classes.repoName} target="_blank">{issue.org.login}/{issue.repo.name}</a>
+                                    <a href={issue.repo.url} className={classes.repoName} target="_blank" rel="noopener noreferrer">{issue.org.login}/{issue.repo.name}</a>
                                 </Grid>
                                 <Grid item xs={12} sm container >
-                                    <a href={issue.url} className={classes.issueTitle} target="_blank">{issue.title}</a>
+                                    <a href={issue.url} className={classes.issueTitle} target="_blank" rel="noopener noreferrer">{issue.title}</a>
                                 </Grid>
                             </Grid>
                             <Grid
@@ -134,7 +121,7 @@ class Issue extends Component {
                                 spacing={8}
                             >
                                 <Grid item className={classes.issueSubTitle}>
-                                    <span><a href={issue.url} className={classes.issueSubTitle} target="_blank">#{issue.number}</a> </span>
+                                    <span><a href={issue.url} className={classes.issueSubTitle} target="_blank" rel="noopener noreferrer">#{issue.number}</a> </span>
                                     <span>opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment></span>
                                     {issue.author !== null &&
                                         <span> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a></span>
@@ -201,6 +188,7 @@ class Issue extends Component {
 
 Issue.propTypes = {
     classes: PropTypes.object.isRequired,
+    issue: PropTypes.object,
 };
 
 export default withStyles(styles)(Issue);

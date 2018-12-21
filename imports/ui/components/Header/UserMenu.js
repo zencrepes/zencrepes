@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
@@ -7,17 +9,12 @@ import { withStyles } from '@material-ui/core/styles';
 
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
-
-import { graphql } from 'react-apollo';
-import { Query } from 'react-apollo';
-import { withApollo } from 'react-apollo';
 
 import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
 
@@ -51,7 +48,7 @@ class UserMenu extends Component {
         }
     }
 
-    componentDidMount(prevProps, prevState, snapshot) {
+    componentDidMount() {
         const { connectedUser, setLoadFlag, setLoadUsers } = this.props;
         if (connectedUser === null) {
             setLoadUsers([Meteor.user().services.github.username]);
@@ -147,6 +144,9 @@ class UserMenu extends Component {
 UserMenu.propTypes = {
     classes: PropTypes.object.isRequired,
     updateChip: PropTypes.func,
+    connectedUser:PropTypes.object,
+    setLoadFlag:PropTypes.func,
+    setLoadUsers:PropTypes.func,
 };
 
 const mapState = state => ({

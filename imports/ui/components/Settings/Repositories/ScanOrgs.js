@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -15,7 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { cfgSources } from "../../../data/Minimongo.js";
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
         width: '100%',
@@ -38,7 +36,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'right',
     }
-});
+};
 
 class ScanOrgs extends Component {
     constructor(props) {
@@ -53,7 +51,7 @@ class ScanOrgs extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -61,7 +59,7 @@ class ScanOrgs extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     reloadRepos = () => {
         const { setLoadFlag, connectedUser, setLogin } = this.props;
@@ -118,6 +116,8 @@ ScanOrgs.propTypes = {
     loadedRepos: PropTypes.number,
     setLoadFlag: PropTypes.func,
     setLoadSuccess: PropTypes.func,
+    connectedUser: PropTypes.object,
+    setLogin: PropTypes.func,
 };
 
 const mapState = state => ({

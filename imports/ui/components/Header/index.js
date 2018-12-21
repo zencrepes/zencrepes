@@ -1,7 +1,9 @@
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import {BrowserRouter as Router, Link, Route, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,18 +13,13 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-import { withTracker } from 'meteor/react-meteor-data';
 
 import {
     Settings,
     Calendar,
-    ChartLine,
-    ChartHistogram,
     ViewDashboard,
     Label,
-    AutoFix,
     RunFast,
-    GithubCircle
 } from 'mdi-material-ui';
 
 import UserMenu from './UserMenu.js';
@@ -119,6 +116,7 @@ class Header extends Component {
 
 Header.propTypes = {
     classes: PropTypes.object.isRequired,
+    authenticated: PropTypes.bool,
 };
 
 export default (

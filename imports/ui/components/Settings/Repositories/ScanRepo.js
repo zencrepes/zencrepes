@@ -43,7 +43,7 @@ class ScanRepo extends Component {
         super(props);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess, setOrgName, setRepoName } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -53,7 +53,7 @@ class ScanRepo extends Component {
                 setRepoName('');
             }, 2000);
         }
-    };
+    }
 
     changeOrgName = name => event => {
         const { setOrgName } = this.props;

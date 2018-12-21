@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
 
 import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
@@ -44,7 +42,7 @@ class TablePaginationActions extends Component {
     };
 
     render() {
-        const { classes, count, page, rowsPerPage, theme } = this.props;
+        const { classes, count, page, rowsPerPage } = this.props;
         return (
             <div className={classes.root}>
                 <IconButton
@@ -82,6 +80,10 @@ class TablePaginationActions extends Component {
 
 TablePaginationActions.propTypes = {
     classes: PropTypes.object.isRequired,
+    count: PropTypes.number,
+    page: PropTypes.number,
+    rowsPerPage: PropTypes.number,
+    onChangePage: PropTypes.func,
 };
 
 export default withStyles(actionsStyles)(TablePaginationActions);

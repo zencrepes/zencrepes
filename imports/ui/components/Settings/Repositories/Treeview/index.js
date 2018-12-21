@@ -1,24 +1,21 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
-import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
 import { cfgSources } from "../../../../data/Minimongo.js";
+
 import Card from "@material-ui/core/Card";
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from "@material-ui/core/CardContent";
 import Typography from '@material-ui/core/Typography';
 
 import Stats from './Stats.js';
 import Tree from './Tree.js';
-import {withRouter} from "react-router-dom";
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -32,7 +29,7 @@ const styles = theme => ({
     cardContent: {
         paddingBottom: '0px',
     },
-});
+};
 
 class Treeview extends Component {
     constructor(props) {
@@ -51,9 +48,9 @@ class Treeview extends Component {
             nodes: this.getData(),
             checked: cfgSources.find(selected).fetch().map(repo => repo.id),
         });
-    };
+    }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps, prevState) {
         const { selected } = this.props;
         const updatedNodes = this.getData();
         if (!_.isEqual(updatedNodes, prevState.nodes)) {
@@ -62,7 +59,7 @@ class Treeview extends Component {
                 checked: cfgSources.find(selected).fetch().map(repo => repo.id),
             });
         }
-    };
+    }
 
     checkNode = async (checked) => {
         const { all, enable, disable } = this.props;
@@ -90,7 +87,7 @@ class Treeview extends Component {
             };
         });
         return data;
-    };
+    }
 
     render() {
         const { classes, all, selected, enable, disable } = this.props;
@@ -112,6 +109,10 @@ class Treeview extends Component {
 
 Treeview.propTypes = {
     classes: PropTypes.object,
+    all: PropTypes.object,
+    enable: PropTypes.object,
+    disable: PropTypes.object,
+    selected: PropTypes.object,
 };
 
 const mapState = state => ({

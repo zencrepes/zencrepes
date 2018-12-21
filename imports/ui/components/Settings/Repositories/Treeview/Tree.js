@@ -1,17 +1,11 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
-import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
 import { cfgSources } from "../../../../data/Minimongo.js";
-
-const styles = theme => ({
-});
 
 class Treeview extends Component {
     constructor(props) {
@@ -30,7 +24,7 @@ class Treeview extends Component {
             nodes: this.getData(),
             checked: cfgSources.find(selected).fetch().map(repo => repo.id),
         });
-    };
+    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { selected } = this.props;
@@ -41,7 +35,7 @@ class Treeview extends Component {
                 checked: cfgSources.find(selected).fetch().map(repo => repo.id),
             });
         }
-    };
+    }
 
     checkNode = async (checked) => {
         const { all, enable, disable } = this.props;
@@ -69,10 +63,9 @@ class Treeview extends Component {
             };
         });
         return data;
-    };
+    }
 
     render() {
-        const { classes } = this.props;
         return (
             <CheckboxTree
                 nodes={this.state.nodes}
@@ -86,7 +79,10 @@ class Treeview extends Component {
 }
 
 Treeview.propTypes = {
-    classes: PropTypes.object,
+    all: PropTypes.object,
+    enable: PropTypes.object,
+    disable: PropTypes.object,
+    selected: PropTypes.object,
 };
 
-export default withStyles(styles)(Treeview);
+export default Treeview;

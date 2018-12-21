@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -17,19 +12,6 @@ import TablePaginationActions from './TablePaginationActions.js';
 import Issue from './Issue.js';
 
 import Header from './Header/index.js';
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class IssuesTable extends Component {
     constructor (props) {
@@ -49,7 +31,7 @@ class IssuesTable extends Component {
     };
 
     render() {
-        const { classes, filteredIssues, pagination } = this.props;
+        const { filteredIssues, pagination } = this.props;
         const { rowsPerPage, page } = this.state;
 
         let emptyRows = 0;
@@ -63,46 +45,45 @@ class IssuesTable extends Component {
         }
 
         return (
-            <div className={classes.root}>
-                <Table className={classes.table}>
-                    <Header
-                        filteredIssues={filteredIssues}
-                    />
-                    <TableBody>
-                        {issues.map(issue => {
-                            return (
-                                <Issue issue={issue} key={issue.id} />
-                            );
-                        })}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 48 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                    {pagination === true &&
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    colSpan={3}
-                                    count={filteredIssues.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onChangePage={this.handleChangePage}
-                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
-                    }
-                </Table>
-            </div>
+            <Table>
+                <Header
+                    filteredIssues={filteredIssues}
+                />
+                <TableBody>
+                    {issues.map(issue => {
+                        return (
+                            <Issue issue={issue} key={issue.id} />
+                        );
+                    })}
+                    {emptyRows > 0 && (
+                        <TableRow style={{ height: 48 * emptyRows }}>
+                            <TableCell colSpan={6} />
+                        </TableRow>
+                    )}
+                </TableBody>
+                {pagination === true &&
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                colSpan={3}
+                                count={filteredIssues.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={this.handleChangePage}
+                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                ActionsComponent={TablePaginationActions}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                }
+            </Table>
         );
     }
 }
 
 IssuesTable.propTypes = {
-    classes: PropTypes.object.isRequired,
+    filteredIssues: PropTypes.array,
+    pagination: PropTypes.bool,
 };
 
-export default withStyles(styles)(IssuesTable);
+export default IssuesTable;

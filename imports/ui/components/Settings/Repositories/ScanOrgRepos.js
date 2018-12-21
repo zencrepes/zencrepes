@@ -46,7 +46,7 @@ class ScanOrgRepos extends Component {
         super(props);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess, setName } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -55,7 +55,7 @@ class ScanOrgRepos extends Component {
                 setName('');
             }, 2000);
         }
-    };
+    }
 
     handleChange = name => event => {
         const { setName } = this.props;
