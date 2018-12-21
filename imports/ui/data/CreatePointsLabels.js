@@ -1,16 +1,15 @@
-import { Component } from 'react'
+import _ from 'lodash';
+import { Meteor } from 'meteor/meteor';
 
-import PropTypes from 'prop-types';
+import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_SINGLEREPO from '../../graphql/getSingleRepo.graphql';
-
-import { cfgSources } from './Minimongo.js';
-import {cfgLabels} from "./Minimongo";
+import { cfgSources, cfgLabels  } from './Minimongo.js';
 import fibonacci from "fibonacci-fast";
 
 import GitHubApi from '@octokit/rest';
+import PropTypes from "prop-types";
 
 
 /*
@@ -28,17 +27,17 @@ class CreatePointsLabels extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('CreatePointsLabels - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, maxPoints, action, color, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
+        const { setChipRemaining, setLoading, setLoadError, setLoadSuccess, maxPoints, action, color, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -133,7 +132,22 @@ class CreatePointsLabels extends Component {
 }
 
 CreatePointsLabels.propTypes = {
+    loadFlag: PropTypes.bool,
+    loading: PropTypes.bool,
+    action: PropTypes.string,
+    maxPoints: PropTypes.number,
+    color: PropTypes.string,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setCreatedLabels: PropTypes.func,
+    setUpdatedRepos: PropTypes.func,
+    setIncrementCreatedLabels: PropTypes.func,
+    setIncrementUpdatedRepos: PropTypes.func,
+    updateChip: PropTypes.func,
+    setChipRemaining: PropTypes.func,
 };
 
 const mapState = state => ({
@@ -143,7 +157,6 @@ const mapState = state => ({
 
     maxPoints: state.githubLabels.maxPoints,
     color: state.githubLabels.color,
-
 });
 
 const mapDispatch = dispatch => ({
@@ -159,7 +172,6 @@ const mapDispatch = dispatch => ({
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,
-
 });
 
 export default connect(mapState, mapDispatch)(withApollo(CreatePointsLabels));

@@ -1,16 +1,13 @@
 import { Component } from 'react'
-
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
-
-import Promise from 'bluebird';
 
 import GET_GITHUB_REPOS from '../../graphql/getReposExternal.graphql';
 
 import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
+import PropTypes from "prop-types";
 
 /*
 Load data about GitHub Orgs
@@ -21,14 +18,14 @@ class FetchOrgRepos extends Component {
         this.reposCount = 0;
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('ScanOrg - Initiating load');
             setLoadFlag(false); // Right away set loadRepositories to false
             this.load();           // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
         const { setLoading, name, setLoadSuccess, setLoadError, setAvailableRepos, setLoadedRepos} = this.props;
@@ -81,7 +78,7 @@ class FetchOrgRepos extends Component {
     loadRepositories = async (data) => {
         const { incrementLoadedRepos } = this.props;
         let lastCursor = null;
-        for (let [key, currentRepo] of Object.entries(data.data.organization.repositories.edges)) {
+        for (let currentRepo of Object.entries(data.data.organization.repositories.edges)) {
             console.log('Inserting: ' + currentRepo.node.name);
             let existNode = cfgSources.findOne({id: currentRepo.node.id});
             let nodeActive = false;
@@ -114,7 +111,19 @@ class FetchOrgRepos extends Component {
 }
 
 FetchOrgRepos.propTypes = {
+    loadFlag: PropTypes.bool,
+    loading: PropTypes.bool,
+    name: PropTypes.string,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    updateChip: PropTypes.func,
+
+    setAvailableRepos: PropTypes.func,
+    setLoadedRepos: PropTypes.func,
+    incrementLoadedRepos: PropTypes.func,
 };
 
 const mapState = state => ({
