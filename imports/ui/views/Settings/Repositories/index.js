@@ -4,11 +4,6 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
-import dashboardStyle from "../../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
-
-import GridItem from '../../../components/Grid/GridItem.js';
-import GridContainer from '../../../components/Grid/GridContainer.js';
-
 import FetchOrgRepos  from '../../../data/FetchOrgRepos.js';
 import FetchRepo  from '../../../data/FetchRepo.js';
 import FetchOrgs  from '../../../data/FetchOrgs.js';
@@ -18,11 +13,16 @@ import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos
 import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
 
 import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
-//import Selects from '../../../components/Settings/Load/Selects.js';
 
 import IssuesFetch from '../../../data/Issues/Fetch/index.js';
 
 import Actions from './Actions.js';
+import Grid from "@material-ui/core/Grid/Grid";
+
+const styles = theme => ({
+    root: {
+    },
+});
 
 class Repositories extends Component {
     constructor(props) {
@@ -32,8 +32,14 @@ class Repositories extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <GridContainer>
-                <GridItem xs={12} sm={6} md={6}>
+            <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                spacing={8}
+            >
+                <Grid item xs={6} sm container>
                     <FetchOrgs/>
                     <FetchOrgRepos/>
                     <FetchRepo/>
@@ -41,14 +47,12 @@ class Repositories extends Component {
                     <ScanOrgRepos />
                     <ScanRepo />
                     <IssuesFetch />
-                </GridItem>
-                <GridItem xs={12} sm={6} md={6}>
-                    <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
-                </GridItem>
-                <GridItem xs={12} sm={6} md={6}>
                     <Actions />
-                </GridItem>
-            </GridContainer>
+                </Grid>
+                <Grid item xs={6} sm container>
+                    <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
+                </Grid>
+            </Grid>
         );
     }
 }
@@ -57,4 +61,4 @@ Repositories.propTypes = {
     classes: PropTypes.object,
 };
 
-export default connect(null, null)(withRouter(withStyles(dashboardStyle)(Repositories)));
+export default connect(null, null)(withRouter(withStyles(styles)(Repositories)));

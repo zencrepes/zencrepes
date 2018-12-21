@@ -2,18 +2,15 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
 
-import DaysToCompletion from './DaysToCompletion/index.js';
-import RemainingWork from './RemainingWork/index.js';
-//import VelocityDays from './VelocityDays/index.js';
-//import VelocityWeeks from './VelocityWeeks/index.js';
-
 import VelocityWeeks from '../../../../components/Cards/VelocityWeeks/index.js';
 import VelocityDays from '../../../../components/Cards/VelocityDays/index.js';
+
+import DaysToCompletion from './DaysToCompletion/index.js';
+import RemainingWork from './RemainingWork/index.js';
 
 const styles = theme => ({
     root: {
@@ -27,7 +24,6 @@ const styles = theme => ({
         */
     },
 });
-
 
 class Summary extends Component {
     constructor (props) {

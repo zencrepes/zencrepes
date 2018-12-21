@@ -2,22 +2,11 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
-
 import SquareIcon from 'mdi-react/SquareIcon';
-import PencilIcon from 'mdi-react/PencilIcon';
-import EyeIcon from 'mdi-react/EyeIcon';
 
 import EditIcon from '@material-ui/icons/Edit';
-
-import Card from "../../components/Card/Card";
-import CardHeader from "../../components/Card/CardHeader";
-import CardBody from "../../components/Card/CardBody";
-
-import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 import {
     // State or Local Processing Plugins
@@ -40,11 +29,6 @@ import {
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
     },
 });
 
@@ -236,4 +220,4 @@ LabelsTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(dashboardStyle)(LabelsTable);
+export default withStyles(styles)(LabelsTable);

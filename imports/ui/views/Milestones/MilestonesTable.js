@@ -11,12 +11,6 @@ import SquareIcon from 'mdi-react/SquareIcon';
 import PencilIcon from 'mdi-react/PencilIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 
-import Card from "../../components/Card/Card";
-import CardHeader from "../../components/Card/CardHeader";
-import CardBody from "../../components/Card/CardBody";
-
-import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
-
 import TableActionButtons from './TableActionButtons.js';
 
 import {
@@ -110,6 +104,11 @@ const EditLabelTypeProvider = props => (
         {...props}
     />
 );
+
+const styles = theme => ({
+    root: {
+    },
+});
 
 class MilestonesTable extends Component {
     constructor(props) {
@@ -233,4 +232,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(dashboardStyle)(MilestonesTable));
+export default connect(mapState, mapDispatch)(withStyles(styles)(MilestonesTable));
