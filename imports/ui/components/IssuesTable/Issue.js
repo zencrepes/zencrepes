@@ -136,7 +136,9 @@ class Issue extends Component {
                                 <Grid item className={classes.issueSubTitle}>
                                     <span><a href={issue.url} className={classes.issueSubTitle} target="_blank">#{issue.number}</a> </span>
                                     <span>opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment></span>
-                                    <span> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a></span>
+                                    {issue.author !== null &&
+                                        <span> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a></span>
+                                    }
                                     {issue.closedAt !== null ? (
                                         <span>, closed on <Moment format="ddd MMM D, YYYY">{issue.closedAt}</Moment></span>
                                     ) : (

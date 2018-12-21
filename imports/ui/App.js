@@ -21,7 +21,6 @@ import Issues from './views/Issues/index.js';
 import Terms from './views/Terms/index.js';
 import About from './views/About/index.js';
 
-
 import Index from './Index.js';
 
 import Public from './components/Public/Public.js';
@@ -29,7 +28,6 @@ import Authenticated from './components/Authenticated/Authenticated.js';
 
 import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
-import Repos from './data/Repos.js';
 import UsersFetch from './data/Users/Fetch/index.js';
 import Startup from './components/Startup/index.js';
 
@@ -59,7 +57,6 @@ class App extends Component {
             return (
                 <ApolloProviderGithub>
                     <div>
-                            <Repos />
                             <UsersFetch />
                             <Router>
                                 {!props.loading ? (
