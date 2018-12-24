@@ -26,7 +26,7 @@ class Treeview extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps, prevState) {
         const { selected } = this.props;
         const updatedNodes = this.getData();
         if (!_.isEqual(updatedNodes, prevState.nodes)) {

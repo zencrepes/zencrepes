@@ -7,14 +7,13 @@ import { withApollo } from 'react-apollo';
 import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleIssue.graphql';
 
 import { cfgIssues } from '../../Minimongo.js';
-import getIssuesStats from "../../utils/getIssuesStats";
 
 class Verification extends Component {
     constructor (props) {
         super(props);
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
+    componentDidUpdate = (prevProps) => {
         const { setVerifFlag, verifFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (verifFlag === true && prevProps.verifFlag === false) {
@@ -61,7 +60,7 @@ class Verification extends Component {
                             //Get points from labels
                             // Regex to test: SP:[.\d]
                             let pointsExp = RegExp('SP:[.\\d]');
-                            for (let [key, currentLabel] of Object.entries(issueObj.labels.edges)) {
+                            for (let currentLabel of Object.entries(issueObj.labels.edges)) {
                                 if (pointsExp.test(currentLabel.node.name)) {
                                     let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                                     console.log('This issue has ' + points + ' story points');
@@ -90,7 +89,18 @@ class Verification extends Component {
 }
 
 Verification.propTypes = {
+    verifFlag: PropTypes.bool,
+    verifying: PropTypes.bool,
+    issues: PropTypes.array,
+    onSuccess: PropTypes.func,
 
+    setVerifFlag: PropTypes.func,
+    setVerifying: PropTypes.func,
+    setVerifyingMsg: PropTypes.func,
+    setVerifiedIssues: PropTypes.func,
+    insVerifiedIssues: PropTypes.func,
+    setVerifySuccess: PropTypes.func,
+    updateChip: PropTypes.func,
 };
 
 const mapState = state => ({

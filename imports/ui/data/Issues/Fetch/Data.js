@@ -21,8 +21,8 @@ class Data extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading } = this.props;
+    componentDidUpdate = (prevProps) => {
+        const { setLoadFlag, loadFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
@@ -34,13 +34,9 @@ class Data extends Component {
         const {
             setLoading,
             setLoadSuccess,
-            setLoadError,
-            setLoadedCount,
             setIterateTotal,
             incIterateCurrent,
-            setIterateCurrent,
             loadRepos,
-            updateSprintsView
         } = this.props;
 
         //Check if there if we are loading everything or just data for a subset of repositories
@@ -103,7 +99,7 @@ class Data extends Component {
                     if (data.data.repository !== null && data.data.repository.issues.edges.length > 0) {
                         //data.data.repository.issues.totalCount;
                         // Refresh the repository with the updated issues count
-                        let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'issues.totalCount': data.data.repository.issues.totalCount}});
+                        cfgSources.update({'id': repoObj.id}, {$set: {'issues.totalCount': data.data.repository.issues.totalCount}});
 
                         let lastCursor = await this.ingestIssues(data, repoObj);
                         let loadedIssuesCount = cfgIssues.find({'repo.id': repoObj.id, 'refreshed': true}).count();
@@ -133,7 +129,7 @@ class Data extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
-        for (let [key, currentIssue] of Object.entries(data.data.repository.issues.edges)){
+        for (let currentIssue of Object.entries(data.data.repository.issues.edges)){
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
 //            console.log(existNode);
@@ -177,7 +173,7 @@ class Data extends Component {
                     //Get points from labels
                     // Regex to test: SP:[.\d]
                     let pointsExp = RegExp('SP:[.\\d]');
-                    for (let [key, currentLabel] of Object.entries(issueObj.labels.edges)) {
+                    for (let currentLabel of Object.entries(issueObj.labels.edges)) {
                         if (pointsExp.test(currentLabel.node.name)) {
                             let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                             console.log('This issue has ' + points + ' story points');
@@ -222,6 +218,19 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loadFlag: PropTypes.bool,
+    loading: PropTypes.bool,
+    loadRepos: PropTypes.array,
+
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setLoadedCount: PropTypes.func,
+    incLoadedCount: PropTypes.func,
+    setIterateTotal: PropTypes.func,
+    setIterateCurrent: PropTypes.func,
+    incIterateCurrent: PropTypes.func,
+    updateChip: PropTypes.func,
 
 };
 
