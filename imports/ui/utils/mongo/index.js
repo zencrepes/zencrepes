@@ -111,7 +111,7 @@ export const buildMongoSelector = (filters) => {
     } else  {
         let convertedMongoFilter = {};
         mongoFilter.forEach(value => {
-            idx = Object.keys(value)[0];
+            let idx = Object.keys(value)[0];
             convertedMongoFilter[idx] = value[idx];
         });
         mongoFilter = convertedMongoFilter;

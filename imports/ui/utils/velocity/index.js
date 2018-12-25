@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /*
 *
 * refreshVelocity() Takes a mongo selector (finder) and Initialize an object containing indices for all days between two dates
@@ -80,7 +82,7 @@ const getAssignees = (issues) => {
 */
 //TODO - To be removed, has been moved to shared.js
 export const formatDate = (dateString) => {
-    day = new Date(dateString);
+    let day = new Date(dateString);
     day.setUTCHours(0);
     day.setUTCMinutes(0);
     day.setUTCSeconds(0);

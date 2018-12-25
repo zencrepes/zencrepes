@@ -12,18 +12,17 @@ export default {
         setLabels(state, payload) {return { ...state, labels: payload };},
         setQuery(state, payload) {return { ...state, query: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
-
     },
     effects: {
         async updateLabels(payload, rootState) {
             this.setLabels(cfgLabels.find(rootState.labelsView.query).fetch());
         },
-        async updateQuery(query, rootState) {
+        async updateQuery(query) {
             console.log('updateQuery: ' + JSON.stringify(query));
             this.setQuery(query);
             this.updateView();
         },
-        async updateView(payload, rootState) {
+        async updateView() {
             this.refreshFacets();
             this.refreshLabels();
         },

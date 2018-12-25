@@ -20,7 +20,6 @@ import {
     populateTicketsPerDay,
     populateTicketsPerWeek
 } from "../../../utils/velocity/index.js";
-import {cfgLabels} from "../../../data/Minimongo";
 
 export default {
     state: {
@@ -104,7 +103,7 @@ export default {
 
     },
     effects: {
-        async initView(payload, rootState) {
+        async initView() {
             console.log('Sprints - initView');
             this.refreshSprints();
 
@@ -113,7 +112,7 @@ export default {
 
             this.updateView();
         },
-        async refreshSprints(payload, rootState) {
+        async refreshSprints() {
             console.log('refreshSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
@@ -121,25 +120,25 @@ export default {
             this.updateSelectedSprint(sprints[0]);
         },
 
-        async updateAvailableSprints(payload, rootState) {
+        async updateAvailableSprints() {
             console.log('updateAvailableSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
         },
 
-        async updateSelectedSprint(selectedSprintTitle, rootState) {
+        async updateSelectedSprint(selectedSprintTitle) {
             await this.setSelectedSprintTitle(selectedSprintTitle);
             this.updateView();
         },
 
-        async addRepoUpdateSelected(selectedRepos, rootState) {
+        async addRepoUpdateSelected(selectedRepos) {
             console.log('addRepoUpdateSelected');
             console.log(selectedRepos);
             this.setAddReposSelected(selectedRepos);
         },
 
-        async createSprint(payload, rootState) {
+        async createSprint() {
             this.setSelectedSprintTitle(null);
             this.setSelectedSprintDescription(null);
             this.setSelectedSprintDueDate(null);

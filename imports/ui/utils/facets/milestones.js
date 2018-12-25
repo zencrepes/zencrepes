@@ -1,11 +1,5 @@
 import _ from 'lodash';
 
-import {
-    formatDate,
-    getLastDay,
-    populateOpen,
-} from '../shared.js';
-
 const aggregationsModel = {
     ids: {
         key: 'id',

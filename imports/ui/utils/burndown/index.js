@@ -146,7 +146,7 @@ const populateBurndown = (dataObject) => {
         totalRemainingPoints = totalRemainingPoints - day['points']['closed'];
         dataObject.days[key]['count']['remaining'] = totalRemainingCount;
         dataObject.days[key]['points']['remaining'] = totalRemainingPoints;
-    };
+    }
     return dataObject;
 };
 

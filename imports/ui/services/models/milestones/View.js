@@ -17,12 +17,12 @@ export default {
         async updateMilestones(payload, rootState) {
             this.setMilestones(cfgMilestones.find(rootState.milestonesView.query).fetch());
         },
-        async updateQuery(query, rootState) {
+        async updateQuery(query) {
             console.log('updateQuery: ' + JSON.stringify(query));
             this.setQuery(query);
             this.updateView();
         },
-        async updateView(payload, rootState) {
+        async updateView() {
             this.refreshFacets();
             this.refreshMilestones();
         },

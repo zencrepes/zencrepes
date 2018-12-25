@@ -56,7 +56,7 @@ export default {
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
     },
     effects: {
-        async updateQuery(query, rootState) {
+        async updateQuery(query) {
             console.log('updateQuery: ' + JSON.stringify(query));
             if (query === null) {this.setQuery({});}
             else {this.setQuery(query);}
@@ -68,7 +68,7 @@ export default {
             this.updateView();
         },
 
-        async updateView(payload, rootState) {
+        async updateView() {
             this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
@@ -78,50 +78,12 @@ export default {
             this.refreshVelocity();
         },
 
-            /*
-            // TODO - Removed, this was moved to the view component
-            async addRemoveQuery(valueName, rootState, facet) {
-                console.log('addRemoveQuery');
-                let query = rootState.issuesView.query;
-
-                //1- Mutate the query to the corresponding state
-                let facetKey = facet.key;
-                if (facet.nested === false) {
-                    if (query[facetKey] === undefined) {
-                        query[facetKey] = {"$in": [valueName]};
-                    } else if (query[facetKey]['$in'].includes(valueName)) {
-                        // Remove element from array
-                        query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== valueName);
-                        if (query[facetKey]['$in'].length === 0) {
-                            delete query[facetKey];
-                        }
-                    } else {
-                        query[facetKey]['$in'].push(valueName);
-                    }
-                } else {
-                    facetKey = facetKey + '.edges';
-                    let nestedKey = 'node.' + facet.nestedKey;
-                    if (query[facetKey] === undefined) {
-                        query[facetKey] = {'$elemMatch': {}};
-                        query[facetKey]['$elemMatch'][nestedKey] = {"$in": [valueName]};
-                    } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(valueName)) {
-                        query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== valueName);
-                        if (query[facetKey]['$elemMatch'][nestedKey]['$in'].length === 0) {
-                            delete query[facetKey];
-                        }
-                    } else {
-                        query[facetKey]['$elemMatch'][nestedKey]['$in'].push(valueName);
-                    }
-                }
-                this.updateQuery(query);
-            },
-            */
-        async deleteQuery(query, rootState) {
+        async deleteQuery(query) {
             await cfgQueries.remove({'_id': query._id});
             this.refreshQueries();
         },
 
-        async refreshQueries(payload, rootState) {
+        async refreshQueries() {
             this.setQueries(cfgQueries.find({}).fetch());
         },
 

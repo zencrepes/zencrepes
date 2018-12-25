@@ -1,13 +1,5 @@
 import _ from 'lodash';
 
-import {
-    formatDate,
-    getLastDay,
-    populateOpen,
-} from '../shared.js';
-
-//import {cfgIssues} from "../../data/Minimongo";
-
 const aggregationsModel = {
     ids: {
         key: 'id',

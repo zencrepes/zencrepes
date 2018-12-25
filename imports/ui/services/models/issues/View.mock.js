@@ -53,7 +53,7 @@ export default {
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
     },
     effects: {
-        async initIssues(payload, rootState) {
+        async initIssues() {
             console.log('initIssues');
         },
 
@@ -79,43 +79,43 @@ export default {
             this.setFilteredIssuesSearch(searchString);
         },
 
-        async updateQuery(query, rootState) {
+        async updateQuery() {
             console.log('initIssues');
         },
 
-        async addRemoveQuery(valueName, rootState, facet) {
+        async addRemoveQuery() {
             console.log('addRemoveQuery');
         },
 
-        async deleteQuery(query, rootState) {
+        async deleteQuery() {
             console.log('deleteQuery');
         },
 
-        async refreshQueries(payload, rootState) {
+        async refreshQueries() {
             console.log('refreshQueries');
         },
 
-        async saveQuery(queryName, rootState) {
+        async saveQuery() {
             console.log('saveQuery');
         },
 
-        async refreshIssues(payload, rootState) {
+        async refreshIssues() {
             console.log('refreshIssues');
         },
 
-        async refreshSummary(payload, rootState) {
+        async refreshSummary() {
             console.log('refreshSummary');
         },
 
-        async refreshFacets(payload, rootState) {
+        async refreshFacets() {
             console.log('refreshFacets');
         },
 
-        async refreshBurndown(payload, rootState) {
+        async refreshBurndown() {
             console.log('refreshBurndown');
         },
 
-        async refreshVelocity(payload, rootState) {
+        async refreshVelocity() {
             console.log('refreshVelocity');
         },
     }

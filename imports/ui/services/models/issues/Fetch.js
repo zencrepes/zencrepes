@@ -1,5 +1,3 @@
-import {cfgMilestones} from "../../../data/Minimongo";
-
 export default {
     state: {
         loading: false,         // Boolean to indicate issues are currently loading

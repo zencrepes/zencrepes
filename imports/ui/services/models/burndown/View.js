@@ -1,6 +1,6 @@
 import { cfgIssues } from '../../../data/Minimongo.js';
 
-import {getLastDay, populateOpen, populateTicketsPerDay, populateTicketsPerWeek } from '../../../utils/velocity/index.js';
+import {getLastDay, populateOpen} from '../../../utils/velocity/index.js';
 import {buildMongoSelector} from "../../../utils/mongo/index.js";
 import {formatDate} from "../../../utils/velocity";
 
@@ -92,7 +92,7 @@ export const populateBurndown = (dataObject) => {
         totalRemainingPoints = totalRemainingPoints - day['points']['closed'];
         dataObject.days[key]['count']['remaining'] = totalRemainingCount;
         dataObject.days[key]['points']['remaining'] = totalRemainingPoints;
-    };
+    }
     return dataObject;
 };
 
@@ -151,7 +151,7 @@ export default {
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
     },
     effects: {
-        async initStates(payload, rootState) {
+        async initStates(payload) {
             console.log('Init state - Burndown');
             let mongoSelector = buildMongoSelector(payload);
             this.setLoading(true);
