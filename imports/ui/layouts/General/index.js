@@ -4,10 +4,22 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import styles from "./styles.jsx";
-
 import Header from '../../components/Header/index.js';
 import Footer from '../../components/Footer/index.js';
+
+const style = {
+    root: {
+    },
+
+    fullWidth :{
+        width: '100%',
+    },
+
+    fullWidthCenter :{
+        width: '100%',
+//        minHeight: 'calc(100vh - 130px)',
+    },
+};
 
 class General extends Component {
     constructor (props) {
@@ -41,6 +53,8 @@ class General extends Component {
 
 General.propTypes = {
     classes: PropTypes.object.isRequired,
+    children: PropTypes.object.isRequired,
+
 };
 
-export default withStyles(styles)(General);
+export default withStyles(style)(General);

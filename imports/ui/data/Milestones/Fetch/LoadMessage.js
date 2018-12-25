@@ -1,16 +1,10 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-const styles = theme => ({
-    root: {
-    },
-});
 class LoadMessage extends Component {
     constructor (props) {
         super(props);
@@ -22,19 +16,23 @@ class LoadMessage extends Component {
     };
 
     render() {
-        const { classes, loading, loadedCount } = this.props;
+        const { loadedCount } = this.props;
 
         return (
-            <div>
+            <React.Fragment>
                 <span id="message-id">Fetching from GitHub, {loadedCount} Milestones</span>
                 <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
-            </div>
+            </React.Fragment>
         );
-    };
+    }
 }
 
 LoadMessage.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    iterateTotal: PropTypes.object.isRequired,
+    iterateCurrent: PropTypes.object.isRequired,
+    loadedCount: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -44,8 +42,4 @@ const mapState = state => ({
     iterateCurrent: state.milestonesFetch.iterateCurrent,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(LoadMessage));
+export default connect(mapState, null)(LoadMessage);

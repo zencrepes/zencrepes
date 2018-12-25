@@ -1,14 +1,13 @@
+import { Meteor } from 'meteor/meteor';
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import { cfgSources } from './Minimongo.js';
 import { cfgIssues } from "./Minimongo.js";
 
 import GitHubApi from '@octokit/rest';
-import {cfgLabels} from "./Minimongo";
+import PropTypes from "prop-types";
 
 class PushPoints extends Component {
     constructor (props) {
@@ -21,27 +20,27 @@ class PushPoints extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             console.log('FetchZenhubPoints - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     // Component should only be updated if loadflag move from false to true (request to load data).
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         const { loadFlag } = this.props;
         if (!loadFlag && nextProps.loadFlag) {
             return true;
         } else {
             return false;
         }
-    };
+    }
 
     load = async () => {
-        const { setLoading, setLoadError, setMessage, setLoadSuccess, setUpdatedIssues, incrementUpdatedIssues, setChipRemaining } = this.props;
+        const { setLoading, setLoadError, setLoadSuccess, setUpdatedIssues, incrementUpdatedIssues, setChipRemaining } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -100,7 +99,7 @@ class PushPoints extends Component {
         }
         setLoadSuccess(true);
         setLoading(false);
-    };
+    }
 
     render() {
         return null;
@@ -108,6 +107,17 @@ class PushPoints extends Component {
 }
 
 PushPoints.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    loadFlag: PropTypes.bool.isRequired,
+
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadError: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setMessage: PropTypes.func.isRequired,
+    setUpdatedIssues: PropTypes.func.isRequired,
+    incrementUpdatedIssues: PropTypes.func.isRequired,
+    setChipRemaining: PropTypes.func.isRequired,
 
 };
 
@@ -128,7 +138,6 @@ const mapDispatch = dispatch => ({
     incrementUpdatedIssues: dispatch.githubPushPoints.setIncrementUpdatedIssues,
 
     setChipRemaining: dispatch.chip.setRemaining,
-
 });
 
 export default connect(mapState, mapDispatch)(withApollo(PushPoints));

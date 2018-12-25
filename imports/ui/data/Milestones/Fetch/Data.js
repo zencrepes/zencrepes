@@ -18,8 +18,8 @@ class Data extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading } = this.props;
+    componentDidUpdate = (prevProps) => {
+        const { setLoadFlag, loadFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
@@ -28,7 +28,7 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones } = this.props;
+        const { setLoading, setLoadSuccess, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones } = this.props;
 
         let allRepos = cfgSources.find({}).fetch();
         setIterateTotal(allRepos.length);
@@ -80,7 +80,7 @@ class Data extends Component {
                     if (data.data.repository !== null && data.data.repository.milestones.edges.length > 0) {
                         //data.data.repository.milestones.totalCount;
                         // Refresh the repository with the updated milestones count
-                        let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'milestones.totalCount': data.data.repository.milestones.totalCount}});
+                        cfgSources.update({'id': repoObj.id}, {$set: {'milestones.totalCount': data.data.repository.milestones.totalCount}});
 
                         let lastCursor = await this.ingestMilestones(data, repoObj);
                         let loadedMilestonesCount = cfgMilestones.find({'repo.id': repoObj.id, 'refreshed': true}).count();
@@ -110,7 +110,7 @@ class Data extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
-        for (let [key, currentMilestone] of Object.entries(data.data.repository.milestones.edges)){
+        for (let currentMilestone of Object.entries(data.data.repository.milestones.edges)){
             console.log('Loading milestone: ' + currentMilestone.node.title);
             let existNode = cfgMilestones.findOne({id: currentMilestone.node.id});
             let exitsNodeUpdateAt = null;
@@ -128,12 +128,6 @@ class Data extends Component {
                 }
             } else {
                 console.log('New or updated milestone');
-                let nodePinned = false;
-                let nodePoints = null;
-                if (existNode !== undefined) {
-                    nodePinned = existNode.pinned;
-                    nodePoints = existNode.points;
-                }
                 let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
                 milestoneObj['repo'] = repoObj;
                 milestoneObj['org'] = repoObj.org;
@@ -165,7 +159,19 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    incLoadedCount: PropTypes.func.isRequired,
+    setIterateTotal: PropTypes.func.isRequired,
+    setIterateCurrent: PropTypes.func.isRequired,
+    incIterateCurrent: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+    updateMilestones: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Oops from './views/Oops/index.js';
+import PropTypes from "prop-types";
 
 //https://reactjs.org/docs/error-boundaries.html
 class ErrorBoundary extends React.Component {
@@ -9,7 +10,7 @@ class ErrorBoundary extends React.Component {
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError() {
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
     }
@@ -30,4 +31,9 @@ class ErrorBoundary extends React.Component {
         return this.props.children;
     }
 }
+
+ErrorBoundary.propTypes = {
+    children: PropTypes.object.isRequired,
+};
+
 export default ErrorBoundary;

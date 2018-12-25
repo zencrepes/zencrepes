@@ -1,10 +1,12 @@
-import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import React, { Component } from 'react';
 
 import { ApolloProvider } from 'react-apollo';
 import ApolloClient from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { setContext } from 'apollo-link-context';
+import PropTypes from "prop-types";
 
 
 const authLink = setContext((_, { headers }) => {
@@ -27,8 +29,30 @@ const client = new ApolloClient({
     cache: cache,
 });
 
+/*
 export default (
     ({ children }) => (
         <ApolloProvider client={client}>{children}</ApolloProvider>
     )
 );
+
+*/
+
+class ApolloProviderGithub extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const { children } = this.props;
+        return (
+            <ApolloProvider client={client}>{children}</ApolloProvider>
+        );
+    }
+}
+
+ApolloProviderGithub.propTypes = {
+    children: PropTypes.object.isRequired,
+};
+
+export default ApolloProviderGithub;

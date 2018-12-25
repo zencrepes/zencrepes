@@ -1,3 +1,5 @@
+import { Mongo } from 'meteor/mongo';
+
 export const cfgSources = new Mongo.Collection('cfgSources', {connection: null});
 //export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
 window.repos = cfgSources;

@@ -97,7 +97,7 @@ class StageTable extends Component {
                                         {milestone.repo.name}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <a href={milestone.url} className={classes.milestoneTitle} target="_blank">{milestone.title} <OpenInNewIcon style={{ fontSize: 12 }} /></a>
+                                        <a href={milestone.url} className={classes.milestoneTitle} rel="noopener noreferrer" target="_blank">{milestone.title} <OpenInNewIcon style={{ fontSize: 12 }} /></a>
                                     </TableCell>
                                     <TableCell component="th" scope="row">
                                         {milestone.state}
