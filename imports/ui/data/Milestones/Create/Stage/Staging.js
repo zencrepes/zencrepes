@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_SINGLE_MILESTONE from '../../../../../graphql/getSingleMilestone.graphql';
 import GET_GITHUB_SINGLE_REPO from '../../../../../graphql/getSingleRepo.graphql';
 import GET_GITHUB_MILESTONES from '../../../../../graphql/getMilestones.graphql';
 
@@ -19,7 +18,7 @@ class Staging extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
+    componentDidUpdate = (prevProps) => {
         const { setVerifFlag, verifFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (verifFlag === true && prevProps.verifFlag === false) {
@@ -142,7 +141,7 @@ class Staging extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
-        for (let [key, currentMilestone] of Object.entries(data.data.repository.milestones.edges)){
+        for (let currentMilestone of Object.entries(data.data.repository.milestones.edges)){
             console.log('Loading milestone: ' + currentMilestone.node.title);
             console.log('New or updated milestone');
             let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
@@ -174,7 +173,18 @@ class Staging extends Component {
 }
 
 Staging.propTypes = {
+    verifFlag: PropTypes.bool.isRequired,
+    verifying: PropTypes.bool.isRequired,
+    milestoneTitle: PropTypes.string.isRequired,
+    repos: PropTypes.array.isRequired,
+    onStagingSuccess: PropTypes.func.isRequired,
 
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setVerifyingMsg: PropTypes.func.isRequired,
+    setVerifiedRepos: PropTypes.func.isRequired,
+    insVerifiedRepos: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

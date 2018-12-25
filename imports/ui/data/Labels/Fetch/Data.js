@@ -1,6 +1,5 @@
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
@@ -10,6 +9,7 @@ import { cfgSources } from '../../Minimongo.js';
 import { cfgLabels } from '../../Minimongo.js';
 
 import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
+import PropTypes from "prop-types";
 
 class Data extends Component {
     constructor (props) {
@@ -18,8 +18,8 @@ class Data extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading } = this.props;
+    componentDidUpdate = (prevProps) => {
+        const { setLoadFlag, loadFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
@@ -28,7 +28,7 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent, updateLabels } = this.props;
+        const { setLoading, setLoadSuccess, setIterateTotal, incIterateCurrent, setIterateCurrent, updateLabels } = this.props;
 
         let allRepos = cfgSources.find({}).fetch();
         setIterateTotal(allRepos.length);
@@ -80,7 +80,7 @@ class Data extends Component {
                     if (data.data.repository !== null && data.data.repository.labels.edges.length > 0) {
                         //data.data.repository.labels.totalCount;
                         // Refresh the repository with the updated labels count
-                        let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'labels.totalCount': data.data.repository.labels.totalCount}});
+                        cfgSources.update({'id': repoObj.id}, {$set: {'labels.totalCount': data.data.repository.labels.totalCount}});
 
                         let lastCursor = await this.ingestLabels(data, repoObj);
                         let loadedLabelsCount = cfgLabels.find({'repo.id': repoObj.id, 'refreshed': true}).count();
@@ -108,10 +108,9 @@ class Data extends Component {
         const { incLoadedCount } = this.props;
 
         let lastCursor = null;
-        let stopLoad = false;
         console.log(data);
 
-        for (let [key, currentLabel] of Object.entries(data.data.repository.labels.edges)){
+        for (let currentLabel of Object.entries(data.data.repository.labels.edges)){
             console.log('Loading label: ' + currentLabel.node.name);
             //let existNode = cfgLabels.findOne({id: currentLabel.node.id});
 
@@ -137,7 +136,19 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    incLoadedCount: PropTypes.func.isRequired,
+    setIterateTotal: PropTypes.func.isRequired,
+    setIterateCurrent: PropTypes.func.isRequired,
+    incIterateCurrent: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+    updateLabels: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -158,7 +169,6 @@ const mapDispatch = dispatch => ({
 
     updateChip: dispatch.chip.updateChip,
     updateLabels: dispatch.labelsView.updateLabels,
-
 });
 
 export default connect(mapState, mapDispatch)(withApollo(Data));

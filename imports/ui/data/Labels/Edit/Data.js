@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
+import { Meteor } from 'meteor/meteor';
+import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
 import {cfgLabels, cfgSources} from "../../Minimongo";
 
 import GitHubApi from '@octokit/rest';
+import PropTypes from "prop-types";
 
 class Data extends Component {
     constructor (props) {
@@ -20,8 +21,8 @@ class Data extends Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        const { loadSuccess, loadFlag } = this.props;
+    shouldComponentUpdate(nextProps) {
+        const { loadFlag } = this.props;
         if (loadFlag !== nextProps.loadFlag) {
             return true;
         } else {
@@ -29,16 +30,16 @@ class Data extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
-        const { client,
+        const {
             setChipRemaining,
             setLoading,
             setLoadError,
@@ -155,7 +156,30 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    action: PropTypes.string.isRequired,
 
+    selectedRepos: PropTypes.array.isRequired,
+    selectedLabels: PropTypes.array.isRequired,
+    selectedName: PropTypes.string.isRequired,
+
+    updateName: PropTypes.string.isRequired,
+    updateDescription: PropTypes.string.isRequired,
+    updateColor: PropTypes.string.isRequired,
+
+    newName: PropTypes.string.isRequired,
+    newDescription: PropTypes.string.isRequired,
+    newColor: PropTypes.string.isRequired,
+
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadError: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    incLoadedCount: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+    setChipRemaining: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

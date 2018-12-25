@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -7,17 +6,17 @@ import {connect} from "react-redux";
 
 import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 class LoadButton extends Component {
     constructor (props) {
         super(props);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -25,7 +24,7 @@ class LoadButton extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     render() {
         const { classes, loadSuccess, loadedCount } = this.props;
@@ -42,11 +41,14 @@ class LoadButton extends Component {
                 />
             </div>
         );
-    };
+    }
 }
 
 LoadButton.propTypes = {
     classes: PropTypes.object.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    loadedCount: PropTypes.number.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

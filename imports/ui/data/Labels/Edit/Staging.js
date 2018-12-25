@@ -1,19 +1,19 @@
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
 import GET_GITHUB_SINGLE_LABEL from '../../../../graphql/getSingleLabel.graphql';
 
 import { cfgLabels } from '../../Minimongo.js';
+import PropTypes from "prop-types";
 
 class Staging extends Component {
     constructor (props) {
         super(props);
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
+    componentDidUpdate = (prevProps) => {
         const { setVerifFlag, verifFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (verifFlag === true && prevProps.verifFlag === false) {
@@ -98,7 +98,17 @@ class Staging extends Component {
 }
 
 Staging.propTypes = {
+    verifFlag: PropTypes.bool.isRequired,
+    verifying: PropTypes.bool.isRequired,
+    labels: PropTypes.array.isRequired,
+    onSuccess: PropTypes.func.isRequired,
 
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setVerifyingMsg: PropTypes.func.isRequired,
+    setVerifiedLabels: PropTypes.func.isRequired,
+    insVerifiedLabels: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
