@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import {connect} from "react-redux";
-
-const styles = theme => ({
-    root: {
-
-    },
-});
 
 class CancelButton extends Component {
     constructor (props) {
@@ -26,14 +17,11 @@ class CancelButton extends Component {
     };
 
     render() {
-        const { classes } = this.props;
-
         //The apply button is disabled until all milestones have been verified in GitHub and no errors have been found
         return (
             <Button
                 variant="contained"
                 color="primary"
-                className={classes.button}
                 onClick={this.cancel}
             >
                 Cancel
@@ -43,7 +31,9 @@ class CancelButton extends Component {
 }
 
 CancelButton.propTypes = {
-    classes: PropTypes.object.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -55,4 +45,4 @@ const mapDispatch = dispatch => ({
     setMilestones: dispatch.milestonesEdit.setMilestones,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(CancelButton));
+export default connect(mapState, mapDispatch)(CancelButton);

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 
 import green from "@material-ui/core/colors/green";
 import CheckIcon from '@material-ui/icons/Check';
@@ -11,7 +9,6 @@ import ErrorIcon from '@material-ui/icons/Error';
 import red from "@material-ui/core/colors/red";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {connect} from "react-redux";
-
 
 const styles = theme => ({
     root: {
@@ -72,20 +69,19 @@ class VerifState extends Component {
                 </span>
             );
         } else if (milestoneCheck[0].error === false) {
-                return (<CheckIcon className={classes.iconVerified} />);
+            return (<CheckIcon className={classes.iconVerified} />);
         }
     }
 }
 
 VerifState.propTypes = {
     classes: PropTypes.object.isRequired,
+    milestone: PropTypes.object.isRequired,
+    verifiedMilestones: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({
     verifiedMilestones: state.milestonesEdit.verifiedMilestones,
 });
 
-const mapDispatch = dispatch => ({
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(VerifState));
+export default connect(mapState, null)(withStyles(styles)(VerifState));

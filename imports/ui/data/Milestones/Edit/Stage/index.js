@@ -1,12 +1,9 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
-import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,11 +14,11 @@ import StageTable from './StageTable/index.js';
 import ApplyButton from './ApplyButton.js';
 import CancelButton from './CancelButton.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         width: '90%'
     },
-});
+};
 class Stage extends Component {
     constructor (props) {
         super(props);
@@ -49,11 +46,17 @@ class Stage extends Component {
                 </Dialog>
             </div>
         );
-    };
+    }
 }
 
 Stage.propTypes = {
     classes: PropTypes.object.isRequired,
+    stageFlag: PropTypes.bool.isRequired,
+    milestones: PropTypes.array.isRequired,
+    action: PropTypes.string.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

@@ -13,7 +13,7 @@ class Staging extends Component {
         super(props);
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
+    componentDidUpdate = (prevProps) => {
         const { setVerifFlag, verifFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (verifFlag === true && prevProps.verifFlag === false) {
@@ -99,7 +99,17 @@ class Staging extends Component {
 }
 
 Staging.propTypes = {
+    verifFlag: PropTypes.bool.isRequired,
+    verifying: PropTypes.bool.isRequired,
+    milestones: PropTypes.array.isRequired,
+    onStagingSuccess: PropTypes.func.isRequired,
 
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setVerifyingMsg: PropTypes.func.isRequired,
+    setVerifiedMilestones: PropTypes.func.isRequired,
+    insVerifiedMilestones: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import {connect} from "react-redux";
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class RemoveButton extends Component {
     constructor (props) {
@@ -27,9 +21,8 @@ class RemoveButton extends Component {
     };
 
     render() {
-        const { classes } = this.props;
         return (
-            <IconButton aria-label="Delete" className={classes.margin} onClick={this.remove}>
+            <IconButton aria-label="Delete" onClick={this.remove}>
                 <DeleteIcon fontSize="small" />
             </IconButton>
         );
@@ -37,7 +30,12 @@ class RemoveButton extends Component {
 }
 
 RemoveButton.propTypes = {
-    classes: PropTypes.object.isRequired,
+    verifiedMilestones: PropTypes.array.isRequired,
+    milestones: PropTypes.array.isRequired,
+    milestone: PropTypes.object.isRequired,
+
+    setMilestones: PropTypes.func.isRequired,
+    setVerifiedMilestones: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -50,4 +48,4 @@ const mapDispatch = dispatch => ({
     setVerifiedMilestones: dispatch.milestonesEdit.setVerifiedMilestones,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(RemoveButton));
+export default connect(mapState, mapDispatch)(RemoveButton);
