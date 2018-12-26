@@ -73,8 +73,13 @@ const IssuesTypeProvider = props => (
     />
 );
 
+
 const EditLabelFormatter = ({ value }) => {
     return <Link to={"/labels/edit/" + value + "/all"}><EditIcon /></Link>;
+};
+
+EditLabelFormatter.propTypes = {
+    value: PropTypes.string.isRequired,
 };
 
 const EditLabelTypeProvider = props => (
@@ -208,7 +213,6 @@ class LabelsTable extends Component {
 LabelsTable.propTypes = {
     classes: PropTypes.object.isRequired,
     labels: PropTypes.array.isRequired,
-    value: PropTypes.string.isRequired,
 };
 
 export default LabelsTable;

@@ -1,8 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
-import { connect } from "react-redux";
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -15,10 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import blue from '@material-ui/core/colors/blue';
 
-const styles = theme => ({
-    root: {
-
-    },
+const styles = {
     listItem: {
         marginLeft: '5px',
         padding: '0px',
@@ -38,15 +32,11 @@ const styles = theme => ({
         color: blue[500],
         padding: '5px',
     }
-});
+};
 
 class FacetSelector extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-
-        };
     }
 
     handleToggle = clickedValue => () => {
@@ -56,8 +46,7 @@ class FacetSelector extends React.Component {
     };
 
     render() {
-        const { data, classes, selected, clickItem } = this.props;
-        //const { value } = this.state;
+        const { data, classes, selected } = this.props;
 
         let facetItem = data.name;
         if (facetItem.length > 20) {
@@ -93,6 +82,9 @@ class FacetSelector extends React.Component {
 
 FacetSelector.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    selected: PropTypes.bool.isRequired,
+    clickItem: PropTypes.func.isRequired,
 };
 
 

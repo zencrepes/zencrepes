@@ -1,18 +1,10 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
-    root: {
-        textAlign: 'right'
-    },
-});
 class ClosedEmptyButton extends Component {
     constructor (props) {
         super(props);
@@ -31,17 +23,28 @@ class ClosedEmptyButton extends Component {
     };
 
     render() {
-        const { classes } = this.props;
         return (
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+            <Button variant="contained" color="primary" onClick={this.deleteClosedEmpty}>
                 Delete Empty
             </Button>
         );
-    };
+    }
 }
 
 ClosedEmptyButton.propTypes = {
-    classes: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    setOnCancel: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -67,4 +70,4 @@ const mapDispatch = dispatch => ({
 
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(ClosedEmptyButton));
+export default connect(mapState, mapDispatch)(ClosedEmptyButton);

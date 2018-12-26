@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -6,13 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 class TableActionButtons extends Component {
     constructor (props) {
         super(props);
@@ -50,16 +48,16 @@ class TableActionButtons extends Component {
     };
 
     render() {
-        const { classes, loadSuccess, milestonesdata } = this.props;
+        const { classes, milestonesdata } = this.props;
         return (
             <div className={classes.root}>
                 {milestonesdata.states.length > 1 &&
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.closeSprint}>
+                <Button variant="contained" color="primary" onClick={this.closeSprint}>
                     Close All
                 </Button>
                 }
                 {milestonesdata.closedNoIssues.length > 0 &&
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+                <Button variant="contained" color="primary" onClick={this.deleteClosedEmpty}>
                     Delete Empty
                 </Button>
                 }
@@ -70,6 +68,17 @@ class TableActionButtons extends Component {
 
 TableActionButtons.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    loadSuccess: PropTypes.bool.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

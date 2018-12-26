@@ -5,21 +5,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
-
-import SquareIcon from 'mdi-react/SquareIcon';
-import PencilIcon from 'mdi-react/PencilIcon';
-import EyeIcon from 'mdi-react/EyeIcon';
-
 import EditIcon from '@material-ui/icons/Edit';
 
 import TableActionButtons from './TableActionButtons.js';
 
 import {
     // State or Local Processing Plugins
-    SelectionState,
     PagingState,
-    IntegratedSelection,
     IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
@@ -28,12 +20,8 @@ import {
     Table,
     TableHeaderRow,
     PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import {cfgMilestones} from "../../../data/Minimongo";
 
 const StatesFormatter = ({ value }) => {
     return value.map(state => (
@@ -97,11 +85,11 @@ const EditMilestoneTypeProvider = props => (
     />
 );
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 
 class MilestonesList extends Component {
     constructor(props) {
@@ -216,6 +204,8 @@ class MilestonesList extends Component {
 
 MilestonesList.propTypes = {
     classes: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
+    query: PropTypes.object.isRequired,
 };
 
 
@@ -224,8 +214,4 @@ const mapState = state => ({
     query: state.milestonesView.query,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(MilestonesList));
+export default connect(mapState, null)(withStyles(styles)(MilestonesList));

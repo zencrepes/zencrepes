@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import {
-    withRouter
-} from 'react-router-dom';
-
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
 import Table from '@material-ui/core/Table';
@@ -14,28 +9,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-
-import { TableLarge } from 'mdi-material-ui';
-
-import Button from '@material-ui/core/Button';
 
 import fibonacci from 'fibonacci-fast';
 
-import { cfgLabels } from "../../../../data/Minimongo.js";
-import {cfgIssues, cfgSources} from "../../../../data/Minimongo";
+import { cfgLabels, cfgSources } from "../../../../data/Minimongo.js";
 
-const styles = theme => ({
-    root: {
-    },
-});
 class ReposTable extends Component {
     constructor(props) {
         super(props);
     }
 
-    getRepoState(points, labels) {
-
+    getRepoState() {
         return 'partial';
     };
 
@@ -71,13 +55,13 @@ class ReposTable extends Component {
     }
 
     render() {
-        const { classes, maxPoints } = this.props;
+        const { classes } = this.props;
         let allLabels = this.getGrouppedLabels();
         let dataset = this.buildReferenceDataset(allLabels);
         return (
-            <div className={classes.tableResponsive}>
-                <Table className={classes.table}>
-                    <TableHead className={classes["TableHeader"]}>
+            <div>
+                <Table>
+                    <TableHead>
                         <TableRow key={0}>
                             <TableCell className={classes.tableCell} key={1}>Story Points</TableCell>
                             <TableCell className={classes.tableCell} key={2}>Configured</TableCell>
@@ -89,16 +73,16 @@ class ReposTable extends Component {
                         {dataset.map((point, key) => {
                             return (
                                 <TableRow key={point.number}>
-                                    <TableCell className={classes.tableCell} key={1}>
+                                    <TableCell key={1}>
                                         {point.number}
                                     </TableCell>
-                                    <TableCell className={classes.tableCell} key={2}>
+                                    <TableCell key={2}>
                                         {point.configured} repos
                                     </TableCell>
-                                    <TableCell className={classes.tableCell} key={3}>
+                                    <TableCell key={3}>
                                         {point.notConfigured} repos
                                     </TableCell>
-                                    <TableCell className={classes.tableCell} key={4}>
+                                    <TableCell key={4}>
                                         {point.total} repos
                                     </TableCell>
                                 </TableRow>
@@ -114,16 +98,12 @@ class ReposTable extends Component {
 
 ReposTable.propTypes = {
     classes: PropTypes.object.isRequired,
+    maxPoints: PropTypes.number.isRequired,
 };
-
-
-const mapDispatch = dispatch => ({
-
-});
 
 const mapState = state => ({
     maxPoints: state.githubLabels.maxPoints,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(ReposTable));
+export default connect(mapState, null)(ReposTable);
 

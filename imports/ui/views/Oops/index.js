@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 import General from "../../layouts/General/index.js";
+import PropTypes from "prop-types";
 
 const styles = theme => ({
     '@global': {
@@ -90,6 +91,10 @@ class Oops extends Component {
             </General>
         );
     }
-
 }
+
+Oops.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
 export default withStyles(styles)(Oops);

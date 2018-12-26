@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
-import PropTypes from "prop-types";
-
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
-import styles from '../../styles.jsx';
 
 import General from '../../layouts/General/index.js';
 
@@ -39,7 +32,6 @@ class Settings extends Component {
     };
 
     render() {
-        const { classes } = this.props;
         const { value } = this.state;
 
         return (
@@ -64,8 +56,7 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
-    classes: PropTypes.object,
 
 };
 
-export default withStyles(styles)(Settings);
+export default Settings;

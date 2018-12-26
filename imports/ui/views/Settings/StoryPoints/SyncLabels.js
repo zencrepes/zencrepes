@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
@@ -16,7 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { cfgSources } from "../../../data/Minimongo.js";
 import Tree from '../../../components/Settings/Repositories/Treeview/Tree.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -38,7 +37,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'left',
     }
-});
+};
 
 class SyncLabels extends Component {
     constructor(props) {
@@ -129,13 +128,13 @@ class SyncLabels extends Component {
 }
 
 SyncLabels.propTypes = {
-    classes: PropTypes.object,
-    loading: PropTypes.bool,
-    loadSuccess: PropTypes.bool,
-    createdLabels: PropTypes.number,
-    updatedRepos: PropTypes.number,
-    setLoadFlag: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    createdLabels: PropTypes.number.isRequired,
+    updatedRepos: PropTypes.number.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

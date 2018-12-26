@@ -107,7 +107,7 @@ class QuerySave extends Component {
             return null;
         }
     }
-};
+}
 
 QuerySave.propTypes = {
     classes: PropTypes.object.isRequired,

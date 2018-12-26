@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Moment from 'react-moment';
-import ReactMarkdown from 'react-markdown';
 
 import SimpleMDE from 'react-simplemde-editor';
 import "simplemde/dist/simplemde.min.css";
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class MilestoneDescription extends Component {
     constructor(props) {
@@ -19,7 +11,7 @@ class MilestoneDescription extends Component {
     }
 
     handleChange = value => {
-        const { classes, setEditMilestoneDescription } = this.props;
+        const { setEditMilestoneDescription } = this.props;
         setEditMilestoneDescription(value);
     };
 
@@ -41,7 +33,8 @@ class MilestoneDescription extends Component {
 }
 
 MilestoneDescription.propTypes = {
-    classes: PropTypes.object,
+    setEditMilestoneDescription: PropTypes.func.isRequired,
+    editMilestoneDescription: PropTypes.string.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -52,4 +45,4 @@ const mapState = state => ({
     editMilestoneDescription: state.milestonesEdit.editMilestoneDescription,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(MilestoneDescription));
+export default connect(mapState, mapDispatch)(MilestoneDescription);

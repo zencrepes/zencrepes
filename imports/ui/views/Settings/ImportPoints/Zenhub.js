@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
@@ -21,7 +20,7 @@ import FetchZenhubPoints from '../../../data/FetchZenhubPoints.js';
 
 import Tree from '../../../components/Settings/Repositories/Treeview/Tree.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -43,7 +42,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'left',
     }
-});
+};
 
 class Zenhub extends Component {
     constructor(props) {
@@ -57,7 +56,7 @@ class Zenhub extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -144,13 +143,13 @@ class Zenhub extends Component {
 }
 
 Zenhub.propTypes = {
-    classes: PropTypes.object,
-    loading: PropTypes.bool,
-    loadSuccess: PropTypes.bool,
-    createdLabels: PropTypes.number,
-    updatedRepos: PropTypes.number,
-    setLoadFlag: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    createdLabels: PropTypes.number.isRequired,
+    updatedRepos: PropTypes.number.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

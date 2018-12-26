@@ -1,27 +1,9 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { withStyles } from '@material-ui/core/styles';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import Button from '@material-ui/core/Button';
-
 import TextField from '@material-ui/core/TextField';
-
-const styles = theme => ({
-    root: {
-
-    },
-    textField: {
-        width: '100%'
-    }
-});
 
 class MilestoneTitle extends Component {
     constructor (props) {
@@ -34,7 +16,7 @@ class MilestoneTitle extends Component {
     };
 
     render() {
-        const { classes, editMilestoneTitle } = this.props;
+        const { editMilestoneTitle } = this.props;
 
         return (
                 <TextField
@@ -56,7 +38,8 @@ class MilestoneTitle extends Component {
 }
 
 MilestoneTitle.propTypes = {
-    classes: PropTypes.object.isRequired,
+    setEditMilestoneTitle: PropTypes.func.isRequired,
+    editMilestoneTitle: PropTypes.string.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -67,4 +50,4 @@ const mapState = state => ({
     editMilestoneTitle: state.milestonesEdit.editMilestoneTitle,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(MilestoneTitle));
+export default connect(mapState, mapDispatch)(MilestoneTitle);

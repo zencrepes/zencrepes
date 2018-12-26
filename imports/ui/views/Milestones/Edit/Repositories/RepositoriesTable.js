@@ -1,36 +1,19 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import { GithubCircle } from 'mdi-material-ui'
-import { Link } from 'react-router-dom';
 
 import {
     // State or Local Processing Plugins
-    SelectionState,
-    PagingState,
-    IntegratedSelection,
-    IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
 import {
     Grid,
     Table,
     TableHeaderRow,
-    PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
-    Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
 import RemoveButton from './RemoveButton.js';
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 const DeleteFormatter = ({ value }) => {
     return <RemoveButton milestone={value} />;
@@ -102,7 +85,7 @@ class RepositoriesTable extends Component {
     }
 
     render() {
-        const { classes, repositories } = this.props;
+        const { repositories } = this.props;
         const { columns, tableColumnExtensions, deleteColumns, repoLinkColumns, orgLinkColumns, milestoneLinkColumns} = this.state;
 
         return (
@@ -132,15 +115,7 @@ class RepositoriesTable extends Component {
 }
 
 RepositoriesTable.propTypes = {
-    classes: PropTypes.object.isRequired,
+    repositories: PropTypes.array.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-
-});
-
-const mapState = state => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(RepositoriesTable));
+export default RepositoriesTable;

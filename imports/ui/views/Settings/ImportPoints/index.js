@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
-import PropTypes from "prop-types";
 
 import Grid from "@material-ui/core/Grid/Grid";
 
@@ -10,18 +8,12 @@ import Zenhub from './Zenhub.js';
 import Waffle from './Waffle.js';
 import Push from './Push.js';
 
-const styles = theme => ({
-    root: {
-    },
-});
-
 class ImportPoints extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { classes } = this.props;
         return (
             <React.Fragment>
                 <Grid
@@ -55,7 +47,6 @@ class ImportPoints extends Component {
 }
 
 ImportPoints.propTypes = {
-    classes: PropTypes.object,
 };
 
-export default connect(null, null)(withRouter(withStyles(styles)(ImportPoints)));
+export default connect(null, null)(withRouter(ImportPoints));

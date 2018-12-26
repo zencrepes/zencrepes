@@ -1,23 +1,9 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { withStyles } from '@material-ui/core/styles';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import Button from '@material-ui/core/Button';
-
 import TextField from '@material-ui/core/TextField';
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class MilestoneDueDate extends Component {
     constructor (props) {
@@ -40,7 +26,7 @@ class MilestoneDueDate extends Component {
     };
 
     render() {
-        const { classes, editMilestoneDueDate } = this.props;
+        const { editMilestoneDueDate } = this.props;
         console.log(editMilestoneDueDate);
         let endDate = new Date(editMilestoneDueDate);
         console.log(endDate);
@@ -64,7 +50,8 @@ class MilestoneDueDate extends Component {
 }
 
 MilestoneDueDate.propTypes = {
-    classes: PropTypes.object.isRequired,
+    editMilestoneDueDate: PropTypes.string.isRequired,
+    setEditMilestoneDueDate: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -75,4 +62,4 @@ const mapState = state => ({
     editMilestoneDueDate: state.milestonesEdit.editMilestoneDueDate,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(MilestoneDueDate));
+export default connect(mapState, mapDispatch)(MilestoneDueDate);
