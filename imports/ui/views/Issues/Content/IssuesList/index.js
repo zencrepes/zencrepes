@@ -1,24 +1,9 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import IssuesTable from '../../../../components/IssuesTable/index.js';
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class IssuesList extends Component {
     constructor (props) {
@@ -26,33 +11,28 @@ class IssuesList extends Component {
     }
 
     render() {
-        const { classes, filteredIssues, pagination } = this.props;
+        const { filteredIssues, pagination } = this.props;
         console.log('render issue list');
         let dispPagination = pagination;
         if (pagination === undefined) {
             dispPagination = true;
         }
         return (
-            <div className={classes.root}>
-                <IssuesTable
-                    pagination={dispPagination}
-                    filteredIssues={filteredIssues}
-                />
-            </div>
+            <IssuesTable
+                pagination={dispPagination}
+                filteredIssues={filteredIssues}
+            />
         );
     }
 }
 
 IssuesList.propTypes = {
-    classes: PropTypes.object.isRequired,
+    filteredIssues: PropTypes.array.isRequired,
+    pagination: PropTypes.bool.isRequired,
 };
 
 const mapState = state => ({
     filteredIssues: state.issuesView.filteredIssues,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesList));
+export default connect(mapState, null)(IssuesList);

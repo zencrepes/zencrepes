@@ -6,8 +6,6 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 
-import styles from '../../styles.jsx';
-
 import General from '../../layouts/General/index.js';
 
 import LabelsFetch from '../../data/Labels/Fetch/index.js';
@@ -17,6 +15,15 @@ import LabelsTable from './LabelsTable.js';
 import LabelsFacets from './Facets/index.js';
 import LabelsQuery from './Query/index.js';
 import Actions from "./Actions/index.js";
+
+const style = {
+    root: {
+        marginRight: '10px'
+    },
+    fullWidth :{
+        width: '100%',
+    }
+};
 
 class Labels extends Component {
     constructor(props) {
@@ -33,9 +40,9 @@ class Labels extends Component {
         } else {
             updateQuery(JSON.parse(queryUrl));
         }
-    };
+    }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { updateQuery } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
@@ -46,7 +53,7 @@ class Labels extends Component {
         if (queryUrl !== oldQueryUrl) {
             updateQuery(JSON.parse(queryUrl));
         }
-    };
+    }
 
     render() {
         const { classes, labels } = this.props;
@@ -88,7 +95,10 @@ class Labels extends Component {
 }
 
 Labels.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    labels: PropTypes.array.isRequired,
+    updateQuery: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -99,4 +109,4 @@ const mapState = state => ({
     labels: state.labelsView.labels,
 });
 
-export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Labels)));
+export default connect(mapState, mapDispatch)(withRouter(withStyles(style)(Labels)));

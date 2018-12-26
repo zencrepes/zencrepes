@@ -12,7 +12,7 @@ import RefreshAll from './RefreshAll.js';
 import RefreshSelected from './RefreshSelected.js';
 import RefreshIssues from './RefreshIssues.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         /*
         flexGrow: 1,
@@ -25,7 +25,7 @@ const styles = theme => ({
     toolbarButtons: {
         flex: 1,
     },
-});
+};
 
 
 class Actions extends Component {
@@ -71,6 +71,13 @@ class Actions extends Component {
 
 Actions.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    defaultPoints: PropTypes.bool.isRequired,
+    facets: PropTypes.array.isRequired,
+
+    setDefaultPoints: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadRepos: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

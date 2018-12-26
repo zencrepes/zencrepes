@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
 
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-
-import styles from './styles.jsx';
 
 import General from '../../layouts/General/index.js';
 
@@ -20,6 +17,15 @@ import IssuesFacets from './Facets/index.js';
 import IssuesQuery from './Query/index.js';
 import IssuesTabs from './Tabs/index.js';
 import IssuesContent from './Content/index.js';
+
+const style = {
+    root: {
+        marginRight: '10px'
+    },
+    fullWidth :{
+        width: '100%',
+    }
+};
 
 class Issues extends Component {
     constructor(props) {
@@ -36,9 +42,9 @@ class Issues extends Component {
         } else {
             updateQuery(JSON.parse(queryUrl));
         }
-    };
+    }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { updateQuery } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
@@ -49,7 +55,7 @@ class Issues extends Component {
         if (queryUrl !== oldQueryUrl) {
             updateQuery(JSON.parse(queryUrl));
         }
-    };
+    }
 
     render() {
         const { classes } = this.props;
@@ -93,12 +99,13 @@ class Issues extends Component {
 }
 
 Issues.propTypes = {
-    classes: PropTypes.object,
-
+    classes: PropTypes.string.isRequired,
+    updateQuery: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
 };
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
 });
 
-export default connect(null, mapDispatch)(withRouter(withStyles(styles)(Issues)));
+export default connect(null, mapDispatch)(withRouter(withStyles(style)(Issues)));

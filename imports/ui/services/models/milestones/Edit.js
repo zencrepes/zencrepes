@@ -144,9 +144,9 @@ export default {
 */
             this.updateView();
         },
-        async updateView(payload, rootState) {
+        async updateView() {
             console.log('MilestoneEdit - updateView');
-            const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
+            //const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
 
         },
 

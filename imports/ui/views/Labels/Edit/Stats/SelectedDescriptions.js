@@ -2,37 +2,13 @@ import _ from 'lodash';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
-
-import {
-    // State or Local Processing Plugins
-    SelectionState,
-    PagingState,
-    IntegratedSelection,
-    IntegratedPaging,
-    DataTypeProvider,
-} from '@devexpress/dx-react-grid';
 import {
     Grid,
     Table,
     TableHeaderRow,
-    PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
-    Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import CustomCard from "../../../../components/CustomCard";
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class SelectedDescriptions extends Component {
     constructor(props) {
@@ -63,10 +39,8 @@ class SelectedDescriptions extends Component {
         return descriptions;
     }
     render() {
-        const { classes } = this.props;
         const { columns, tableColumnExtensions} = this.state;
 
-        //console.log(this.buildDataset());
         return (
             <CustomCard
                 headerTitle="Label Descriptions"
@@ -86,7 +60,7 @@ class SelectedDescriptions extends Component {
 }
 
 SelectedDescriptions.propTypes = {
-    classes: PropTypes.object.isRequired,
+    selectedLabels: PropTypes.array.isRequired,
 
 };
 
@@ -95,8 +69,4 @@ const mapState = state => ({
 
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(SelectedDescriptions));
+export default connect(mapState, null)(SelectedDescriptions);

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
@@ -182,6 +181,15 @@ class IssuesQuery extends Component {
 
 IssuesQuery.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    query: PropTypes.object.isRequired,
+    queries: PropTypes.array.isRequired,
+    facets: PropTypes.array.isRequired,
+
+    saveQuery: PropTypes.func.isRequired,
+    deleteQuery: PropTypes.func.isRequired,
+
+    history: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

@@ -1,33 +1,15 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
 
 import TextField from '@material-ui/core/TextField';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Switch from '@material-ui/core/Switch';
 
-const styles = theme => ({
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
-    },
-});
-
 class LabelName extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
     }
 
     handleToggle = value => () => {
@@ -42,7 +24,7 @@ class LabelName extends Component {
     };
 
     render() {
-        const { classes, updateName, newName } = this.props;
+        const { updateName, newName } = this.props;
         return (
             <ListItem >
                 <TextField
@@ -69,8 +51,11 @@ class LabelName extends Component {
 }
 
 LabelName.propTypes = {
-    classes: PropTypes.object.isRequired,
+    updateName: PropTypes.string.isRequired,
+    newName: PropTypes.string.isRequired,
 
+    setUpdateName: PropTypes.func.isRequired,
+    setNewName: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -83,4 +68,4 @@ const mapDispatch = dispatch => ({
     setNewName: dispatch.labelsEdit.setNewName,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LabelName));
+export default connect(mapState, mapDispatch)(LabelName);

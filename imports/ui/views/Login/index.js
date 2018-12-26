@@ -1,23 +1,20 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import red from "@material-ui/core/colors/red";
 
 import GitHubLogin from '../../components/Github/GitHubLogin.js';
 
 import General from '../../layouts/General/index.js';
 import lightBlue from "@material-ui/core/colors/lightBlue";
 import {withRouter} from "react-router-dom";
+import PropTypes from "prop-types";
 
 const styles = theme => ({
     '@global': {
@@ -25,11 +22,6 @@ const styles = theme => ({
             backgroundColor: theme.palette.common.white,
         },
     },
-    /*
-    appBar: {
-        position: 'relative',
-    },
-    */
     toolbarTitle: {
         flex: 1,
     },
@@ -142,6 +134,12 @@ class Login extends Component {
 }
 
 //export default withStyles(styles)(Login);
+
+Login.propTypes = {
+    classes: PropTypes.object.isRequired,
+    authenticated: PropTypes.bool.isRequired,
+};
+
 
 export default (
     withTracker(() => {

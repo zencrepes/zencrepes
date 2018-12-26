@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {connect} from "react-redux";
 
 import Switch from '@material-ui/core/Switch';
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 class PointsSwitch extends Component {
     constructor (props) {
         super(props);
@@ -36,11 +35,13 @@ class PointsSwitch extends Component {
                 Points
             </div>
         )
-    };
+    }
 }
 
 PointsSwitch.propTypes = {
     classes: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+    setDefaultPoints: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PointsSwitch);

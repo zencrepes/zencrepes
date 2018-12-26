@@ -1,27 +1,12 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Paper from '@material-ui/core/Paper';
 import uuidv1 from "uuid/v1";
 
 import VelocityChart from './Chart.js';
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class Velocity extends Component {
     constructor (props) {
@@ -55,12 +40,10 @@ class Velocity extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-
         let dataset = this.prepareDataset();
 
         return (
-            <Paper className={classes.root} elevation={1}>
+            <Paper elevation={1}>
                 <VelocityChart data={this.getVelocityHighcharts(dataset)} />
             </Paper>
         );
@@ -68,15 +51,11 @@ class Velocity extends Component {
 }
 
 Velocity.propTypes = {
-    classes: PropTypes.object.isRequired,
+    velocity: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
     velocity: state.issuesView.velocity,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(Velocity));
+export default connect(mapState, null)(Velocity);

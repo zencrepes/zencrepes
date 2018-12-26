@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
@@ -22,7 +21,6 @@ const styles = theme => ({
     query: {
         flex: 1,
     },
-
 });
 
 
@@ -105,7 +103,7 @@ class LabelsQuery extends Component {
     };
 
     render() {
-        const { classes, query, facets, queries } = this.props;
+        const { classes, query, facets } = this.props;
         console.log('Render - IssuesQuery: ' + JSON.stringify(query));
         console.log(facets);
 
@@ -149,6 +147,11 @@ class LabelsQuery extends Component {
 
 LabelsQuery.propTypes = {
     classes: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    history: PropTypes.object.isRequired,
+    saveQuery: PropTypes.func.isRequired,
+    deleteQuery: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

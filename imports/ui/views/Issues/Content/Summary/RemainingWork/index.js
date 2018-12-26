@@ -1,28 +1,9 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
-
-import Grid from '@material-ui/core/Grid';
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 
 import ReposTreemap from "./ReposTreemap";
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class RemainingWork extends Component {
     constructor (props) {
@@ -36,7 +17,7 @@ class RemainingWork extends Component {
         } else {
             return remainingWorkCount;
         }
-    };
+    }
 
     getDefaultRemainingTxt() {
         const { defaultPoints } = this.props;
@@ -45,7 +26,7 @@ class RemainingWork extends Component {
         } else {
             return 'Issues';
         }
-    };
+    }
     getDefaultRemainingTxtShrt() {
         const { defaultPoints } = this.props;
         if (defaultPoints) {
@@ -53,10 +34,10 @@ class RemainingWork extends Component {
         } else {
             return 'Tkts';
         }
-    };
+    }
 
     render() {
-        const { classes, defaultPoints, remainingWorkPoints, remainingWorkRepos, remainingWorkCount  } = this.props;
+        const { defaultPoints, remainingWorkRepos  } = this.props;
 
         return (
             <CustomCard
@@ -71,7 +52,10 @@ class RemainingWork extends Component {
 }
 
 RemainingWork.propTypes = {
-    classes: PropTypes.object.isRequired,
+    remainingWorkRepos: PropTypes.array.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+    remainingWorkPoints: PropTypes.number.isRequired,
+    remainingWorkCount: PropTypes.number.isRequired,
 };
 
-export default withStyles(styles)(RemainingWork);
+export default RemainingWork;

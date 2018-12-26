@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import { withRouter } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 
 import { ResponsiveTreeMap } from '@nivo/treemap'
 
-const styles = theme => ({
+const styles = {
     root: {
         height: '150px'
     },
-});
+};
 
 class ReposTreemap extends Component {
     constructor(props) {
@@ -71,6 +68,8 @@ class ReposTreemap extends Component {
 
 ReposTreemap.propTypes = {
     classes: PropTypes.object.isRequired,
+    repos: PropTypes.array.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(ReposTreemap);

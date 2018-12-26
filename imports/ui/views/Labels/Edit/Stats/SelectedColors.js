@@ -3,20 +3,16 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
 
 import { ResponsivePie } from '@nivo/pie'
 import CustomCard from "../../../../components/CustomCard";
 
-const styles = theme => ({
+const styles = {
     root: {
         height: '150px',
     },
-});
+};
 
 class SelectedColors extends Component {
     constructor(props) {
@@ -24,7 +20,7 @@ class SelectedColors extends Component {
     }
 
     buildDataset() {
-        const { selectedRepos, selectedLabels, setNewColor } = this.props;
+        const { selectedLabels } = this.props;
         let colorElements = _.groupBy(selectedLabels, 'color');
         let colors = Object.keys(colorElements).map(idx => {
             return {
@@ -39,7 +35,7 @@ class SelectedColors extends Component {
         return colors.map((c) => {
             return {id: c.name, label: c.name, value: c.count, color: c.color};
         })
-    };
+    }
 
     render() {
         const { classes, setNewColor } = this.props;
@@ -111,16 +107,16 @@ class SelectedColors extends Component {
 }
 SelectedColors.propTypes = {
     classes: PropTypes.object.isRequired,
+    selectedLabels: PropTypes.array.isRequired,
+    setNewColor: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-    selectedRepos: state.labelsEdit.selectedRepos,
     selectedLabels: state.labelsEdit.selectedLabels,
 });
 
 const mapDispatch = dispatch => ({
     setNewColor: dispatch.labelsEdit.setNewColor,
-
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(SelectedColors));

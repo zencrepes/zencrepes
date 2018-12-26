@@ -10,21 +10,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Refresh from './Refresh.js';
 import RefreshLabels from './RefreshLabels.js';
 
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
+const styles = {
     toolbarButtons: {
         flex: 1,
     },
-});
-
+};
 
 class Actions extends Component {
     constructor (props) {
@@ -34,31 +24,29 @@ class Actions extends Component {
     render() {
         const {
             classes,
-            setDefaultPoints,
-            defaultPoints,
             setLoadFlag,
-            setLoadRepos,
-            facets
         } = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static" color="primary" className={classes.appBar}>
-                    <Toolbar>
-                        <div className={classes.toolbarButtons}>
-                            <Refresh
-                                setLoadFlag={setLoadFlag}
-                            />
-                            <RefreshLabels />
-                        </div>
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <AppBar position="static" color="primary" className={classes.appBar}>
+                <Toolbar>
+                    <div className={classes.toolbarButtons}>
+                        <Refresh
+                            setLoadFlag={setLoadFlag}
+                        />
+                        <RefreshLabels />
+                    </div>
+                </Toolbar>
+            </AppBar>
         );
     }
 }
 
 Actions.propTypes = {
     classes: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+    facets: PropTypes.array.isRequired,
+
+    setLoadFlag: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

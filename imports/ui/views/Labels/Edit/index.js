@@ -1,14 +1,8 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-import { withRouter, Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-
-import styles from '../../../styles.jsx';
 
 import General from '../../../layouts/General/index.js';
 
@@ -16,8 +10,6 @@ import SelectedColors from './Stats/SelectedColors.js';
 import SelectedDescriptions from './Stats/SelectedDescriptions.js';
 import EditSelection from './Selection/index.js';
 import EditActions from './Actions/index.js';
-
-import LabelsEdit from '../../../data/Labels/Edit/index.js';
 
 class LabelEdit extends Component {
     constructor(props) {
@@ -31,7 +23,7 @@ class LabelEdit extends Component {
         initConfiguration(labelName)
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         console.log('Sprint Planning - componentDidUpdate');
         const { initConfiguration, loadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
@@ -41,38 +33,37 @@ class LabelEdit extends Component {
     }
 
     render() {
-        const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <General>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item xs={12} sm={6} md={4}>
-                            <SelectedColors />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={8}>
-                            <SelectedDescriptions />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                            <EditSelection />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                            <EditActions />
-                        </Grid>
+            <General>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={4}>
+                        <SelectedColors />
                     </Grid>
-                </General>
-            </div>
+                    <Grid item xs={12} sm={6} md={8}>
+                        <SelectedDescriptions />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <EditSelection />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <EditActions />
+                    </Grid>
+                </Grid>
+            </General>
         );
     }
 }
 
 LabelEdit.propTypes = {
-    classes: PropTypes.object,
+    loadSuccess: PropTypes.bool.isRequired,
+    match: PropTypes.object.isRequired,
+    initConfiguration: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -83,4 +74,4 @@ const mapDispatch = dispatch => ({
     initConfiguration: dispatch.labelsEdit.initConfiguration,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LabelEdit));
+export default connect(mapState, mapDispatch)(LabelEdit);
