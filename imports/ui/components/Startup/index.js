@@ -17,7 +17,6 @@ import { cfgMilestones } from "../../data/Minimongo.js";
 class Startup extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     render() {
@@ -36,7 +35,7 @@ class Startup extends Component {
 
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                <DialogTitle id="simple-dialog-title">Loading data from browser's localStorage ...</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Loading data from browser&apos;s localStorage ...</DialogTitle>
                 <DialogContent>
                     <div>
                         Issues: {issuesCount} {loadedIssues && <i>- Complete</i>} <br />

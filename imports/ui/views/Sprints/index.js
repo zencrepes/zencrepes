@@ -35,7 +35,7 @@ class Sprints extends Component {
     componentDidMount() {
         const { initView } = this.props;
         initView();
-    };
+    }
 
     render() {
         const { issues, labels, velocity, assignees } = this.props;

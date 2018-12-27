@@ -174,7 +174,7 @@ Wizard.propTypes = {
     steps: PropTypes.array.isRequired,
     changeActiveStep: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    issues: PropTypes.number.isRequired,
+    issues: PropTypes.number,
 };
 
 const mapState = state => ({
