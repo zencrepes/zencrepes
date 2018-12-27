@@ -42,8 +42,7 @@ class AddAssignee extends Component {
         } else {
             return null;
         }
-
-    };
+    }
 }
 
 AddAssignee.propTypes = {

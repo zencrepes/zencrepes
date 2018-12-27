@@ -142,6 +142,7 @@ Waffle.propTypes = {
     setBoardUrl: PropTypes.func.isRequired,
     loadedIssues: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
+    boardUrl: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({

@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-
 import {
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
@@ -18,6 +15,9 @@ import RemoveButton from './RemoveButton.js';
 const DeleteFormatter = ({ value }) => {
     return <RemoveButton milestone={value} />;
 };
+DeleteFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
 
 const DeleteTypeProvider = props => (
     <DataTypeProvider
@@ -28,6 +28,9 @@ const DeleteTypeProvider = props => (
 
 const RepoLinkFormatter = ({ value }) => {
     return <span>{value.name}</span>;
+};
+RepoLinkFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
 };
 
 const RepoLinkTypeProvider = props => (
@@ -40,6 +43,9 @@ const RepoLinkTypeProvider = props => (
 const OrgLinkFormatter = ({ value }) => {
     return <span>{value.login}</span>;
 };
+OrgLinkFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
 
 const OrgLinkTypeProvider = props => (
     <DataTypeProvider
@@ -50,6 +56,9 @@ const OrgLinkTypeProvider = props => (
 
 const MilestoneLinkFormatter = ({ value }) => {
     return <span>{value.state}</span>;
+};
+MilestoneLinkFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
 };
 
 const MilestoneLinkTypeProvider = props => (

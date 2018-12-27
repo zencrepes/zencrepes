@@ -12,6 +12,7 @@ import StoryPoints from './StoryPoints/index.js';
 import ImportPoints from './ImportPoints/index.js';
 import PropTypes from "prop-types";
 
+/*
 function TabContainer(props) {
     return (
         <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -19,6 +20,18 @@ function TabContainer(props) {
         </Typography>
     );
 }
+*/
+const TabContainer = ( {children} ) => {
+    return (
+        <Typography component="div" style={{ padding: 8 * 3 }}>
+            {children}
+        </Typography>
+    );
+};
+TabContainer.propTypes = {
+    children: PropTypes.object.isRequired,
+};
+
 
 class Settings extends Component {
     constructor(props) {
@@ -34,7 +47,6 @@ class Settings extends Component {
 
     render() {
         const { value } = this.state;
-
         return (
             <General>
                 <Tabs

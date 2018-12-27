@@ -86,7 +86,7 @@ class Oops extends Component {
                         <hr className={classes.underline} />
                     </div>
                     <p className={classes.subtitle}>Sorry, it seems that ZenCrepes experienced a big glitch, please refresh your browser.</p>
-                    <p className={classes.subtitle}>If the problem persists, don't hesitate to create an Issue on ZenCrepes' repo.</p>
+                    <p className={classes.subtitle}>If the problem persists, don&apos;t hesitate to create an Issue on ZenCrepes&apos; repo.</p>
                 </main>
             </General>
         );

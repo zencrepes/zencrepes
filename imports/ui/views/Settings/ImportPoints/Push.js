@@ -77,7 +77,7 @@ class Push extends Component {
                             Push points to GitHub as labels
                         </Typography>
                         <Typography>
-                            Attach the 'SP:X' label to all issues for which points have been imported from ZenHub or Waffle and push back to GitHub.
+                            Attach the &apos;SP:X&apos; label to all issues for which points have been imported from ZenHub or Waffle and push back to GitHub.
                         </Typography>
                         {loading &&
                         <div className={classes.loading}>

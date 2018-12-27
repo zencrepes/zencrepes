@@ -21,7 +21,6 @@ class MilestoneDescription extends Component {
             <SimpleMDE
                 id="milestoneDescriptionEdit"
                 onChange={this.handleChange}
-                className={classes.root}
                 value={editMilestoneDescription}
                 options={{
                     autofocus: true,

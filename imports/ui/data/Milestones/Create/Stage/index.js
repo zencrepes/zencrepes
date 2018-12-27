@@ -35,7 +35,7 @@ class Stage extends Component {
                     <DialogTitle id="simple-dialog-title">Review changes before pushing</DialogTitle>
                     <DialogContent>
                         <span>The following nodes will be modified in GitHub. Removing from this table will not push the change to GitHub for the removed node.</span><br />
-                        <span>The system will verify each nodes in GitHub, applying changes will only be possible if local data is identical than GitHub's (based on last update date)</span>
+                        <span>The system will verify each nodes in GitHub, applying changes will only be possible if local data is identical than GitHub&apos;s (based on last update date)</span>
                         <StageTable
                             repos={repos}
                             milestoneTitle={milestoneTitle}

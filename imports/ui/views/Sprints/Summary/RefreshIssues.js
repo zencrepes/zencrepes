@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 
@@ -25,12 +23,12 @@ class RefreshIssues extends Component {
 
     render() {
         return (
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshFull}>
-                <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+            <Button variant="contained" color="primary" onClick={this.refreshFull}>
+                <RefreshIcon />
                 Issues
             </Button>
         )
-    };
+    }
 }
 
 RefreshIssues.propTypes = {

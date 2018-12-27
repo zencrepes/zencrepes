@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Typography from '@material-ui/core/Typography';
@@ -80,6 +78,7 @@ class IssuesRepartition extends Component {
 }
 
 IssuesRepartition.propTypes = {
+    classes: PropTypes.object.isRequired,
     issues: PropTypes.array.isRequired,
 };
 

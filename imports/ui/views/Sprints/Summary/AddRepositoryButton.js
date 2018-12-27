@@ -33,7 +33,7 @@ class AddRepositoryButton extends Component {
                 </Button>
             </div>
         )
-    };
+    }
 }
 
 AddRepositoryButton.propTypes = {

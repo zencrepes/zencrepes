@@ -26,6 +26,7 @@ class CurrentCompletion extends Component {
 
 
         //Filter out all issues labelled with Scope Change
+        /*
         const noScIssues = issues
             .filter(issue => {
                 if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length === 0) {
@@ -34,7 +35,7 @@ class CurrentCompletion extends Component {
                     return false;
                 }
             });
-
+        */
         /*
         const noScIssuesTotalPoints = noScIssues
             .map(issue => issue.points)

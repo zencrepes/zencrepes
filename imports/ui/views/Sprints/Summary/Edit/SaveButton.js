@@ -79,6 +79,7 @@ ApplyButton.propTypes = {
     setVerifFlag: PropTypes.func.isRequired,
     setVerifying: PropTypes.func.isRequired,
     setMilestones: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
     setEditMilestoneTitle: PropTypes.func.isRequired,
     setEditMilestoneDescription: PropTypes.func.isRequired,
     setEditMilestoneDueDate: PropTypes.func.isRequired,

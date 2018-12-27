@@ -20,30 +20,28 @@ class LoadDialog extends Component {
         const { reposIssues } = this.props;
 
         return (
-            <div className={classes.root}>
-                <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                    <DialogTitle id="simple-dialog-title">Load issues ?</DialogTitle>
-                    <DialogContent>
-                        {reposIssues === 0 ? (
-                            <React.Fragment>
-                                Please select a repository with issues.
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                Do you want to load the {reposIssues} issues attached to the selected repositories ?<br />
-                            </React.Fragment>
-                        )}
-                    </DialogContent>
-                    <DialogActions>
-                        {reposIssues !== 0 &&
-                            <CancelButton />
-                        }
-                        <ApplyButton />
-                    </DialogActions>
-                </Dialog>
-            </div>
+            <Dialog aria-labelledby="simple-dialog-title" open={true}>
+                <DialogTitle id="simple-dialog-title">Load issues ?</DialogTitle>
+                <DialogContent>
+                    {reposIssues === 0 ? (
+                        <React.Fragment>
+                            Please select a repository with issues.
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            Do you want to load the {reposIssues} issues attached to the selected repositories ?<br />
+                        </React.Fragment>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    {reposIssues !== 0 &&
+                        <CancelButton />
+                    }
+                    <ApplyButton />
+                </DialogActions>
+            </Dialog>
         );
-    };
+    }
 }
 
 LoadDialog.propTypes = {

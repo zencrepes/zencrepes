@@ -34,7 +34,7 @@ class SprintTitle extends Component {
                 }}
             />
         );
-    };
+    }
 }
 
 SprintTitle.propTypes = {

@@ -40,7 +40,7 @@ class CloseSprint extends Component {
                 </Button>
             )
         }
-    };
+    }
 }
 
 CloseSprint.propTypes = {

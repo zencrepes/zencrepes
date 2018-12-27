@@ -83,7 +83,7 @@ class SyncLabels extends Component {
                         </Typography>
                         <Typography>
                             Warning, this process can be lengthy. <br />
-                            Please also note that this process is not mandatory, simply adding a label 'SP:x' (with 'x' being a number) though GitHub web interface is sufficient. <br />
+                            Please also note that this process is not mandatory, simply adding a label &apos;SP:x&apos; (with &apos;x&apos; being a number) though GitHub web interface is sufficient. <br />
                             Adding through this interface ensures consistency (label names, color, description) across repositories.
                         </Typography>
                         <Typography>

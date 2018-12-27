@@ -33,7 +33,7 @@ class Select extends Component {
             return null
         } else {
             return (
-                <TextField className={classes.root}
+                <TextField
                    id="select-query"
                    select
                    label="Select an open sprint"

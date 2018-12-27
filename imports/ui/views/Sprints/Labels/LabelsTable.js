@@ -29,7 +29,7 @@ class LabelsTable extends Component {
         const { columns, tableColumnExtensions} = this.state;
 
         return (
-            <div className={classes.root}>
+            <React.Fragment>
                 <Grid
                     rows={labels}
                     columns={columns}
@@ -38,7 +38,7 @@ class LabelsTable extends Component {
                     <TableHeaderRow />
                 </Grid>
                 <i>*Issues with multiple labels are counted multiple times</i>
-            </div>
+            </React.Fragment>
         );
     }
 }

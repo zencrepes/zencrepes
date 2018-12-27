@@ -33,6 +33,7 @@ class RemoveButton extends Component {
 RemoveButton.propTypes = {
     verifiedRepos: PropTypes.array.isRequired,
     repos: PropTypes.array.isRequired,
+    milestone: PropTypes.object.isRequired,
 
     setStageFlag: PropTypes.func.isRequired,
     setVerifFlag: PropTypes.func.isRequired,

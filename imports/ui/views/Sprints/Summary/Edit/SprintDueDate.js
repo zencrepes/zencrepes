@@ -45,7 +45,7 @@ class SprintDueDate extends Component {
                 onChange={this.changeSprintEndDate()}
             />
         );
-    };
+    }
 }
 
 SprintDueDate.propTypes = {

@@ -91,7 +91,7 @@ class AddRepository extends Component {
         } else {
             return null;
         }
-    };
+    }
 }
 
 AddRepository.propTypes = {

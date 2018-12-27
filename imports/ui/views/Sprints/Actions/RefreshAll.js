@@ -19,7 +19,6 @@ const styles = theme => ({
 class RefreshAll extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     refreshFull = () => {
@@ -36,7 +35,7 @@ class RefreshAll extends Component {
                 All Repos
             </Button>
         )
-    };
+    }
 }
 
 RefreshAll.propTypes = {

@@ -28,6 +28,9 @@ const StatesFormatter = ({ value }) => {
         <div key={state.value}>{state.value}</div>
     ))
 };
+StatesFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
+};
 
 const StatesTypeProvider = props => (
     <DataTypeProvider
@@ -43,6 +46,10 @@ const ReposFormatter = ({ value }) => {
         return '1 (' + value[0].repo.name + ')';
     }
 };
+ReposFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
+};
+
 
 const ReposTypeProvider = props => (
     <DataTypeProvider
@@ -53,6 +60,9 @@ const ReposTypeProvider = props => (
 
 const IssuesFormatter = ({ value }) => {
     return value.filter(label => label.issues !== undefined).map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
+};
+IssuesFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
 };
 
 const IssuesTypeProvider = props => (
@@ -65,6 +75,9 @@ const IssuesTypeProvider = props => (
 const ActionsFormatter = ({ value }) => {
     return <TableActionButtons key={value.title} milestonesdata={value} />
 };
+ActionsFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
 
 const ActionsTypeProvider = props => (
     <DataTypeProvider
@@ -73,9 +86,11 @@ const ActionsTypeProvider = props => (
     />
 );
 
-
 const EditLabelFormatter = ({ value }) => {
     return <Link to={"/labels/view/" + value}><EyeIcon /></Link>;
+};
+EditLabelFormatter.propTypes = {
+    value: PropTypes.string.isRequired,
 };
 
 const EditLabelTypeProvider = props => (
