@@ -43,7 +43,7 @@ class DeleteClosedEmptyButton extends Component {
                 }
             </div>
         );
-    };
+    }
 }
 
 DeleteClosedEmptyButton.propTypes = {

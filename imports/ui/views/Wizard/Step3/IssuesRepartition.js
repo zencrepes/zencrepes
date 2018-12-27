@@ -10,7 +10,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import {ResponsiveTreeMap} from "@nivo/treemap";
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
         width: '100%',
@@ -18,10 +18,7 @@ const styles = theme => ({
     treemap: {
         height: '320px'
     },
-    loading: {
-        flexGrow: 1,
-    },
-});
+};
 
 class IssuesRepartition extends Component {
     constructor(props) {
@@ -30,7 +27,6 @@ class IssuesRepartition extends Component {
 
     buildDataset = () => {
         const { issues } = this.props;
-
         let reposGroup = _.groupBy(issues.filter(issue => issue.state === 'OPEN'), 'repo.name');
         return {
             name: 'repositories'
@@ -84,16 +80,7 @@ class IssuesRepartition extends Component {
 }
 
 IssuesRepartition.propTypes = {
-    classes: PropTypes.object,
-
+    issues: PropTypes.array.isRequired,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesRepartition));
+export default withStyles(styles)(IssuesRepartition);

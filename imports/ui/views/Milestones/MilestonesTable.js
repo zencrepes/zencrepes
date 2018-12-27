@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -193,6 +194,7 @@ class MilestonesTable extends Component {
 MilestonesTable.propTypes = {
     classes: PropTypes.object.isRequired,
     milestones: PropTypes.array.isRequired,
+    value: PropTypes.string.isRequired,
 };
 
 

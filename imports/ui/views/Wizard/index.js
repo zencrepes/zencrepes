@@ -169,11 +169,11 @@ class Wizard extends Component {
 }
 
 Wizard.propTypes = {
-    classes: PropTypes.object,
-    activeStep: PropTypes.number,
-    steps: PropTypes.array,
-    changeActiveStep: PropTypes.func,
-    history: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    activeStep: PropTypes.number.isRequired,
+    steps: PropTypes.array.isRequired,
+    changeActiveStep: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

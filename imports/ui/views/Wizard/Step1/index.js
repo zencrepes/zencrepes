@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 
-const styles = theme => ({
+const styles = {
     root: {
     },
     subtitle: {
@@ -20,7 +20,7 @@ const styles = theme => ({
         fontFamily: 'Roboto',
         fontWeight: 400,
     },
-});
+};
 
 class Step1 extends Component {
     constructor(props) {
@@ -53,7 +53,7 @@ class Step1 extends Component {
 }
 
 Step1.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Step1);

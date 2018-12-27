@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 
 import Value from './Value.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         marginLeft: '5px',
     },
@@ -15,7 +15,7 @@ const styles = theme => ({
         flex: 1,
     },
 
-});
+};
 
 const ExpandButton = (props) => {
     if (props.collapsed && props.length > 2) {
@@ -83,6 +83,10 @@ class Aggregation extends Component {
 
 Aggregation.propTypes = {
     classes: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    currentFacet: PropTypes.object.isRequired,
+    updateQuery: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Aggregation);

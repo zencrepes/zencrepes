@@ -22,8 +22,6 @@ import RemainingPoints from './RemainingPoints/index.js';
 
 import CurrentCompletion from './CurrentCompletion/index.js';
 
-import CreateSprint from './CreateSprint/index.js';
-
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
 import IssuesEdit from '../../data/Issues/Edit/index.js';
 
@@ -53,7 +51,6 @@ class Sprints extends Component {
             <General>
                 <IssuesFetch />
                 <IssuesEdit />
-                <CreateSprint />
                 <MilestonesEdit />
                 <MilestonesCreate />
                 <Actions />

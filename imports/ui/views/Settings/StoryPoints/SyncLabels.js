@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -51,7 +50,7 @@ class SyncLabels extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -59,7 +58,7 @@ class SyncLabels extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     createLabels = () => {
         const { setLoadFlag, setAction } = this.props;
@@ -135,6 +134,7 @@ SyncLabels.propTypes = {
     updatedRepos: PropTypes.number.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
     setLoadSuccess: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

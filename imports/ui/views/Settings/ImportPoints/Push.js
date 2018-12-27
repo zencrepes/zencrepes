@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -60,7 +59,7 @@ class Push extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     reloadRepos = () => {
         const { setLoadFlag } = this.props;
@@ -120,6 +119,8 @@ Push.propTypes = {
     updatedRepos: PropTypes.number.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
     setLoadSuccess: PropTypes.func.isRequired,
+    updatedIssues: PropTypes.number.isRequired,
+    message: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({

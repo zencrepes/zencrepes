@@ -14,20 +14,11 @@ import RefreshAll from './RefreshAll.js';
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
+const styles = {
     toolbarButtons: {
         flex: 1,
     },
-});
+};
 
 class Actions extends Component {
     constructor(props) {
@@ -35,36 +26,30 @@ class Actions extends Component {
     }
 
     render() {
-        const { classes, selectedSprintName, assignees, setLoadFlag, setLoadRepos } = this.props;
-        //let assignees = getAssigneesRepartition(cfgIssues.find({'milestone.title':{'$in':[sprintName]}}).fetch());
+        const { classes, setLoadFlag, setLoadRepos } = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static" color="primary" className={classes.appBar}>
-                    <Toolbar>
-                        <div className={classes.toolbarButtons}>
-                            <Select />
-                            <RefreshAll
-                                setLoadFlag={setLoadFlag}
-                                setLoadRepos={setLoadRepos}
-                            />
-                            <Refresh />
-                        </div>
-                        <Create />
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <AppBar position="static" color="primary" className={classes.appBar}>
+                <Toolbar>
+                    <div className={classes.toolbarButtons}>
+                        <Select />
+                        <RefreshAll
+                            setLoadFlag={setLoadFlag}
+                            setLoadRepos={setLoadRepos}
+                        />
+                        <Refresh />
+                    </div>
+                    <Create />
+                </Toolbar>
+            </AppBar>
         );
     }
 }
 
 Actions.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadRepos: PropTypes.object.isRequired,
 };
-
-const mapState = state => ({
-    selectedSprintName: state.sprintsView.selectedSprintName,
-    assignees: state.sprintsView.assignees,
-});
 
 const mapDispatch = dispatch => ({
     setDefaultPoints: dispatch.issuesView.setDefaultPoints,
@@ -73,4 +58,4 @@ const mapDispatch = dispatch => ({
     setLoadRepos: dispatch.issuesFetch.setLoadRepos,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Actions));
+export default connect(null, mapDispatch)(withStyles(styles)(Actions));

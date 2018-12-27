@@ -52,6 +52,7 @@ MilestonesFacets.propTypes = {
     classes: PropTypes.object.isRequired,
     facets: PropTypes.array.isRequired,
     query: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

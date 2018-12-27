@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
@@ -7,18 +6,13 @@ import PropTypes from "prop-types";
 import CustomCard from "../../../components/CustomCard/index.js";
 import LabelsTable from './LabelsTable.js';
 
-const styles = theme => ({
-    root: {
-    }
-});
-
 class Labels extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { classes, labels } = this.props;
+        const { labels } = this.props;
         return (
             <CustomCard
                 headerTitle="Labels"
@@ -32,11 +26,11 @@ class Labels extends Component {
 }
 
 Labels.propTypes = {
-    classes: PropTypes.object,
+    labels: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({
     labels: state.sprintsView.labels,
 });
 
-export default connect(mapState, null)(withStyles(styles)(Labels));
+export default connect(mapState, null)(Labels);

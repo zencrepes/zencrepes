@@ -77,7 +77,6 @@ class Terms extends Component {
 
     render() {
         const { classes } = this.props;
-
         return (
             <General>
                 <main className={classes.layout}>

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
 
-const styles = theme => ({
-    root: {
-    },
+const styles = {
     subtitle: {
         fontSize: '20px',
         fontFamily: 'Roboto',
@@ -21,7 +18,7 @@ const styles = theme => ({
         fontFamily: 'Roboto',
         fontWeight: 400,
     },
-});
+};
 
 class Step4 extends Component {
     constructor(props) {
@@ -56,6 +53,5 @@ class Step4 extends Component {
 Step4.propTypes = {
     classes: PropTypes.object,
 };
-
 
 export default withStyles(styles)(Step4);

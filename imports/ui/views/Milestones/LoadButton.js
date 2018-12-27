@@ -37,7 +37,7 @@ class LoadButton extends Component {
                 }
             </div>
         );
-    };
+    }
 }
 
 LoadButton.propTypes = {

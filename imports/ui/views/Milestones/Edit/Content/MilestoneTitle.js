@@ -17,24 +17,23 @@ class MilestoneTitle extends Component {
 
     render() {
         const { editMilestoneTitle } = this.props;
-
         return (
-                <TextField
-                    id="outlined-full-width"
-                    label="Milestone Title"
-                    style={{ margin: 8 }}
-                    placeholder=""
-                    fullWidth
-                    value={editMilestoneTitle}
-                    onChange={this.changeSprintName()}
-                    margin="normal"
-                    variant="outlined"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
+            <TextField
+                id="outlined-full-width"
+                label="Milestone Title"
+                style={{ margin: 8 }}
+                placeholder=""
+                fullWidth
+                value={editMilestoneTitle}
+                onChange={this.changeSprintName()}
+                margin="normal"
+                variant="outlined"
+                InputLabelProps={{
+                    shrink: true,
+                }}
+            />
         );
-    };
+    }
 }
 
 MilestoneTitle.propTypes = {

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -158,7 +159,7 @@ class MilestonesList extends Component {
     }
 
     render() {
-        const { classes, milestones, query } = this.props;
+        const { classes, query } = this.props;
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
@@ -206,6 +207,7 @@ MilestonesList.propTypes = {
     classes: PropTypes.object.isRequired,
     milestones: PropTypes.array.isRequired,
     query: PropTypes.object.isRequired,
+    value: PropTypes.string.isRequired,
 };
 
 

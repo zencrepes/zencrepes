@@ -33,20 +33,18 @@ class MilestoneDueDate extends Component {
         const formattedMilestoneEndDate = endDate.getFullYear() + "-" + (endDate.getMonth()+1 < 10 ? '0' : '') + (endDate.getMonth()+1) + "-" + (endDate.getDate() < 10 ? '0' : '') + (endDate.getDate());
         console.log(formattedMilestoneEndDate);
         return (
-            <div className={classes.root}>
-                <TextField
-                    id="date"
-                    label="End Date"
-                    type="date"
-                    defaultValue={formattedMilestoneEndDate}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    onChange={this.changeMilestoneEndDate()}
-                />
-            </div>
+            <TextField
+                id="date"
+                label="End Date"
+                type="date"
+                defaultValue={formattedMilestoneEndDate}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                onChange={this.changeMilestoneEndDate()}
+            />
         );
-    };
+    }
 }
 
 MilestoneDueDate.propTypes = {

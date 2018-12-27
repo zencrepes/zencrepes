@@ -48,7 +48,7 @@ class Milestones extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { updateQuery } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
@@ -120,7 +120,8 @@ class Milestones extends Component {
 }
 
 Milestones.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
 

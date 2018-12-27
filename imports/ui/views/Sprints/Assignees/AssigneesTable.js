@@ -1,34 +1,11 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { GithubCircle } from 'mdi-material-ui'
-import { Link } from 'react-router-dom';
-
-import {
-    // State or Local Processing Plugins
-    SelectionState,
-    PagingState,
-    IntegratedSelection,
-    IntegratedPaging,
-    DataTypeProvider,
-} from '@devexpress/dx-react-grid';
 import {
     Grid,
     Table,
     TableHeaderRow,
-    PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
-    Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class AsisgneesTable extends Component {
     constructor(props) {
@@ -68,16 +45,8 @@ class AsisgneesTable extends Component {
 
 AsisgneesTable.propTypes = {
     classes: PropTypes.object.isRequired,
+    assignees: PropTypes.array.isRequired,
 };
 
-const mapDispatch = dispatch => ({
 
-});
-
-
-const mapState = state => ({
-
-});
-
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(AsisgneesTable));
+export default AsisgneesTable;

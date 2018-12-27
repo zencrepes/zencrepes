@@ -10,6 +10,7 @@ import General from '../../layouts/General/index.js';
 import Repositories from './Repositories/index.js';
 import StoryPoints from './StoryPoints/index.js';
 import ImportPoints from './ImportPoints/index.js';
+import PropTypes from "prop-types";
 
 function TabContainer(props) {
     return (
@@ -56,7 +57,7 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
-
+    children: PropTypes.object.isRequired,
 };
 
 export default Settings;

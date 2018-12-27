@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -54,7 +53,7 @@ class Waffle extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -62,7 +61,7 @@ class Waffle extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     reloadRepos = () => {
         const { setLoadFlag } = this.props;
@@ -76,7 +75,7 @@ class Waffle extends Component {
 
 
     render() {
-        const { classes, loading, loadSuccess, loadedIssues, boardUrl, rateLimitPause, message } = this.props;
+        const { classes, loading, loadSuccess, loadedIssues, boardUrl, message } = this.props;
         return (
             <div className={classes.root}>
                 <FetchWafflePoints />
@@ -140,6 +139,9 @@ Waffle.propTypes = {
     updatedRepos: PropTypes.number.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
     setLoadSuccess: PropTypes.func.isRequired,
+    setBoardUrl: PropTypes.func.isRequired,
+    loadedIssues: PropTypes.number.isRequired,
+    message: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({

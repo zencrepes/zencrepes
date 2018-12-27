@@ -14,10 +14,9 @@ const styles = {
 class TableActionButtons extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -25,7 +24,7 @@ class TableActionButtons extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     closeSprint = () => {
         console.log('closeSprint');
@@ -63,13 +62,14 @@ class TableActionButtons extends Component {
                 }
             </div>
         );
-    };
+    }
 }
 
 TableActionButtons.propTypes = {
     classes: PropTypes.object.isRequired,
 
     loadSuccess: PropTypes.bool.isRequired,
+    milestonesdata: PropTypes.object.isRequired,
 
     setStageFlag: PropTypes.func.isRequired,
     setVerifFlag: PropTypes.func.isRequired,

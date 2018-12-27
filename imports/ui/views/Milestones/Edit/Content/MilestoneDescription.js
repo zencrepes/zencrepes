@@ -16,7 +16,7 @@ class MilestoneDescription extends Component {
     };
 
     render() {
-        const { classes, editMilestoneDescription } = this.props;
+        const { editMilestoneDescription } = this.props;
         return (
             <SimpleMDE
                 id="milestoneDescriptionEdit"

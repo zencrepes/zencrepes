@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,15 +12,9 @@ import Button from '@material-ui/core/Button';
 import SearchAssignees from './SearchAssignees';
 import ListAssignees from './ListAssignees';
 
-const styles = theme => ({
-    root: {
-    }
-});
-
 class AddAssignee extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     close = () => {
@@ -30,7 +23,7 @@ class AddAssignee extends Component {
     };
 
     render() {
-        const { classes, openAddAssignee } = this.props;
+        const { openAddAssignee } = this.props;
         if (openAddAssignee) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openAddAssignee}>
@@ -55,7 +48,8 @@ class AddAssignee extends Component {
 
 AddAssignee.propTypes = {
     classes: PropTypes.object.isRequired,
-
+    openAddAssignee: PropTypes.bool.isRequired,
+    setOpenAddAssignee: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -66,4 +60,4 @@ const mapDispatch = dispatch => ({
     setOpenAddAssignee: dispatch.sprintsView.setOpenAddAssignee,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(AddAssignee));
+export default connect(mapState, mapDispatch)(AddAssignee);

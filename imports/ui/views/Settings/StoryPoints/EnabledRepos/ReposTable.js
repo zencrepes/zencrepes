@@ -21,13 +21,13 @@ class ReposTable extends Component {
 
     getRepoState() {
         return 'partial';
-    };
+    }
 
     getGrouppedLabels() {
         let allLabels = [];
-        let repos = cfgSources.find({active: true}).map(repo => {
+        cfgSources.find({active: true}).forEach(repo => {
             //Get Labels for repo
-            let labels = cfgLabels.find({'repo.id': repo.id}).map(label => {
+            cfgLabels.find({'repo.id': repo.id}).forEach(label => {
                 allLabels.push(label);
             });
         });
@@ -70,7 +70,7 @@ class ReposTable extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {dataset.map((point, key) => {
+                        {dataset.map((point) => {
                             return (
                                 <TableRow key={point.number}>
                                     <TableCell key={1}>

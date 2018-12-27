@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -10,16 +8,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import DualListBox from 'react-dual-listbox';
-
-const styles = theme => ({
-    button: {
-        marginLeft: '10px',
-    },
-});
 
 class AddRepository extends Component {
     constructor (props) {
@@ -37,13 +28,10 @@ class AddRepository extends Component {
 
         const {
             setOpenAddRepository,
-            addReposAvailable,
             addReposSelected,
             allRepos,
             setStageFlag,
             setVerifFlag,
-            setMilestones,
-            setAction,
             setVerifying,
             setRepos,
             setMilestoneTitle,
@@ -74,7 +62,7 @@ class AddRepository extends Component {
     };
 
     render() {
-        const { classes, openAddRepository, addReposAvailable, addReposSelected, addRepoUpdateSelected } = this.props;
+        const { openAddRepository, addReposAvailable, addReposSelected, addRepoUpdateSelected } = this.props;
 
         if (openAddRepository) {
             return (
@@ -108,6 +96,26 @@ class AddRepository extends Component {
 
 AddRepository.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    openAddRepository: PropTypes.bool.isRequired,
+    addReposAvailable: PropTypes.array.isRequired,
+    addReposSelected: PropTypes.array.isRequired,
+    allRepos: PropTypes.array.isRequired,
+    selectedSprintTitle: PropTypes.string.isRequired,
+    selectedSprintDescription: PropTypes.string.isRequired,
+    selectedSprintDueDate: PropTypes.string.isRequired,
+
+    setOpenAddRepository: PropTypes.func.isRequired,
+    addRepoUpdateSelected: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setRepos: PropTypes.func.isRequired,
+    setMilestoneTitle: PropTypes.func.isRequired,
+    setMilestoneDescription: PropTypes.func.isRequired,
+    setMilestoneDueDate: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -141,4 +149,4 @@ const mapDispatch = dispatch => ({
     updateView: dispatch.sprintsView.updateView,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(AddRepository));
+export default connect(mapState, mapDispatch)(AddRepository);

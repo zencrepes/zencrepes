@@ -27,10 +27,6 @@ class MilestoneEdit extends Component {
     }
 
     render() {
-        const {
-            //selectedMilestoneDueDate,
-        } = this.props;
-
         //var moment = require('moment');
         //const dueDate = moment(selectedMilestoneDueDate).utc().format('ddd MMM D, YYYY');
 
@@ -60,6 +56,7 @@ MilestoneEdit.propTypes = {
     selectedMilestoneTitle: PropTypes.string.isRequired,
     selectedMilestoneDueDate: PropTypes.string.isRequired,
     updateQuery: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
 
 import {
     // State or Local Processing Plugins
@@ -89,33 +88,32 @@ class RepositoriesTable extends Component {
         const { columns, tableColumnExtensions, deleteColumns, repoLinkColumns, orgLinkColumns, milestoneLinkColumns} = this.state;
 
         return (
-            <div className={classes.root}>
-                <Grid
-                    rows={repositories}
-                    columns={columns}
-                >
-                    <DeleteTypeProvider
-                        for={deleteColumns}
-                    />
-                    <RepoLinkTypeProvider
-                        for={repoLinkColumns}
-                    />
-                    <OrgLinkTypeProvider
-                        for={orgLinkColumns}
-                    />
-                    <MilestoneLinkTypeProvider
-                        for={milestoneLinkColumns}
-                    />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                </Grid>
-            </div>
+            <Grid
+                rows={repositories}
+                columns={columns}
+            >
+                <DeleteTypeProvider
+                    for={deleteColumns}
+                />
+                <RepoLinkTypeProvider
+                    for={repoLinkColumns}
+                />
+                <OrgLinkTypeProvider
+                    for={orgLinkColumns}
+                />
+                <MilestoneLinkTypeProvider
+                    for={milestoneLinkColumns}
+                />
+                <Table columnExtensions={tableColumnExtensions} />
+                <TableHeaderRow />
+            </Grid>
         );
     }
 }
 
 RepositoriesTable.propTypes = {
     repositories: PropTypes.array.isRequired,
+    value: PropTypes.string.isRequired,
 };
 
 export default RepositoriesTable;
