@@ -32,7 +32,7 @@ class ApplyButton extends Component {
 }
 
 ApplyButton.propTypes = {
-    reposIssues: PropTypes.array.isRequired,
+    reposIssues: PropTypes.number.isRequired,
     changeActiveStep: PropTypes.func.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
     setLoadRepos: PropTypes.func.isRequired,

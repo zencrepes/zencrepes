@@ -110,6 +110,41 @@ class Data extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
+        await data.data.repository.milestones.edges.forEach(async (currentMilestone) => {
+            console.log('Loading milestone: ' + currentMilestone.node.title);
+            let existNode = cfgMilestones.findOne({id: currentMilestone.node.id});
+            let exitsNodeUpdateAt = null;
+            if (existNode !== undefined) {
+                exitsNodeUpdateAt = existNode.updatedAt;
+            }
+            if (new Date(currentMilestone.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
+                console.log('Milestone already loaded, skipping');
+                // Milestones are loaded from newest to oldest, when it gets to a point where updated date of a loaded milestone
+                // is equal to updated date of a local milestone, it means there is no "new" content, but there might still be
+                // milestones that were not loaded for any reason. So the system only stops loaded if totalCount remote is equal
+                //  to the total number of milestones locally
+                if (data.data.repository.milestones.totalCount === cfgMilestones.find({'repo.id': repoObj.id}).count()) {
+                    stopLoad = true;
+                }
+            } else {
+                console.log('New or updated milestone');
+                let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
+                milestoneObj['repo'] = repoObj;
+                milestoneObj['org'] = repoObj.org;
+                milestoneObj['refreshed'] = true;
+                milestoneObj['active'] = true;
+
+                await cfgMilestones.remove({'id': milestoneObj.id});
+                await cfgMilestones.upsert({
+                    id: milestoneObj.id
+                }, {
+                    $set: milestoneObj
+                });
+                incLoadedCount(1);
+            }
+            lastCursor = currentMilestone.cursor;
+        });
+        /*
         for (let currentMilestone of Object.entries(data.data.repository.milestones.edges)){
             console.log('Loading milestone: ' + currentMilestone.node.title);
             let existNode = cfgMilestones.findOne({id: currentMilestone.node.id});
@@ -144,6 +179,7 @@ class Data extends Component {
             }
             lastCursor = currentMilestone.cursor;
         }
+        */
         if (lastCursor === null) {
             console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
         }

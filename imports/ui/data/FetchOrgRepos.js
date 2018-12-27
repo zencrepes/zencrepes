@@ -78,6 +78,29 @@ class FetchOrgRepos extends Component {
     loadRepositories = async (data) => {
         const { incrementLoadedRepos } = this.props;
         let lastCursor = null;
+        await data.data.organization.repositories.edges.forEach(async (currentRepo) => {
+            console.log('Inserting: ' + currentRepo.node.name);
+            let existNode = cfgSources.findOne({id: currentRepo.node.id});
+            let nodeActive = false;
+            if (existNode !== undefined) {
+                nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
+            }
+            let repoObj = JSON.parse(JSON.stringify(currentRepo.node)); //TODO - Replace this with something better to copy object ?
+            repoObj['org'] = {
+                login: data.data.organization.login,
+                name: data.data.organization.name,
+                id: data.data.organization.id,
+                url: data.data.organization.url,
+            };
+            repoObj['active'] = nodeActive;
+            await cfgSources.upsert({
+                id: repoObj.id
+            }, {
+                $set: repoObj
+            });
+            lastCursor = currentRepo.cursor
+        });
+        /*
         for (let currentRepo of Object.entries(data.data.organization.repositories.edges)) {
             console.log('Inserting: ' + currentRepo.node.name);
             let existNode = cfgSources.findOne({id: currentRepo.node.id});
@@ -100,6 +123,7 @@ class FetchOrgRepos extends Component {
             });
             lastCursor = currentRepo.cursor
         }
+        */
         this.reposCount = this.reposCount + Object.entries(data.data.organization.repositories.edges).length;
         incrementLoadedRepos(Object.entries(data.data.organization.repositories.edges).length);
         return lastCursor;

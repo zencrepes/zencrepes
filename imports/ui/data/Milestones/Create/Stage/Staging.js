@@ -141,6 +141,24 @@ class Staging extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
+        await data.data.repository.milestones.edges.forEach(async (currentMilestone) => {
+            console.log('Loading milestone: ' + currentMilestone.node.title);
+            console.log('New or updated milestone');
+            let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
+            milestoneObj['repo'] = repoObj;
+            milestoneObj['org'] = repoObj.org;
+            milestoneObj['refreshed'] = true;
+            milestoneObj['active'] = true;
+            await cfgMilestones.upsert({
+                id: milestoneObj.id
+            }, {
+                $set: milestoneObj
+            });
+            console.log(milestoneObj);
+            this.syncedMilestones.push(milestoneObj);
+            lastCursor = currentMilestone.cursor;
+        });
+        /*
         for (let currentMilestone of Object.entries(data.data.repository.milestones.edges)){
             console.log('Loading milestone: ' + currentMilestone.node.title);
             console.log('New or updated milestone');
@@ -158,6 +176,7 @@ class Staging extends Component {
             this.syncedMilestones.push(milestoneObj);
             lastCursor = currentMilestone.cursor;
         }
+        */
         if (lastCursor === null) {
             console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
