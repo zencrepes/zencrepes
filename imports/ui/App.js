@@ -40,6 +40,11 @@ class App extends Component {
         autoBind(this);
     }
 
+    componentDidMount() {
+        const { initApp } = this.props;
+        initApp();
+    }
+
     setAfterLoginPath(afterLoginPath) {
         this.setState({ afterLoginPath });
     }
@@ -99,6 +104,7 @@ App.propTypes = {
     emailAddress: PropTypes.string,
     emailVerified: PropTypes.bool.isRequired,
     authenticated: PropTypes.bool.isRequired,
+    initApp: PropTypes.func.isRequired,
 };
 
 const getUserName = name => ({
@@ -113,8 +119,12 @@ const mapState = state => ({
     loadedQueries: state.startup.loadedQueries,
 });
 
+const mapDispatch = dispatch => ({
+    initApp: dispatch.global.initApp,
+});
+
 export default
-    connect(mapState, null)(
+    connect(mapState, mapDispatch)(
         withTracker(() => {
             const loggingIn = Meteor.loggingIn();
             const user = Meteor.user();

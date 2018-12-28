@@ -30,6 +30,7 @@ class Data extends Component {
             client,
             refreshUsers,
             updateChip,
+            log,
         } = this.props;
 
         let users = [];
@@ -45,7 +46,7 @@ class Data extends Component {
             users.push(data.data.user);
         }
         refreshUsers(users);
-        console.log('Load completed: There is a total of ' + users.length + ' users in memory');
+        log.info('Load completed: There is a total of ' + users.length + ' users in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
     };
@@ -67,6 +68,8 @@ Data.propTypes = {
     incLoadedCount: PropTypes.func.isRequired,
     refreshUsers: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -74,6 +77,8 @@ const mapState = state => ({
     loading: state.usersFetch.loading,
 
     loadUsers: state.usersFetch.loadUsers,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

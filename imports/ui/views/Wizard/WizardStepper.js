@@ -29,7 +29,6 @@ class WizardStepper extends Component {
 
     render() {
         const { classes, activeStep, steps } = this.props;
-        console.log(activeStep);
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
