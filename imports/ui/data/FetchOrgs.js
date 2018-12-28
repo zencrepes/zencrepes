@@ -97,15 +97,10 @@ class FetchOrgs extends Component {
     loadOrganizations = async (data) => {
         const { setIncrementLoadedOrgs } = this.props;
         let lastCursor = null;
-        await data.data.viewer.organizations.edges.forEach((currentOrg) => {
+        for (var currentOrg of data.data.viewer.organizations.edges) {
             this.githubOrgs.push(currentOrg.node);
             lastCursor = currentOrg.cursor;
-        });
-        /*
-        for (let currentOrg of Object.entries(data.data.viewer.organizations.edges)){
-            this.githubOrgs.push(currentOrg.node);
-            lastCursor = currentOrg.cursor;
-        }*/
+        }
         setIncrementLoadedOrgs(Object.entries(data.data.viewer.organizations.edges).length);
         return lastCursor;
     };
@@ -152,26 +147,7 @@ class FetchOrgs extends Component {
         const { setIncrementLoadedRepos } = this.props;
 
         let lastCursor = null;
-        await repositories.edges.forEach(async (currentRepo) => {
-            console.log('Inserting: ' + currentRepo.node.name);
-            let existNode = cfgSources.findOne({id: currentRepo.node.id});
-            let nodeActive = false;
-            if (existNode !== undefined) {
-                nodeActive = cfgSources.findOne({id: currentRepo.node.id}).active;
-            }
-            let repoObj = JSON.parse(JSON.stringify(currentRepo.node)); //TODO - Replace this with something better to copy object ?
-            repoObj['org'] = OrgObj;
-            repoObj['active'] = nodeActive;
-
-            await cfgSources.upsert({
-                id: repoObj.id
-            }, {
-                $set: repoObj
-            });
-            lastCursor = currentRepo.cursor;
-        });
-        /*
-        for (let currentRepo of Object.entries(repositories.edges)){
+        for (var currentRepo of repositories.edges) {
             console.log('Inserting: ' + currentRepo.node.name);
             let existNode = cfgSources.findOne({id: currentRepo.node.id});
             let nodeActive = false;
@@ -189,7 +165,6 @@ class FetchOrgs extends Component {
             });
             lastCursor = currentRepo.cursor
         }
-        */
         setIncrementLoadedRepos(Object.entries(repositories.edges).length);
         this.orgReposCount[OrgObj.id] = this.orgReposCount[OrgObj.id] + Object.entries(repositories.edges).length;
         this.totalReposCount = this.totalReposCount + Object.entries(repositories.edges).length;

@@ -33,13 +33,11 @@ class Step1 extends Component {
             <React.Fragment>
                 <p className={classes.subtitle}>Select your repositories</p>
                 <p className={classes.paragraph}>
-                    When you&apos;ll move to the next stage, ZenCrepes will fetch all organizations you&apos;re a member of and fetch all of the corresponding repositories.
-                    You will then be able to select an entire organization or individual repositories to be included in ZenCrepes.
-                    As you select elements, ZenCrepes will indicate how many issues are included in those repos, giving you a sense of what will be loaded.
+                    ZenCrepes will first fetch all organizations and repositories you&apos;re a member of and let you select repositories to be included..
                 </p>
                 <p className={classes.subtitle}>Add external orgs and repos</p>
                 <p className={classes.paragraph}>
-                    You can also add public opensource repositories and organizations to ZenCrepes to load the associated data.
+                    ZenCrepes will also allow you to add public opensource repositories and organizations and load their public data.
                     For example if you add &quot;Jetbrains&quot; as an organization, you&apos;d be able ot select add some of the repositories to ZenCrepes (of course this will be read-only).<br />
                     If an org is configured not to allow listing of repositories, you can also add individual repositories. For example try adding the &quot;elastic&quot; organization and the &quot;beats&quot; repository.
                 </p>

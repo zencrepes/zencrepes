@@ -35,8 +35,8 @@ class IssuesTabs extends Component {
 }
 
 IssuesTabs.propTypes = {
-    selectedTab: PropTypes.string.isRequired,
-    setSelectedTab: PropTypes.object.isRequired,
+    selectedTab: PropTypes.number.isRequired,
+    setSelectedTab: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

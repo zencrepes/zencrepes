@@ -60,22 +60,14 @@ class Verification extends Component {
                             //Get points from labels
                             // Regex to test: SP:[.\d]
                             let pointsExp = RegExp('SP:[.\\d]');
-                            await issueObj.labels.edges.forEach((currentLabel) => {
-                                if (pointsExp.test(currentLabel.node.name)) {
-                                    let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                                    console.log('This issue has ' + points + ' story points');
-                                    issueObj['points'] = points;
-                                }
-                            });
-                            /*
-                            for (let currentLabel of Object.entries(issueObj.labels.edges)) {
+                            for (var currentLabel of issueObj.labels.edges) {
                                 if (pointsExp.test(currentLabel.node.name)) {
                                     let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                                     console.log('This issue has ' + points + ' story points');
                                     issueObj['points'] = points;
                                 }
                             }
-                            */
+
                         }
                         await cfgIssues.upsert({
                             id: data.data.repository.issue.id

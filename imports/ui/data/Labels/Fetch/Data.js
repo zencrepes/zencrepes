@@ -109,25 +109,7 @@ class Data extends Component {
 
         let lastCursor = null;
         console.log(data);
-        await data.data.repository.labels.edges.forEach(async (currentLabel) => {
-            console.log('Loading label: ' + currentLabel.node.name);
-            //let existNode = cfgLabels.findOne({id: currentLabel.node.id});
-
-            let labelObj = JSON.parse(JSON.stringify(currentLabel.node)); //TODO - Replace this with something better to copy object ?
-            labelObj['repo'] = repoObj;
-            labelObj['org'] = repoObj.org;
-            labelObj['refreshed'] = true;
-            await cfgLabels.upsert({
-                id: labelObj.id
-            }, {
-                $set: labelObj
-            });
-            incLoadedCount(1);
-            //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
-            lastCursor = currentLabel.cursor
-        });
-        /*
-        for (let currentLabel of Object.entries(data.data.repository.labels.edges)){
+        for (var currentLabel of data.data.repository.labels.edges) {
             console.log('Loading label: ' + currentLabel.node.name);
             //let existNode = cfgLabels.findOne({id: currentLabel.node.id});
 
@@ -144,7 +126,6 @@ class Data extends Component {
             //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentLabel.cursor
         }
-        */
         return lastCursor;
     };
 

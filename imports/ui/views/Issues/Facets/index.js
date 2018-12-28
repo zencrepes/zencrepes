@@ -56,7 +56,6 @@ IssuesFacets.propTypes = {
     query: PropTypes.object.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
 
-    addRemoveQuery: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
 };
 
@@ -66,8 +65,4 @@ const mapState = state => ({
     defaultPoints: state.issuesView.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-    addRemoveQuery: dispatch.issuesView.addRemoveQuery,
-});
-
-export default withRouter(connect(mapState, mapDispatch)(withStyles(styles)(IssuesFacets)));
+export default withRouter(connect(mapState, null)(withStyles(styles)(IssuesFacets)));

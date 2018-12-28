@@ -129,7 +129,7 @@ class Data extends Component {
         let lastCursor = null;
         let stopLoad = false;
         console.log(data);
-        data.data.repository.issues.edges.forEach(async (currentIssue) => {
+        for (var currentIssue of data.data.repository.issues.edges){
             console.log(currentIssue);
             console.log('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
@@ -174,93 +174,7 @@ class Data extends Component {
                     //Get points from labels
                     // Regex to test: SP:[.\d]
                     let pointsExp = RegExp('SP:[.\\d]');
-                    await issueObj.labels.edges.forEach((currentLabel) => {
-                        if (pointsExp.test(currentLabel.node.name)) {
-                            let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                            console.log('This issue has ' + points + ' story points');
-                            issueObj['points'] = points;
-                        }
-                    });
-                    /*
-                    for (let currentLabel of Object.entries(issueObj.labels.edges)) {
-                        if (pointsExp.test(currentLabel.node.name)) {
-                            let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                            console.log('This issue has ' + points + ' story points');
-                            issueObj['points'] = points;
-                        }
-                    }
-                    */
-                }
-                await cfgIssues.remove({'id': issueObj.id});
-                await cfgIssues.upsert({
-                    id: issueObj.id
-                }, {
-                    $set: issueObj
-                });
-
-                if (issueObj.milestone !== null) {
-                    let milestoneObj = issueObj.milestone;
-                    milestoneObj['repo'] = repoObj;
-                    milestoneObj['org'] = repoObj.org;
-                    await cfgMilestones.upsert({
-                        id: milestoneObj.id
-                    }, {
-                        $set: milestoneObj
-                    });
-                }
-
-                incLoadedCount(1);
-            }
-            lastCursor = currentIssue.cursor;
-        });
-        /*
-        for (let currentIssue of Object.entries(data.data.repository.issues.edges)){
-
-            console.log(currentIssue);
-            console.log('Loading issue: ' + currentIssue.node.title);
-            let existNode = cfgIssues.findOne({id: currentIssue.node.id});
-//            console.log(existNode);
-//            console.log(currentIssue.node.updatedAt);
-//            console.log(new Date(currentIssue.node.updatedAt).getTime());
-            let exitsNodeUpdateAt = null;
-            if (existNode !== undefined) {
-                exitsNodeUpdateAt = existNode.updatedAt;
-//                console.log(new Date(existNode.updatedAt).getTime());
-            }
-            if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
-                console.log('Issue already loaded, skipping');
-//                console.log(data.data.repository.issues.totalCount);
-//                console.log(cfgIssues.find({'repo.id': repoObj.id}).count());
-
-                // Issues are loaded from newest to oldest, when it gets to a point where updated date of a loaded issue
-                // is equal to updated date of a local issue, it means there is no "new" content, but there might still be
-                // issues that were not loaded for any reason. So the system only stops loaded if totalCount remote is equal
-                //  to the total number of issues locally
-                if (data.data.repository.issues.totalCount === cfgIssues.find({'repo.id': repoObj.id}).count()) {
-                    stopLoad = true;
-                }
-            } else {
-                console.log('New or updated issue');
-                let nodePinned = false;
-                let nodePoints = null;
-                if (existNode !== undefined) {
-                    nodePinned = existNode.pinned;
-                    nodePoints = existNode.points;
-                }
-                let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
-                issueObj['repo'] = repoObj;
-                issueObj['org'] = repoObj.org;
-                issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
-                issueObj['refreshed'] = true;
-                issueObj['pinned'] = nodePinned;
-                issueObj['points'] = nodePoints;
-                issueObj['active'] = true;
-
-                if (issueObj.labels !== undefined) {
-                    //Get points from labels
-                    // Regex to test: SP:[.\d]
-                    let pointsExp = RegExp('SP:[.\\d]');
-                    for (let currentLabel of Object.entries(issueObj.labels.edges)) {
+                    for (var currentLabel of issueObj.labels.edges) {
                         if (pointsExp.test(currentLabel.node.name)) {
                             let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                             console.log('This issue has ' + points + ' story points');
@@ -290,7 +204,7 @@ class Data extends Component {
             }
             lastCursor = currentIssue.cursor;
         }
-        */
+
         if (lastCursor === null) {
             console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
         }

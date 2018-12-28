@@ -33,7 +33,7 @@ class IssuesContent extends Component {
 }
 
 IssuesContent.propTypes = {
-    selectedTab: PropTypes.string.isRequired,
+    selectedTab: PropTypes.number.isRequired,
 };
 
 const mapState = state => ({

@@ -99,7 +99,7 @@ class Issues extends Component {
 }
 
 Issues.propTypes = {
-    classes: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
 };

@@ -53,8 +53,7 @@ class General extends Component {
 
 General.propTypes = {
     classes: PropTypes.object.isRequired,
-    children: PropTypes.object.isRequired,
-
+    children: PropTypes.node.isRequired,
 };
 
 export default withStyles(style)(General);
