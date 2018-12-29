@@ -55,7 +55,8 @@ class Data extends Component {
             newName,
             newDescription,
             newColor,
-            incLoadedCount
+            incLoadedCount,
+            log
         } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
@@ -87,13 +88,13 @@ class Data extends Component {
                         updateObj['description'] = newDescription;
                     }
                     if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
-                        console.log('Nothing to be changed, not sending a request to GitHub');
+                        log.info('Nothing to be changed, not sending a request to GitHub');
                     } else {
                         try {
                             result = await this.octokit.issues.updateLabel(updateObj);
                         }
                         catch (error) {
-                            console.log(error);
+                            log.info(error);
                         }
                     }
                 } else {
@@ -108,10 +109,10 @@ class Data extends Component {
                         result = await this.octokit.issues.createLabel(updateObj);
                     }
                     catch (error) {
-                        console.log(error);
+                        log.info(error);
                     }
                 }
-                console.log(result);
+                log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     let labelObj = {
@@ -159,6 +160,7 @@ Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     action: PropTypes.string.isRequired,
+    log: PropTypes.object.isRequired,
 
     selectedRepos: PropTypes.array.isRequired,
     selectedLabels: PropTypes.array.isRequired,
@@ -199,6 +201,7 @@ const mapState = state => ({
     newDescription: state.labelsEdit.newDescription,
     newColor: state.labelsEdit.newColor,
 
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

@@ -23,7 +23,7 @@ class Verification extends Component {
     };
 
     load = async () => {
-        const { setVerifying, issues, setVerifiedIssues, insVerifiedIssues, client, onSuccess, setVerifyingMsg, setVerifySuccess } = this.props;
+        const { setVerifying, issues, setVerifiedIssues, insVerifiedIssues, client, onSuccess, setVerifyingMsg, setVerifySuccess, log } = this.props;
         setVerifySuccess(false);
         setVerifiedIssues([]);
         setVerifyingMsg('About pull data from ' + issues.length + ' issues');
@@ -42,7 +42,7 @@ class Verification extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
                 if (data.data !== null) {
                     if (data.data.repository.issue.updatedAt === issue.updatedAt) {
@@ -63,7 +63,7 @@ class Verification extends Component {
                             for (var currentLabel of issueObj.labels.edges) {
                                 if (pointsExp.test(currentLabel.node.name)) {
                                     let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                                    console.log('This issue has ' + points + ' story points');
+                                    log.info('This issue has ' + points + ' story points');
                                     issueObj['points'] = points;
                                 }
                             }
@@ -94,6 +94,7 @@ Verification.propTypes = {
     verifying: PropTypes.bool,
     issues: PropTypes.array,
     onSuccess: PropTypes.func,
+    log: PropTypes.object.isRequired,
 
     setVerifFlag: PropTypes.func,
     setVerifying: PropTypes.func,
@@ -110,6 +111,7 @@ const mapState = state => ({
 
     issues: state.issuesEdit.issues,
     onSuccess: state.issuesEdit.onSuccess,
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

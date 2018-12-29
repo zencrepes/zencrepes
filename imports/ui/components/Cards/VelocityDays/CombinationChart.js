@@ -16,7 +16,6 @@ class CombinationChart extends Component {
 
     render() {
         const { dataset, metric } = this.props;
-        console.log(dataset);
         let updatedOptions = {
             chart: {
                 height: 300,

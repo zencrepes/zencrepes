@@ -37,6 +37,7 @@ class Data extends Component {
             setIterateTotal,
             incIterateCurrent,
             loadRepos,
+            log,
         } = this.props;
 
         //Check if there if we are loading everything or just data for a subset of repositories
@@ -51,10 +52,10 @@ class Data extends Component {
         for (let repo of cfgSources.find(reposQuery).fetch()) {
             if (repo.active === false) {
                 //If repo is inactive, delete any issues attached to this repo (if any)
-                console.log('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgIssues.find({'repo.id': repo.id}).count() + ' issues and ' + cfgLabels.find({'repo.id': repo.id}).count() + ' labels');
+                log.info('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgIssues.find({'repo.id': repo.id}).count() + ' issues and ' + cfgLabels.find({'repo.id': repo.id}).count() + ' labels');
                 await cfgIssues.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
-                console.log('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
+                log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
 
                 // We always start by loading 5 issues in the repository
                 // This is also used to refresh the total number of issues & labels in the repo, which might have
@@ -67,7 +68,7 @@ class Data extends Component {
             }
         }
 
-        console.log('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues in memory');
+        log.info('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
     };
@@ -75,7 +76,7 @@ class Data extends Component {
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 issues, but local only has 99
     // Query increment should not be just 1 since if the missing issue is far down, this will generate a large number of calls
     getIssuesPagination = async (cursor, increment, repoObj) => {
-        const { client, setLoadSuccess, setLoading } = this.props;
+        const { client, setLoadSuccess, setLoading, log } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
@@ -86,12 +87,12 @@ class Data extends Component {
                         fetchPolicy: 'no-cache',
                         errorPolicy: 'ignore',
                     });
-                    console.log(data);
+                    log.info(data);
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(repoObj);
+                log.info(repoObj);
                 if (data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
@@ -104,7 +105,7 @@ class Data extends Component {
                         let lastCursor = await this.ingestIssues(data, repoObj);
                         let loadedIssuesCount = cfgIssues.find({'repo.id': repoObj.id, 'refreshed': true}).count();
                         let queryIncrement = calculateQueryIncrement(loadedIssuesCount, data.data.repository.issues.totalCount);
-                        console.log('Loading issues for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedIssuesCount + ' - Remote Count: ' + data.data.repository.issues.totalCount);
+                        log.info('Loading issues for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedIssuesCount + ' - Remote Count: ' + data.data.repository.issues.totalCount);
                         if (queryIncrement > 0 && lastCursor !== null) {
                             //Start recurring call, to load all issues from a repository
                             await this.getIssuesPagination(lastCursor, queryIncrement, repoObj);
@@ -112,11 +113,11 @@ class Data extends Component {
                     }
                 } else {
                     this.errorRetry = this.errorRetry + 1;
-                    console.log('Error loading content, current count: ' + this.errorRetry)
+                    log.info('Error loading content, current count: ' + this.errorRetry)
                     await this.getIssuesPagination(cursor, increment, repoObj);
                 }
             } else {
-                console.log('Got too many load errors, stopping');
+                log.info('Got too many load errors, stopping');
                 setLoadSuccess(false);
                 setLoading(false);
             }
@@ -124,27 +125,27 @@ class Data extends Component {
     };
 
     ingestIssues = async (data, repoObj) => {
-        const { incLoadedCount } = this.props;
+        const { incLoadedCount, log } = this.props;
 
         let lastCursor = null;
         let stopLoad = false;
-        console.log(data);
+        log.info(data);
         for (var currentIssue of data.data.repository.issues.edges){
-            console.log(currentIssue);
-            console.log('Loading issue: ' + currentIssue.node.title);
+            log.info(currentIssue);
+            log.info('Loading issue: ' + currentIssue.node.title);
             let existNode = cfgIssues.findOne({id: currentIssue.node.id});
-//            console.log(existNode);
-//            console.log(currentIssue.node.updatedAt);
-//            console.log(new Date(currentIssue.node.updatedAt).getTime());
+//            log.info(existNode);
+//            log.info(currentIssue.node.updatedAt);
+//            log.info(new Date(currentIssue.node.updatedAt).getTime());
             let exitsNodeUpdateAt = null;
             if (existNode !== undefined) {
                 exitsNodeUpdateAt = existNode.updatedAt;
-//                console.log(new Date(existNode.updatedAt).getTime());
+//                log.info(new Date(existNode.updatedAt).getTime());
             }
             if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
-                console.log('Issue already loaded, skipping');
-//                console.log(data.data.repository.issues.totalCount);
-//                console.log(cfgIssues.find({'repo.id': repoObj.id}).count());
+                log.info('Issue already loaded, skipping');
+//                log.info(data.data.repository.issues.totalCount);
+//                log.info(cfgIssues.find({'repo.id': repoObj.id}).count());
 
                 // Issues are loaded from newest to oldest, when it gets to a point where updated date of a loaded issue
                 // is equal to updated date of a local issue, it means there is no "new" content, but there might still be
@@ -154,7 +155,7 @@ class Data extends Component {
                     stopLoad = true;
                 }
             } else {
-                console.log('New or updated issue');
+                log.info('New or updated issue');
                 let nodePinned = false;
                 let nodePoints = null;
                 if (existNode !== undefined) {
@@ -177,7 +178,7 @@ class Data extends Component {
                     for (var currentLabel of issueObj.labels.edges) {
                         if (pointsExp.test(currentLabel.node.name)) {
                             let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                            console.log('This issue has ' + points + ' story points');
+                            log.info('This issue has ' + points + ' story points');
                             issueObj['points'] = points;
                         }
                     }
@@ -206,7 +207,7 @@ class Data extends Component {
         }
 
         if (lastCursor === null) {
-            console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
+            log.info('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
         if (stopLoad === true) {
             lastCursor = null;
@@ -223,6 +224,7 @@ Data.propTypes = {
     loadFlag: PropTypes.bool,
     loading: PropTypes.bool,
     loadRepos: PropTypes.array,
+    log: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,
@@ -239,6 +241,7 @@ Data.propTypes = {
 const mapState = state => ({
     loadFlag: state.issuesFetch.loadFlag,
     loading: state.issuesFetch.loading,
+    log: state.global.log,
 
     loadRepos: state.issuesFetch.loadRepos,
 });

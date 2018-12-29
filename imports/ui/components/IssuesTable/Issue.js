@@ -78,7 +78,6 @@ class Issue extends Component {
     render() {
         const { classes, issue } = this.props;
         const pointsExp = RegExp('SP:[.\\d]');
-        console.log(issue);
         return (
             <TableRow key={issue.id}>
                 <TableCell component="th" scope="row">

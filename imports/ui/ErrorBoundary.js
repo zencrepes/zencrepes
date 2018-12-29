@@ -2,6 +2,7 @@ import React from 'react';
 
 import Oops from './views/Oops/index.js';
 import PropTypes from "prop-types";
+import {connect} from "react-redux";
 
 //https://reactjs.org/docs/error-boundaries.html
 class ErrorBoundary extends React.Component {
@@ -16,10 +17,10 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, info) {
+        const { log } = this.props;
         // You can also log the error to an error reporting service
-        console.log(error);
-        console.log(info);
-//        logErrorToMyService(error, info);
+        log.error(error);
+        log.info(info);
     }
 
     render() {
@@ -34,6 +35,11 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
     children: PropTypes.object.isRequired,
+    log: PropTypes.object.isRequired,
 };
 
-export default ErrorBoundary;
+const mapState = state => ({
+    log: state.global.log,
+});
+
+export default connect(mapState, null)(ErrorBoundary);

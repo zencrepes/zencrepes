@@ -23,7 +23,7 @@ class Staging extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, labels, setVerifiedLabels, onSuccess, insVerifiedLabels, client } = this.props;
+        const { setVerifying, setVerifyingMsg, labels, setVerifiedLabels, onSuccess, insVerifiedLabels, client, log } = this.props;
         setVerifiedLabels([]);
         setVerifyingMsg('About pull data from ' + labels.length + ' labels');
 //        for (let label of labels) {
@@ -45,9 +45,9 @@ class Staging extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(data);
+                log.info(data);
                 if (data.data !== null) {
                     if (data.data.repository.label === null) {
                         // The label doesn't exist anymore on GitHub.
@@ -109,6 +109,7 @@ Staging.propTypes = {
     setVerifiedLabels: PropTypes.func.isRequired,
     insVerifiedLabels: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -117,6 +118,7 @@ const mapState = state => ({
 
     labels: state.labelsEdit.labels,
     onSuccess: state.labelsEdit.onSuccess,
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

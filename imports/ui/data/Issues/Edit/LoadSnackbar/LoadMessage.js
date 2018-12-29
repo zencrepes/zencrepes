@@ -11,7 +11,6 @@ class LoadMessage extends Component {
     }
 
     cancelLoad = () => {
-        console.log('cancelLoad');
         const { setVerifying } = this.props;
         setVerifying(false);
     };

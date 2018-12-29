@@ -23,7 +23,6 @@ class PushPoints extends Component {
     componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
-            console.log('FetchZenhubPoints - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
@@ -40,7 +39,7 @@ class PushPoints extends Component {
     }
 
     load = async () => {
-        const { setLoading, setLoadError, setLoadSuccess, setUpdatedIssues, incrementUpdatedIssues, setChipRemaining } = this.props;
+        const { setLoading, setLoadError, setLoadSuccess, setUpdatedIssues, incrementUpdatedIssues, setChipRemaining, log } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -50,13 +49,13 @@ class PushPoints extends Component {
         //Only work with issues for which points are not null
         for (let issue of cfgIssues.find({points:{ $exists: true, $ne: null }}).fetch()) {
             let pointsLabel = 'SP:' + issue.points;
-            console.log('Processing issue: ' + issue.title);
+            log.info('Processing issue: ' + issue.title);
             let existingLabels = [];
             if (issue.labels.totalCount > 0) {
                 existingLabels = issue.labels.edges.map(label => label.node.name);
             }
             if (!existingLabels.includes(pointsLabel)) {
-                console.log('Label: ' + pointsLabel + ' is not attached to issue');
+                log.info('Label: ' + pointsLabel + ' is not attached to issue');
                 let result = false;
                 try {
                     result = await this.octokit.issues.addLabels({
@@ -67,11 +66,11 @@ class PushPoints extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    console.log(result);
+                    log.info(result);
 
                     //Prepare results data
                     let updatedData = result.data.map((label) => {
@@ -109,6 +108,7 @@ class PushPoints extends Component {
 PushPoints.propTypes = {
     loading: PropTypes.bool.isRequired,
     loadFlag: PropTypes.bool.isRequired,
+    log: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
@@ -124,6 +124,7 @@ PushPoints.propTypes = {
 const mapState = state => ({
     loadFlag: state.githubPushPoints.loadFlag,
     loading: state.githubPushPoints.loading,
+    log: state.global.log,
 
 });
 

@@ -16,7 +16,6 @@ class CombinationChart extends Component {
     };
 
     clickBar = (event) => {
-        console.log(event.point);
         if (event.point.issues !== undefined && event.point.issues.length > 0) {
             const issues = event.point.issues;
             const issuesArrayQuery = issues.map(issue => issue.id);
@@ -36,7 +35,6 @@ class CombinationChart extends Component {
     */
     render() {
         const { dataset, metric } = this.props;
-        console.log(dataset);
         let updatedOptions = {
             chart: {
                 height: 300,

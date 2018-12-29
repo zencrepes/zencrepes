@@ -43,7 +43,6 @@ class VelocityWeeks extends Component {
 
     buildDataset() {
         const { velocity } = this.props;
-        console.log(velocity);
         if (velocity['weeks'] !== undefined ) {
             let startPos = 0;
             let endPos = velocity['weeks'].length;

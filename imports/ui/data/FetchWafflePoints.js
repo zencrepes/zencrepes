@@ -20,7 +20,6 @@ class FetchWafflePoints extends Component {
     componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
-            console.log('FetchZenhubPoints - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
@@ -46,22 +45,22 @@ class FetchWafflePoints extends Component {
     };
 
     loadWafflePoints = (issue) => {
-        const { setIncrementLoadedIssues, setMessage } = this.props;
+        const { setIncrementLoadedIssues, setMessage, log } = this.props;
         // Search for issue by number
         let existNode = cfgIssues.findOne({databaseId: issue.githubMetadata.id});
         if (existNode !== undefined && issue.size !== undefined) {
-            console.log('updated points: ' + issue.size + ' for issue: ' + existNode.title + ' Closed At:' + existNode.closedAt);
+            log.info('updated points: ' + issue.size + ' for issue: ' + existNode.title + ' Closed At:' + existNode.closedAt);
             cfgIssues.update({id: existNode.id}, {$set:{'points':issue.size}});
             setIncrementLoadedIssues(1);
             setMessage('Updated points for issue: ' + existNode.title);
         }
-        console.log(issue.githubMetadata.id);
-        console.log(issue);
-        console.log(existNode);
+        log.info(issue.githubMetadata.id);
+        log.info(issue);
+        log.info(existNode);
     };
 
     load = async () => {
-        const { setLoading, setLoadError, setLoadSuccess, setLoadedIssues, boardUrl } = this.props;
+        const { setLoading, setLoadError, setLoadSuccess, setLoadedIssues, boardUrl, log } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -69,7 +68,7 @@ class FetchWafflePoints extends Component {
         setLoadedIssues(0);
 
         let apiUrl = this.getApiFromBoard(boardUrl);
-        console.log('Will making a call to: ' + apiUrl);
+        log.info('Will making a call to: ' + apiUrl);
 
         let response = await axios({
             method:'get',
@@ -93,6 +92,7 @@ FetchWafflePoints.propTypes = {
     loading: PropTypes.bool,
     loadFlag: PropTypes.bool,
     boardUrl: PropTypes.string,
+    log: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,
@@ -108,6 +108,7 @@ const mapState = state => ({
     loading: state.waffle.loading,
 
     boardUrl: state.waffle.boardUrl,
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({
