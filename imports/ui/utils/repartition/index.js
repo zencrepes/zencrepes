@@ -8,8 +8,6 @@ import _ from 'lodash';
 * - issues: Array of issues
 */
 export const getAssignees = (issues) => {
-    console.log('getAssignees');
-
     let statesGroup = [];
 
     let allValues = [];
@@ -33,7 +31,6 @@ export const getAssignees = (issues) => {
 }
 
 export const getAssigneesRepartition = (issues) => {
-    console.log('getAssignees');
     let statesGroup = [];
     let allValues = [];
     issues.forEach((issue) => {
@@ -91,8 +88,6 @@ export const getRepositories = (issues) => {
 export const getRepositoriesRepartition = (milestones, issues) => {
     const repos = milestones.map((ms) => {
         let issuesList = issues.filter(issue => ms.repo.id === issue.repo.id);
-        console.log(ms);
-        console.log(issuesList);
         return {
             ...ms,
             issues: {
@@ -128,7 +123,6 @@ export const getRepositoriesRepartition = (milestones, issues) => {
 };
 
 export const getLabelsRepartition = (issues) => {
-    console.log('getLabelsRepartition');
     let statesGroup = [];
     let allValues = [];
     issues.forEach((issue) => {

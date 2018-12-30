@@ -12,7 +12,6 @@ export default {
     },
     effects: {
         async refreshUsers() {
-            console.log('refreshUsers');
         },
     }
 };

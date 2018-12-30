@@ -42,7 +42,6 @@ class Data extends Component {
     }
 
     load = async () => {
-        console.log('MilestonesEdit - Start load');
         const {
             client,
             setChipRemaining,
@@ -56,13 +55,14 @@ class Data extends Component {
             milestoneDueDate,
             onSuccess,
             incrementLoadedCount,
+            log,
         } = this.props;
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
         setLoadedCount(0);
 
-        console.log(repos);
+        log.info(repos);
         for (let repo of repos) {
             let result = false;
             try {
@@ -86,9 +86,9 @@ class Data extends Component {
                 result = await this.octokit.issues.createMilestone(createPayload);
             }
             catch (error) {
-                console.log(error);
+                log.warn(error);
             }
-            console.log(result);
+            log.info(result);
             if (result !== false) {
                 setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                 // From the milestone number, fetch single milestone data from GitHub through the Graphql API
@@ -106,16 +106,16 @@ class Data extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(data);
+                log.info(data);
                 if (data.data !== null) {
                     const milestoneObj = {
                         ...data.data.repository.milestone,
                         repo: repo,
                         org: repo.org,
                     };
-                    console.log(milestoneObj);
+                    log.info(milestoneObj);
                     await cfgMilestones.upsert({
                         id: milestoneObj.id
                     }, {
@@ -153,6 +153,7 @@ Data.propTypes = {
     updateChip: PropTypes.func.isRequired,
     setChipRemaining: PropTypes.func.isRequired,
 
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -166,6 +167,8 @@ const mapState = state => ({
     milestoneDueDate: state.milestonesCreate.milestoneDueDate,
 
     repos: state.milestonesCreate.repos,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

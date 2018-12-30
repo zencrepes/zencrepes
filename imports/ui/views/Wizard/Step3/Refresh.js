@@ -24,13 +24,11 @@ class Refresh extends Component {
     }
 
     loadIssues = () => {
-        console.log('loadIssues');
         const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };
 
     cancelLoad = () => {
-        console.log('cancelLoad');
         const { setLoading } = this.props;
         setLoading(false);
     };

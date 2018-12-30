@@ -13,25 +13,21 @@ class SprintDueDate extends Component {
     }
 
     changeSprintEndDate = name => event => {
-        const { setEditSprintDueDate } = this.props;
-        console.log(event.target.value);
+        const { setEditSprintDueDate, log } = this.props;
         let newSprintEndDate = null;
         try {
             var moment = require('moment');
             newSprintEndDate = moment(event.target.value, "YYYY-MM-DD").add(4, 'hours').toISOString();
         }
         catch (error) {
-            console.log(error);
+            log.warn(error);
         }
-        console.log(newSprintEndDate);
         setEditSprintDueDate(newSprintEndDate);
     };
 
     render() {
         const { editSprintDueDate } = this.props;
-        console.log(editSprintDueDate);
         let endDate = new Date(editSprintDueDate);
-        console.log(endDate);
         let formattedSprintEndDate = endDate.getFullYear() + "-" + (endDate.getMonth()+1 < 10 ? '0' : '') + (endDate.getMonth()+1) + "-" + (endDate.getDate() < 10 ? '0' : '') + (endDate.getDate());
         return (
             <TextField
@@ -51,10 +47,12 @@ class SprintDueDate extends Component {
 SprintDueDate.propTypes = {
     editSprintDueDate: PropTypes.string.isRequired,
     setEditSprintDueDate: PropTypes.func.isRequired,
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
     editSprintDueDate: state.sprintsView.editSprintDueDate,
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

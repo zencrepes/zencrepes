@@ -30,7 +30,6 @@ class Filters extends Component {
                 return false;
             }
         }).map((facet) => {
-            console.log(facet);
             if (facet.nested === false) {
                 return {...facet, values: query[facet.key]['$in']};
             } else {

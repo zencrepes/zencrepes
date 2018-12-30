@@ -102,8 +102,6 @@ export default {
             this.setAllRepos(allRepos);
 
             const selectedRepos = cfgLabels.find({name: labelName}).map(label => label.repo).map(repo => repo.id);
-            console.log(cfgLabels.find({name: labelName}).fetch());
-            console.log(selectedRepos);
             this.updateSelectedRepos(selectedRepos);
 
         },
@@ -115,7 +113,6 @@ export default {
         },
 
         async resetValues() {
-            console.log('resetValues');
             this.setUpdateName(false);
             this.setUpdateDescription(false);
             this.setUpdateColor(false);

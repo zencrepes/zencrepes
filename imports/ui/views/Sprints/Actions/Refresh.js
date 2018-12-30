@@ -23,7 +23,6 @@ class Refresh extends Component {
 
     refreshRepos = () => {
         const { setLoadFlag, setLoadRepos, milestones } = this.props;
-        console.log(milestones);
         setLoadRepos(milestones.map(milestone => milestone.repo.id));
         setLoadFlag(true);
 

@@ -84,7 +84,6 @@ export const populateTotals = (dataObject, closedIssues, openedIssues) => {
 };
 
 export const populateBurndown = (dataObject) => {
-    console.log(dataObject);
     let totalRemainingCount = dataObject.total.count.total;
     let totalRemainingPoints = dataObject.total.points.total;
     for (let [key, day] of Object.entries(dataObject.days)){
@@ -152,7 +151,6 @@ export default {
     },
     effects: {
         async initStates(payload) {
-            console.log('Init state - Burndown');
             let mongoSelector = buildMongoSelector(payload);
             this.setLoading(true);
 
@@ -165,18 +163,12 @@ export default {
             let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(mongoSelector, cfgIssues);
 
-            console.log(mongoSelector);
-            console.log(firstDay);
-            console.log(lastDay);
-
             let dataObject = initObject(firstDay, lastDay);                                         // Build an object of all days and weeks between two dates
             dataObject = populateTotals(dataObject, cfgIssues.find(closedIssuesFilter).fetch(), cfgIssues.find(openedIssuesFilter).fetch());      // Populate total numbers
             dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilter).fetch());    // Populate the object with count of days and weeks
             dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch());      // Populate remaining issues count and remaining points
             dataObject = populateBurndown(dataObject);                                              // Populate remaining issues count and remaining points
-            console.log(dataObject);
             dataObject = populateVelocity(dataObject);
-            console.log(dataObject);
 
             //dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilterNoSprint).fetch()); // Populate closed issues count and points
             //dataObject = populateTicketsPerDay(dataObject);

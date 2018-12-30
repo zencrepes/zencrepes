@@ -17,7 +17,6 @@ class AddRepositoryButton extends Component {
     }
 
     addClick = () => {
-        console.log('addClick');
         const { setOpenAddRepository, setAddReposSelected } = this.props;
         setAddReposSelected([]);
         setOpenAddRepository(true);

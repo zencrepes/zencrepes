@@ -128,7 +128,6 @@ class LabelsTable extends Component {
     }
 
     formatData() {
-        console.log('componentDidMount');
         const { labels } = this.props;
 
         let uniqueLabels = _.groupBy(labels, 'name');

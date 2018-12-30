@@ -12,7 +12,6 @@ class IssuesList extends Component {
 
     render() {
         const { filteredIssues, pagination } = this.props;
-        console.log('render issue list');
         let dispPagination = pagination;
         if (pagination === undefined) {
             dispPagination = true;

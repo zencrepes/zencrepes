@@ -78,7 +78,6 @@ export default {
     },
     effects: {
         async updateQuery(query) {
-            console.log('MilestoneEdit - initView');
             this.setQuery(query);
 
             const milestoneTitle = query.title;
@@ -114,7 +113,6 @@ export default {
         },
 
         async initView() {
-            console.log('MilestoneEdit - initView');
             /*
 
             this.setSelectedMilestoneTitle(milestoneTitle);
@@ -145,7 +143,6 @@ export default {
             this.updateView();
         },
         async updateView() {
-            console.log('MilestoneEdit - updateView');
             //const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
 
         },

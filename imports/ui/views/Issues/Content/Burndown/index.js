@@ -15,18 +15,14 @@ class Burndown extends Component {
 
     componentDidMount() {
         const { refreshBurndown, shouldBurndownDataReload } = this.props;
-        console.log('Burndown - componentDidMount');
         if (shouldBurndownDataReload === true) {
-            console.log('Burndown - componentDidMount - Trigger initFacets');
             refreshBurndown();
         }
     }
 
     componentDidUpdate(prevProps) {
         const { refreshBurndown, shouldBurndownDataReload } = this.props;
-        console.log('Burndown - componentDidUpdate');
         if (prevProps.shouldBurndownDataReload === false && shouldBurndownDataReload === true) {
-            console.log('Burndown - componentDidUpdate - Trigger initFacets');
             refreshBurndown();
         }
     }

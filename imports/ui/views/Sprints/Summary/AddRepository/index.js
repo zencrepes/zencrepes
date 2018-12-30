@@ -18,14 +18,11 @@ class AddRepository extends Component {
     }
 
     cancel = () => {
-        console.log('Cancel');
         const { setOpenAddRepository } = this.props;
         setOpenAddRepository(false);
     };
 
     apply = () => {
-        console.log('apply');
-
         const {
             setOpenAddRepository,
             addReposSelected,
@@ -54,7 +51,6 @@ class AddRepository extends Component {
         setMilestoneTitle(selectedSprintTitle);
         setMilestoneDescription(selectedSprintDescription);
         setMilestoneDueDate(selectedSprintDueDate);
-        console.log(updateView);
         setOnSuccess(updateView);
         setVerifying(true);
         setStageFlag(true);

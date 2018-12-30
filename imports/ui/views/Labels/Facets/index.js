@@ -34,7 +34,6 @@ class LabelsFacets extends Component {
 
     render() {
         const { classes, facets, query } = this.props;
-        console.log(facets);
         return (
             <div className={classes.root}>
                 {facets.filter(facet => facet.hiddenFacet === undefined).map(facet => {

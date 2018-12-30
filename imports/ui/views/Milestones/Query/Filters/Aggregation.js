@@ -43,7 +43,6 @@ class Aggregation extends Component {
         const { classes, query, facets, currentFacet, updateQuery } = this.props;
         const { collapsed } = this.state;
 
-        console.log(currentFacet);
         let facetsValues = currentFacet.values;
         if (collapsed) {
             facetsValues = currentFacet.values.slice(0, 2);

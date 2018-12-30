@@ -11,7 +11,6 @@ class ApplyButton extends Component {
 
     apply = () => {
         const { setLoadFlag, setStageFlag, milestones } = this.props;
-        console.log(milestones);
         setStageFlag(false);
         setLoadFlag(true);
     };

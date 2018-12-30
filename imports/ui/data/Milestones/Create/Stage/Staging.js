@@ -28,7 +28,7 @@ class Staging extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, repos, onStagingSuccess, setVerifiedRepos, insVerifiedRepos, client, milestoneTitle } = this.props;
+        const { setVerifying, setVerifyingMsg, repos, onStagingSuccess, setVerifiedRepos, insVerifiedRepos, client, milestoneTitle, log } = this.props;
         setVerifiedRepos([]);
         setVerifyingMsg('About verify data about from ' + repos.length + ' repos');
 //        for (let milestone of milestones) {
@@ -37,7 +37,7 @@ class Staging extends Component {
                 this.syncedMilestones = [];
                 let baseMsg = (idx+1) + '/' + repos.length + ' - Fetching data for repo: ' + repo.org.login + '/' + repo.name;
                 setVerifyingMsg(baseMsg);
-                console.log(baseMsg);
+                log.info(baseMsg);
                 // 1- Fetch updated Repo data
                 // 2- Fetch all milestones for repo
                 // 3- Verify if identical title exists
@@ -54,24 +54,24 @@ class Staging extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.warn(error);
                 }
-                console.log(data);
+                log.info(data);
                 this.props.updateChip(data.data.rateLimit);
 
                 const repoData = {...data.data.repository, org: repo.org};
-                console.log(repoData);
+                log.info(repoData);
                 await cfgSources.upsert({
                     id: repoData.id
                 }, {
                     $set: repoData
                 });
 
-                console.log(this.syncedMilestones);
+                log.info(this.syncedMilestones);
                 let fetchIncrement = 100;
                 if (repoData.milestones.totalCount < 100) {fetchIncrement = repoData.milestones.totalCount}
                 await this.getMilestonesPagination(null, fetchIncrement, repoData);
-                console.log(this.syncedMilestones);
+                log.info(this.syncedMilestones);
 
                 const filteredSyncedMilestones = this.syncedMilestones.filter(m => m.title === milestoneTitle);
                 if (filteredSyncedMilestones.length > 0) {
@@ -89,7 +89,7 @@ class Staging extends Component {
             }
         }
         setVerifying(false);
-        console.log(onStagingSuccess);
+        log.info(onStagingSuccess);
         onStagingSuccess();
     };
 
@@ -97,7 +97,7 @@ class Staging extends Component {
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 milestones, but local only has 99
     // Query increment should not be just 1 since if the missing milestones is far down, this will generate a large number of calls
     getMilestonesPagination = async (cursor, increment, repoObj) => {
-        const { client } = this.props;
+        const { client, log } = this.props;
         if (this.props.verifying) {
             if (this.errorRetry <= 3) {
                 let data = {};
@@ -110,9 +110,9 @@ class Staging extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.warn(error);
                 }
-                console.log(repoObj);
+                log.info(repoObj);
                 if (data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
@@ -122,7 +122,7 @@ class Staging extends Component {
                         let lastCursor = await this.ingestMilestones(data, repoObj);
                         let loadedMilestonesCount = this.syncedMilestones.length;
                         let queryIncrement = calculateQueryIncrement(loadedMilestonesCount, data.data.repository.milestones.totalCount);
-                        console.log('Loading milestones for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedMilestonesCount + ' - Remote Count: ' + data.data.repository.milestones.totalCount);
+                        log.info('Loading milestones for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedMilestonesCount + ' - Remote Count: ' + data.data.repository.milestones.totalCount);
                         if (queryIncrement > 0 && lastCursor !== null) {
                             //Start recurring call, to load all milestones from a repository
                             await this.getMilestonesPagination(lastCursor, queryIncrement, repoObj);
@@ -130,7 +130,7 @@ class Staging extends Component {
                     }
                 } else {
                     this.errorRetry = this.errorRetry + 1;
-                    console.log('Error loading content, current count: ' + this.errorRetry)
+                    log.info('Error loading content, current count: ' + this.errorRetry)
                     await this.getMilestonesPagination(cursor, increment, repoObj);
                 }
             }
@@ -138,12 +138,13 @@ class Staging extends Component {
     };
 
     ingestMilestones = async (data, repoObj) => {
+        const { log } = this.props;
         let lastCursor = null;
         let stopLoad = false;
-        console.log(data);
+        log.info(data);
         for (var currentMilestone of data.data.repository.milestones.edges) {
-            console.log('Loading milestone: ' + currentMilestone.node.title);
-            console.log('New or updated milestone');
+            log.info('Loading milestone: ' + currentMilestone.node.title);
+            log.info('New or updated milestone');
             let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
             milestoneObj['repo'] = repoObj;
             milestoneObj['org'] = repoObj.org;
@@ -154,12 +155,12 @@ class Staging extends Component {
             }, {
                 $set: milestoneObj
             });
-            console.log(milestoneObj);
+            log.info(milestoneObj);
             this.syncedMilestones.push(milestoneObj);
             lastCursor = currentMilestone.cursor;
         }
         if (lastCursor === null) {
-            console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
+            log.info('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
         if (stopLoad === true) {
             lastCursor = null;
@@ -185,6 +186,8 @@ Staging.propTypes = {
     setVerifiedRepos: PropTypes.func.isRequired,
     insVerifiedRepos: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -195,6 +198,8 @@ const mapState = state => ({
 
     repos: state.milestonesCreate.repos,
     onStagingSuccess: state.milestonesCreate.onStagingSuccess,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

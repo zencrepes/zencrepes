@@ -40,7 +40,6 @@ class FacetSelector extends React.Component {
     }
 
     handleToggle = clickedValue => () => {
-        console.log('handleToggle');
         const { clickItem } = this.props;
         clickItem(clickedValue);
     };

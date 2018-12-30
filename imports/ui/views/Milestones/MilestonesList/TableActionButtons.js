@@ -27,7 +27,6 @@ class TableActionButtons extends Component {
     }
 
     closeSprint = () => {
-        console.log('closeSprint');
         const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() !== 'closed'));
         setAction('close');
@@ -37,7 +36,6 @@ class TableActionButtons extends Component {
     };
 
     deleteClosedEmpty = () => {
-        console.log('deleteClosedEmpty');
         const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
         setAction('delete');

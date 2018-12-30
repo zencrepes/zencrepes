@@ -12,8 +12,7 @@ class OpenClosed extends Component {
     }
 
     render() {
-        const { milestones } = this.props;
-        console.log(milestones);
+//        const { milestones } = this.props;
         return (
             <CustomCard
                 headerTitle="Open vs Closed"

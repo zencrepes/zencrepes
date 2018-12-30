@@ -21,7 +21,6 @@ class Summary extends Component {
     }
 
     openEditSprint = () => {
-        console.log('openEditSprint');
         const {
             setEditSprint,
             setEditSprintTitle,

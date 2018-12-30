@@ -54,21 +54,15 @@ export default {
     },
     effects: {
         async initIssues() {
-            console.log('initIssues');
         },
 
         async searchIssues(searchString, rootState) {
             let issues = rootState.issuesView.issues;
-            console.log('SearchString: ' + searchString);
-            console.log(searchString.length);
             if (searchString.length === 0) {
-                console.log('Clear Issues');
                 this.setFilteredIssues(issues);
             } else {
-                console.log('Filter Issues');
                 const filteredIssues = issues.filter((issue) => {
                     if (issue.repo.name === searchString) {
-                        console.log(issue.repo.name);
                         return true;
                     } else {
                         return false;
@@ -80,43 +74,33 @@ export default {
         },
 
         async updateQuery() {
-            console.log('initIssues');
         },
 
         async addRemoveQuery() {
-            console.log('addRemoveQuery');
         },
 
         async deleteQuery() {
-            console.log('deleteQuery');
         },
 
         async refreshQueries() {
-            console.log('refreshQueries');
         },
 
         async saveQuery() {
-            console.log('saveQuery');
         },
 
         async refreshIssues() {
-            console.log('refreshIssues');
         },
 
         async refreshSummary() {
-            console.log('refreshSummary');
         },
 
         async refreshFacets() {
-            console.log('refreshFacets');
         },
 
         async refreshBurndown() {
-            console.log('refreshBurndown');
         },
 
         async refreshVelocity() {
-            console.log('refreshVelocity');
         },
     }
 };

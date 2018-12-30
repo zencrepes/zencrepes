@@ -17,7 +17,6 @@ class AddButton extends Component {
     }
 
     addClick = () => {
-        console.log('addClick');
         const { setOpenAddAssignee } = this.props;
         setOpenAddAssignee(true);
     };

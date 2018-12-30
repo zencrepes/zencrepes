@@ -11,7 +11,6 @@ class ClosedEmptyButton extends Component {
     }
 
     deleteClosedEmpty = () => {
-        console.log('deleteClosedEmpty');
         const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnCancel, setOnSuccess, updateView } = this.props;
         setMilestones(milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
         setAction('delete');

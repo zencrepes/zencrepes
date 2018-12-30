@@ -18,7 +18,6 @@ class CloseSprint extends Component {
     }
 
     closeSprint = () => {
-        console.log('closeSprint');
         const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, refreshSprints, setVerifying } = this.props;
         setOnSuccess(refreshSprints);
         setMilestones(milestones);

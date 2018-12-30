@@ -39,7 +39,7 @@ class ApplyButton extends Component {
         if (selectedSprintDueDate !== editSprintDueDate) {hasChanged = true;}
         if (milestones.length > 0 && hasChanged === true) {
             //TODO - To be implemented
-            console.log('Some milestones need to be changed, pending implementation');
+            //console.log('Some milestones need to be changed, pending implementation');
             setMilestones(milestones);
             setEditMilestoneTitle(editSprintTitle);
             setEditMilestoneDescription(editSprintDescription);
@@ -50,7 +50,7 @@ class ApplyButton extends Component {
             setStageFlag(true);
             setVerifFlag(true);
         } else {
-            console.log('Nothing has changed or no repo in sprint');
+            //console.log('Nothing has changed or no repo in sprint');
         }
         saveSprint();
     };

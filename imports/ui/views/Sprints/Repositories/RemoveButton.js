@@ -12,7 +12,6 @@ class RemoveButton extends Component {
 
     remove = () => {
         const { milestone, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnSuccess, updateView } = this.props;
-        console.log(milestone);
         setMilestones([milestone]);
         setOnSuccess(updateView);
         setAction('delete');

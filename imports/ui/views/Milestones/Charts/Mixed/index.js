@@ -15,8 +15,8 @@ class Mixed extends Component {
     render() {
         const { milestones } = this.props;
 
+        /*
         const byTitle = _.groupBy(milestones, 'title');
-        console.log(byTitle);
 
         const byState = Object.entries(byTitle)
             .filter(([name, content]) => {
@@ -35,6 +35,7 @@ class Mixed extends Component {
                 }
             });
         console.log(byState);
+        */
         return (
             <CustomCard
                 headerTitle="Inconsistent States"

@@ -6,7 +6,7 @@
  * - filter: Filter object
  */
 export const buildMongoSelector = (filters) => {
-    console.log('Current Filters: ' + JSON.stringify(filters));
+//    console.log('Current Filters: ' + JSON.stringify(filters));
     /*
      TEST DATA
      let filters = {
@@ -57,7 +57,7 @@ export const buildMongoSelector = (filters) => {
                     currentQuery[idx + ".edges"]["$elemMatch"][subFilter]["$in"] = filteredValues.filter(val => val !== currentFilter.nullName);
                     // Test if array of values contains a "nullName" (name taken by undefined or non-existing field);
                     if (filteredValues.includes(currentFilter.nullName)) {
-                        console.log('The array contains an empty value');
+                        //console.log('The array contains an empty value');
                         if (filteredValues.length === 1) { //This means there is only 1 filtered item, and it has to be the null one
                             return currentFilter.nullFilter;
                         } else {
@@ -82,7 +82,7 @@ export const buildMongoSelector = (filters) => {
         return currentQuery;
     });
 
-    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
+//    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
 
     // Convert array of objects to an object that can be parsed by Mongo
     /*
@@ -117,7 +117,7 @@ export const buildMongoSelector = (filters) => {
         mongoFilter = convertedMongoFilter;
     }
 
-    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
+//    console.log('Mongo Filter: ' + JSON.stringify(mongoFilter));
     return mongoFilter
 
 };

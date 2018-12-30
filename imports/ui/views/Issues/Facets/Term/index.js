@@ -66,7 +66,6 @@ class TermFacet extends Component {
     };
 
     clickItem = (clickedValue) => {
-        console.log('clickItem');
         const { facet, addRemoveQuery } = this.props;
         addRemoveQuery(clickedValue.name, facet);
     };

@@ -18,7 +18,6 @@ export default {
             this.setLabels(cfgLabels.find(rootState.labelsView.query).fetch());
         },
         async updateQuery(query) {
-            console.log('updateQuery: ' + JSON.stringify(query));
             this.setQuery(query);
             this.updateView();
         },
@@ -27,17 +26,16 @@ export default {
             this.refreshLabels();
         },
         async refreshFacets(payload, rootState) {
-            console.log('refreshFacets');
+            const log = rootState.global.log;
             const t0 = performance.now();
 
             const updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.labelsView.query)), cfgLabels);
             this.setFacets(updatedFacets);
 
             const t1 = performance.now();
-            console.log("refreshFacets - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshFacets - took " + (t1 - t0) + " milliseconds.");
         },
         async refreshLabels(payload, rootState) {
-            console.log('refreshLabels');
             const labels = cfgLabels.find(rootState.labelsView.query).fetch();
             this.setLabels(labels);
         },

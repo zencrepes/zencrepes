@@ -51,7 +51,6 @@ class StageTable extends Component {
 
     render() {
         const { classes, milestones, action } = this.props;
-        console.log(milestones);
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>

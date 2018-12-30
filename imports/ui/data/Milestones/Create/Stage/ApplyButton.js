@@ -11,7 +11,6 @@ class ApplyButton extends Component {
 
     apply = () => {
         const { setLoadFlag, setStageFlag, repos } = this.props;
-        console.log(repos);
         setStageFlag(false);
         setLoadFlag(true);
     };

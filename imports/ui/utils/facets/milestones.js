@@ -106,11 +106,9 @@ const buildFacetValues = (query, miniMongo, facet) => {
         });
         statesGroup = _.groupBy(allValues, facet.nestedKey);
     } else {
-        console.log(facetQuery);
         //statesGroup = _.groupBy(miniMongo.find(facetQuery).fetch(), facet.key);
         statesGroup = _.groupBy(miniMongo.find(facetQuery).fetch(), facet.key);
     }
-    console.log(statesGroup);
     // If the key is 'undefined', replace with default facet name
     if (statesGroup['undefined'] !== undefined) {
         statesGroup[facet.nullName] = statesGroup['undefined'];

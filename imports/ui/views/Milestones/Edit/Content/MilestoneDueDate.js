@@ -11,27 +11,22 @@ class MilestoneDueDate extends Component {
     }
 
     changeMilestoneEndDate = name => event => {
-        const { setEditMilestoneDueDate } = this.props;
-        console.log(event.target.value);
+        const { setEditMilestoneDueDate, log } = this.props;
         let newMilestoneEndDate = null;
         try {
             var moment = require('moment');
             newMilestoneEndDate = moment(event.target.value, "YYYY-MM-DD").add(4, 'hours').toISOString();
         }
         catch (error) {
-            console.log(error);
+            log.warn(error);
         }
-        console.log(newMilestoneEndDate);
         setEditMilestoneDueDate(newMilestoneEndDate);
     };
 
     render() {
         const { editMilestoneDueDate } = this.props;
-        console.log(editMilestoneDueDate);
         let endDate = new Date(editMilestoneDueDate);
-        console.log(endDate);
         const formattedMilestoneEndDate = endDate.getFullYear() + "-" + (endDate.getMonth()+1 < 10 ? '0' : '') + (endDate.getMonth()+1) + "-" + (endDate.getDate() < 10 ? '0' : '') + (endDate.getDate());
-        console.log(formattedMilestoneEndDate);
         return (
             <TextField
                 id="date"
@@ -50,6 +45,8 @@ class MilestoneDueDate extends Component {
 MilestoneDueDate.propTypes = {
     editMilestoneDueDate: PropTypes.string.isRequired,
     setEditMilestoneDueDate: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -58,6 +55,7 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     editMilestoneDueDate: state.milestonesEdit.editMilestoneDueDate,
+    log: state.global.log,
 });
 
 export default connect(mapState, mapDispatch)(MilestoneDueDate);

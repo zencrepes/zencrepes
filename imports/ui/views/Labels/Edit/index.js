@@ -17,14 +17,12 @@ class LabelEdit extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
         const { initConfiguration } = this.props;
         let labelName = this.props.match.params.name;
         initConfiguration(labelName)
     }
 
     componentDidUpdate(prevProps) {
-        console.log('Sprint Planning - componentDidUpdate');
         const { initConfiguration, loadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             let labelName = this.props.match.params.name;

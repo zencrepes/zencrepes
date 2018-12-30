@@ -26,7 +26,6 @@ class ListAssignees extends Component {
     }
 
     addAssignee = assignee => () => {
-        console.log('addAssignee');
         const { addAssignee } = this.props;
         addAssignee(assignee);
     };

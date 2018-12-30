@@ -42,7 +42,6 @@ class MilestonesQuery extends Component {
     };
 
     loadQuery = (query) => {
-        console.log(query.filters);
         this.props.history.push({
             pathname: '/milestones',
             search: '?q=' + query.filters,
@@ -73,39 +72,31 @@ class MilestonesQuery extends Component {
     };
 
     setOpenSaveQueryDialog = (state) => {
-        console.log('setOpenSaveQueryDialog');
         this.setState({ openSaveQueryDialog: state });
     };
 
     openSaveQueryDialog = () => {
-        console.log('openSaveQueryDialog');
         this.setState({ openSaveQueryDialog: true });
     };
 
     closeSaveQueryDialog = () => {
-        console.log('closeSaveQueryDialog');
         this.setState({ openSaveQueryDialog: false });
     };
 
     setOpenManageQueryDialog = (state) => {
-        console.log('setOpenManageQueryDialog');
         this.setState({ openManageQueryDialog: state });
     };
 
     openManageQueryDialog = () => {
-        console.log('openManageQueryDialog');
         this.setState({ openManageQueryDialog: true });
     };
 
     closeManageQueryDialog = () => {
-        console.log('closeManageQueryDialog');
         this.setState({ openManageQueryDialog: false });
     };
 
     render() {
         const { classes, query, facets } = this.props;
-        console.log('Render - IssuesQuery: ' + JSON.stringify(query));
-        console.log(facets);
 
         return (
             <div className={classes.root}>

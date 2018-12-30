@@ -18,7 +18,6 @@ class LoadButton extends Component {
     }
 
     loadMilestones = () => {
-        console.log('loadMilestones');
         const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };

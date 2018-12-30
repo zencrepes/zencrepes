@@ -104,7 +104,6 @@ export default {
     },
     effects: {
         async initView() {
-            console.log('Sprints - initView');
             this.refreshSprints();
 
             const allRepos = cfgSources.find({active: true}).fetch();
@@ -113,7 +112,6 @@ export default {
             this.updateView();
         },
         async refreshSprints() {
-            console.log('refreshSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
@@ -121,7 +119,6 @@ export default {
         },
 
         async updateAvailableSprints() {
-            console.log('updateAvailableSprints');
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
@@ -133,8 +130,6 @@ export default {
         },
 
         async addRepoUpdateSelected(selectedRepos) {
-            console.log('addRepoUpdateSelected');
-            console.log(selectedRepos);
             this.setAddReposSelected(selectedRepos);
         },
 
@@ -164,11 +159,6 @@ export default {
             const includedRepos = milestones.map((ms) => ms.repo);
             const allRepos = cfgSources.find({active: true}).fetch();
             const availableRepos = _.differenceBy(allRepos, includedRepos, 'id');
-
-            console.log(includedRepos);
-            console.log(allRepos);
-            console.log(availableRepos);
-
             this.setAddReposAvailable(availableRepos.map((repo) => {
                 return {
                     value: repo.id,
@@ -186,7 +176,6 @@ export default {
 
 
         async updateView(payload, rootState) {
-            console.log('Sprints - updateView');
             /*
             console.log('Update Sprint');
             console.log(selectedSprintTitle);
@@ -243,7 +232,6 @@ export default {
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
             let closedIssues = cfgIssues.find(closedIssuesFilter).fetch()
-            console.log(closedIssues);
 
             let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
@@ -259,8 +247,6 @@ export default {
         },
 
         async updateDescriptionDate(payload, rootState) {
-            console.log(rootState.sprintsView.milestones);
-
             /*
             this.setSelectedSprintDescription('# Live demo\n' +
                 '\n' +
@@ -300,7 +286,6 @@ export default {
             let currentAssignees = rootState.sprintsView.assignees;
             currentAssignees.push(payload);
             this.setAssignees(currentAssignees);
-            console.log(currentAssignees);
 
             let allAssignees = getAssignees(cfgIssues.find({}).fetch());
             let assigneesDifference = _.differenceBy(allAssignees, currentAssignees, 'id');
@@ -325,7 +310,6 @@ export default {
             let currentRepositories = rootState.sprintsView.repositories;
             currentRepositories.push(payload);
             this.setRepositories(currentRepositories);
-            console.log(currentRepositories);
 
             let allRepositories = getRepositories(cfgIssues.find({}).fetch());
             let repositoriesDifference = _.differenceBy(allRepositories, currentRepositories, 'id');
@@ -337,9 +321,11 @@ export default {
         },
 
         async sprintCreated(payload, rootState) {
-            console.log('sprintCreated');
-            console.log(payload);
-            console.log(rootState);
+            const log = rootState.global.log;
+
+            log.info('sprintCreated');
+            log.info(payload);
+            log.info(rootState);
         }
     }
 };

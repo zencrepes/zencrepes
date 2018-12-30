@@ -90,38 +90,29 @@ export default {
     },
     effects: {
         async updateAvailableSprints() {
-            console.log('updateAvailableSprints');
         },
         async updateSelectedSprint() {
-            console.log('updateSelectedSprint');
         },
 
         async updateView() {
-            console.log('updateView');
         },
 
         async updateVelocity() {
-            console.log('updateVelocity');
         },
 
         async updateAvailableAssigneesFilter() {
-            console.log('updateAvailableAssigneesFilter');
         },
 
         async addAssignee() {
-            console.log('addAssignee');
         },
 
         async updateAvailableRepositoriesFilter() {
-            console.log('updateAvailableRepositoriesFilter');
         },
 
         async addRepository() {
-            console.log('addRepository');
         },
 
         async sprintCreated() {
-            console.log('sprintCreated');
         }
     }
 };

@@ -57,7 +57,6 @@ export default {
     },
     effects: {
         async updateQuery(query) {
-            console.log('updateQuery: ' + JSON.stringify(query));
             if (query === null) {this.setQuery({});}
             else {this.setQuery(query);}
 
@@ -117,6 +116,7 @@ export default {
         },
 
         async refreshSummary(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             let query = rootState.issuesView.query;
@@ -138,20 +138,22 @@ export default {
             this.setRemainingWorkCount(repos.map(r => r.issues.length).reduce((acc, count) => acc + count, 0));
 
             var t1 = performance.now();
-            console.log("refreshSummary - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshSummary - took " + (t1 - t0) + " milliseconds.");
         },
 
         async refreshFacets(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             let updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.issuesView.query)), cfgIssues);
             this.setFacets(updatedFacets);
 
             var t1 = performance.now();
-            console.log("refreshFacets - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshFacets - took " + (t1 - t0) + " milliseconds.");
         },
 
         async refreshBurndown(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             this.setShouldBurndownDataReload(false);
@@ -161,10 +163,11 @@ export default {
             this.setBurndown(burndownData);
 
             var t1 = performance.now();
-            console.log("refreshBurndown - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshBurndown - took " + (t1 - t0) + " milliseconds.");
         },
 
         async refreshVelocity(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             this.setShouldVelocityDataReload(false);
@@ -174,7 +177,7 @@ export default {
             this.setVelocity(velocityData);
 
             var t1 = performance.now();
-            console.log("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
         },
     }
 };

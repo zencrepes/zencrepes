@@ -23,7 +23,6 @@ class Select extends Component {
 
     handleChange = name => event => {
         const { updateSelectedSprint } = this.props;
-        console.log('Dashboard - QueryPicker - handleChange');
         updateSelectedSprint(event.target.value);
     };
 

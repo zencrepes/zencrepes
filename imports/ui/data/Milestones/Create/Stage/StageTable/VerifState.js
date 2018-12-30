@@ -48,10 +48,7 @@ class VerifState extends Component {
 
     render() {
         const { classes, repo, verifiedRepos } = this.props;
-        console.log(verifiedRepos);
-        console.log(repo);
         const repoCheck = verifiedRepos.filter(ms => ms.id === repo.id);
-        console.log(repoCheck);
         if (repoCheck.length === 0) {
             return (
                 <CircularProgress
