@@ -12,7 +12,7 @@ class SprintDueDate extends Component {
         super(props);
     }
 
-    changeSprintEndDate = name => event => {
+    changeSprintEndDate = (event) => {
         const { setEditSprintDueDate, log } = this.props;
         let newSprintEndDate = null;
         try {
@@ -38,7 +38,7 @@ class SprintDueDate extends Component {
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={this.changeSprintEndDate()}
+                onChange={this.changeSprintEndDate}
             />
         );
     }

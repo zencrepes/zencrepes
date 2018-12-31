@@ -10,7 +10,7 @@ class MilestoneTitle extends Component {
         super(props);
     }
 
-    changeSprintName = name => event => {
+    changeSprintName = (event) => {
         const { setEditMilestoneTitle } = this.props;
         setEditMilestoneTitle(event.target.value);
     };
@@ -25,7 +25,7 @@ class MilestoneTitle extends Component {
                 placeholder=""
                 fullWidth
                 value={editMilestoneTitle}
-                onChange={this.changeSprintName()}
+                onChange={this.changeSprintName}
                 margin="normal"
                 variant="outlined"
                 InputLabelProps={{

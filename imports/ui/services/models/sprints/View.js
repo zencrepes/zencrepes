@@ -231,7 +231,7 @@ export default {
 
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
-            let closedIssues = cfgIssues.find(closedIssuesFilter).fetch()
+            //let closedIssues = cfgIssues.find(closedIssuesFilter).fetch()
 
             let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(closedIssuesFilter, cfgIssues);

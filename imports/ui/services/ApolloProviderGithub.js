@@ -52,7 +52,7 @@ class ApolloProviderGithub extends Component {
 }
 
 ApolloProviderGithub.propTypes = {
-    children: PropTypes.object.isRequired,
+    children: PropTypes.array.isRequired,
 };
 
 export default ApolloProviderGithub;

@@ -68,7 +68,7 @@ class Waffle extends Component {
         setLoadFlag(true);
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setBoardUrl } = this.props;
         setBoardUrl(event.target.value);
     };
@@ -97,7 +97,7 @@ class Waffle extends Component {
                             className={classes.textField}
                             fullWidth
                             margin="normal"
-                            onChange={this.handleChange()}
+                            onChange={this.handleChange}
                         />
                         {loading &&
                         <div className={classes.loading}>

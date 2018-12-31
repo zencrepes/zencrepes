@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -13,9 +12,10 @@ class Mixed extends Component {
     }
 
     render() {
+        /*
         const { milestones } = this.props;
 
-        /*
+
         const byTitle = _.groupBy(milestones, 'title');
 
         const byState = Object.entries(byTitle)

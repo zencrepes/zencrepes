@@ -3,7 +3,7 @@ import * as log from 'loglevel';
 
 export default {
     state: {
-        log: () => {},
+        log: {},
     },
     reducers: {
         setLog(state, payload) {return { ...state, log: payload };},

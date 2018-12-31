@@ -21,7 +21,7 @@ class Select extends Component {
         super(props);
     }
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { updateSelectedSprint } = this.props;
         updateSelectedSprint(event.target.value);
     };
@@ -40,7 +40,7 @@ class Select extends Component {
                    variant="filled"
                    className={classes.textField}
                    value={selectedSprintName}
-                   onChange={this.handleChange('sprint')}
+                   onChange={this.handleChange}
                 >
                     {sprints.map(sprintTitle => (
                         <MenuItem key={sprintTitle} value={sprintTitle}>

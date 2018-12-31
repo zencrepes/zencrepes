@@ -12,7 +12,7 @@ class SearchAssignees extends Component {
         super(props);
     }
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { updateAvailableAssigneesFilter } = this.props;
         updateAvailableAssigneesFilter(event.target.value);
     };
@@ -24,7 +24,7 @@ class SearchAssignees extends Component {
                 label="Search"
                 id="simple-start-adornment"
                 value={availableAssigneesFilter}
-                onChange={this.handleChange('name')}
+                onChange={this.handleChange}
                 InputProps={{
                     startAdornment: <InputAdornment position="start"><MagnifyIcon /></InputAdornment>,
                 }}

@@ -43,8 +43,13 @@ const aggregationsModel = {
 * - cfgIssues: Minimongo instance
 */
 export const buildFacets = (query, miniMongo) => {
+    /*
     let aggregations = Object.entries(aggregationsModel).map(([facet, content]) => {
         return content
+    });
+    */
+    let aggregations = Object.keys(aggregationsModel).map((key) => {
+        return aggregationsModel[key];
     });
 
     return aggregations.map((facet) => {

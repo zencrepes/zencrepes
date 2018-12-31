@@ -27,7 +27,7 @@ class IssuesList extends Component {
 
 IssuesList.propTypes = {
     filteredIssues: PropTypes.array.isRequired,
-    pagination: PropTypes.bool.isRequired,
+    pagination: PropTypes.bool,
 };
 
 const mapState = state => ({

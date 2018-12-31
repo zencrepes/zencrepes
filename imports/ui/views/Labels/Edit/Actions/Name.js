@@ -12,13 +12,13 @@ class LabelName extends Component {
         super(props);
     }
 
-    handleToggle = value => () => {
+    handleToggle = value => {
         const { setUpdateName } = this.props;
         if (value === true) {setUpdateName(false);}
         else {setUpdateName(true);}
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setNewName } = this.props;
         setNewName(event.target.value);
     };
@@ -37,7 +37,7 @@ class LabelName extends Component {
                     fullWidth
                     margin="normal"
                     value={newName}
-                    onChange={this.handleChange('name')}
+                    onChange={this.handleChange}
                 />
                 <ListItemSecondaryAction>
                     <Switch

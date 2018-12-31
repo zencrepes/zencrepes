@@ -55,7 +55,7 @@ class QuerySave extends Component {
         }
     };
 
-    changeQueryName = name => event => {
+    changeQueryName = (event) => {
         //Search for existing query name
         if (this.doesQueryNameExists(event.target.value)) {
             this.setState({
@@ -90,7 +90,7 @@ class QuerySave extends Component {
                             helperText={queryNameHelperText}
                             fullWidth
                             margin="normal"
-                            onChange={this.changeQueryName()}
+                            onChange={this.changeQueryName}
                         />
                     </DialogContent>
                     <DialogActions>

@@ -57,12 +57,13 @@ class GitHubLogin extends Component {
     }
 }
 
+/*
 GitHubLogin.defaultProps = {
     callback: (error) => {
         if (error) console.log(error.message, 'danger');
     },
 };
-
+*/
 GitHubLogin.propTypes = {
     classes: PropTypes.object.isRequired,
     callback: PropTypes.func,
@@ -74,9 +75,7 @@ const verifiedServices = new ReactiveVar([]);
 export default withTracker(() => {
     if (!verificationComplete.get()) {
         Meteor.call('oauth.verifyConfiguration', ['github'], (error, response) => {
-            if (error) {
-                console.warn(error);
-            } else {
+            if (!error) {
                 verifiedServices.set(response);
                 verificationComplete.set(true);
             }

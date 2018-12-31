@@ -12,13 +12,13 @@ class LabelDescription extends Component {
         super(props);
     }
 
-    handleToggle = value => () => {
+    handleToggle = value => {
         const { setUpdateDescription } = this.props;
         if (value === true) {setUpdateDescription(false);}
         else {setUpdateDescription(true);}
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setNewDescription } = this.props;
         setNewDescription(event.target.value);
     };
@@ -37,7 +37,7 @@ class LabelDescription extends Component {
                     fullWidth
                     margin="normal"
                     value={newDescription}
-                    onChange={this.handleChange('description')}
+                    onChange={this.handleChange}
                 />
                 <ListItemSecondaryAction>
                     <Switch

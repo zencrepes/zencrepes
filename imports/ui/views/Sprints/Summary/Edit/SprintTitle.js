@@ -10,7 +10,7 @@ class SprintTitle extends Component {
         super(props);
     }
 
-    changeSprintName = name => event => {
+    changeSprintName = (event) => {
         const { setEditSprintTitle } = this.props;
         setEditSprintTitle(event.target.value);
     };
@@ -26,7 +26,7 @@ class SprintTitle extends Component {
                 placeholder=""
                 fullWidth
                 value={editSprintTitle}
-                onChange={this.changeSprintName()}
+                onChange={this.changeSprintName}
                 margin="normal"
                 variant="outlined"
                 InputLabelProps={{

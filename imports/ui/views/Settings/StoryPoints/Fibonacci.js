@@ -74,7 +74,7 @@ class Fibonacci extends Component {
         }
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         this.updateValue(event.target.value);
     };
 
@@ -162,7 +162,7 @@ class Fibonacci extends Component {
                                     className={classes.textField}
                                     helperText={fibonacciHelperText}
                                     margin="normal"
-                                    onChange={this.handleChange()}
+                                    onChange={this.handleChange}
                                 />
                                 <Button color="primary" variant="contained" className={classes.button} onClick={this.incFibonacci}>+</Button>
                             </ListItemText>

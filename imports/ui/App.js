@@ -61,35 +61,32 @@ class App extends Component {
         } else {
             return (
                 <ApolloProviderGithub>
-                    <div>
-                            <UsersFetch />
-                            <Router>
-                                {!props.loading ? (
-                                    <div className="App">
-                                        <ErrorBoundary>
-                                        <Switch>
-                                            <Route exact name="index" path="/" component={Index} />
-                                            <Public path="/login" component={Login} {...props} {...state} />
-                                            <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/milestones/edit" component={MilestoneEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                            <Public exact path="/terms" component={Terms} {...props} {...state} />
-                                            <Public exact path="/about" component={About} {...props} {...state} />
-                                        </Switch>
-                                        </ErrorBoundary>
-                                    </div>
-                                ) : ''}
-                            </Router>
-                    </div>
+                    <UsersFetch />
+                    {!props.loading ? (
+                        <div className="App">
+                            <ErrorBoundary>
+                                <Router>
+                                    <Switch>
+                                        <Route exact name="index" path="/" component={Index} />
+                                        <Public path="/login" component={Login} {...props} {...state} />
+                                        <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/milestones/edit" component={MilestoneEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Public exact path="/terms" component={Terms} {...props} {...state} />
+                                        <Public exact path="/about" component={About} {...props} {...state} />
+                                    </Switch>
+                                </Router>
+                            </ErrorBoundary>
+                        </div>
+                    ) : ''}
                 </ApolloProviderGithub>
             );
         }
-
     }
 }
 

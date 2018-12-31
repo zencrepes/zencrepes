@@ -16,7 +16,7 @@ class PointsSwitch extends Component {
         this.state = {};
     }
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setDefaultPoints } = this.props;
         setDefaultPoints(event.target.checked);
     };
@@ -29,7 +29,7 @@ class PointsSwitch extends Component {
                 Issues Count
                 <Switch
                     checked={defaultPoints}
-                    onChange={this.handleChange('defaultPoints')}
+                    onChange={this.handleChange}
                     value="defaultPoints"
                 />
                 Points

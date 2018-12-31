@@ -70,7 +70,7 @@ class Zenhub extends Component {
         setLoadFlag(true);
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setToken } = this.props;
         setToken(event.target.value);
     };
@@ -97,7 +97,7 @@ class Zenhub extends Component {
                             className={classes.textField}
                             fullWidth
                             margin="normal"
-                            onChange={this.handleChange()}
+                            onChange={this.handleChange}
                         />
                         <Typography>
                             Select repositories and organizations to import Zenhub points from:

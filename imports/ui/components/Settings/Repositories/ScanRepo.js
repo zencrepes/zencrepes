@@ -55,12 +55,12 @@ class ScanRepo extends Component {
         }
     }
 
-    changeOrgName = name => event => {
+    changeOrgName = (event) => {
         const { setOrgName } = this.props;
         setOrgName(event.target.value);
     };
 
-    changeRepoName = name => event => {
+    changeRepoName = (event) => {
         const { setRepoName } = this.props;
         setRepoName(event.target.value);
     };
@@ -98,7 +98,7 @@ class ScanRepo extends Component {
                                     helperText={loadError && "Error"}
                                     className={classes.textField}
                                     value={orgName}
-                                    onChange={this.changeOrgName('name')}
+                                    onChange={this.changeOrgName}
                                     margin="normal"
                                 />
                                 <TextField
@@ -108,7 +108,7 @@ class ScanRepo extends Component {
                                     className={classes.textField}
                                     helperText={loadError && "Unable to fetch data from Org or Repo"}
                                     value={repoName}
-                                    onChange={this.changeRepoName('name')}
+                                    onChange={this.changeRepoName}
                                     margin="normal"
                                 />
                                 <Button color="primary" variant="contained" className={classes.button} onClick={this.handleScanRepo}>

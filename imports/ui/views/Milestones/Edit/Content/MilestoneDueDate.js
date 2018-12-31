@@ -10,7 +10,7 @@ class MilestoneDueDate extends Component {
         super(props);
     }
 
-    changeMilestoneEndDate = name => event => {
+    changeMilestoneEndDate = (event) => {
         const { setEditMilestoneDueDate, log } = this.props;
         let newMilestoneEndDate = null;
         try {
@@ -36,7 +36,7 @@ class MilestoneDueDate extends Component {
                 InputLabelProps={{
                     shrink: true,
                 }}
-                onChange={this.changeMilestoneEndDate()}
+                onChange={this.changeMilestoneEndDate}
             />
         );
     }
