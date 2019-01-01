@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -6,13 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
+const styles = {
     button: {
         marginLeft: '10px',
     },
-});
+};
 
 class CloseSprint extends Component {
     constructor (props) {
@@ -20,7 +18,6 @@ class CloseSprint extends Component {
     }
 
     closeSprint = () => {
-        console.log('closeSprint');
         const { milestones, setStageFlag, setVerifFlag, setMilestones, setAction, setOnSuccess, refreshSprints, setVerifying } = this.props;
         setOnSuccess(refreshSprints);
         setMilestones(milestones);
@@ -31,7 +28,7 @@ class CloseSprint extends Component {
     };
 
     render() {
-        const { classes, loading, loadSuccess, loadedCount, milestones } = this.props;
+        const { classes, milestones } = this.props;
 
         if (milestones.length === 0) {
             return null;
@@ -42,21 +39,35 @@ class CloseSprint extends Component {
                 </Button>
             )
         }
-    };
+    }
 }
 
 CloseSprint.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    loading: PropTypes.bool.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    loadedCount: PropTypes.number.isRequired,
+    repositories: PropTypes.array.isRequired,
+    milestones: PropTypes.array.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    updateAvailableSprints: PropTypes.func.isRequired,
+    updateSelectedSprint: PropTypes.func.isRequired,
+    refreshSprints: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loading: state.milestonesEdit.loading,
     loadSuccess: state.milestonesEdit.loadSuccess,
-
     loadedCount: state.milestonesEdit.loadedCount,
-
     repositories: state.sprintsView.repositories,
-
     milestones: state.sprintsView.milestones,
 });
 

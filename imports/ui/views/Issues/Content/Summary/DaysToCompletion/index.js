@@ -1,28 +1,9 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
-
-import Grid from '@material-ui/core/Grid';
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-
 import VelocityBarHorizontal from "./VelocityBarHorizontal.js";
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class DaysToCompletion extends Component {
     constructor (props) {
@@ -77,7 +58,7 @@ class DaysToCompletion extends Component {
         } else {
             return '-';
         }
-    };
+    }
 
     getVelocityBar(dataset) {
         const { defaultPoints } = this.props;
@@ -93,10 +74,10 @@ class DaysToCompletion extends Component {
         } else {
             return [];
         }
-    };
+    }
 
     render() {
-        const { classes, velocity } = this.props;
+        const { velocity } = this.props;
         return (
             <CustomCard
                 headerTitle="Remaining work"
@@ -110,7 +91,8 @@ class DaysToCompletion extends Component {
 }
 
 DaysToCompletion.propTypes = {
-    classes: PropTypes.object.isRequired,
+    velocity: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(DaysToCompletion);
+export default DaysToCompletion;

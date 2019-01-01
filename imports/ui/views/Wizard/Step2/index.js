@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -14,20 +12,14 @@ import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
 import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
 import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
 
-const styles = theme => ({
-    root: {
-    },
-});
-
 class Step2 extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { classes } = this.props;
         return (
-            <div>
+            <React.Fragment>
                 <FetchOrgs/>
                 <FetchOrgRepos/>
                 <FetchRepo/>
@@ -47,13 +39,9 @@ class Step2 extends Component {
                         <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
                     </Grid>
                 </Grid>
-            </div>
+            </React.Fragment>
         );
     }
 }
 
-Step2.propTypes = {
-    classes: PropTypes.object,
-};
-
-export default withStyles(styles)(Step2);
+export default Step2;

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 export default (exception) => {
     const message =
         (exception.sanitizedError && exception.sanitizedError.message)

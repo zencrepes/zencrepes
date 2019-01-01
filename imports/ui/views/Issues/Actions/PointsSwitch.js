@@ -2,22 +2,21 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {connect} from "react-redux";
 
 import Switch from '@material-ui/core/Switch';
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 class PointsSwitch extends Component {
     constructor (props) {
         super(props);
         this.state = {};
     }
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setDefaultPoints } = this.props;
         setDefaultPoints(event.target.checked);
     };
@@ -30,17 +29,19 @@ class PointsSwitch extends Component {
                 Issues Count
                 <Switch
                     checked={defaultPoints}
-                    onChange={this.handleChange('defaultPoints')}
+                    onChange={this.handleChange}
                     value="defaultPoints"
                 />
                 Points
             </div>
         )
-    };
+    }
 }
 
 PointsSwitch.propTypes = {
     classes: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+    setDefaultPoints: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PointsSwitch);

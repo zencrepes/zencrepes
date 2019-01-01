@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /*
 *
 * getAssigneesRepartition() Take a list of issues and returns repartition by assignees
@@ -5,12 +7,7 @@
 * Arguments:
 * - issues: Array of issues
 */
-
-import {cfgIssues, cfgSources} from "../../data/Minimongo";
-
 export const getAssignees = (issues) => {
-    console.log('getAssignees');
-
     let statesGroup = [];
 
     let allValues = [];
@@ -34,7 +31,6 @@ export const getAssignees = (issues) => {
 }
 
 export const getAssigneesRepartition = (issues) => {
-    console.log('getAssignees');
     let statesGroup = [];
     let allValues = [];
     issues.forEach((issue) => {
@@ -69,50 +65,9 @@ export const getAssigneesRepartition = (issues) => {
     return assignees.sort((a, b) => b.issues.count - a.issues.count);
 };
 
-/*
-export const getAssigneesRepartition = (issues) => {
-    console.log('getAssignees');
-
-    let statesGroup = [];
-
-    let allValues = [];
-    issues.forEach((issue) => {
-        if (issue['assignees'].totalCount === 0) {
-            let pushObj = {};
-            pushObj['login'] = 'UNASSIGNED';
-            allValues.push(pushObj);
-        } else {
-            issue['assignees'].edges.map((nestedValue) => {
-                if (nestedValue.node['login'] === null || nestedValue.node['login'] === '' || nestedValue.node['login'] === undefined ) {
-                    //console.log({...nestedValue.node, name: nestedValue.node.login});
-                    allValues.push({...nestedValue.node, name: nestedValue.node.login});
-                } else {
-                    allValues.push(nestedValue.node);
-                }
-            })
-        }
-    });
-    console.log(allValues);
-    statesGroup = _.groupBy(allValues, 'login');
-
-    // If the key is 'undefined', replace with default facet name
-    if (statesGroup['undefined'] !== undefined) {
-        statesGroup['UNASSIGNED'] = statesGroup['undefined'];
-        delete statesGroup['undefined'];
-    }
-
-    let states = [];
-    Object.keys(statesGroup).forEach(function(key) {
-        states.push({count: statesGroup[key].length, login: key });
-    });
-    //Return the array sorted by count
-    return states.sort((a, b) => b.count - a.count);
-};
-*/
-
 export const getRepositories = (issues) => {
     let repos = [];
-    statesGroup = _.groupBy(issues, (value) => value.repo.name);
+    let statesGroup = _.groupBy(issues, (value) => value.repo.name);
     Object.keys(statesGroup).forEach(function(key) {
         repos.push({
             id: statesGroup[key][0].repo.id,
@@ -133,8 +88,6 @@ export const getRepositories = (issues) => {
 export const getRepositoriesRepartition = (milestones, issues) => {
     const repos = milestones.map((ms) => {
         let issuesList = issues.filter(issue => ms.repo.id === issue.repo.id);
-        console.log(ms);
-        console.log(issuesList);
         return {
             ...ms,
             issues: {
@@ -170,7 +123,6 @@ export const getRepositoriesRepartition = (milestones, issues) => {
 };
 
 export const getLabelsRepartition = (issues) => {
-    console.log('getLabelsRepartition');
     let statesGroup = [];
     let allValues = [];
     issues.forEach((issue) => {

@@ -1,20 +1,11 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
-import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-const styles = theme => ({
-    root: {
-    },
-});
 class RefreshIssues extends Component {
     constructor (props) {
         super(props);
@@ -31,19 +22,25 @@ class RefreshIssues extends Component {
     };
 
     render() {
-        const { classes } = this.props;
-
         return (
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshFull}>
-                <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+            <Button variant="contained" color="primary" onClick={this.refreshFull}>
+                <RefreshIcon />
                 Issues
             </Button>
         )
-    };
+    }
 }
 
 RefreshIssues.propTypes = {
-    classes: PropTypes.object.isRequired,
+    issues: PropTypes.array.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setIssues: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -60,7 +57,6 @@ const mapDispatch = dispatch => ({
     setOnSuccess: dispatch.issuesEdit.setOnSuccess,
 
     updateView: dispatch.sprintsView.updateView,
-
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(RefreshIssues));
+export default connect(mapState, mapDispatch)(RefreshIssues);

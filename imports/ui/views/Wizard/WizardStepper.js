@@ -22,8 +22,6 @@ const styles = theme => ({
     },
 });
 
-
-
 class WizardStepper extends Component {
     constructor(props) {
         super(props);
@@ -31,11 +29,10 @@ class WizardStepper extends Component {
 
     render() {
         const { classes, activeStep, steps } = this.props;
-        console.log(activeStep);
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
-                    {steps.map((label, index) => {
+                    {steps.map((label) => {
                         const props = {};
                         const labelProps = {};
                         return (
@@ -52,9 +49,9 @@ class WizardStepper extends Component {
 }
 
 WizardStepper.propTypes = {
-    classes: PropTypes.object,
-    activeStep: PropTypes.number,
-    steps: PropTypes.array,
+    classes: PropTypes.object.isRequired,
+    activeStep: PropTypes.number.isRequired,
+    steps: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({

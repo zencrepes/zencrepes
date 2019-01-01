@@ -11,11 +11,11 @@ export default {
         setReposIssues(state, payload) {return { ...state, reposIssues: payload };},
     },
     effects: {
-        changeActiveStep(payload, rootState) {
+        changeActiveStep(payload) {
             this.setActiveStep(payload);
             this.updateReposIssues();
         },
-        updateReposIssues(payload, rootState) {
+        updateReposIssues() {
             const issuesCount = cfgSources.find({active: true}).map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0);
             this.setReposIssues(issuesCount);
         }

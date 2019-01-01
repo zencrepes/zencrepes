@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Paper from '@material-ui/core/Paper';
@@ -10,38 +8,21 @@ import uuidv1 from "uuid/v1";
 
 import BurndownChart from './Chart.js';
 
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
-
 class Burndown extends Component {
     constructor (props) {
         super(props);
     }
 
-    componentDidMount(prevProps, prevState, snapshot) {
-        const { refreshBurndown, shouldBurndownDataReload, burndown } = this.props;
-        console.log('Burndown - componentDidMount');
+    componentDidMount() {
+        const { refreshBurndown, shouldBurndownDataReload } = this.props;
         if (shouldBurndownDataReload === true) {
-            console.log('Burndown - componentDidMount - Trigger initFacets');
             refreshBurndown();
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { refreshBurndown, shouldBurndownDataReload } = this.props;
-        console.log('Burndown - componentDidUpdate');
         if (prevProps.shouldBurndownDataReload === false && shouldBurndownDataReload === true) {
-            console.log('Burndown - componentDidUpdate - Trigger initFacets');
             refreshBurndown();
         }
     }
@@ -69,9 +50,8 @@ class Burndown extends Component {
     }
 
     render() {
-        const { classes } = this.props;
         return (
-            <Paper className={classes.root} elevation={1}>
+            <Paper elevation={1}>
                 <BurndownChart data={this.getVelocityHighcharts()} />
             </Paper>
         );
@@ -79,7 +59,9 @@ class Burndown extends Component {
 }
 
 Burndown.propTypes = {
-    classes: PropTypes.object.isRequired,
+    shouldBurndownDataReload: PropTypes.bool.isRequired,
+    burndown: PropTypes.object.isRequired,
+    refreshBurndown: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -89,7 +71,6 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     refreshBurndown: dispatch.issuesView.refreshBurndown,
-
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Burndown));
+export default connect(mapState, mapDispatch)(Burndown);

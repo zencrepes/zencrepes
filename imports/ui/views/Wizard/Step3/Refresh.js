@@ -3,25 +3,12 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from '@material-ui/core/CardActions';
 import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import LinearProgress from "@material-ui/core/LinearProgress";
 
-const styles = theme => ({
+const styles = {
     root: {
         flexGrow: 1,
         margin: '10px',
-    },
-    listItem: {
-        padding: '0px',
     },
     actionButtons: {
         textAlign: 'right',
@@ -29,7 +16,7 @@ const styles = theme => ({
     loading: {
         flexGrow: 1,
     },
-});
+};
 
 class Refresh extends Component {
     constructor(props) {
@@ -37,13 +24,11 @@ class Refresh extends Component {
     }
 
     loadIssues = () => {
-        console.log('loadIssues');
         const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };
 
     cancelLoad = () => {
-        console.log('cancelLoad');
         const { setLoading } = this.props;
         setLoading(false);
     };
@@ -72,10 +57,10 @@ class Refresh extends Component {
 }
 
 Refresh.propTypes = {
-    classes: PropTypes.object,
-    loading: PropTypes.bool,
-    setLoadFlag: PropTypes.func,
-    setLoading: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

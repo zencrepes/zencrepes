@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
 
@@ -33,15 +30,7 @@ class MilestonesFetch extends Component {
 }
 
 MilestonesFetch.propTypes = {
-
+    loadModal: PropTypes.bool.isRequired,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(MilestonesFetch);
+export default MilestonesFetch;

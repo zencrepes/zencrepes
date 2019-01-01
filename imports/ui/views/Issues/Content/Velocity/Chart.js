@@ -1,44 +1,30 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-
-import {
-    withRouter
-} from 'react-router-dom';
-
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 
 import Highcharts from 'highcharts/highstock';
+import {
+    HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Legend,
+    SplineSeries, RangeSelector, Tooltip
+} from 'react-jsx-highstock';
+/*
 import {
     HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
     AreaSplineSeries, SplineSeries, Series, Navigator, RangeSelector, Tooltip
 } from 'react-jsx-highstock';
-
-const styles = theme => ({
-    root: {
-        height: '300px'
-    },
-});
-
+*/
 class VelocityChart extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            //series: [],
-        };
     }
 
     renderSeries({ id, name, weeks }) {
         return (
             <SplineSeries name={name} key={id} id={id} data={weeks} />
         )
-    };
+    }
 
     render() {
-        const { classes, data } = this.props;
-        const { series } = this.state;
+        const { data } = this.props;
 
         const plotOptions =  {
             series: {
@@ -82,7 +68,7 @@ class VelocityChart extends Component {
 }
 
 VelocityChart.propTypes = {
-    //classes: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
 };
 
 export default withHighcharts(VelocityChart, Highcharts);

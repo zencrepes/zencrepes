@@ -20,7 +20,6 @@ import {
     populateTicketsPerDay,
     populateTicketsPerWeek
 } from "../../../utils/velocity/index.js";
-import {cfgLabels} from "../../../data/Minimongo";
 
 export default {
     state: {
@@ -104,8 +103,7 @@ export default {
 
     },
     effects: {
-        async initView(payload, rootState) {
-            console.log('Sprints - initView');
+        async initView() {
             this.refreshSprints();
 
             const allRepos = cfgSources.find({active: true}).fetch();
@@ -113,33 +111,29 @@ export default {
 
             this.updateView();
         },
-        async refreshSprints(payload, rootState) {
-            console.log('refreshSprints');
+        async refreshSprints() {
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
             this.updateSelectedSprint(sprints[0]);
         },
 
-        async updateAvailableSprints(payload, rootState) {
-            console.log('updateAvailableSprints');
+        async updateAvailableSprints() {
             let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
             this.setSprints(sprints);
         },
 
-        async updateSelectedSprint(selectedSprintTitle, rootState) {
+        async updateSelectedSprint(selectedSprintTitle) {
             await this.setSelectedSprintTitle(selectedSprintTitle);
             this.updateView();
         },
 
-        async addRepoUpdateSelected(selectedRepos, rootState) {
-            console.log('addRepoUpdateSelected');
-            console.log(selectedRepos);
+        async addRepoUpdateSelected(selectedRepos) {
             this.setAddReposSelected(selectedRepos);
         },
 
-        async createSprint(payload, rootState) {
+        async createSprint() {
             this.setSelectedSprintTitle(null);
             this.setSelectedSprintDescription(null);
             this.setSelectedSprintDueDate(null);
@@ -165,11 +159,6 @@ export default {
             const includedRepos = milestones.map((ms) => ms.repo);
             const allRepos = cfgSources.find({active: true}).fetch();
             const availableRepos = _.differenceBy(allRepos, includedRepos, 'id');
-
-            console.log(includedRepos);
-            console.log(allRepos);
-            console.log(availableRepos);
-
             this.setAddReposAvailable(availableRepos.map((repo) => {
                 return {
                     value: repo.id,
@@ -187,7 +176,6 @@ export default {
 
 
         async updateView(payload, rootState) {
-            console.log('Sprints - updateView');
             /*
             console.log('Update Sprint');
             console.log(selectedSprintTitle);
@@ -243,8 +231,7 @@ export default {
 
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
-            let closedIssues = cfgIssues.find(closedIssuesFilter).fetch()
-            console.log(closedIssues);
+            //let closedIssues = cfgIssues.find(closedIssuesFilter).fetch()
 
             let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
             let lastDay = getLastDay(closedIssuesFilter, cfgIssues);
@@ -260,8 +247,6 @@ export default {
         },
 
         async updateDescriptionDate(payload, rootState) {
-            console.log(rootState.sprintsView.milestones);
-
             /*
             this.setSelectedSprintDescription('# Live demo\n' +
                 '\n' +
@@ -301,7 +286,6 @@ export default {
             let currentAssignees = rootState.sprintsView.assignees;
             currentAssignees.push(payload);
             this.setAssignees(currentAssignees);
-            console.log(currentAssignees);
 
             let allAssignees = getAssignees(cfgIssues.find({}).fetch());
             let assigneesDifference = _.differenceBy(allAssignees, currentAssignees, 'id');
@@ -326,7 +310,6 @@ export default {
             let currentRepositories = rootState.sprintsView.repositories;
             currentRepositories.push(payload);
             this.setRepositories(currentRepositories);
-            console.log(currentRepositories);
 
             let allRepositories = getRepositories(cfgIssues.find({}).fetch());
             let repositoriesDifference = _.differenceBy(allRepositories, currentRepositories, 'id');
@@ -338,9 +321,11 @@ export default {
         },
 
         async sprintCreated(payload, rootState) {
-            console.log('sprintCreated');
-            console.log(payload);
-            console.log(rootState);
+            const log = rootState.global.log;
+
+            log.info('sprintCreated');
+            log.info(payload);
+            log.info(rootState);
         }
     }
 };

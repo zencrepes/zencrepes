@@ -17,22 +17,21 @@ class FetchRepo extends Component {
         this.repositories = [];
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
-            console.log('ScanOrg - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
-        const { client, updateChip, setLoading, setLoadError, setLoadSuccess, orgName, repoName, setRepoData } = this.props;
+        const { client, updateChip, setLoading, setLoadError, setLoadSuccess, orgName, repoName, setRepoData, log } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadSuccess(false);
-        console.log('Getting data about Organization: ' + orgName + ' - Repository: ' + repoName);
+        log.info('Getting data about Organization: ' + orgName + ' - Repository: ' + repoName);
 
         let data = await client.query({
             query: GET_GITHUB_SINGLEREPO,
@@ -41,7 +40,7 @@ class FetchRepo extends Component {
             errorPolicy: 'ignore',
         });
 
-        console.log(data);
+        log.info(data);
 
         updateChip(data.data.rateLimit);
         if (data.data.repository === null) {
@@ -75,7 +74,18 @@ class FetchRepo extends Component {
 }
 
 FetchRepo.propTypes = {
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
+    orgName: PropTypes.string,
+    repoName: PropTypes.string,
+    log: PropTypes.object.isRequired,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    updateChip: PropTypes.func,
+    setRepoData: PropTypes.func,
 };
 
 const mapState = state => ({
@@ -84,6 +94,8 @@ const mapState = state => ({
 
     orgName: state.githubFetchRepo.orgName,
     repoName: state.githubFetchRepo.repoName,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

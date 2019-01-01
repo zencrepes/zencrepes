@@ -3,12 +3,11 @@ import PropTypes from "prop-types";
 
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
 import Grid from '@material-ui/core/Grid';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
         borderTopRightRadius: 0,
@@ -45,8 +44,6 @@ const styles = theme => ({
     },
     headerFactTitle: {
         paddingRight: 5,
-    },
-    headerFactTitle: {
         textAlign: 'right',
         color: '#999999',
         fontSize: 14,
@@ -64,8 +61,7 @@ const styles = theme => ({
         paddingTop: 0,
         paddingBottom: 5
     },
-});
-
+};
 
 class CustomCard extends Component {
     constructor(props) {
@@ -111,6 +107,11 @@ class CustomCard extends Component {
 
 CustomCard.propTypes = {
     classes: PropTypes.object,
+    headerTitle: PropTypes.string,
+    headerIcon: PropTypes.object,
+    headerFactTitle: PropTypes.string,
+    headerFactValue: PropTypes.string,
+    children: PropTypes.object,
 };
 
 export default withStyles(styles)(CustomCard);

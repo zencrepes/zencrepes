@@ -1,27 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
-import { withStyles } from '@material-ui/core/styles';
-
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-    toolbarButtons: {
-        flex: 1,
-    },
-});
 
 class GaugeChart extends Component {
     constructor(props) {
@@ -34,7 +17,7 @@ class GaugeChart extends Component {
     };
 
     render() {
-        const { classes, title, completed, max, legend } = this.props;
+        const { title, completed, max } = this.props;
 
         const options = {
             chart: {
@@ -128,7 +111,9 @@ class GaugeChart extends Component {
 }
 
 GaugeChart.propTypes = {
-    classes: PropTypes.object,
+    title: PropTypes.string.isRequired,
+    completed: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired,
 };
 
-export default withStyles(styles)(GaugeChart);
+export default GaugeChart;

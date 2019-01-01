@@ -1,7 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import { Button } from '@storybook/react/demo';
 import { Provider } from 'react-redux';
 import { init } from "@rematch/core";
 
@@ -11,8 +9,6 @@ import CurrentCompletion from '../imports/ui/views/Sprints/CurrentCompletion/ind
 
 // The *.mock.js files contains static redux stores configuration with no external dependencies (such as minimongo).
 import * as models from "../imports/ui/services/models/index.mock.js";
-import VelocityWeeks from "../imports/ui/components/Cards/VelocityWeeks";
-import GridItem from "../imports/ui/components/Grid/GridItem";
 import {BrowserRouter as Router} from "react-router-dom";
 //https://medium.com/ingenious/storybook-meets-redux-6ab09a5be346
 

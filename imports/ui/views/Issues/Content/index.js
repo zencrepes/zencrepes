@@ -1,27 +1,12 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Summary from './Summary/index.js';
 import Burndown from './Burndown/index.js';
 import Velocity from './Velocity/index.js';
 import IssuesList from './IssuesList/index.js';
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class IssuesContent extends Component {
     constructor (props) {
@@ -33,30 +18,26 @@ class IssuesContent extends Component {
     };
 
     render() {
-        const { classes, selectedTab } = this.props;
+        const { selectedTab } = this.props;
         return (
-            <div className={classes.root}>
+            <React.Fragment>
                 {{
                     0: <Summary />,
                     1: <IssuesList />,
                     2: <Velocity />,
                     3: <Burndown />,
                 }[selectedTab]}
-            </div>
+            </React.Fragment>
         );
     }
 }
 
 IssuesContent.propTypes = {
-    classes: PropTypes.object.isRequired,
+    selectedTab: PropTypes.number.isRequired,
 };
 
 const mapState = state => ({
     selectedTab: state.issuesView.selectedTab,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesContent));
+export default connect(mapState, null)(IssuesContent);

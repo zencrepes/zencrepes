@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import {connect} from "react-redux";
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class RemoveButton extends Component {
     constructor (props) {
@@ -17,10 +11,7 @@ class RemoveButton extends Component {
     }
 
     remove = () => {
-        const { milestone } = this.props;
-        console.log(milestone);
-
-        const { setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnSuccess, updateView } = this.props;
+        const { milestone, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnSuccess, updateView } = this.props;
         setMilestones([milestone]);
         setOnSuccess(updateView);
         setAction('delete');
@@ -30,9 +21,8 @@ class RemoveButton extends Component {
     };
 
     render() {
-        const { classes } = this.props;
         return (
-            <IconButton aria-label="Delete" className={classes.margin} onClick={this.remove}>
+            <IconButton aria-label="Delete" onClick={this.remove}>
                 <DeleteIcon fontSize="small" />
             </IconButton>
         );
@@ -40,7 +30,17 @@ class RemoveButton extends Component {
 }
 
 RemoveButton.propTypes = {
-    classes: PropTypes.object.isRequired,
+    verifiedRepos: PropTypes.array.isRequired,
+    repos: PropTypes.array.isRequired,
+    milestone: PropTypes.object.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -59,7 +59,6 @@ const mapDispatch = dispatch => ({
     setOnSuccess: dispatch.milestonesEdit.setOnSuccess,
 
     updateView: dispatch.sprintsView.updateView,
-
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(RemoveButton));
+export default connect(mapState, mapDispatch)(RemoveButton);

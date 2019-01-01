@@ -1,8 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
-import { connect } from "react-redux";
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import blue from '@material-ui/core/colors/blue';
 
-const styles = theme => ({
+const styles = {
     root: {
 
     },
@@ -37,7 +34,7 @@ const styles = theme => ({
         color: blue[500],
         padding: '5px',
     }
-});
+};
 
 class FacetSelector extends React.Component {
     constructor(props) {
@@ -49,14 +46,12 @@ class FacetSelector extends React.Component {
     }
 
     handleToggle = clickedValue => () => {
-        console.log('handleToggle');
         const { clickItem } = this.props;
         clickItem(clickedValue);
     };
 
     render() {
-        const { data, classes, selected, clickItem, defaultPoints } = this.props;
-        //const { value } = this.state;
+        const { data, classes, selected, defaultPoints } = this.props;
 
         let facetItem = data.name;
         if (facetItem.length > 20) {
@@ -70,7 +65,6 @@ class FacetSelector extends React.Component {
                 dense
                 button
                 onClick={this.handleToggle(data)}
-                //onClick={clickItem(data)}
                 className={classes.listItem}
             >
                 <Checkbox
@@ -92,7 +86,10 @@ class FacetSelector extends React.Component {
 
 FacetSelector.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    selected: PropTypes.bool.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+    clickItem: PropTypes.func.isRequired,
 };
-
 
 export default withStyles(styles)(FacetSelector);

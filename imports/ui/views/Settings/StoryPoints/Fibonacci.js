@@ -1,14 +1,10 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
-import Snackbar from '@material-ui/core/Snackbar';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,18 +13,15 @@ import TextField from '@material-ui/core/TextField';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Switch from '@material-ui/core/Switch';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import fibonacci from 'fibonacci-fast';
 
 import { SketchPicker } from 'react-color';
 
-import Color from '../../Labels/Edit/Actions/Color.js';
 import reactCSS from "reactcss";
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -51,7 +44,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'right',
     }
-});
+};
 
 class Fibonacci extends Component {
     constructor(props) {
@@ -81,7 +74,7 @@ class Fibonacci extends Component {
         }
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         this.updateValue(event.target.value);
     };
 
@@ -169,7 +162,7 @@ class Fibonacci extends Component {
                                     className={classes.textField}
                                     helperText={fibonacciHelperText}
                                     margin="normal"
-                                    onChange={this.handleChange()}
+                                    onChange={this.handleChange}
                                 />
                                 <Button color="primary" variant="contained" className={classes.button} onClick={this.incFibonacci}>+</Button>
                             </ListItemText>
@@ -196,20 +189,22 @@ class Fibonacci extends Component {
 }
 
 Fibonacci.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    maxPoints: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
 
+    setMaxPoints: PropTypes.func.isRequired,
+    setColor: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     maxPoints: state.githubLabels.maxPoints,
     color: state.githubLabels.color,
-
 });
 
 const mapDispatch = dispatch => ({
     setMaxPoints: dispatch.githubLabels.setMaxPoints,
     setColor: dispatch.githubLabels.setColor,
-
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Fibonacci));

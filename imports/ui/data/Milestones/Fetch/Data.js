@@ -18,8 +18,8 @@ class Data extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading } = this.props;
+    componentDidUpdate = (prevProps) => {
+        const { setLoadFlag, loadFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
@@ -28,7 +28,7 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setLoadError, setLoadedCount, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones } = this.props;
+        const { setLoading, setLoadSuccess, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones, log } = this.props;
 
         let allRepos = cfgSources.find({}).fetch();
         setIterateTotal(allRepos.length);
@@ -36,19 +36,19 @@ class Data extends Component {
         for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any milestones attached to this repo (if any)
-                console.log('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgMilestones.find({'repo.id': repo.id}).count() + ' milestones ');
+                log.info('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgMilestones.find({'repo.id': repo.id}).count() + ' milestones ');
                 await cfgMilestones.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
-                console.log('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.milestones.totalCount + ' milestones');
+                log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.milestones.totalCount + ' milestones');
                 await this.getMilestonesPagination(null, 5, repo);
             }
             incIterateCurrent(1);
         }
 
-        console.log('Will be deleting ' + cfgMilestones.find({active: false}).count() + ' milestones attached to disabled repositories');
+        log.info('Will be deleting ' + cfgMilestones.find({active: false}).count() + ' milestones attached to disabled repositories');
         await cfgMilestones.remove({active: false});
 
-        console.log('Load completed: There is a total of ' + cfgMilestones.find({}).count() + ' milestones in memory');
+        log.info('Load completed: There is a total of ' + cfgMilestones.find({}).count() + ' milestones in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
         updateMilestones();
@@ -57,7 +57,7 @@ class Data extends Component {
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 milestones, but local only has 99
     // Query increment should not be just 1 since if the missing milestones is far down, this will generate a large number of calls
     getMilestonesPagination = async (cursor, increment, repoObj) => {
-        const { client, setLoadSuccess, setLoading } = this.props;
+        const { client, setLoadSuccess, setLoading, log } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
@@ -70,9 +70,9 @@ class Data extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(repoObj);
+                log.info(repoObj);
                 if (data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
@@ -80,12 +80,12 @@ class Data extends Component {
                     if (data.data.repository !== null && data.data.repository.milestones.edges.length > 0) {
                         //data.data.repository.milestones.totalCount;
                         // Refresh the repository with the updated milestones count
-                        let updatedRepo = cfgSources.update({'id': repoObj.id}, {$set: {'milestones.totalCount': data.data.repository.milestones.totalCount}});
+                        cfgSources.update({'id': repoObj.id}, {$set: {'milestones.totalCount': data.data.repository.milestones.totalCount}});
 
                         let lastCursor = await this.ingestMilestones(data, repoObj);
                         let loadedMilestonesCount = cfgMilestones.find({'repo.id': repoObj.id, 'refreshed': true}).count();
                         let queryIncrement = calculateQueryIncrement(loadedMilestonesCount, data.data.repository.milestones.totalCount);
-                        console.log('Loading milestones for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedMilestonesCount + ' - Remote Count: ' + data.data.repository.milestones.totalCount);
+                        log.info('Loading milestones for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedMilestonesCount + ' - Remote Count: ' + data.data.repository.milestones.totalCount);
                         if (queryIncrement > 0 && lastCursor !== null) {
                             //Start recurring call, to load all milestones from a repository
                             await this.getMilestonesPagination(lastCursor, queryIncrement, repoObj);
@@ -93,11 +93,11 @@ class Data extends Component {
                     }
                 } else {
                     this.errorRetry = this.errorRetry + 1;
-                    console.log('Error loading content, current count: ' + this.errorRetry)
+                    log.info('Error loading content, current count: ' + this.errorRetry)
                     await this.getMilestonesPagination(cursor, increment, repoObj);
                 }
             } else {
-                console.log('Got too many load errors, stopping');
+                log.info('Got too many load errors, stopping');
                 setLoadSuccess(false);
                 setLoading(false);
             }
@@ -105,20 +105,19 @@ class Data extends Component {
     };
 
     ingestMilestones = async (data, repoObj) => {
-        const { incLoadedCount } = this.props;
-
+        const { incLoadedCount, log } = this.props;
         let lastCursor = null;
         let stopLoad = false;
-        console.log(data);
-        for (let [key, currentMilestone] of Object.entries(data.data.repository.milestones.edges)){
-            console.log('Loading milestone: ' + currentMilestone.node.title);
+        log.info(data);
+        for (var currentMilestone of data.data.repository.milestones.edges) {
+            log.info('Loading milestone: ' + currentMilestone.node.title);
             let existNode = cfgMilestones.findOne({id: currentMilestone.node.id});
             let exitsNodeUpdateAt = null;
             if (existNode !== undefined) {
                 exitsNodeUpdateAt = existNode.updatedAt;
             }
             if (new Date(currentMilestone.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
-                console.log('Milestone already loaded, skipping');
+                log.info('Milestone already loaded, skipping');
                 // Milestones are loaded from newest to oldest, when it gets to a point where updated date of a loaded milestone
                 // is equal to updated date of a local milestone, it means there is no "new" content, but there might still be
                 // milestones that were not loaded for any reason. So the system only stops loaded if totalCount remote is equal
@@ -127,13 +126,7 @@ class Data extends Component {
                     stopLoad = true;
                 }
             } else {
-                console.log('New or updated milestone');
-                let nodePinned = false;
-                let nodePoints = null;
-                if (existNode !== undefined) {
-                    nodePinned = existNode.pinned;
-                    nodePoints = existNode.points;
-                }
+                log.info('New or updated milestone');
                 let milestoneObj = JSON.parse(JSON.stringify(currentMilestone.node)); //TODO - Replace this with something better to copy object ?
                 milestoneObj['repo'] = repoObj;
                 milestoneObj['org'] = repoObj.org;
@@ -151,7 +144,7 @@ class Data extends Component {
             lastCursor = currentMilestone.cursor;
         }
         if (lastCursor === null) {
-            console.log('=> No more updates to load, will not be making another GraphQL call for this repository');
+            log.info('=> No more updates to load, will not be making another GraphQL call for this repository');
         }
         if (stopLoad === true) {
             lastCursor = null;
@@ -165,12 +158,28 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    incLoadedCount: PropTypes.func.isRequired,
+    setIterateTotal: PropTypes.func.isRequired,
+    setIterateCurrent: PropTypes.func.isRequired,
+    incIterateCurrent: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+    updateMilestones: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.milestonesFetch.loadFlag,
     loading: state.milestonesFetch.loading,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

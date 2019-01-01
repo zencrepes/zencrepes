@@ -2,12 +2,12 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:8.11.4
+      - image: circleci/node:8.11.4-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -21,19 +21,38 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          name : Restore NPM Cache
+          key: npm-cache-{{ checksum "package.json" }}
 
-      - run: yarn install
+      - run:
+          name: Download and install meteor
+          command: curl https://install.meteor.com | /bin/sh
+
+      #- run:
+      #    name: Create Settings File
+      #    command: echo $METEOR_SETTINGS > settings.json
+
+      - run:
+          name: Install npm dependencies
+          command: meteor npm install
 
       - save_cache:
+          name: Save NPM Cache
+          key: npm-cache-{{ checksum "package.json" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - 'node_modules'
 
-      # run tests!
-      - run: yarn test
+      - run:
+          name: Run Linting
+          command: meteor npm run lint --silent
+
+      - save_cache:
+          key: packages-cache-{{ checksum ".meteor/versions" }}
+          paths:
+            - './.meteor/local/build'
+            - './.meteor/local/bundler-cache'
+            - './.meteor/local/isopacks'
+            - './.meteor/local/plugin-cache'
+
 
 

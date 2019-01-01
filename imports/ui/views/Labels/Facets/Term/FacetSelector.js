@@ -1,8 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
-import { connect } from "react-redux";
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -17,10 +14,7 @@ import SquareIcon from 'mdi-react/SquareIcon';
 
 import blue from '@material-ui/core/colors/blue';
 
-const styles = theme => ({
-    root: {
-
-    },
+const styles = {
     listItem: {
         marginLeft: '5px',
         padding: '0px',
@@ -40,27 +34,20 @@ const styles = theme => ({
         color: blue[500],
         padding: '5px',
     }
-});
+};
 
 class FacetSelector extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-
-        };
     }
 
     handleToggle = clickedValue => () => {
-        console.log('handleToggle');
         const { clickItem } = this.props;
         clickItem(clickedValue);
     };
 
     render() {
-        const { data, classes, selected, clickItem, type } = this.props;
-        //const { value } = this.state;
-
+        const { data, classes, selected, type } = this.props;
         let facetItem = data.name;
         if (facetItem.length > 20) {
             facetItem = facetItem.slice(0, 25) + '...';
@@ -73,7 +60,6 @@ class FacetSelector extends React.Component {
                 dense
                 button
                 onClick={this.handleToggle(data)}
-                //onClick={clickItem(data)}
                 className={classes.listItem}
             >
                 <Checkbox
@@ -98,7 +84,10 @@ class FacetSelector extends React.Component {
 
 FacetSelector.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    selected: PropTypes.bool.isRequired,
+    type: PropTypes.string.isRequired,
+    clickItem: PropTypes.func.isRequired,
 };
-
 
 export default withStyles(styles)(FacetSelector);

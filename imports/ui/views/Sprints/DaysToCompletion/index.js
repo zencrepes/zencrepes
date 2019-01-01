@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
 
 import VelocityBarHorizontal from "../../../components/Charts/VelocityBarHorizontal";
 import CustomCard from "../../../components/CustomCard/index.js";
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class DaysToCompletion extends Component {
     constructor(props) {
@@ -85,7 +79,7 @@ class DaysToCompletion extends Component {
     }
 
     render() {
-        const { classes, velocity } = this.props;
+        const { velocity } = this.props;
         return (
             <CustomCard
                 headerTitle="Forecast"
@@ -99,8 +93,8 @@ class DaysToCompletion extends Component {
 }
 
 DaysToCompletion.propTypes = {
-    classes: PropTypes.object,
-
+    defaultPoints: PropTypes.bool.isRequired,
+    velocity: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -108,4 +102,4 @@ const mapState = state => ({
     defaultPoints: true,
 });
 
-export default connect(mapState, null)(withStyles(styles)(DaysToCompletion));
+export default connect(mapState, null)(DaysToCompletion);

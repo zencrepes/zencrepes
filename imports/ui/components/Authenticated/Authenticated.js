@@ -6,8 +6,9 @@ import {cfgSources} from "../../data/Minimongo.js";
 import {cfgIssues} from "../../data/Minimongo.js";
 
 class Authenticated extends React.Component {
-    componentWillMount() {
-        this.props.setAfterLoginPath(`${window.location.pathname}${window.location.search}`);
+    constructor(props) {
+        super(props);
+        props.setAfterLoginPath(`${window.location.pathname}${window.location.search}`);
     }
 
     render() {

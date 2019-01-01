@@ -6,13 +6,13 @@ import Grid from '@material-ui/core/Grid';
 
 import Aggregation from './Aggregation.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',    },
     query: {
         flex: 1,
     },
-});
+};
 
 class Filters extends Component {
     constructor (props) {
@@ -30,7 +30,6 @@ class Filters extends Component {
                 return false;
             }
         }).map((facet) => {
-            console.log(facet);
             if (facet.nested === false) {
                 return {...facet, values: query[facet.key]['$in']};
             } else {
@@ -69,6 +68,9 @@ class Filters extends Component {
 
 Filters.propTypes = {
     classes: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    updateQuery: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Filters);

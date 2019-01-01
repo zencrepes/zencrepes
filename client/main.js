@@ -1,7 +1,9 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import { render } from 'react-dom';
-import { Accounts } from 'meteor/accounts-base';
+//import { Accounts } from 'meteor/accounts-base';
+import { PersistentMinimongo2 }  from 'meteor/frozeman:persistent-minimongo2'
 
 import { init } from "@rematch/core";
 import { Provider } from "react-redux";

@@ -1,23 +1,17 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
-
-import SquareIcon from 'mdi-react/SquareIcon';
-import PencilIcon from 'mdi-react/PencilIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 
 import TableActionButtons from './TableActionButtons.js';
 
 import {
     // State or Local Processing Plugins
-    SelectionState,
     PagingState,
-    IntegratedSelection,
     IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
@@ -26,27 +20,16 @@ import {
     Table,
     TableHeaderRow,
     PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import {cfgMilestones} from "../../data/Minimongo";
-
-const styles = theme => ({
-    root: {
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-    },
-});
 
 const StatesFormatter = ({ value }) => {
     return value.map(state => (
         <div key={state.value}>{state.value}</div>
     ))
+};
+StatesFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
 };
 
 const StatesTypeProvider = props => (
@@ -63,6 +46,10 @@ const ReposFormatter = ({ value }) => {
         return '1 (' + value[0].repo.name + ')';
     }
 };
+ReposFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
+};
+
 
 const ReposTypeProvider = props => (
     <DataTypeProvider
@@ -73,6 +60,9 @@ const ReposTypeProvider = props => (
 
 const IssuesFormatter = ({ value }) => {
     return value.filter(label => label.issues !== undefined).map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
+};
+IssuesFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
 };
 
 const IssuesTypeProvider = props => (
@@ -85,6 +75,9 @@ const IssuesTypeProvider = props => (
 const ActionsFormatter = ({ value }) => {
     return <TableActionButtons key={value.title} milestonesdata={value} />
 };
+ActionsFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
 
 const ActionsTypeProvider = props => (
     <DataTypeProvider
@@ -93,9 +86,11 @@ const ActionsTypeProvider = props => (
     />
 );
 
-
 const EditLabelFormatter = ({ value }) => {
     return <Link to={"/labels/view/" + value}><EyeIcon /></Link>;
+};
+EditLabelFormatter.propTypes = {
+    value: PropTypes.string.isRequired,
 };
 
 const EditLabelTypeProvider = props => (
@@ -104,11 +99,6 @@ const EditLabelTypeProvider = props => (
         {...props}
     />
 );
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class MilestonesTable extends Component {
     constructor(props) {
@@ -176,51 +166,50 @@ class MilestonesTable extends Component {
     }
 
     render() {
-        const { classes, milestones } = this.props;
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
-            <div className={classes.root}>
-                <Grid
-                    rows={this.formatData()}
-                    columns={columns}
-                >
-                    <PagingState
-                        currentPage={currentPage}
-                        onCurrentPageChange={this.changeCurrentPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={this.changePageSize}
-                    />
-                    <StatesTypeProvider
-                        for={statesColumns}
-                    />
-                    <ReposTypeProvider
-                        for={reposColumns}
-                    />
-                    <IssuesTypeProvider
-                        for={issuesColumns}
-                    />
-                    <ActionsTypeProvider
-                        for={actionsColumns}
-                    />
-                    <EditLabelTypeProvider
-                        for={editLabelColumns}
-                    />
-                    <IntegratedPaging />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                    <Toolbar />
-                    <PagingPanel
-                        pageSizes={pageSizes}
-                    />
-                </Grid>
-            </div>
+            <Grid
+                rows={this.formatData()}
+                columns={columns}
+            >
+                <PagingState
+                    currentPage={currentPage}
+                    onCurrentPageChange={this.changeCurrentPage}
+                    pageSize={pageSize}
+                    onPageSizeChange={this.changePageSize}
+                />
+                <StatesTypeProvider
+                    for={statesColumns}
+                />
+                <ReposTypeProvider
+                    for={reposColumns}
+                />
+                <IssuesTypeProvider
+                    for={issuesColumns}
+                />
+                <ActionsTypeProvider
+                    for={actionsColumns}
+                />
+                <EditLabelTypeProvider
+                    for={editLabelColumns}
+                />
+                <IntegratedPaging />
+                <Table columnExtensions={tableColumnExtensions} />
+                <TableHeaderRow />
+                <Toolbar />
+                <PagingPanel
+                    pageSizes={pageSizes}
+                />
+            </Grid>
         );
     }
 }
 
 MilestonesTable.propTypes = {
     classes: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
+    value: PropTypes.string.isRequired,
 };
 
 
@@ -228,8 +217,4 @@ const mapState = state => ({
     milestones: state.milestonesView.milestones,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(MilestonesTable));
+export default connect(mapState, null)(MilestonesTable);

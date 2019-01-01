@@ -1,44 +1,30 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
 
 import TextField from '@material-ui/core/TextField';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Switch from '@material-ui/core/Switch';
 
-const styles = theme => ({
-
-});
-
 class LabelDescription extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
     }
 
-    handleToggle = value => () => {
+    handleToggle = value => {
         const { setUpdateDescription } = this.props;
         if (value === true) {setUpdateDescription(false);}
         else {setUpdateDescription(true);}
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setNewDescription } = this.props;
         setNewDescription(event.target.value);
     };
 
     render() {
-        const { classes, updateDescription, newDescription } = this.props;
+        const { updateDescription, newDescription } = this.props;
         return (
             <ListItem >
                 <TextField
@@ -51,7 +37,7 @@ class LabelDescription extends Component {
                     fullWidth
                     margin="normal"
                     value={newDescription}
-                    onChange={this.handleChange('description')}
+                    onChange={this.handleChange}
                 />
                 <ListItemSecondaryAction>
                     <Switch
@@ -65,8 +51,11 @@ class LabelDescription extends Component {
 }
 
 LabelDescription.propTypes = {
-    classes: PropTypes.object.isRequired,
+    updateDescription: PropTypes.string.isRequired,
+    newDescription: PropTypes.string.isRequired,
 
+    setUpdateDescription: PropTypes.func.isRequired,
+    setNewDescription: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -79,4 +68,4 @@ const mapDispatch = dispatch => ({
     setNewDescription: dispatch.labelsEdit.setNewDescription,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LabelDescription));
+export default connect(mapState, mapDispatch)(LabelDescription);

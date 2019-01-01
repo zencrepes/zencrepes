@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 
-const styles = theme => ({
+const styles = {
     root: {
         marginLeft: '5px',
     },
-});
-
+};
 
 class Value extends Component {
     constructor (props) {
@@ -39,6 +38,9 @@ class Value extends Component {
 
 Value.propTypes = {
     classes: PropTypes.object.isRequired,
+    currentFacet: PropTypes.object.isRequired,
+    value: PropTypes.string.isRequired,
+    updateQuery: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Value);

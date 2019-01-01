@@ -1,51 +1,39 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Snackbar from "@material-ui/core/Snackbar";
 
 import LoadMessage from './LoadMessage.js';
 
-const styles = theme => ({
-    root: {
-    },
-});
 class LoadSnackbar extends Component {
     constructor (props) {
         super(props);
     }
 
     render() {
-        const { classes, loading } = this.props;
+        const { loading } = this.props;
 
         return (
-            <div className={classes.root}>
-                <Snackbar
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    open={loading}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<LoadMessage />}
-                />
-            </div>
+            <Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                open={loading}
+                ContentProps={{
+                    'aria-describedby': 'message-id',
+                }}
+                message={<LoadMessage />}
+            />
         );
-    };
+    }
 }
 
 LoadSnackbar.propTypes = {
-    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
 
 const mapState = state => ({
     loading: state.milestonesFetch.loading,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(LoadSnackbar));
+export default connect(mapState, null)(LoadSnackbar);

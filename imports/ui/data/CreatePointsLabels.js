@@ -1,16 +1,15 @@
-import { Component } from 'react'
+import _ from 'lodash';
+import { Meteor } from 'meteor/meteor';
 
-import PropTypes from 'prop-types';
+import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_SINGLEREPO from '../../graphql/getSingleRepo.graphql';
-
-import { cfgSources } from './Minimongo.js';
-import {cfgLabels} from "./Minimongo";
+import { cfgSources, cfgLabels  } from './Minimongo.js';
 import fibonacci from "fibonacci-fast";
 
 import GitHubApi from '@octokit/rest';
+import PropTypes from "prop-types";
 
 
 /*
@@ -28,17 +27,29 @@ class CreatePointsLabels extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
-            console.log('CreatePointsLabels - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
-        const { client, setChipRemaining, setLoading, setLoadError, setLoadSuccess, maxPoints, action, color, setIncrementCreatedLabels, setIncrementUpdatedRepos, setCreatedLabels, setUpdatedRepos } = this.props;
+        const {
+            setChipRemaining,
+            setLoading,
+            setLoadError,
+            setLoadSuccess,
+            maxPoints,
+            action,
+            color,
+            setIncrementCreatedLabels,
+            setIncrementUpdatedRepos,
+            setCreatedLabels,
+            setUpdatedRepos,
+            log,
+        } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -47,18 +58,18 @@ class CreatePointsLabels extends Component {
         setUpdatedRepos(0);
 
         let points = fibonacci.array(2, fibonacci.find(maxPoints).index + 1).map(x => 'SP:' + x.number.toString());
-        console.log(points);
+        log.info(points);
         let repos = cfgSources.find({active: true, pushLabels: true}).fetch();
         //let repos = cfgSources.find({active: true, pushLabels: true}).map(repo => {
         for (let repo of repos) {
-            console.log(repo);
+            log.info(repo);
             //Get Labels for repo
             let labels = cfgLabels.find({'repo.id': repo.id}).map(label => label.name);
 
             if (action === 'create') {
                 let missingPointsLabels = _.difference(points, labels);
                 for (let label of missingPointsLabels) {
-                    console.log('Processing: ' + label);
+                    log.info('Processing: ' + label);
                     let result = false;
                     try {
                         result = await this.octokit.issues.createLabel({
@@ -70,9 +81,9 @@ class CreatePointsLabels extends Component {
                         });
                     }
                     catch (error) {
-                        console.log(error);
+                        log.info(error);
                     }
-                    console.log(result);
+                    log.info(result);
                     if (result !== false) {
                         setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                         let labelObj = {
@@ -95,7 +106,7 @@ class CreatePointsLabels extends Component {
             }
             else if (action === 'delete') {
                 for (let label of points) {
-                    console.log('Processing: ' + label);
+                    log.info('Processing: ' + label);
                     let result = false;
                     try {
                         if (labels.includes(label)) {
@@ -105,17 +116,17 @@ class CreatePointsLabels extends Component {
                                 name: label,
                             });
                         } else {
-                            console.log('Label: ' + label + ' does not exist in repo: ' + repo.name + ', skipping...');
+                            log.info('Label: ' + label + ' does not exist in repo: ' + repo.name + ', skipping...');
                         }
                     }
                     catch(error) {
-                        console.log(error);
+                        log.info(error);
                     }
-                    console.log(result);
+                    log.info(result);
                     if (result !== false) {
                         setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                         cfgLabels.remove({'repo.id': repo.id, name: 'label'});
-                        console.log('Label: ' + label + ' removed from repo: ' + repo.name);
+                        log.info('Label: ' + label + ' removed from repo: ' + repo.name);
                     }
                 }
             }
@@ -133,7 +144,23 @@ class CreatePointsLabels extends Component {
 }
 
 CreatePointsLabels.propTypes = {
+    loadFlag: PropTypes.bool,
+    loading: PropTypes.bool,
+    action: PropTypes.string,
+    maxPoints: PropTypes.number,
+    color: PropTypes.string,
+    log: PropTypes.object.isRequired,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setCreatedLabels: PropTypes.func,
+    setUpdatedRepos: PropTypes.func,
+    setIncrementCreatedLabels: PropTypes.func,
+    setIncrementUpdatedRepos: PropTypes.func,
+    updateChip: PropTypes.func,
+    setChipRemaining: PropTypes.func,
 };
 
 const mapState = state => ({
@@ -143,7 +170,7 @@ const mapState = state => ({
 
     maxPoints: state.githubLabels.maxPoints,
     color: state.githubLabels.color,
-
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({
@@ -159,7 +186,6 @@ const mapDispatch = dispatch => ({
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,
-
 });
 
 export default connect(mapState, mapDispatch)(withApollo(CreatePointsLabels));

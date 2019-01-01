@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +8,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import {ResponsiveTreeMap} from "@nivo/treemap";
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
         width: '100%',
@@ -18,10 +16,7 @@ const styles = theme => ({
     treemap: {
         height: '320px'
     },
-    loading: {
-        flexGrow: 1,
-    },
-});
+};
 
 class IssuesRepartition extends Component {
     constructor(props) {
@@ -30,7 +25,6 @@ class IssuesRepartition extends Component {
 
     buildDataset = () => {
         const { issues } = this.props;
-
         let reposGroup = _.groupBy(issues.filter(issue => issue.state === 'OPEN'), 'repo.name');
         return {
             name: 'repositories'
@@ -84,16 +78,8 @@ class IssuesRepartition extends Component {
 }
 
 IssuesRepartition.propTypes = {
-    classes: PropTypes.object,
-
+    classes: PropTypes.object.isRequired,
+    issues: PropTypes.array.isRequired,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesRepartition));
+export default withStyles(styles)(IssuesRepartition);

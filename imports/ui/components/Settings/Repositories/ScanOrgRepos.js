@@ -46,7 +46,7 @@ class ScanOrgRepos extends Component {
         super(props);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess, setName } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -55,9 +55,9 @@ class ScanOrgRepos extends Component {
                 setName('');
             }, 2000);
         }
-    };
+    }
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setName } = this.props;
         setName(event.target.value);
     };
@@ -96,7 +96,7 @@ class ScanOrgRepos extends Component {
                                     className={classes.textField}
                                     value={name}
                                     helperText={loadError && "Unable to fetch data from organization"}
-                                    onChange={this.handleChange('name')}
+                                    onChange={this.handleChange}
                                     margin="normal"
                                 />
                                 <Button color="primary" variant="contained" className={classes.button}

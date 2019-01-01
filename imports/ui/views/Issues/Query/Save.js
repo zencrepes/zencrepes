@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
-
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 class Save extends Component {
     constructor (props) {
@@ -18,18 +11,17 @@ class Save extends Component {
     }
 
     render() {
-      const { classes, onClick } = this.props;
+      const { onClick } = this.props;
       return (
-            <IconButton className={classes.button} aria-label="Open" onClick={onClick}>
+            <IconButton aria-label="Open" onClick={onClick}>
                 <SaveIcon />
             </IconButton>
         )
-
-    };
+    }
 }
 
 Save.propTypes = {
-    classes: PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Save);
+export default Save;

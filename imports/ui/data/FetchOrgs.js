@@ -13,7 +13,6 @@ import GET_GITHUB_USER_REPOS from '../../graphql/getUserRepos.graphql';
 import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
-import {cfgLabels} from "./Minimongo";
 
 /*
 Load data about GitHub Orgs
@@ -27,15 +26,14 @@ class FetchOrgs extends Component {
         this.state = {};
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
-            console.log('Repos - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.resetCounts();     // Reset all counts since those will be refresh by loadIssues
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     resetCounts = () => {
         const { setLoadedOrgs, setLoadedRepos, setLoadSuccess} = this.props;
@@ -47,27 +45,26 @@ class FetchOrgs extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, login } = this.props;
+        const { setLoading, setLoadSuccess, login, log } = this.props;
 
         setLoading(true);  // Set setLoading to true to indicate repositories are actually loading.
-        console.log('Initiate Organizations load');
+        log.info('Initiate Organizations load');
         await this.getOrgsPagination(null, 10);
-        console.log('Oranization loaded: ' + this.githubOrgs.length);
+        log.info('Oranization loaded: ' + this.githubOrgs.length);
 
 
-        console.log('Initiate Organizations Repositories load');
+        log.info('Initiate Organizations Repositories load');
         await Promise.map(this.githubOrgs, async (OrgObj): Promise<number> => {
             if (OrgObj !== null) {
-                console.log('Loading Org');
-                console.log(OrgObj);
+                log.info('Loading Org', OrgObj);
                 await this.getReposPagination(null, 5, OrgObj, 'org');
             }
         });
-        console.log('Organizations Repositories loaded: ' + this.totalReposCount);
+        log.info('Organizations Repositories loaded: ' + this.totalReposCount);
 
-        console.log('Initiate Users own Repositories load');
+        log.info('Initiate Users own Repositories load');
         await this.getReposPagination(null, 20, {login: login}, 'user');
-        console.log('Organizations Repositories loaded: ' + this.totalReposCount);
+        log.info('Organizations Repositories loaded: ' + this.totalReposCount);
 
         // Remove archived repositories, we don't want to take care of those since no actions are allowed
         cfgSources.remove({'isArchived':true});
@@ -79,14 +76,14 @@ class FetchOrgs extends Component {
     };
 
     getOrgsPagination = async (cursor, increment) => {
-        const { client, updateChip } = this.props;
+        const { client, updateChip, log } = this.props;
         let data = await client.query({
             query: GET_GITHUB_ORGS,
             variables: {repo_cursor: cursor, increment: increment},
             fetchPolicy: 'no-cache',
             errorPolicy: 'ignore',
         });
-        console.log(data);
+        log.debug('GraphQL Response:', data);
         updateChip(data.data.rateLimit);
         let lastCursor = await this.loadOrganizations(data);
         let queryIncrement = calculateQueryIncrement(this.githubOrgs.length, data.data.viewer.organizations.totalCount);
@@ -97,9 +94,8 @@ class FetchOrgs extends Component {
 
     loadOrganizations = async (data) => {
         const { setIncrementLoadedOrgs } = this.props;
-
         let lastCursor = null;
-        for (let [key, currentOrg] of Object.entries(data.data.viewer.organizations.edges)){
+        for (var currentOrg of data.data.viewer.organizations.edges) {
             this.githubOrgs.push(currentOrg.node);
             lastCursor = currentOrg.cursor;
         }
@@ -109,11 +105,10 @@ class FetchOrgs extends Component {
 
     //TODO - Redo with some better logic and no mutations!
     getReposPagination = async (cursor, increment, OrgObj, type) => {
-        const { client, updateChip } = this.props;
+        const { client, updateChip, log } = this.props;
         if (OrgObj !== null) {
             let data = {};
             let repositories = {};
-            console.log(OrgObj);
             if (type === 'org') {
                 data = await client.query({
                     query: GET_GITHUB_REPOS,
@@ -133,12 +128,12 @@ class FetchOrgs extends Component {
             if (this.orgReposCount[OrgObj.id] === undefined) {this.orgReposCount[OrgObj.id] = 0;}
             updateChip(data.data.rateLimit);
             let lastCursor = await this.loadRepositories(repositories, OrgObj);
-            console.log('ORG OBJ: ' + OrgObj.id);
+            log.info('ORG OBJ: ' + OrgObj.id);
             let queryIncrement = calculateQueryIncrement(this.orgReposCount[OrgObj.id], repositories.totalCount);
-            console.log(cfgSources.find({'org.id': OrgObj.id}).fetch());
-            console.log('Current count: ' + this.orgReposCount[OrgObj.id]);
-            console.log('Total count: ' + repositories.totalCount);
-            console.log('Query increment: ' + queryIncrement);
+            log.info(cfgSources.find({'org.id': OrgObj.id}).fetch());
+            log.info('Current count: ' + this.orgReposCount[OrgObj.id]);
+            log.info('Total count: ' + repositories.totalCount);
+            log.info('Query increment: ' + queryIncrement);
             if (queryIncrement > 0) {
                 await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
             }
@@ -146,11 +141,11 @@ class FetchOrgs extends Component {
     };
 
     loadRepositories = async (repositories, OrgObj) => {
-        const { setIncrementLoadedRepos } = this.props;
+        const { setIncrementLoadedRepos, log } = this.props;
 
         let lastCursor = null;
-        for (let [key, currentRepo] of Object.entries(repositories.edges)){
-            console.log('Inserting: ' + currentRepo.node.name);
+        for (var currentRepo of repositories.edges) {
+            log.info('Inserting: ' + currentRepo.node.name);
             let existNode = cfgSources.findOne({id: currentRepo.node.id});
             let nodeActive = false;
             if (existNode !== undefined) {
@@ -179,7 +174,21 @@ class FetchOrgs extends Component {
 }
 
 FetchOrgs.propTypes = {
+    login: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
+    loadFlag: PropTypes.bool.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadError: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+
+    setLoadedOrgs: PropTypes.func.isRequired,
+    setLoadedRepos: PropTypes.func.isRequired,
+    setIncrementLoadedOrgs: PropTypes.func.isRequired,
+    setIncrementLoadedRepos: PropTypes.func.isRequired,
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -188,6 +197,7 @@ const mapState = state => ({
     loading: state.githubFetchOrgs.loading,
     loadFlag: state.githubFetchOrgs.loadFlag,
 
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

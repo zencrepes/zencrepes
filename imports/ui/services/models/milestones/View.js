@@ -17,27 +17,25 @@ export default {
         async updateMilestones(payload, rootState) {
             this.setMilestones(cfgMilestones.find(rootState.milestonesView.query).fetch());
         },
-        async updateQuery(query, rootState) {
-            console.log('updateQuery: ' + JSON.stringify(query));
+        async updateQuery(query) {
             this.setQuery(query);
             this.updateView();
         },
-        async updateView(payload, rootState) {
+        async updateView() {
             this.refreshFacets();
             this.refreshMilestones();
         },
         async refreshFacets(payload, rootState) {
-            console.log('refreshFacets');
+            const log = rootState.global.log;
             const t0 = performance.now();
 
             const updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.milestonesView.query)), cfgMilestones);
             this.setFacets(updatedFacets);
 
             const t1 = performance.now();
-            console.log("refreshFacets - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshFacets - took " + (t1 - t0) + " milliseconds.");
         },
         async refreshMilestones(payload, rootState) {
-            console.log('refreshMilestones');
             const milestones = cfgMilestones.find(rootState.milestonesView.query).fetch();
             this.setMilestones(milestones);
         },

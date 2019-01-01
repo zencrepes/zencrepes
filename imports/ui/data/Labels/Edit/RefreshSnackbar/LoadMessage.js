@@ -1,50 +1,40 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
 
-const styles = theme => ({
-    root: {
-    },
-});
 class LoadMessage extends Component {
     constructor (props) {
         super(props);
     }
 
     cancelLoad = () => {
-        console.log('cancelLoad');
         const { setVerifying } = this.props;
         setVerifying(false);
     };
 
     render() {
-        const { classes, message } = this.props;
-
+        const { message } = this.props;
         return (
-            <div className={classes.root}>
+            <React.Fragment>
                 <span id="message-id">{message}</span>
                 <IconButton aria-label="Delete" onClick={this.cancelLoad}>
                     <CancelIcon fontSize="small" color="disabled" />
                 </IconButton>
-            </div>
+            </React.Fragment>
         );
-    };
+    }
 }
 
 LoadMessage.propTypes = {
-    classes: PropTypes.object.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    message: PropTypes.string.isRequired,
 };
-
-const mapState = state => ({
-});
 
 const mapDispatch = dispatch => ({
     setVerifying: dispatch.labelsEdit.setVerifying,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LoadMessage));
+export default connect(null, mapDispatch)(LoadMessage);

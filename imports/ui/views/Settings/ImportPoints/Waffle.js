@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -19,7 +17,7 @@ import { cfgSources } from "../../../data/Minimongo.js";
 
 import FetchWafflePoints from '../../../data/FetchWafflePoints.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -41,7 +39,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'left',
     }
-});
+};
 
 class Waffle extends Component {
     constructor(props) {
@@ -55,7 +53,7 @@ class Waffle extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -63,21 +61,21 @@ class Waffle extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     reloadRepos = () => {
         const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };
 
-    handleChange = name => event => {
+    handleChange = (event) => {
         const { setBoardUrl } = this.props;
         setBoardUrl(event.target.value);
     };
 
 
     render() {
-        const { classes, loading, loadSuccess, loadedIssues, boardUrl, rateLimitPause, message } = this.props;
+        const { classes, loading, loadSuccess, loadedIssues, boardUrl, message } = this.props;
         return (
             <div className={classes.root}>
                 <FetchWafflePoints />
@@ -99,7 +97,7 @@ class Waffle extends Component {
                             className={classes.textField}
                             fullWidth
                             margin="normal"
-                            onChange={this.handleChange()}
+                            onChange={this.handleChange}
                         />
                         {loading &&
                         <div className={classes.loading}>
@@ -134,13 +132,17 @@ class Waffle extends Component {
 }
 
 Waffle.propTypes = {
-    classes: PropTypes.object,
-    loading: PropTypes.bool,
-    loadSuccess: PropTypes.bool,
-    createdLabels: PropTypes.number,
-    updatedRepos: PropTypes.number,
-    setLoadFlag: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    createdLabels: PropTypes.number.isRequired,
+    updatedRepos: PropTypes.number.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setBoardUrl: PropTypes.func.isRequired,
+    loadedIssues: PropTypes.number.isRequired,
+    message: PropTypes.string.isRequired,
+    boardUrl: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({

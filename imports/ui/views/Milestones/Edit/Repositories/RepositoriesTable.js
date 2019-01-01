@@ -1,39 +1,25 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { GithubCircle } from 'mdi-material-ui'
-import { Link } from 'react-router-dom';
 
 import {
     // State or Local Processing Plugins
-    SelectionState,
-    PagingState,
-    IntegratedSelection,
-    IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
 import {
     Grid,
     Table,
     TableHeaderRow,
-    PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
-    Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
 import RemoveButton from './RemoveButton.js';
 
-const styles = theme => ({
-    root: {
-    },
-});
-
 const DeleteFormatter = ({ value }) => {
     return <RemoveButton milestone={value} />;
+};
+
+DeleteFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
 };
 
 const DeleteTypeProvider = props => (
@@ -46,6 +32,10 @@ const DeleteTypeProvider = props => (
 const RepoLinkFormatter = ({ value }) => {
     return <span>{value.name}</span>;
 };
+RepoLinkFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
+
 
 const RepoLinkTypeProvider = props => (
     <DataTypeProvider
@@ -57,6 +47,10 @@ const RepoLinkTypeProvider = props => (
 const OrgLinkFormatter = ({ value }) => {
     return <span>{value.login}</span>;
 };
+OrgLinkFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
+
 
 const OrgLinkTypeProvider = props => (
     <DataTypeProvider
@@ -67,6 +61,9 @@ const OrgLinkTypeProvider = props => (
 
 const MilestoneLinkFormatter = ({ value }) => {
     return <span>{value.state}</span>;
+};
+MilestoneLinkFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
 };
 
 const MilestoneLinkTypeProvider = props => (
@@ -102,45 +99,36 @@ class RepositoriesTable extends Component {
     }
 
     render() {
-        const { classes, repositories } = this.props;
+        const { repositories } = this.props;
         const { columns, tableColumnExtensions, deleteColumns, repoLinkColumns, orgLinkColumns, milestoneLinkColumns} = this.state;
 
         return (
-            <div className={classes.root}>
-                <Grid
-                    rows={repositories}
-                    columns={columns}
-                >
-                    <DeleteTypeProvider
-                        for={deleteColumns}
-                    />
-                    <RepoLinkTypeProvider
-                        for={repoLinkColumns}
-                    />
-                    <OrgLinkTypeProvider
-                        for={orgLinkColumns}
-                    />
-                    <MilestoneLinkTypeProvider
-                        for={milestoneLinkColumns}
-                    />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                </Grid>
-            </div>
+            <Grid
+                rows={repositories}
+                columns={columns}
+            >
+                <DeleteTypeProvider
+                    for={deleteColumns}
+                />
+                <RepoLinkTypeProvider
+                    for={repoLinkColumns}
+                />
+                <OrgLinkTypeProvider
+                    for={orgLinkColumns}
+                />
+                <MilestoneLinkTypeProvider
+                    for={milestoneLinkColumns}
+                />
+                <Table columnExtensions={tableColumnExtensions} />
+                <TableHeaderRow />
+            </Grid>
         );
     }
 }
 
 RepositoriesTable.propTypes = {
-    classes: PropTypes.object.isRequired,
+    repositories: PropTypes.array.isRequired,
+    value: PropTypes.string.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-
-});
-
-const mapState = state => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(RepositoriesTable));
+export default RepositoriesTable;

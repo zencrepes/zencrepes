@@ -1,40 +1,22 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
-
-import Grid from '@material-ui/core/Grid';
 
 import CustomCard from "../../../../components/CustomCard/index.js";
 import {withRouter} from "react-router-dom";
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class Mixed extends Component {
     constructor (props) {
         super(props);
     }
 
-
-
     render() {
-        const { classes, milestones } = this.props;
+        /*
+        const { milestones } = this.props;
+
 
         const byTitle = _.groupBy(milestones, 'title');
-        console.log(byTitle);
 
         const byState = Object.entries(byTitle)
             .filter(([name, content]) => {
@@ -53,6 +35,7 @@ class Mixed extends Component {
                 }
             });
         console.log(byState);
+        */
         return (
             <CustomCard
                 headerTitle="Inconsistent States"
@@ -66,11 +49,11 @@ class Mixed extends Component {
 }
 
 Mixed.propTypes = {
-    classes: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({
     milestones: state.milestonesView.milestones,
 });
 
-export default withRouter(connect(mapState, null)(withStyles(styles)(Mixed)));
+export default withRouter(connect(mapState, null)(Mixed));

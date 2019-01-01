@@ -1,19 +1,13 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-const styles = theme => ({
+const styles = {
     root: {
         width: '100%',
         maxWidth: 360,
@@ -24,18 +18,14 @@ const styles = theme => ({
     highlight: {
         background: 'rgba(0, 0, 0, 0.07)',
     },
-});
+};
 
 class ListAssignees extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
     }
 
     addAssignee = assignee => () => {
-        console.log('addAssignee');
         const { addAssignee } = this.props;
         addAssignee(assignee);
     };
@@ -62,15 +52,16 @@ class ListAssignees extends Component {
 
 ListAssignees.propTypes = {
     classes: PropTypes.object.isRequired,
+    filteredAvailableAssignees: PropTypes.array.isRequired,
+    addAssignee: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     filteredAvailableAssignees: state.sprintsView.filteredAvailableAssignees,
-    toggledAvailableRepos: state.labelsEdit.toggledAvailableRepos,
 });
 
 const mapDispatch = dispatch => ({
-    addAssignee: dispatch.sprintsView.addAssignee
+    addAssignee: dispatch.sprintsView.addAssignee,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(ListAssignees));

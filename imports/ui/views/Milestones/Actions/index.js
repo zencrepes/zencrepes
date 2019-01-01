@@ -11,21 +11,11 @@ import RefreshAll from './RefreshAll.js';
 import RefreshSelected from './RefreshSelected.js';
 import RefreshMilestones from './RefreshMilestones.js';
 
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
+const styles = {
     toolbarButtons: {
         flex: 1,
     },
-});
-
+};
 
 class Actions extends Component {
     constructor (props) {
@@ -40,30 +30,31 @@ class Actions extends Component {
             facets
         } = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static" color="primary" className={classes.appBar}>
-                    <Toolbar>
-                        <div className={classes.toolbarButtons}>
-                            <RefreshAll
-                                setLoadFlag={setLoadFlag}
-                                setLoadRepos={setLoadRepos}
-                            />
-                            <RefreshSelected
-                                setLoadFlag={setLoadFlag}
-                                setLoadRepos={setLoadRepos}
-                                facets={facets}
-                            />
-                            <RefreshMilestones />
-                        </div>
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <AppBar position="static" color="primary" className={classes.appBar}>
+                <Toolbar>
+                    <div className={classes.toolbarButtons}>
+                        <RefreshAll
+                            setLoadFlag={setLoadFlag}
+                            setLoadRepos={setLoadRepos}
+                        />
+                        <RefreshSelected
+                            setLoadFlag={setLoadFlag}
+                            setLoadRepos={setLoadRepos}
+                            facets={facets}
+                        />
+                        <RefreshMilestones />
+                    </div>
+                </Toolbar>
+            </AppBar>
         );
     }
 }
 
 Actions.propTypes = {
     classes: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadRepos: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

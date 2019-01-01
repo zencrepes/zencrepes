@@ -11,8 +11,7 @@ export default {
         setConnectedUser(state, payload) {return { ...state, connectedUser: JSON.parse(JSON.stringify(payload)) };},
     },
     effects: {
-        async refreshUsers(payload, rootState) {
-            console.log(refreshUsers);
+        async refreshUsers() {
         },
     }
 };

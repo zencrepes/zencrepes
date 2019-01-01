@@ -1,12 +1,9 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
-import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,11 +15,11 @@ import ApplyButton from './ApplyButton.js';
 import CancelButton from './CancelButton.js';
 import Staging from './Staging.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         width: '90%'
     },
-});
+};
 class Stage extends Component {
     constructor (props) {
         super(props);
@@ -38,7 +35,7 @@ class Stage extends Component {
                     <DialogTitle id="simple-dialog-title">Review changes before pushing</DialogTitle>
                     <DialogContent>
                         <span>The following nodes will be modified in GitHub. Removing from this table will not push the change to GitHub for the removed node.</span><br />
-                        <span>The system will verify each nodes in GitHub, applying changes will only be possible if local data is identical than GitHub's (based on last update date)</span>
+                        <span>The system will verify each nodes in GitHub, applying changes will only be possible if local data is identical than GitHub&apos;s (based on last update date)</span>
                         <StageTable
                             repos={repos}
                             milestoneTitle={milestoneTitle}
@@ -51,11 +48,18 @@ class Stage extends Component {
                 </Dialog>
             </div>
         );
-    };
+    }
 }
 
 Stage.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    stageFlag: PropTypes.bool.isRequired,
+    repos: PropTypes.array.isRequired,
+    milestoneTitle: PropTypes.string.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setRepos: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

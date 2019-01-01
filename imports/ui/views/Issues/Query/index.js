@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
@@ -49,7 +48,6 @@ class IssuesQuery extends Component {
     };
 
     loadQuery = (query) => {
-        console.log(query.filters);
         this.props.history.push({
             pathname: '/issues',
             search: '?q=' + query.filters,
@@ -80,39 +78,31 @@ class IssuesQuery extends Component {
     };
 
     setOpenSaveQueryDialog = (state) => {
-        console.log('setOpenSaveQueryDialog');
         this.setState({ openSaveQueryDialog: state });
     };
 
     openSaveQueryDialog = () => {
-        console.log('openSaveQueryDialog');
         this.setState({ openSaveQueryDialog: true });
     };
 
     closeSaveQueryDialog = () => {
-        console.log('closeSaveQueryDialog');
         this.setState({ openSaveQueryDialog: false });
     };
 
     setOpenManageQueryDialog = (state) => {
-        console.log('setOpenManageQueryDialog');
         this.setState({ openManageQueryDialog: state });
     };
 
     openManageQueryDialog = () => {
-        console.log('openManageQueryDialog');
         this.setState({ openManageQueryDialog: true });
     };
 
     closeManageQueryDialog = () => {
-        console.log('closeManageQueryDialog');
         this.setState({ openManageQueryDialog: false });
     };
 
     render() {
         const { classes, query, facets, queries } = this.props;
-        console.log('Render - IssuesQuery: ' + JSON.stringify(query));
-        console.log(facets);
 
         return (
             <div className={classes.root}>
@@ -182,6 +172,15 @@ class IssuesQuery extends Component {
 
 IssuesQuery.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    query: PropTypes.object.isRequired,
+    queries: PropTypes.array.isRequired,
+    facets: PropTypes.array.isRequired,
+
+    saveQuery: PropTypes.func.isRequired,
+    deleteQuery: PropTypes.func.isRequired,
+
+    history: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

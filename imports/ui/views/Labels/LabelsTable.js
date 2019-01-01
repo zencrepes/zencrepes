@@ -1,7 +1,7 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
 import SquareIcon from 'mdi-react/SquareIcon';
@@ -10,9 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import {
     // State or Local Processing Plugins
-    SelectionState,
     PagingState,
-    IntegratedSelection,
     IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
@@ -21,16 +19,8 @@ import {
     Table,
     TableHeaderRow,
     PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-
-const styles = theme => ({
-    root: {
-    },
-});
 
 const ColorsFormatter = ({ value }) => {
     return value.map(color => (
@@ -83,8 +73,13 @@ const IssuesTypeProvider = props => (
     />
 );
 
+
 const EditLabelFormatter = ({ value }) => {
     return <Link to={"/labels/edit/" + value + "/all"}><EditIcon /></Link>;
+};
+
+EditLabelFormatter.propTypes = {
+    value: PropTypes.string.isRequired,
 };
 
 const EditLabelTypeProvider = props => (
@@ -130,11 +125,9 @@ class LabelsTable extends Component {
         this.hiddenColumnNamesChange = (hiddenColumnNames) => {
             this.setState({ hiddenColumnNames });
         };
-
     }
 
     formatData() {
-        console.log('componentDidMount');
         const { labels } = this.props;
 
         let uniqueLabels = _.groupBy(labels, 'name');
@@ -218,6 +211,7 @@ class LabelsTable extends Component {
 
 LabelsTable.propTypes = {
     classes: PropTypes.object.isRequired,
+    labels: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(LabelsTable);
+export default LabelsTable;

@@ -1,7 +1,3 @@
-import { cfgIssues } from '../../data/Minimongo.js';
-import { cfgSources } from '../../data/Minimongo.js';
-import axios from 'axios';
-
 export default {
     state: {
         loadFlag: false,        // Flag to indicate the data should be reloaded

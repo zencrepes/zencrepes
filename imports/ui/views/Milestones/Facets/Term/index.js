@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -12,28 +11,25 @@ import FacetSelector from './FacetSelector.js';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import Grid from '@material-ui/core/Grid';
 
-import red from '@material-ui/core/colors/red';
 import blue from '@material-ui/core/colors/blue';
 
-
-const styles = theme => ({
+const styles = {
     root: {
         marginBottom: '10px',
     },
     cardContent: {
         padding: '0px',
     }
-});
+};
 
 const cardStyle = {
     borderLeft: '4px solid ' + blue[900],
     borderTop: '1px solid #ccc',
     borderRadius: '0px',
     background: '#fafafa',
-}
+};
 
 const cardHeaderStyle = {
     padding: '5px 2px 5px 5px',
@@ -55,16 +51,6 @@ const ExpandButton = (props) => {
     }
 };
 
-const SelectAllButton = (props) => {
-    if (props.selectAll && props.length > 5) {
-        return ( <Button color="primary" size="small" className={props.classes.button} onClick={props.onClick(false)}>Unselect All</Button>);
-    } else if (!props.selectAll && props.length > 5) {
-        return (<Button color="primary" size="small" className={props.classes.button} onClick={props.onClick(true)}>Select All</Button>);
-    } else {
-        return null;
-    }
-};
-
 class TermFacet extends Component {
     constructor (props) {
         super(props);
@@ -79,7 +65,6 @@ class TermFacet extends Component {
     };
 
     clickItem = (clickedValue) => {
-        console.log('clickItem');
         const { facet, addRemoveQuery } = this.props;
         addRemoveQuery(clickedValue.name, facet);
     };
@@ -148,6 +133,9 @@ class TermFacet extends Component {
 
 TermFacet.propTypes = {
     classes: PropTypes.object.isRequired,
+    facet: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
+    addRemoveQuery: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TermFacet);

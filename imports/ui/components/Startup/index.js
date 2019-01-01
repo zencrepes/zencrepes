@@ -4,12 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withTracker } from 'meteor/react-meteor-data';
 
-import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import Button from '@material-ui/core/Button';
 
 import { cfgLabels } from "../../data/Minimongo.js";
 import { cfgQueries } from "../../data/Minimongo.js";
@@ -17,20 +14,13 @@ import { cfgSources } from "../../data/Minimongo.js";
 import { cfgIssues } from "../../data/Minimongo.js";
 import { cfgMilestones } from "../../data/Minimongo.js";
 
-const styles = theme => ({
-    root: {
-    }
-});
-
 class Startup extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     render() {
         const {
-            classes,
             loadedIssues,
             loadedSources,
             loadedLabels,
@@ -45,7 +35,7 @@ class Startup extends Component {
 
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                <DialogTitle id="simple-dialog-title">Loading data from browser's localStorage ...</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Loading data from browser&apos;s localStorage ...</DialogTitle>
                 <DialogContent>
                     <div>
                         Issues: {issuesCount} {loadedIssues && <i>- Complete</i>} <br />
@@ -61,7 +51,16 @@ class Startup extends Component {
 }
 
 Startup.propTypes = {
-    classes: PropTypes.object.isRequired,
+    loadedIssues: PropTypes.bool,
+    loadedSources: PropTypes.bool,
+    loadedLabels: PropTypes.bool,
+    loadedQueries: PropTypes.bool,
+    loadedMilestones: PropTypes.bool,
+    issuesCount: PropTypes.number,
+    labelsCount: PropTypes.number,
+    queriesCount: PropTypes.number,
+    sourcesCount: PropTypes.number,
+    milestonesCount: PropTypes.number,
 };
 
 const mapState = state => ({
@@ -73,16 +72,12 @@ const mapState = state => ({
 });
 
 export default
-    connect(mapState, null)
-    (
+    connect(mapState, null)(
         withTracker(() => {return {
             issuesCount: cfgIssues.find({}).count(),
             labelsCount: cfgLabels.find({}).count(),
             queriesCount: cfgQueries.find({}).count(),
             sourcesCount: cfgSources.find({}).count(),
             milestonesCount: cfgMilestones.find({}).count(),
-        }})
-        (
-            withStyles(styles)(Startup)
-        )
+        }})(Startup)
     );

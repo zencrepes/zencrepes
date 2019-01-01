@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
-import PropTypes from "prop-types";
 
 import FetchOrgRepos  from '../../../data/FetchOrgRepos.js';
 import FetchRepo  from '../../../data/FetchRepo.js';
@@ -19,18 +17,12 @@ import IssuesFetch from '../../../data/Issues/Fetch/index.js';
 import Actions from './Actions.js';
 import Grid from "@material-ui/core/Grid/Grid";
 
-const styles = theme => ({
-    root: {
-    },
-});
-
 class Repositories extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { classes } = this.props;
         return (
             <Grid
                 container
@@ -58,7 +50,6 @@ class Repositories extends Component {
 }
 
 Repositories.propTypes = {
-    classes: PropTypes.object,
 };
 
-export default connect(null, null)(withRouter(withStyles(styles)(Repositories)));
+export default connect(null, null)(withRouter(Repositories));

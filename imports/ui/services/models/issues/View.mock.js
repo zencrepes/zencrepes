@@ -53,22 +53,16 @@ export default {
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
     },
     effects: {
-        async initIssues(payload, rootState) {
-            console.log('initIssues');
+        async initIssues() {
         },
 
         async searchIssues(searchString, rootState) {
             let issues = rootState.issuesView.issues;
-            console.log('SearchString: ' + searchString);
-            console.log(searchString.length);
             if (searchString.length === 0) {
-                console.log('Clear Issues');
                 this.setFilteredIssues(issues);
             } else {
-                console.log('Filter Issues');
                 const filteredIssues = issues.filter((issue) => {
                     if (issue.repo.name === searchString) {
-                        console.log(issue.repo.name);
                         return true;
                     } else {
                         return false;
@@ -79,44 +73,34 @@ export default {
             this.setFilteredIssuesSearch(searchString);
         },
 
-        async updateQuery(query, rootState) {
-            console.log('initIssues');
+        async updateQuery() {
         },
 
-        async addRemoveQuery(valueName, rootState, facet) {
-            console.log('addRemoveQuery');
+        async addRemoveQuery() {
         },
 
-        async deleteQuery(query, rootState) {
-            console.log('deleteQuery');
+        async deleteQuery() {
         },
 
-        async refreshQueries(payload, rootState) {
-            console.log('refreshQueries');
+        async refreshQueries() {
         },
 
-        async saveQuery(queryName, rootState) {
-            console.log('saveQuery');
+        async saveQuery() {
         },
 
-        async refreshIssues(payload, rootState) {
-            console.log('refreshIssues');
+        async refreshIssues() {
         },
 
-        async refreshSummary(payload, rootState) {
-            console.log('refreshSummary');
+        async refreshSummary() {
         },
 
-        async refreshFacets(payload, rootState) {
-            console.log('refreshFacets');
+        async refreshFacets() {
         },
 
-        async refreshBurndown(payload, rootState) {
-            console.log('refreshBurndown');
+        async refreshBurndown() {
         },
 
-        async refreshVelocity(payload, rootState) {
-            console.log('refreshVelocity');
+        async refreshVelocity() {
         },
     }
 };

@@ -1,13 +1,10 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {connect} from "react-redux";
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
 import RefreshIcon from '@material-ui/icons/Refresh';
 
@@ -42,11 +39,13 @@ class RefreshAll extends Component {
                 All Repos
             </Button>
         )
-    };
+    }
 }
 
 RefreshAll.propTypes = {
     classes: PropTypes.object.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadRepos: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RefreshAll);

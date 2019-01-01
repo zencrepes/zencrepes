@@ -1,28 +1,14 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
 
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import DualListBox from 'react-dual-listbox';
 import CustomCard from "../../../../components/CustomCard";
 
-const styles = theme => ({
-    root: {
-    },
-});
 class EditSelection extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
     }
 
     addToSelected() {
@@ -37,7 +23,7 @@ class EditSelection extends Component {
 
     // Subtitle is currently not being displayed
     render() {
-        const { classes, selectedRepos, allRepos, updateSelectedRepos } = this.props;
+        const { selectedRepos, allRepos, updateSelectedRepos } = this.props;
         return (
             <CustomCard
                 headerTitle="Select Repositories"
@@ -59,8 +45,12 @@ class EditSelection extends Component {
 }
 
 EditSelection.propTypes = {
-    classes: PropTypes.object.isRequired,
+    selectedRepos: PropTypes.array.isRequired,
+    allRepos: PropTypes.array.isRequired,
+    updateSelectedRepos: PropTypes.func.isRequired,
 
+    addToSelected: PropTypes.func.isRequired,
+    addToAvailable: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -72,4 +62,4 @@ const mapDispatch = dispatch => ({
     updateSelectedRepos: dispatch.labelsEdit.updateSelectedRepos,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(EditSelection));
+export default connect(mapState, mapDispatch)(EditSelection);

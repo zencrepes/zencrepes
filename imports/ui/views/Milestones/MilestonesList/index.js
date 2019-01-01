@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -5,21 +6,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
-
-import SquareIcon from 'mdi-react/SquareIcon';
-import PencilIcon from 'mdi-react/PencilIcon';
-import EyeIcon from 'mdi-react/EyeIcon';
-
 import EditIcon from '@material-ui/icons/Edit';
 
 import TableActionButtons from './TableActionButtons.js';
 
 import {
     // State or Local Processing Plugins
-    SelectionState,
     PagingState,
-    IntegratedSelection,
     IntegratedPaging,
     DataTypeProvider,
 } from '@devexpress/dx-react-grid';
@@ -28,17 +21,16 @@ import {
     Table,
     TableHeaderRow,
     PagingPanel,
-    ColumnChooser,
-    TableColumnVisibility,
-    TableSelection,
     Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import {cfgMilestones} from "../../../data/Minimongo";
 
 const StatesFormatter = ({ value }) => {
     return value.map(state => (
         <div key={state.value}>{state.value}</div>
     ))
+};
+StatesFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
 };
 
 const StatesTypeProvider = props => (
@@ -55,6 +47,10 @@ const ReposFormatter = ({ value }) => {
         return '1 (' + value[0].repo.name + ')';
     }
 };
+ReposFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
+};
+
 
 const ReposTypeProvider = props => (
     <DataTypeProvider
@@ -65,6 +61,9 @@ const ReposTypeProvider = props => (
 
 const IssuesFormatter = ({ value }) => {
     return value.filter(label => label.issues !== undefined).map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
+};
+IssuesFormatter.propTypes = {
+    value: PropTypes.array.isRequired,
 };
 
 const IssuesTypeProvider = props => (
@@ -77,6 +76,9 @@ const IssuesTypeProvider = props => (
 const ActionsFormatter = ({ value }) => {
     return <TableActionButtons key={value.title} milestonesdata={value} />
 };
+ActionsFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
+};
 
 const ActionsTypeProvider = props => (
     <DataTypeProvider
@@ -85,9 +87,12 @@ const ActionsTypeProvider = props => (
     />
 );
 
-
 const EditMilestoneFormatter = ({value}) => {
     return <Link to={"/milestones/edit?q=" + JSON.stringify(value)}><EditIcon /></Link>;
+};
+
+EditMilestoneFormatter.propTypes = {
+    value: PropTypes.object.isRequired,
 };
 
 const EditMilestoneTypeProvider = props => (
@@ -97,11 +102,11 @@ const EditMilestoneTypeProvider = props => (
     />
 );
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 
 class MilestonesList extends Component {
     constructor(props) {
@@ -170,7 +175,7 @@ class MilestonesList extends Component {
     }
 
     render() {
-        const { classes, milestones, query } = this.props;
+        const { classes, query } = this.props;
         const { columns, pageSize, pageSizes, currentPage, statesColumns, reposColumns, issuesColumns, actionsColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
@@ -216,6 +221,9 @@ class MilestonesList extends Component {
 
 MilestonesList.propTypes = {
     classes: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
+    query: PropTypes.object.isRequired,
+    value: PropTypes.string.isRequired,
 };
 
 
@@ -224,8 +232,4 @@ const mapState = state => ({
     query: state.milestonesView.query,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(MilestonesList));
+export default connect(mapState, null)(withStyles(styles)(MilestonesList));

@@ -13,9 +13,6 @@ import {
 * - cfgIssues: Minimongo instance
 */
 export const refreshBurndown = (mongoSelector, cfgIssues) => {
-    console.log('refreshBurndown');
-    console.log(mongoSelector);
-
     if (mongoSelector['state'] !== undefined) {
         delete mongoSelector['state'];
     }
@@ -25,18 +22,12 @@ export const refreshBurndown = (mongoSelector, cfgIssues) => {
     let firstDay = getFirstDay(closedIssuesFilter, cfgIssues);
     let lastDay = getLastDay(mongoSelector, cfgIssues);
 
-    console.log(mongoSelector);
-    console.log(firstDay);
-    console.log(lastDay);
-
     let dataObject = initObject(firstDay, lastDay);                                         // Build an object of all days and weeks between two dates
     dataObject = populateTotals(dataObject, cfgIssues.find(closedIssuesFilter).fetch(), cfgIssues.find(openedIssuesFilter).fetch());      // Populate total numbers
     dataObject = populateClosed(dataObject, cfgIssues.find(closedIssuesFilter).fetch());    // Populate the object with count of days and weeks
     dataObject = populateOpen(dataObject, cfgIssues.find(openedIssuesFilter).fetch());      // Populate remaining issues count and remaining points
     dataObject = populateBurndown(dataObject);                                              // Populate remaining issues count and remaining points
-    console.log(dataObject);
     dataObject = populateVelocity(dataObject);
-    console.log(dataObject);
 
     return dataObject;
 };
@@ -138,7 +129,6 @@ const populateClosed = (dataObject, issues) => {
 * - dataObject: Object to modify
 */
 const populateBurndown = (dataObject) => {
-    console.log(dataObject);
     let totalRemainingCount = dataObject.total.count.total;
     let totalRemainingPoints = dataObject.total.points.total;
     for (let [key, day] of Object.entries(dataObject.days)){
@@ -146,7 +136,7 @@ const populateBurndown = (dataObject) => {
         totalRemainingPoints = totalRemainingPoints - day['points']['closed'];
         dataObject.days[key]['count']['remaining'] = totalRemainingCount;
         dataObject.days[key]['points']['remaining'] = totalRemainingPoints;
-    };
+    }
     return dataObject;
 };
 

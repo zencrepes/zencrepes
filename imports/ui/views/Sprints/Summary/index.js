@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Moment from 'react-moment';
 import ReactMarkdown from 'react-markdown';
 
 import Grid from '@material-ui/core/Grid';
@@ -17,19 +15,12 @@ import AddRepositoryButton from './AddRepositoryButton.js';
 
 import AddRepository from './AddRepository/index.js';
 
-
-const styles = theme => ({
-    root: {
-    }
-});
-
 class Summary extends Component {
     constructor(props) {
         super(props);
     }
 
     openEditSprint = () => {
-        console.log('openEditSprint');
         const {
             setEditSprint,
             setEditSprintTitle,
@@ -48,7 +39,6 @@ class Summary extends Component {
 
     render() {
         const {
-            classes,
             selectedSprintDescription,
             selectedSprintTitle,
             selectedSprintDueDate,
@@ -121,8 +111,28 @@ class Summary extends Component {
 }
 
 Summary.propTypes = {
-    classes: PropTypes.object,
+    editSprint: PropTypes.bool.isRequired,
+    selectedSprintDescription: PropTypes.string.isRequired,
+    selectedSprintTitle: PropTypes.string.isRequired,
+    selectedSprintDueDate: PropTypes.string.isRequired,
+    milestones: PropTypes.array.isRequired,
+
+    setEditSprint: PropTypes.func.isRequired,
+    setEditSprintTitle: PropTypes.func.isRequired,
+    setEditSprintDescription: PropTypes.func.isRequired,
+    setEditSprintDueDate: PropTypes.func.isRequired,
+    saveSprint: PropTypes.func.isRequired,
 };
+
+
+const mapState = state => ({
+    editSprint: state.sprintsView.editSprint,
+    selectedSprintDescription: state.sprintsView.selectedSprintDescription,
+    selectedSprintTitle: state.sprintsView.selectedSprintTitle,
+    selectedSprintDueDate: state.sprintsView.selectedSprintDueDate,
+
+    milestones: state.sprintsView.milestones,
+});
 
 const mapDispatch = dispatch => ({
     setEditSprint: dispatch.sprintsView.setEditSprint,
@@ -132,14 +142,5 @@ const mapDispatch = dispatch => ({
     saveSprint: dispatch.sprintsView.saveSprint,
 });
 
-const mapState = state => ({
-    editSprint: state.sprintsView.editSprint,
-    selectedSprintDescription: state.sprintsView.selectedSprintDescription,
-    selectedSprintTitle: state.sprintsView.selectedSprintTitle,
-    selectedSprintDueDate: state.sprintsView.selectedSprintDueDate,
 
-    milestones: state.sprintsView.milestones,
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(Summary));
+export default connect(mapState, mapDispatch)(Summary);

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { connect } from "react-redux";
-import Tooltip from '@material-ui/core/Tooltip';
 import Moment from 'react-moment';
 
 const styles = {
@@ -27,7 +26,7 @@ class GitRequests extends React.Component {
     };
 
     render() {
-        const { classes, limit, cost, remaining, resetAt } = this.props;
+        const { classes, limit, remaining, resetAt } = this.props;
         return (
             <div className={classes.root}>
                 <span className={classes.legend}>Available GitHub points: {remaining} / 5000
@@ -46,7 +45,6 @@ class GitRequests extends React.Component {
 GitRequests.propTypes = {
     classes: PropTypes.object.isRequired,
     limit: PropTypes.number,
-    cost: PropTypes.number,
     remaining: PropTypes.number,
     resetAt: PropTypes.string,
 };

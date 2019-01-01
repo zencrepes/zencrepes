@@ -1,19 +1,13 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {connect} from "react-redux";
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
-
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 const styles = theme => ({
-    root: {
-    },
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
@@ -47,11 +41,14 @@ class RefreshSelected extends Component {
                 Selected Repos
             </Button>
         )
-    };
+    }
 }
 
 RefreshSelected.propTypes = {
     classes: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    setLoadRepos: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RefreshSelected);

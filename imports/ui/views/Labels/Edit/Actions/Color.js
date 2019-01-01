@@ -1,16 +1,8 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import reactCSS from 'reactcss'
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
-
 import { SketchPicker } from 'react-color';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -18,10 +10,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Switch from '@material-ui/core/Switch';
 import ListItemText from '@material-ui/core/ListItemText';
-
-const styles = theme => ({
-
-});
 
 class LabelColor extends Component {
     constructor(props) {
@@ -51,7 +39,7 @@ class LabelColor extends Component {
     };
 
     render() {
-        const { classes, updateColor, newColor } = this.props;
+        const { updateColor, newColor } = this.props;
 
         const styles = reactCSS({
             'default': {
@@ -106,8 +94,11 @@ class LabelColor extends Component {
 }
 
 LabelColor.propTypes = {
-    classes: PropTypes.object.isRequired,
+    updateColor: PropTypes.string.isRequired,
+    newColor: PropTypes.string.isRequired,
 
+    setUpdateColor: PropTypes.func.isRequired,
+    setNewColor: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -120,4 +111,4 @@ const mapDispatch = dispatch => ({
     setNewColor: dispatch.labelsEdit.setNewColor,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LabelColor));
+export default connect(mapState, mapDispatch)(LabelColor);

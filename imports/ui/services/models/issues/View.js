@@ -56,8 +56,7 @@ export default {
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
     },
     effects: {
-        async updateQuery(query, rootState) {
-            console.log('updateQuery: ' + JSON.stringify(query));
+        async updateQuery(query) {
             if (query === null) {this.setQuery({});}
             else {this.setQuery(query);}
 
@@ -68,7 +67,7 @@ export default {
             this.updateView();
         },
 
-        async updateView(payload, rootState) {
+        async updateView() {
             this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
@@ -78,50 +77,12 @@ export default {
             this.refreshVelocity();
         },
 
-            /*
-            // TODO - Removed, this was moved to the view component
-            async addRemoveQuery(valueName, rootState, facet) {
-                console.log('addRemoveQuery');
-                let query = rootState.issuesView.query;
-
-                //1- Mutate the query to the corresponding state
-                let facetKey = facet.key;
-                if (facet.nested === false) {
-                    if (query[facetKey] === undefined) {
-                        query[facetKey] = {"$in": [valueName]};
-                    } else if (query[facetKey]['$in'].includes(valueName)) {
-                        // Remove element from array
-                        query[facetKey]['$in'] = query[facetKey]['$in'].filter(i => i !== valueName);
-                        if (query[facetKey]['$in'].length === 0) {
-                            delete query[facetKey];
-                        }
-                    } else {
-                        query[facetKey]['$in'].push(valueName);
-                    }
-                } else {
-                    facetKey = facetKey + '.edges';
-                    let nestedKey = 'node.' + facet.nestedKey;
-                    if (query[facetKey] === undefined) {
-                        query[facetKey] = {'$elemMatch': {}};
-                        query[facetKey]['$elemMatch'][nestedKey] = {"$in": [valueName]};
-                    } else if (query[facetKey]['$elemMatch'][nestedKey]['$in'].includes(valueName)) {
-                        query[facetKey]['$elemMatch'][nestedKey]['$in'] = query[facetKey]['$elemMatch'][nestedKey]['$in'].filter(i => i !== valueName);
-                        if (query[facetKey]['$elemMatch'][nestedKey]['$in'].length === 0) {
-                            delete query[facetKey];
-                        }
-                    } else {
-                        query[facetKey]['$elemMatch'][nestedKey]['$in'].push(valueName);
-                    }
-                }
-                this.updateQuery(query);
-            },
-            */
-        async deleteQuery(query, rootState) {
+        async deleteQuery(query) {
             await cfgQueries.remove({'_id': query._id});
             this.refreshQueries();
         },
 
-        async refreshQueries(payload, rootState) {
+        async refreshQueries() {
             this.setQueries(cfgQueries.find({}).fetch());
         },
 
@@ -155,6 +116,7 @@ export default {
         },
 
         async refreshSummary(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             let query = rootState.issuesView.query;
@@ -176,20 +138,22 @@ export default {
             this.setRemainingWorkCount(repos.map(r => r.issues.length).reduce((acc, count) => acc + count, 0));
 
             var t1 = performance.now();
-            console.log("refreshSummary - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshSummary - took " + (t1 - t0) + " milliseconds.");
         },
 
         async refreshFacets(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             let updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.issuesView.query)), cfgIssues);
             this.setFacets(updatedFacets);
 
             var t1 = performance.now();
-            console.log("refreshFacets - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshFacets - took " + (t1 - t0) + " milliseconds.");
         },
 
         async refreshBurndown(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             this.setShouldBurndownDataReload(false);
@@ -199,10 +163,11 @@ export default {
             this.setBurndown(burndownData);
 
             var t1 = performance.now();
-            console.log("refreshBurndown - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshBurndown - took " + (t1 - t0) + " milliseconds.");
         },
 
         async refreshVelocity(payload, rootState) {
+            const log = rootState.global.log;
             let t0 = performance.now();
 
             this.setShouldVelocityDataReload(false);
@@ -212,7 +177,7 @@ export default {
             this.setVelocity(velocityData);
 
             var t1 = performance.now();
-            console.log("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
         },
     }
 };

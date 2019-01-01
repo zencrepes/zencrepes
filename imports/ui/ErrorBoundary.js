@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Oops from './views/Oops/index.js';
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
 
 //https://reactjs.org/docs/error-boundaries.html
 class ErrorBoundary extends React.Component {
@@ -9,16 +11,16 @@ class ErrorBoundary extends React.Component {
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError() {
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
     }
 
     componentDidCatch(error, info) {
+        const { log } = this.props;
         // You can also log the error to an error reporting service
-        console.log(error);
-        console.log(info);
-//        logErrorToMyService(error, info);
+        log.error(error);
+        log.info(info);
     }
 
     render() {
@@ -30,4 +32,14 @@ class ErrorBoundary extends React.Component {
         return this.props.children;
     }
 }
-export default ErrorBoundary;
+
+ErrorBoundary.propTypes = {
+    children: PropTypes.object.isRequired,
+    log: PropTypes.object.isRequired,
+};
+
+const mapState = state => ({
+    log: state.global.log,
+});
+
+export default connect(mapState, null)(ErrorBoundary);

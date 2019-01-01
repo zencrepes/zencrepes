@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
-import PropTypes from "prop-types";
-
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
-import styles from '../../styles.jsx';
 
 import General from '../../layouts/General/index.js';
 
 import Repositories from './Repositories/index.js';
 import StoryPoints from './StoryPoints/index.js';
 import ImportPoints from './ImportPoints/index.js';
+import PropTypes from "prop-types";
 
+/*
 function TabContainer(props) {
     return (
         <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -25,6 +20,18 @@ function TabContainer(props) {
         </Typography>
     );
 }
+*/
+const TabContainer = ( {children} ) => {
+    return (
+        <Typography component="div" style={{ padding: 8 * 3 }}>
+            {children}
+        </Typography>
+    );
+};
+TabContainer.propTypes = {
+    children: PropTypes.object.isRequired,
+};
+
 
 class Settings extends Component {
     constructor(props) {
@@ -39,9 +46,7 @@ class Settings extends Component {
     };
 
     render() {
-        const { classes } = this.props;
         const { value } = this.state;
-
         return (
             <General>
                 <Tabs
@@ -64,8 +69,7 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
-    classes: PropTypes.object,
-
+    children: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Settings);
+export default Settings;

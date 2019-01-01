@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -13,13 +11,11 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-import TextField from '@material-ui/core/TextField';
-
 import { cfgSources } from "../../../data/Minimongo.js";
 
 import PushPoints from '../../../data/PushPoints.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -41,7 +37,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'left',
     }
-});
+};
 
 class Push extends Component {
     constructor(props) {
@@ -55,7 +51,7 @@ class Push extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -63,7 +59,7 @@ class Push extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     reloadRepos = () => {
         const { setLoadFlag } = this.props;
@@ -81,7 +77,7 @@ class Push extends Component {
                             Push points to GitHub as labels
                         </Typography>
                         <Typography>
-                            Attach the 'SP:X' label to all issues for which points have been imported from ZenHub or Waffle and push back to GitHub.
+                            Attach the &apos;SP:X&apos; label to all issues for which points have been imported from ZenHub or Waffle and push back to GitHub.
                         </Typography>
                         {loading &&
                         <div className={classes.loading}>
@@ -116,13 +112,15 @@ class Push extends Component {
 }
 
 Push.propTypes = {
-    classes: PropTypes.object,
-    loading: PropTypes.bool,
-    loadSuccess: PropTypes.bool,
-    createdLabels: PropTypes.number,
-    updatedRepos: PropTypes.number,
-    setLoadFlag: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    createdLabels: PropTypes.number.isRequired,
+    updatedRepos: PropTypes.number.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    updatedIssues: PropTypes.number.isRequired,
+    message: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({

@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import { Meteor } from 'meteor/meteor';
+import { Component } from 'react'
 
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
@@ -22,8 +23,8 @@ class Data extends Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        const { loadSuccess, loadFlag } = this.props;
+    shouldComponentUpdate(nextProps) {
+        const { loadFlag } = this.props;
         if (loadFlag !== nextProps.loadFlag) {
             return true;
         } else {
@@ -31,16 +32,15 @@ class Data extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     load = async () => {
-        console.log('MilestonesEdit - Start load');
         const {
             client,
             setChipRemaining,
@@ -57,6 +57,7 @@ class Data extends Component {
             editMilestoneTitle,
             editMilestoneDescription,
             editMilestoneDueDate,
+            log,
         } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
@@ -64,9 +65,9 @@ class Data extends Component {
         setLoadSuccess(false);
         setLoadedCount(0);
 
-        console.log(milestones);
+        log.info(milestones);
         for (let milestone of milestones) {
-            console.log(milestone);
+            log.info(milestone);
             let result = false;
             if (action === 'close') {
                 try {
@@ -78,9 +79,9 @@ class Data extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(result);
+                log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     incrementLoadedCount(1);
@@ -99,9 +100,9 @@ class Data extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(result);
+                log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     incrementLoadedCount(1);
@@ -126,20 +127,20 @@ class Data extends Component {
                     }
                 }
                 if (editMilestoneDueDate !== null) {
-                    console.log(editMilestoneDueDate);
+                    log.info(editMilestoneDueDate);
                     updatePayload = {
                         ...updatePayload,
                         due_on: editMilestoneDueDate,
                     }
                 }
-                console.log(updatePayload);
+                log.info(updatePayload);
                 try {
                     result = await this.octokit.issues.updateMilestone(updatePayload);
                 }
                 catch (error) {
-                    console.log(error);
+                    log.info(error);
                 }
-                console.log(result);
+                log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     incrementLoadedCount(1);
@@ -158,16 +159,16 @@ class Data extends Component {
                         });
                     }
                     catch (error) {
-                        console.log(error);
+                        log.info(error);
                     }
-                    console.log(data);
+                    log.info(data);
                     if (data.data !== null) {
                         const milestoneObj = {
                             ...data.data.repository.milestone,
                             repo: milestone.repo,
                             org: milestone.org,
                         };
-                        console.log(milestoneObj);
+                        log.info(milestoneObj);
                         await cfgMilestones.upsert({
                             id: milestoneObj.id
                         }, {
@@ -181,7 +182,7 @@ class Data extends Component {
         setLoading(false);
         updateMilestones();
         if (onSuccess !== null && onSuccess !== undefined) {
-            console.log(onSuccess);
+            log.info(onSuccess);
             onSuccess();
         }
     };
@@ -192,7 +193,26 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    action: PropTypes.string.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    milestones: PropTypes.array.isRequired,
+    editMilestoneTitle: PropTypes.string.isRequired,
+    editMilestoneDescription: PropTypes.string.isRequired,
+    editMilestoneDueDate: PropTypes.string.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadError: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    incrementLoadedCount: PropTypes.func.isRequired,
+    updateMilestones: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+    setChipRemaining: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -208,6 +228,7 @@ const mapState = state => ({
     editMilestoneDescription: state.milestonesEdit.editMilestoneDescription,
     editMilestoneDueDate: state.milestonesEdit.editMilestoneDueDate,
 
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

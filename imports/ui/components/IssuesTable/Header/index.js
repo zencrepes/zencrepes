@@ -1,27 +1,10 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
-//import Search from "./Search";
-import Table from "@material-ui/core/Table/Table";
 import Grid from "@material-ui/core/Grid/Grid";
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class Header extends Component {
     constructor (props) {
@@ -29,7 +12,7 @@ class Header extends Component {
     }
 
     render() {
-        const { classes, filteredIssues } = this.props;
+        const { filteredIssues } = this.props;
         return (
             <TableHead>
                 <TableRow>
@@ -56,8 +39,7 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-    classes: PropTypes.object.isRequired,
+    filteredIssues: PropTypes.array,
 };
 
-
-export default withStyles(styles)(Header);
+export default Header;

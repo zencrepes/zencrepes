@@ -1,20 +1,10 @@
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_ISSUES from '../../../../graphql/getIssues.graphql';
 import GET_USER_DATA from '../../../../graphql/getUser.graphql';
-
-
-import { cfgSources } from '../../Minimongo.js';
-import { cfgIssues } from '../../Minimongo.js';
-
-import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
-import getIssuesStats from '../../utils/getIssuesStats.js';
-import {cfgLabels, cfgMilestones} from "../../Minimongo";
-
+import PropTypes from "prop-types";
 
 class Data extends Component {
     constructor (props) {
@@ -23,8 +13,8 @@ class Data extends Component {
         this.errorRetry = 0;
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const { setLoadFlag, loadFlag, loading } = this.props;
+    componentDidUpdate = (prevProps) => {
+        const { setLoadFlag, loadFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (loadFlag === true && prevProps.loadFlag === false) {
             setLoadFlag(false);
@@ -36,12 +26,11 @@ class Data extends Component {
         const {
             setLoading,
             setLoadSuccess,
-            setLoadError,
-            setLoadedCount,
             loadUsers,
             client,
             refreshUsers,
             updateChip,
+            log,
         } = this.props;
 
         let users = [];
@@ -57,7 +46,7 @@ class Data extends Component {
             users.push(data.data.user);
         }
         refreshUsers(users);
-        console.log('Load completed: There is a total of ' + users.length + ' users in memory');
+        log.info('Load completed: There is a total of ' + users.length + ' users in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
     };
@@ -68,7 +57,19 @@ class Data extends Component {
 }
 
 Data.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    loadFlag: PropTypes.bool.isRequired,
+    loadUsers: PropTypes.array.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
+    incLoadedCount: PropTypes.func.isRequired,
+    refreshUsers: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -76,6 +77,8 @@ const mapState = state => ({
     loading: state.usersFetch.loading,
 
     loadUsers: state.usersFetch.loadUsers,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({
@@ -85,10 +88,6 @@ const mapDispatch = dispatch => ({
     setLoadedCount: dispatch.usersFetch.setLoadedCount,
 
     incLoadedCount: dispatch.usersFetch.incLoadedCount,
-    setIterateTotal: dispatch.usersFetch.setIterateTotal,
-    setIterateCurrent: dispatch.usersFetch.setIterateCurrent,
-    incIterateCurrent: dispatch.usersFetch.incIterateCurrent,
-
     refreshUsers: dispatch.usersView.refreshUsers,
 
     updateChip: dispatch.chip.updateChip,

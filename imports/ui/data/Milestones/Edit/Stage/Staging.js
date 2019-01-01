@@ -13,7 +13,7 @@ class Staging extends Component {
         super(props);
     }
 
-    componentDidUpdate = (prevProps, prevState, snapshot) => {
+    componentDidUpdate = (prevProps) => {
         const { setVerifFlag, verifFlag } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
         if (verifFlag === true && prevProps.verifFlag === false) {
@@ -23,12 +23,12 @@ class Staging extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, milestones, onStagingSuccess, setVerifiedMilestones, insVerifiedMilestones, client } = this.props;
+        const { setVerifying, setVerifyingMsg, milestones, onStagingSuccess, setVerifiedMilestones, insVerifiedMilestones, client, log } = this.props;
         setVerifiedMilestones([]);
         setVerifyingMsg('About pull data from ' + milestones.length + ' milestones');
 //        for (let milestone of milestones) {
         for (const [idx, milestone] of milestones.entries()) {
-            console.log(milestone);
+            log.info(milestone);
             if (this.props.verifying) {
                 let baseMsg = (idx+1) + '/' + milestones.length + ' - Fetching milestone: ' + milestone.org.login + '/' + milestone.repo.name + '#' + milestone.number;
                 setVerifyingMsg(baseMsg);
@@ -46,9 +46,9 @@ class Staging extends Component {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+                    log.warn(error);
                 }
-                console.log(data);
+                log.info(data);
                 if (data.data !== null) {
                     if (data.data.repository.milestone === null) {
                         // The milestone doesn't exist anymore on GitHub.
@@ -99,7 +99,19 @@ class Staging extends Component {
 }
 
 Staging.propTypes = {
+    verifFlag: PropTypes.bool.isRequired,
+    verifying: PropTypes.bool.isRequired,
+    milestones: PropTypes.array.isRequired,
+    onStagingSuccess: PropTypes.func.isRequired,
 
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setVerifyingMsg: PropTypes.func.isRequired,
+    setVerifiedMilestones: PropTypes.func.isRequired,
+    insVerifiedMilestones: PropTypes.func.isRequired,
+    updateChip: PropTypes.func.isRequired,
+
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -108,6 +120,8 @@ const mapState = state => ({
 
     milestones: state.milestonesEdit.milestones,
     onStagingSuccess: state.milestonesEdit.onStagingSuccess,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

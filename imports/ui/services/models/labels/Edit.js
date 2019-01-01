@@ -89,10 +89,10 @@ export default {
     },
 
     effects: {
-        async initConfiguration(labelName, rootState) {
+        async initConfiguration(labelName) {
             this.setSelectedName(labelName);
 
-            allRepos = cfgSources.find({}).map((repo) => {
+            let allRepos = cfgSources.find({}).map((repo) => {
                 return {
                     value: repo.id,
                     label: repo.org.login + "/" + repo.name
@@ -102,8 +102,6 @@ export default {
             this.setAllRepos(allRepos);
 
             const selectedRepos = cfgLabels.find({name: labelName}).map(label => label.repo).map(repo => repo.id);
-            console.log(cfgLabels.find({name: labelName}).fetch());
-            console.log(selectedRepos);
             this.updateSelectedRepos(selectedRepos);
 
         },
@@ -114,8 +112,7 @@ export default {
             //{"org.name":{"$in":["Overture","Human Cancer Models Initiative - Catalog"]}}
         },
 
-        async resetValues(payload, rootState) {
-            console.log('resetValues');
+        async resetValues() {
             this.setUpdateName(false);
             this.setUpdateDescription(false);
             this.setUpdateColor(false);

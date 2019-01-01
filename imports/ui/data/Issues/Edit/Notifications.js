@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -7,17 +6,17 @@ import {connect} from "react-redux";
 
 import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
-class LoadButton extends Component {
+};
+class Notifications extends Component {
     constructor (props) {
         super(props);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { verifySuccess, setVerifySuccess } = this.props;
         if (prevProps.verifySuccess === false && verifySuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -25,7 +24,7 @@ class LoadButton extends Component {
                 setVerifySuccess(false);
             }, 2000);
         }
-    };
+    }
 
     render() {
         const { classes, verifySuccess, verifiedIssues } = this.props;
@@ -47,11 +46,14 @@ class LoadButton extends Component {
         } else {
             return null;
         }
-    };
+    }
 }
 
-LoadButton.propTypes = {
+Notifications.propTypes = {
     classes: PropTypes.object.isRequired,
+    verifySuccess: PropTypes.bool,
+    verifiedIssues: PropTypes.array,
+    setVerifySuccess: PropTypes.func,
 };
 
 const mapState = state => ({
@@ -63,4 +65,4 @@ const mapDispatch = dispatch => ({
     setVerifySuccess: dispatch.issuesEdit.setVerifySuccess,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(LoadButton));
+export default connect(mapState, mapDispatch)(withStyles(styles)(Notifications));

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -7,13 +6,10 @@ import {connect} from "react-redux";
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 const styles = theme => ({
-    root: {
-    },
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
@@ -27,7 +23,7 @@ class RefreshLabels extends Component {
     }
 
     refreshFull = () => {
-        const { setStageFlag, setVerifFlag, setLabels, setAction, labels, setOnSuccess, updateView, setVerifying } = this.props;
+        const { setVerifFlag, setLabels, setAction, labels, setOnSuccess, updateView, setVerifying } = this.props;
         setLabels(labels);
         setAction('refresh');
         setVerifying(true);
@@ -39,16 +35,25 @@ class RefreshLabels extends Component {
         const { classes } = this.props;
 
         return (
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.refreshFull}>
+            <Button variant="contained" color="primary" onClick={this.refreshFull}>
                 <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Labels
             </Button>
         )
-    };
+    }
 }
 
 RefreshLabels.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    labels: PropTypes.array.isRequired,
+
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setLabels: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -56,7 +61,6 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setStageFlag: dispatch.labelsEdit.setStageFlag,
     setVerifFlag: dispatch.labelsEdit.setVerifFlag,
     setVerifying: dispatch.labelsEdit.setVerifying,
 

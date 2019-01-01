@@ -1,35 +1,14 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
 
 import Query from './Query.js';
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-    table: {
-//        height: '300px'
-    },
-});
-
 
 class QueriesTable extends Component {
     constructor (props) {
@@ -49,41 +28,42 @@ class QueriesTable extends Component {
     };
     
     render() {
-        const { classes, queries, facets, loadQuery, deleteQuery } = this.props;
+        const { queries, facets, loadQuery, deleteQuery } = this.props;
         const { rowsPerPage, page } = this.state;
 
         return (
-            <div className={classes.root}>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell padding="none"></TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Filter</TableCell>
-                            <TableCell padding="none"></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {queries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(query => {
-                            return (
-                                <Query
-                                  query={query}
-                                  key={query._id}
-                                  facets={facets}
-                                  loadQuery={loadQuery}
-                                  deleteQuery={deleteQuery}
-                                />
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </div>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell padding="none"></TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Filter</TableCell>
+                        <TableCell padding="none"></TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {queries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(query => {
+                        return (
+                            <Query
+                              query={query}
+                              key={query._id}
+                              facets={facets}
+                              loadQuery={loadQuery}
+                              deleteQuery={deleteQuery}
+                            />
+                        );
+                    })}
+                </TableBody>
+            </Table>
         );
     }
 }
 
 QueriesTable.propTypes = {
-    classes: PropTypes.object.isRequired,
+    queries: PropTypes.array.isRequired,
+    facets: PropTypes.array.isRequired,
+    loadQuery: PropTypes.func.isRequired,
+    deleteQuery: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(QueriesTable);
+export default QueriesTable;

@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Moment from 'react-moment';
-import ReactMarkdown from 'react-markdown';
 
 import SimpleMDE from 'react-simplemde-editor';
 import "simplemde/dist/simplemde.min.css";
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class SprintDescription extends Component {
     constructor(props) {
@@ -19,17 +11,16 @@ class SprintDescription extends Component {
     }
 
     handleChange = value => {
-        const { classes, setEditSprintDescription } = this.props;
+        const { setEditSprintDescription } = this.props;
         setEditSprintDescription(value);
     };
 
     render() {
-        const { classes, editSprintDescription } = this.props;
+        const { editSprintDescription } = this.props;
         return (
             <SimpleMDE
                 id="sprintDescriptionEdit"
                 onChange={this.handleChange}
-                className={classes.root}
                 value={editSprintDescription}
                 options={{
                     autofocus: true,
@@ -41,15 +32,17 @@ class SprintDescription extends Component {
 }
 
 SprintDescription.propTypes = {
-    classes: PropTypes.object,
+    editSprintDescription: PropTypes.string.isRequired,
+    setEditSprintDescription: PropTypes.func.isRequired,
 };
 
-const mapDispatch = dispatch => ({
-    setEditSprintDescription: dispatch.sprintsView.setEditSprintDescription,
-});
 
 const mapState = state => ({
     editSprintDescription: state.sprintsView.editSprintDescription,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(SprintDescription));
+const mapDispatch = dispatch => ({
+    setEditSprintDescription: dispatch.sprintsView.setEditSprintDescription,
+});
+
+export default connect(mapState, mapDispatch)(SprintDescription);

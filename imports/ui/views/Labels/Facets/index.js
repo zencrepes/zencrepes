@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { addRemoveFromQuery } from '../../../utils/query/index.js';
 import TermFacet from './Term/index.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         width: '250px',
         marginTop: '10px',
     },
-});
+};
 
 
 class LabelsFacets extends Component {
@@ -33,8 +33,7 @@ class LabelsFacets extends Component {
     };
 
     render() {
-        const { classes, facets, query, addRemoveQuery } = this.props;
-        console.log(facets);
+        const { classes, facets, query } = this.props;
         return (
             <div className={classes.root}>
                 {facets.filter(facet => facet.hiddenFacet === undefined).map(facet => {
@@ -42,7 +41,6 @@ class LabelsFacets extends Component {
                         facet={facet}
                         key={facet.name}
                         query={query}
-                        //addRemoveQuery={addRemoveQuery}
                         addRemoveQuery={this.addRemoveQuery}
                     />);
                 })}
@@ -53,6 +51,9 @@ class LabelsFacets extends Component {
 
 LabelsFacets.propTypes = {
     classes: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    query: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import {connect} from "react-redux";
-
-const styles = theme => ({
-    root: {
-
-    },
-});
 
 class ApplyButton extends Component {
     constructor (props) {
@@ -24,8 +15,6 @@ class ApplyButton extends Component {
     };
 
     render() {
-        const { classes } = this.props;
-
         //The apply button is disabled until all milestones have been verified in GitHub and no errors have been found
         return (
             <Button onClick={this.cancel} color="primary" autoFocus>
@@ -36,15 +25,11 @@ class ApplyButton extends Component {
 }
 
 ApplyButton.propTypes = {
-    classes: PropTypes.object.isRequired,
+    setEditSprint: PropTypes.func.isRequired,
 };
-
-const mapState = state => ({
-
-});
 
 const mapDispatch = dispatch => ({
     setEditSprint: dispatch.sprintsView.setEditSprint,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(ApplyButton));
+export default connect(null, mapDispatch)(ApplyButton);

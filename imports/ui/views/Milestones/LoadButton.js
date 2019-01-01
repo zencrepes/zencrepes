@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -6,16 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
-import {buildMongoSelector} from "../../utils/mongo";
-import {cfgIssues} from "../../data/Minimongo";
-
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 class LoadButton extends Component {
     constructor (props) {
         super(props);
@@ -23,7 +18,6 @@ class LoadButton extends Component {
     }
 
     loadMilestones = () => {
-        console.log('loadMilestones');
         const { setLoadFlag } = this.props;
         setLoadFlag(true);
     };
@@ -42,11 +36,13 @@ class LoadButton extends Component {
                 }
             </div>
         );
-    };
+    }
 }
 
 LoadButton.propTypes = {
     classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

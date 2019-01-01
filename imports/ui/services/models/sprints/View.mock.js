@@ -89,39 +89,30 @@ export default {
 
     },
     effects: {
-        async updateAvailableSprints(payload, rootState) {
-            console.log('updateAvailableSprints');
+        async updateAvailableSprints() {
         },
-        async updateSelectedSprint(selectedSprintTitle, rootState) {
-            console.log('updateSelectedSprint');
+        async updateSelectedSprint() {
         },
 
-        async updateView(payload, rootState) {
-            console.log('updateView');
+        async updateView() {
         },
 
-        async updateVelocity(assignees, rootState) {
-            console.log('updateVelocity');
+        async updateVelocity() {
         },
 
-        async updateAvailableAssigneesFilter(payload, rootState) {
-            console.log('updateAvailableAssigneesFilter');
+        async updateAvailableAssigneesFilter() {
         },
 
-        async addAssignee(payload, rootState) {
-            console.log('addAssignee');
+        async addAssignee() {
         },
 
-        async updateAvailableRepositoriesFilter(payload, rootState) {
-            console.log('updateAvailableRepositoriesFilter');
+        async updateAvailableRepositoriesFilter() {
         },
 
-        async addRepository(payload, rootState) {
-            console.log('addRepository');
+        async addRepository() {
         },
 
-        async sprintCreated(payload, rootState) {
-            console.log('sprintCreated');
+        async sprintCreated() {
         }
     }
 };

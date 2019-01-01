@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import ReposTable from './ReposTable.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -34,7 +31,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'right',
     }
-});
+};
 
 class EnabledRepos extends Component {
     constructor(props) {
@@ -59,17 +56,7 @@ class EnabledRepos extends Component {
 }
 
 EnabledRepos.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
 };
 
-const mapState = state => ({
-    //maxPoints: state.githubLabels.maxPoints,
-
-});
-
-const mapDispatch = dispatch => ({
-    //setMaxPoints: dispatch.githubLabels.setMaxPoints,
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(EnabledRepos));
+export default withStyles(styles)(EnabledRepos);

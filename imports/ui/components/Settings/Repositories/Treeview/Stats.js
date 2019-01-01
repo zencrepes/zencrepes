@@ -8,20 +8,17 @@ import Typography from '@material-ui/core/Typography';
 
 import {cfgSources} from "../../../../data/Minimongo.js";
 
-const styles = theme => ({
+const styles = {
     root: {
         flexGrow: 1,
         paddingTop: '10px',
         fontSize: '10px',
     },
-});
+};
 
 class Stats extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     getRepos() {
@@ -57,7 +54,4 @@ Stats.propTypes = {
     repos: PropTypes.array,
 };
 
-export default withTracker(() => {return {repos: cfgSources.find({active: true}).fetch()}})
-(
-    withStyles(styles)(Stats)
-);
+export default withTracker(() => {return {repos: cfgSources.find({active: true}).fetch()}})(withStyles(styles)(Stats));

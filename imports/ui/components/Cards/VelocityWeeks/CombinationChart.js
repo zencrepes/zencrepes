@@ -1,22 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
-import { withStyles } from '@material-ui/core/styles';
-
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-//require('highcharts/highcharts-more')(Highcharts);
-
-const styles = theme => ({
-    root: {
-
-    },
-    toolbarButtons: {
-        flex: 1,
-    },
-});
 
 class CombinationChart extends Component {
     constructor(props) {
@@ -29,7 +16,6 @@ class CombinationChart extends Component {
     };
 
     clickBar = (event) => {
-        console.log(event.point);
         if (event.point.issues !== undefined && event.point.issues.length > 0) {
             const issues = event.point.issues;
             const issuesArrayQuery = issues.map(issue => issue.id);
@@ -48,8 +34,7 @@ class CombinationChart extends Component {
     };
     */
     render() {
-        const { classes, dataset, metric } = this.props;
-        console.log(dataset);
+        const { dataset, metric } = this.props;
         let updatedOptions = {
             chart: {
                 height: 300,
@@ -146,7 +131,11 @@ class CombinationChart extends Component {
 
 CombinationChart.propTypes = {
     classes: PropTypes.object,
+    completed: PropTypes.number,
+    max: PropTypes.number,
+    history: PropTypes.object,
+    dataset: PropTypes.array,
+    metric: PropTypes.string,
 };
 
-//export default withStyles(styles)(CombinationChart);
-export default withRouter(withStyles(styles)(CombinationChart));
+export default withRouter(CombinationChart);

@@ -1,4 +1,4 @@
-import {cfgMilestones, cfgSources} from "../../../data/Minimongo";
+import {cfgMilestones} from "../../../data/Minimongo";
 
 export default {
     state: {
@@ -77,8 +77,7 @@ export default {
         setSelectedMilestoneDueDate(state, payload) {return { ...state, selectedMilestoneDueDate: payload };},
     },
     effects: {
-        async updateQuery(query, rootState) {
-            console.log('MilestoneEdit - initView');
+        async updateQuery(query) {
             this.setQuery(query);
 
             const milestoneTitle = query.title;
@@ -113,8 +112,7 @@ export default {
 
         },
 
-        async initView(milestoneTitle, rootState) {
-            console.log('MilestoneEdit - initView');
+        async initView() {
             /*
 
             this.setSelectedMilestoneTitle(milestoneTitle);
@@ -144,9 +142,8 @@ export default {
 */
             this.updateView();
         },
-        async updateView(payload, rootState) {
-            console.log('MilestoneEdit - updateView');
-            const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
+        async updateView() {
+            //const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
 
         },
 

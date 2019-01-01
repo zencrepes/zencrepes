@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
-
 import PropTypes from "prop-types";
 
 import Data from './Data.js';
@@ -33,15 +29,7 @@ class LabelsFetch extends Component {
 }
 
 LabelsFetch.propTypes = {
-
+    loadModal: PropTypes.bool.isRequired,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(LabelsFetch);
+export default LabelsFetch;

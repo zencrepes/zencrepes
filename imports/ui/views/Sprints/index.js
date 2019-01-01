@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
@@ -22,20 +21,11 @@ import RemainingPoints from './RemainingPoints/index.js';
 
 import CurrentCompletion from './CurrentCompletion/index.js';
 
-import CreateSprint from './CreateSprint/index.js';
-
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
 import IssuesEdit from '../../data/Issues/Edit/index.js';
 
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 import MilestonesCreate from '../../data/Milestones/Create/index.js';
-
-import ErrorBoundary from '../../ErrorBoundary.js';
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class Sprints extends Component {
     constructor(props) {
@@ -45,15 +35,14 @@ class Sprints extends Component {
     componentDidMount() {
         const { initView } = this.props;
         initView();
-    };
+    }
 
     render() {
-        const { classes, issues, labels, velocity, assignees } = this.props;
+        const { issues, labels, velocity, assignees } = this.props;
         return (
             <General>
                 <IssuesFetch />
                 <IssuesEdit />
-                <CreateSprint />
                 <MilestonesEdit />
                 <MilestonesCreate />
                 <Actions />
@@ -131,8 +120,14 @@ class Sprints extends Component {
 }
 
 Sprints.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    assignees: PropTypes.array.isRequired,
+    issues: PropTypes.array.isRequired,
+    velocity: PropTypes.object.isRequired,
 
+    labels: PropTypes.array.isRequired,
+
+    initView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -145,4 +140,4 @@ const mapDispatch = dispatch => ({
     initView: dispatch.sprintsView.initView,
 });
 
-export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Sprints)));
+export default connect(mapState, mapDispatch)(withRouter(Sprints));

@@ -1,13 +1,5 @@
 import _ from 'lodash';
 
-import {
-    formatDate,
-    getLastDay,
-    populateOpen,
-} from '../shared.js';
-
-//import {cfgIssues} from "../../data/Minimongo";
-
 const aggregationsModel = {
     ids: {
         key: 'id',
@@ -83,10 +75,14 @@ const aggregationsModel = {
 * - cfgIssues: Minimongo instance
 */
 export const buildFacets = (query, cfgIssues) => {
+    /*
     let aggregations = Object.entries(aggregationsModel).map(([facet, content]) => {
         return content
     });
-
+    */
+    let aggregations = Object.keys(aggregationsModel).map((key) => {
+        return aggregationsModel[key];
+    });
     return aggregations.map((facet) => {
         let facetValues = {};
         if (facet.hiddenFacet === undefined) {
@@ -146,11 +142,9 @@ const buildFacetValues = (query, cfgIssues, facet) => {
         });
         statesGroup = _.groupBy(allValues, facet.nestedKey);
     } else {
-        console.log(facetQuery);
         //statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
         statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
     }
-    console.log(statesGroup);
     // If the key is 'undefined', replace with default facet name
     if (statesGroup['undefined'] !== undefined) {
         statesGroup[facet.nullName] = statesGroup['undefined'];

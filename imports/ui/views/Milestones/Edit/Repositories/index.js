@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
-
 
 import PropTypes from "prop-types";
 
@@ -9,18 +7,13 @@ import RepositoriesTable from './RepositoriesTable.js';
 
 import CustomCard from "../../../../components/CustomCard/index.js";
 
-const styles = theme => ({
-    root: {
-    }
-});
-
 class Repositories extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { classes, milestones, allMilestones } = this.props;
+        const { milestones, allMilestones } = this.props;
         return (
             <CustomCard
                 headerTitle="Repositories"
@@ -37,8 +30,8 @@ class Repositories extends Component {
 }
 
 Repositories.propTypes = {
-    classes: PropTypes.object,
-
+    milestones: PropTypes.array.isRequired,
+    allMilestones: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({
@@ -46,4 +39,4 @@ const mapState = state => ({
     allMilestones: state.milestonesEdit.allMilestones,
 });
 
-export default connect(mapState, null)(withStyles(styles)(Repositories));
+export default connect(mapState, null)(Repositories);

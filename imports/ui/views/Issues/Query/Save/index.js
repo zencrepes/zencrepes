@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -12,17 +11,12 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
-const styles = theme => ({
-    root: {
-    },
+const styles = {
     textField: {
         width: 400,
     },
-});
+};
 
-/*
-    Modal window handling the saving of a query
- */
 class QuerySave extends Component {
     constructor (props) {
         super(props);
@@ -61,7 +55,7 @@ class QuerySave extends Component {
         }
     };
 
-    changeQueryName = name => event => {
+    changeQueryName = (event) => {
         //Search for existing query name
         if (this.doesQueryNameExists(event.target.value)) {
             this.setState({
@@ -78,7 +72,7 @@ class QuerySave extends Component {
     };
 
     render() {
-        const { classes, openSaveQueryDialog, setOpenSaveQueryDialog } = this.props;
+        const { classes, openSaveQueryDialog } = this.props;
         const { queryNameError, queryNameHelperText } = this.state;
         if (openSaveQueryDialog) {
             return (
@@ -96,7 +90,7 @@ class QuerySave extends Component {
                             helperText={queryNameHelperText}
                             fullWidth
                             margin="normal"
-                            onChange={this.changeQueryName()}
+                            onChange={this.changeQueryName}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -112,12 +106,15 @@ class QuerySave extends Component {
         } else {
             return null;
         }
-
-    };
-};
+    }
+}
 
 QuerySave.propTypes = {
     classes: PropTypes.object.isRequired,
+    setOpenSaveQueryDialog: PropTypes.func.isRequired,
+    saveQuery: PropTypes.func.isRequired,
+    queries: PropTypes.array.isRequired,
+    openSaveQueryDialog: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(QuerySave);

@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 
 import Button from '@material-ui/core/Button';
@@ -16,7 +14,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { cfgSources } from "../../../data/Minimongo.js";
 import Tree from '../../../components/Settings/Repositories/Treeview/Tree.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         margin: '10px',
     },
@@ -38,7 +36,7 @@ const styles = theme => ({
     actionButtons: {
         textAlign: 'left',
     }
-});
+};
 
 class SyncLabels extends Component {
     constructor(props) {
@@ -52,7 +50,7 @@ class SyncLabels extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -60,7 +58,7 @@ class SyncLabels extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     createLabels = () => {
         const { setLoadFlag, setAction } = this.props;
@@ -85,7 +83,7 @@ class SyncLabels extends Component {
                         </Typography>
                         <Typography>
                             Warning, this process can be lengthy. <br />
-                            Please also note that this process is not mandatory, simply adding a label 'SP:x' (with 'x' being a number) though GitHub web interface is sufficient. <br />
+                            Please also note that this process is not mandatory, simply adding a label &apos;SP:x&apos; (with &apos;x&apos; being a number) though GitHub web interface is sufficient. <br />
                             Adding through this interface ensures consistency (label names, color, description) across repositories.
                         </Typography>
                         <Typography>
@@ -129,13 +127,14 @@ class SyncLabels extends Component {
 }
 
 SyncLabels.propTypes = {
-    classes: PropTypes.object,
-    loading: PropTypes.bool,
-    loadSuccess: PropTypes.bool,
-    createdLabels: PropTypes.number,
-    updatedRepos: PropTypes.number,
-    setLoadFlag: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    loadSuccess: PropTypes.bool.isRequired,
+    createdLabels: PropTypes.number.isRequired,
+    updatedRepos: PropTypes.number.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

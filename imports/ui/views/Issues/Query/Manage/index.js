@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
-import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -12,15 +10,9 @@ import Button from '@material-ui/core/Button';
 
 import QueriesTable from './Table/index.js';
 
-const styles = theme => ({
-    root: {
-    }
-});
-
 class QueryManage extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     close = () => {
@@ -29,7 +21,7 @@ class QueryManage extends Component {
     };
 
     render() {
-        const { classes, queries, facets, openManageQueryDialog, loadQuery, deleteQuery } = this.props;
+        const { queries, facets, openManageQueryDialog, loadQuery, deleteQuery } = this.props;
         if (openManageQueryDialog) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openManageQueryDialog} maxWidth="md">
@@ -52,13 +44,16 @@ class QueryManage extends Component {
         } else {
             return null;
         }
-
-    };
+    }
 }
 
 QueryManage.propTypes = {
-    classes: PropTypes.object.isRequired,
+    queries: PropTypes.array.isRequired,
+    facets: PropTypes.array.isRequired,
+    openManageQueryDialog: PropTypes.bool.isRequired,
+    loadQuery: PropTypes.func.isRequired,
+    deleteQuery: PropTypes.func.isRequired,
+    setOpenManageQueryDialog: PropTypes.func.isRequired,
 };
 
-
-export default withStyles(styles)(QueryManage);
+export default QueryManage;

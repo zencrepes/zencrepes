@@ -18,38 +18,37 @@ class FetchZenhubPoints extends Component {
         this.repositories = [];
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate() {
         const { setLoadFlag, loadFlag } = this.props;
         if (loadFlag) {
-            console.log('FetchZenhubPoints - Initiating load');
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
-    };
+    }
 
     // Component should only be updated if loadflag move from false to true (request to load data).
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         const { loadFlag } = this.props;
         if (!loadFlag && nextProps.loadFlag) {
             return true;
         } else {
             return false;
         }
-    };
+    }
 
     sleep = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     };
 
     getReposFromZenhubBoards = async (repositories) => {
-        const { rateLimitMax, rateLimitUsed, rateLimitPause, token, setRateLimitUsed, setPaused, setMessage } = this.props;
+        const { rateLimitMax, rateLimitUsed, rateLimitPause, token, setRateLimitUsed, setPaused, setMessage, log } = this.props;
         let currentRateLimitUsed = rateLimitUsed;
         let boardRepos = [];
 
         for (let repo of repositories) {
-            console.log('Obtaining board data for repo: ' + repo.name);
+            log.info('Obtaining board data for repo: ' + repo.name);
             if (currentRateLimitUsed >=rateLimitMax) {
-                console.log('Migth be hitting zenhub API limit, pausing');
+                log.info('Migth be hitting zenhub API limit, pausing');
                 setPaused(true);
                 await this.sleep(rateLimitPause);
                 setPaused(false);
@@ -69,7 +68,7 @@ class FetchZenhubPoints extends Component {
                 .map(pipeline => pipeline.issues)
                 .reduce((a, b) => [...a, ...b], []);
 
-            console.log(boardIssues);
+            log.info(boardIssues);
             if (boardIssues.length > 0) {
                 boardRepos.push(repo);
             }
@@ -78,10 +77,8 @@ class FetchZenhubPoints extends Component {
     };
 
     getIssuesToRefresh = (repositories) => {
-        console.log('getIssuesToRefresh');
         let issues = [];
         for (let repo of repositories) {
-            console.log('Listing issues from repo');
             issues.push(
                 cfgIssues.find({
                     'repo.databaseId': repo.databaseId,
@@ -95,12 +92,12 @@ class FetchZenhubPoints extends Component {
     };
 
     getIssuesDataFromZenhub = async (issues, rateLimitUsed) => {
-        const { rateLimitMax, rateLimitPause, token, setRateLimitUsed, setPaused, setMessage, setIncrementLoadedIssues } = this.props;
-        console.log('getIssuesDataFromZenhub');
+        const { rateLimitMax, rateLimitPause, token, setRateLimitUsed, setPaused, setMessage, setIncrementLoadedIssues, log } = this.props;
+        log.info('getIssuesDataFromZenhub');
 
         for (let issue of issues) {
             if (rateLimitUsed >=rateLimitMax) {
-                console.log('Might be hitting zenhub API limit, pausing');
+                log.info('Might be hitting zenhub API limit, pausing');
                 setPaused(true);
                 await this.sleep(rateLimitPause);
                 setPaused(false);
@@ -120,16 +117,16 @@ class FetchZenhubPoints extends Component {
 
             if (response.data.estimate !== undefined) {
                 cfgIssues.update({id: issue.id}, {$set:{'points':response.data.estimate.value, 'metadata.zenhub': response.data}});
-                console.log('Updated ' + response.data.estimate.value + ' points to: ' + issue.title);
+                log.info('Updated ' + response.data.estimate.value + ' points to: ' + issue.title);
             } else {
                 cfgIssues.update({id: issue.id}, {$set:{'metadata.zenhub': response.data}});
-                console.log('No points found for issue: ' + issue.title);
+                log.info('No points found for issue: ' + issue.title);
             }
         }
     };
 
     load = async () => {
-        const { client, updateChip, setLoading, setLoadError, setMessage, setLoadSuccess, setLoadedIssues, setRateLimitUsed } = this.props;
+        const { setLoading, setLoadError, setMessage, setLoadSuccess, setLoadedIssues, setRateLimitUsed, log } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
@@ -143,11 +140,11 @@ class FetchZenhubPoints extends Component {
         const { rateLimitUsed, boardRepos } = await this.getReposFromZenhubBoards(repositories);
         setRateLimitUsed(rateLimitUsed);
 
-        console.log(rateLimitUsed);
-        console.log(boardRepos);
+        log.info(rateLimitUsed);
+        log.info(boardRepos);
 
         const issues = await this.getIssuesToRefresh(boardRepos);
-        console.log(issues);
+        log.info(issues);
 
         await this.getIssuesDataFromZenhub(issues, rateLimitUsed);
 
@@ -163,7 +160,24 @@ class FetchZenhubPoints extends Component {
 }
 
 FetchZenhubPoints.propTypes = {
+    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool,
+    rateLimitMax: PropTypes.number,
+    rateLimitUsed: PropTypes.number,
+    rateLimitPause: PropTypes.number,
+    token: PropTypes.string,
 
+    setLoadFlag: PropTypes.func,
+    setLoading: PropTypes.func,
+    setLoadError: PropTypes.func,
+    setLoadSuccess: PropTypes.func,
+    setMessage: PropTypes.func,
+    setRateLimitUsed: PropTypes.func,
+    setLoadedIssues: PropTypes.func,
+    setIncrementLoadedIssues: PropTypes.func,
+    setPaused: PropTypes.func,
+    updateChip: PropTypes.func,
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -174,6 +188,8 @@ const mapState = state => ({
     rateLimitUsed: state.zenhub.rateLimitUsed,
     rateLimitPause: state.zenhub.rateLimitPause,
     token: state.zenhub.token,
+
+    log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({

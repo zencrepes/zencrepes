@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../components/CustomCard/index.js";
-
 import ReposTreemap from './ReposTreemap.js';
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class RemainingPoints extends Component {
     constructor(props) {
@@ -19,7 +11,7 @@ class RemainingPoints extends Component {
     }
 
     render() {
-        const { classes, assignees, issues } = this.props;
+        const { assignees, issues } = this.props;
 
         const openPoints = issues
             .filter(issue => issue.state === 'OPEN')
@@ -54,7 +46,8 @@ class RemainingPoints extends Component {
 }
 
 RemainingPoints.propTypes = {
-    classes: PropTypes.object,
+    assignees: PropTypes.array.isRequired,
+    issues: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(RemainingPoints);
+export default RemainingPoints;

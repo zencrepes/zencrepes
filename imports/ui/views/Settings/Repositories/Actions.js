@@ -11,8 +11,7 @@ import Button from "@material-ui/core/Button";
 
 import { cfgIssues, cfgLabels } from "../../../data/Minimongo.js";
 
-
-const styles = theme => ({
+const styles = {
     root: {
         flexGrow: 1,
         margin: '10px',
@@ -26,7 +25,7 @@ const styles = theme => ({
     loading: {
         flexGrow: 1,
     },
-});
+};
 
 class Actions extends Component {
     constructor(props) {
@@ -37,13 +36,11 @@ class Actions extends Component {
     }
 
     deleteIssues = () => {
-        console.log('deleteIssues');
         cfgIssues.remove({});
         this.forceUpdate();
     };
 
     deleteLabels = () => {
-        console.log('deleteLabels');
         cfgLabels.remove({});
         this.forceUpdate();
     };
@@ -84,7 +81,8 @@ class Actions extends Component {
 }
 
 Actions.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
 
 };
 
@@ -92,8 +90,4 @@ const mapState = state => ({
     loading: state.issuesFetch.loading,
 });
 
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(withStyles(styles)(Actions));
+export default connect(mapState, null)(withStyles(styles)(Actions));

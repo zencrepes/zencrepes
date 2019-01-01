@@ -4,21 +4,17 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { addRemoveFromQuery } from '../../../utils/query/index.js';
 import TermFacet from './Term/index.js';
 
-const styles = theme => ({
+const styles = {
     root: {
         width: '250px',
         marginTop: '10px',
-//        paddingBottom: '10px',
-//        borderRight: '1px solid #ccc',
-//        borderBottom: '1px solid #ccc',
     },
-});
-
+};
 
 class IssuesFacets extends Component {
     constructor (props) {
@@ -36,8 +32,7 @@ class IssuesFacets extends Component {
     };
 
     render() {
-        const { classes, facets, query, addRemoveQuery, defaultPoints } = this.props;
-        console.log(facets);
+        const { classes, facets, query, defaultPoints } = this.props;
         return (
             <div className={classes.root}>
                 {facets.filter(facet => facet.hiddenFacet === undefined).map(facet => {
@@ -46,7 +41,6 @@ class IssuesFacets extends Component {
                         key={facet.name}
                         query={query}
                         defaultPoints={defaultPoints}
-                        //addRemoveQuery={addRemoveQuery}
                         addRemoveQuery={this.addRemoveQuery}
                     />);
                 })}
@@ -57,6 +51,12 @@ class IssuesFacets extends Component {
 
 IssuesFacets.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    facets: PropTypes.array.isRequired,
+    query: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+
+    history: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -65,8 +65,4 @@ const mapState = state => ({
     defaultPoints: state.issuesView.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-    addRemoveQuery: dispatch.issuesView.addRemoveQuery,
-});
-
-export default withRouter(connect(mapState, mapDispatch)(withStyles(styles)(IssuesFacets)));
+export default withRouter(connect(mapState, null)(withStyles(styles)(IssuesFacets)));

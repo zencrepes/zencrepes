@@ -1,17 +1,6 @@
-import _ from 'lodash';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withApollo } from 'react-apollo';
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-
-import classNames from 'classnames';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -20,23 +9,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-
-import LabelColor from './Color.js';
-import LabelName from './Name.js';
-import LabelDescription from './Description.js';
-
-const styles = theme => ({
-    button: {
-
-    },
-});
-
 class DeleteWarning extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
     }
 
     triggerLabelsDeletion = () => {
@@ -53,9 +28,7 @@ class DeleteWarning extends Component {
     };
 
     render() {
-        const { classes, deleteWarning } = this.props;
-        console.log(deleteWarning);
-
+        const { deleteWarning } = this.props;
         if (deleteWarning) {
             return (
                 <div>
@@ -91,20 +64,21 @@ class DeleteWarning extends Component {
 }
 
 DeleteWarning.propTypes = {
-    classes: PropTypes.object.isRequired,
+    deleteWarning: PropTypes.bool.isRequired,
 
+    setDeleteWarning: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     deleteWarning: state.labelsEdit.deleteWarning
-
 });
 
 const mapDispatch = dispatch => ({
     setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
     setLoadFlag: dispatch.labelsEdit.setLoadFlag,
     setAction: dispatch.labelsEdit.setAction,
-
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(DeleteWarning));
+export default connect(mapState, mapDispatch)(DeleteWarning);

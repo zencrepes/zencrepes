@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import CustomCard from '../../../components/CustomCard/index.js';
-
 import GaugeChart from './GaugeChart.js';
-
-const styles = theme => ({
-    root: {
-    }
-});
 
 class CurrentCompletion extends Component {
     constructor(props) {
@@ -19,7 +12,7 @@ class CurrentCompletion extends Component {
     }
 
     render() {
-        const { classes, issues } = this.props;
+        const { issues } = this.props;
 
         // Get metrics for all issues, without consideration if they involve a change of scope or not
         const completedIssues = issues.filter(issue => issue.state === 'CLOSED').length;
@@ -33,6 +26,7 @@ class CurrentCompletion extends Component {
 
 
         //Filter out all issues labelled with Scope Change
+        /*
         const noScIssues = issues
             .filter(issue => {
                 if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length === 0) {
@@ -41,11 +35,12 @@ class CurrentCompletion extends Component {
                     return false;
                 }
             });
-
+        */
+        /*
         const noScIssuesTotalPoints = noScIssues
             .map(issue => issue.points)
             .reduce((acc, points) => acc + points, 0);
-
+        */
         return (
             <CustomCard
                 headerTitle="Current Completion"
@@ -82,7 +77,7 @@ class CurrentCompletion extends Component {
 }
 
 CurrentCompletion.propTypes = {
-    classes: PropTypes.object,
+    issues: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(CurrentCompletion);
+export default CurrentCompletion;

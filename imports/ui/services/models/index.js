@@ -14,6 +14,9 @@ export { default as startup } from './startup.js';
 export { default as zenhub } from './zenhub.js';
 export { default as waffle } from './waffle.js';
 
+// Global: Available throughout the app for base lifecycle (logs and so on)
+export { default as global } from './global.js';
+
 // Milestones
 export { default as milestonesView } from './milestones/View.js';
 export { default as milestonesEdit } from './milestones/Edit.js';

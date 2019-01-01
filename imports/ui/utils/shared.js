@@ -6,7 +6,7 @@
 * - dateString: Date string
 */
 export const formatDate = (dateString) => {
-    day = new Date(dateString);
+    let day = new Date(dateString);
     day.setUTCHours(0);
     day.setUTCMinutes(0);
     day.setUTCSeconds(0);

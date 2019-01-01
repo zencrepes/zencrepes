@@ -1,32 +1,14 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from "react-redux";
 
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import Delete from './Delete.js';
 import Open from './Open.js';
 
 import Filters from '../../Filters/index.js';
-import Grid from "@material-ui/core/Grid/Grid";
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class Query extends Component {
     constructor (props) {
@@ -44,7 +26,7 @@ class Query extends Component {
     };
 
     render() {
-        const { classes, query, facets, loadQuery } = this.props;
+        const { query, facets } = this.props;
 
         return (
             <TableRow>
@@ -66,7 +48,10 @@ class Query extends Component {
 }
 
 Query.propTypes = {
-    classes: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
+    facets: PropTypes.array.isRequired,
+    deleteQuery: PropTypes.func.isRequired,
+    loadQuery: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Query);
+export default Query;

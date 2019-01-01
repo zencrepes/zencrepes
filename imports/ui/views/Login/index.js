@@ -1,23 +1,20 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import red from "@material-ui/core/colors/red";
 
 import GitHubLogin from '../../components/Github/GitHubLogin.js';
 
 import General from '../../layouts/General/index.js';
 import lightBlue from "@material-ui/core/colors/lightBlue";
 import {withRouter} from "react-router-dom";
+import PropTypes from "prop-types";
 
 const styles = theme => ({
     '@global': {
@@ -25,11 +22,6 @@ const styles = theme => ({
             backgroundColor: theme.palette.common.white,
         },
     },
-    /*
-    appBar: {
-        position: 'relative',
-    },
-    */
     toolbarTitle: {
         flex: 1,
     },
@@ -116,14 +108,14 @@ class Login extends Component {
                             </div>
                             <p className={classes.subtitle}>Agile analytics and management over GitHub organizations & repositories made easy!</p>
                             <p className={classes.paragraph}>ZenCrepes operates across repositories and organizations and facilitates batch modifications. Welcome consistency!</p>
-                            <p className={classes.paragraph}>If you update content, ZenCrepes will first stage the changes and <b><u>you'll have to confirm</u></b>
+                            <p className={classes.paragraph}>If you update content, ZenCrepes will first stage the changes and <b><u>you&apos;ll have to confirm</u></b>
                                 before pushing to GitHub.</p>
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <h4 className={classes.secondTitle}>Get Started</h4>
                             <Paper className={classes.notice} elevation={1}>
                                 <Typography component="p">
-                                    Data is yours! ZenCrepes is <b><u>entirely client-side</u></b>, we don't see any of your data, none!
+                                    Data is yours! ZenCrepes is <b><u>entirely client-side</u></b>, we don&apos;t see any of your data, none!
                                 </Typography>
                             </Paper>
                             <GitHubLogin />
@@ -142,6 +134,12 @@ class Login extends Component {
 }
 
 //export default withStyles(styles)(Login);
+
+Login.propTypes = {
+    classes: PropTypes.object.isRequired,
+    authenticated: PropTypes.bool.isRequired,
+};
+
 
 export default (
     withTracker(() => {

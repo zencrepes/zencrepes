@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
 import {
     withRouter
@@ -7,17 +6,14 @@ import {
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
 
 import { ResponsiveBar } from '@nivo/bar'
 
-import {getWeekYear} from "../../utils/velocity/index";
-
-const styles = theme => ({
+const styles = {
     root: {
         height: '75px'
-    },
-});
+    }
+};
 
 class VelocityBar extends Component {
     constructor(props) {
@@ -86,22 +82,8 @@ class VelocityBar extends Component {
 
 VelocityBar.propTypes = {
     classes: PropTypes.object.isRequired,
+    data: PropTypes.array,
 };
 
-const mapDispatch = dispatch => ({
-});
-
-
-const mapState = state => ({
-});
-
-
-export default
-    connect(mapState, mapDispatch)
-    (
-            withRouter
-            (
-                withStyles(styles)(VelocityBar)
-            )
-    );
+export default withRouter(withStyles(styles)(VelocityBar));
 

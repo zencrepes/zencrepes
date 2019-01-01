@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
-
-import PropTypes from "prop-types";
 
 import Data from './Data.js';
 import LoadModal from './LoadModal.js';
@@ -12,6 +7,7 @@ import Notifications from './Notifications.js';
 import Staging from './Staging.js';
 
 import RefreshSnackbar from './RefreshSnackbar/index.js';
+import PropTypes from "prop-types";
 
 class LabelsEdit extends Component {
     constructor(props) {
@@ -38,15 +34,7 @@ class LabelsEdit extends Component {
 }
 
 LabelsEdit.propTypes = {
-
+    loadModal: PropTypes.bool,
 };
 
-const mapState = state => ({
-
-});
-
-const mapDispatch = dispatch => ({
-
-});
-
-export default connect(mapState, mapDispatch)(LabelsEdit);
+export default LabelsEdit;

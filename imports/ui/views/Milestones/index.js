@@ -7,16 +7,12 @@ import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
 
-import styles from '../../styles.jsx';
-
 import General from '../../layouts/General/index.js';
 
 import MilestonesFetch from '../../data/Milestones/Fetch/index.js';
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 
 import MilestonesList from './MilestonesList/index.js';
-import LoadButton from './LoadButton.js';
-import DeleteClosedEmptyButton from './DeleteClosedEmptyButton.js';
 
 import MilestonesFacets from './Facets/index.js';
 import MilestonesQuery from './Query/index.js';
@@ -25,6 +21,15 @@ import Actions from './Actions/index.js';
 import OpenClosed from './Charts/OpenClosed/index.js';
 import Mixed from './Charts/Mixed/index.js';
 import Empty from './Charts/Empty/index.js';
+
+const style = {
+    root: {
+        marginRight: '10px'
+    },
+    fullWidth :{
+        width: '100%',
+    }
+};
 
 class Milestones extends Component {
     constructor(props) {
@@ -41,9 +46,9 @@ class Milestones extends Component {
         } else {
             updateQuery(JSON.parse(queryUrl));
         }
-    };
+    }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { updateQuery } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
@@ -54,7 +59,7 @@ class Milestones extends Component {
         if (queryUrl !== oldQueryUrl) {
             updateQuery(JSON.parse(queryUrl));
         }
-    };
+    }
 
     render() {
         const { classes } = this.props;
@@ -115,11 +120,13 @@ class Milestones extends Component {
 }
 
 Milestones.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    updateQuery: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.milestonesView.updateQuery,
 });
 
-export default connect(null, mapDispatch)(withRouter(withStyles(styles)(Milestones)));
+export default connect(null, mapDispatch)(withRouter(withStyles(style)(Milestones)));

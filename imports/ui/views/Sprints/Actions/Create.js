@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -7,16 +6,15 @@ import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right',
     },
-});
+};
 
 class Create extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     createSprint = () => {
@@ -28,16 +26,17 @@ class Create extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.createSprint}>
+                <Button variant="contained" color="primary" onClick={this.createSprint}>
                     Create New Sprint
                 </Button>
             </div>
         )
-    };
+    }
 }
 
 Create.propTypes = {
     classes: PropTypes.object.isRequired,
+    createSprint: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({

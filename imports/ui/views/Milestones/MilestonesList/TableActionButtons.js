@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -6,20 +5,18 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 import Button from '@material-ui/core/Button';
-import Snackbar from "@material-ui/core/Snackbar";
 
-const styles = theme => ({
+const styles = {
     root: {
         textAlign: 'right'
     },
-});
+};
 class TableActionButtons extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         const { loadSuccess, setLoadSuccess } = this.props;
         if (prevProps.loadSuccess === false && loadSuccess === true) {
             //Set timer to actually set back success to false (and remove snackbar)
@@ -27,10 +24,9 @@ class TableActionButtons extends Component {
                 setLoadSuccess(false);
             }, 2000);
         }
-    };
+    }
 
     closeSprint = () => {
-        console.log('closeSprint');
         const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() !== 'closed'));
         setAction('close');
@@ -40,7 +36,6 @@ class TableActionButtons extends Component {
     };
 
     deleteClosedEmpty = () => {
-        console.log('deleteClosedEmpty');
         const { milestonesdata, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying } = this.props;
         setMilestones(milestonesdata.milestones.filter(m => m.state.toLowerCase() === 'closed').filter(m => m.issues.totalCount === 0));
         setAction('delete');
@@ -50,26 +45,38 @@ class TableActionButtons extends Component {
     };
 
     render() {
-        const { classes, loadSuccess, milestonesdata } = this.props;
+        const { classes, milestonesdata } = this.props;
         return (
             <div className={classes.root}>
                 {milestonesdata.states.length > 1 &&
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.closeSprint}>
+                <Button variant="contained" color="primary" onClick={this.closeSprint}>
                     Close All
                 </Button>
                 }
                 {milestonesdata.closedNoIssues.length > 0 &&
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.deleteClosedEmpty}>
+                <Button variant="contained" color="primary" onClick={this.deleteClosedEmpty}>
                     Delete Empty
                 </Button>
                 }
             </div>
         );
-    };
+    }
 }
 
 TableActionButtons.propTypes = {
     classes: PropTypes.object.isRequired,
+
+    loadSuccess: PropTypes.bool.isRequired,
+    milestonesdata: PropTypes.object.isRequired,
+
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadSuccess: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+    setLoadedCount: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

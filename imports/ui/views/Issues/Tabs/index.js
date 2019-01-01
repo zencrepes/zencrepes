@@ -1,26 +1,10 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from "react-redux";
-import Grid from '@material-ui/core/Grid';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
-const styles = theme => ({
-    root: {
-        /*
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        */
-    },
-});
-
 
 class IssuesTabs extends Component {
     constructor (props) {
@@ -33,37 +17,34 @@ class IssuesTabs extends Component {
     };
 
     render() {
-        const { classes, selectedTab } = this.props;
+        const { selectedTab } = this.props;
         return (
-            <div className={classes.root}>
-                <Tabs
-                    value={selectedTab}
-                    onChange={this.handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                >
-                    <Tab label="Summary" />
-                    <Tab label="List" />
-                    <Tab label="Velocity" />
-                    <Tab label="Burndown" />
-                </Tabs>
-            </div>
+            <Tabs
+                value={selectedTab}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+            >
+                <Tab label="Summary" />
+                <Tab label="List" />
+                <Tab label="Velocity" />
+                <Tab label="Burndown" />
+            </Tabs>
         );
     }
 }
 
 IssuesTabs.propTypes = {
-    classes: PropTypes.object.isRequired,
+    selectedTab: PropTypes.number.isRequired,
+    setSelectedTab: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     selectedTab: state.issuesView.selectedTab,
-
 });
 
 const mapDispatch = dispatch => ({
     setSelectedTab: dispatch.issuesView.setSelectedTab,
-
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(IssuesTabs));
+export default connect(mapState, mapDispatch)(IssuesTabs);
