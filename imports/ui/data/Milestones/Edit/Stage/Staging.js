@@ -112,6 +112,7 @@ Staging.propTypes = {
     updateChip: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

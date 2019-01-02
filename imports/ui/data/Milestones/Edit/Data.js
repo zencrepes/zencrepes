@@ -213,6 +213,7 @@ Data.propTypes = {
     setChipRemaining: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({

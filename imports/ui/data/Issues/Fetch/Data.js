@@ -225,6 +225,7 @@ Data.propTypes = {
     loading: PropTypes.bool,
     loadRepos: PropTypes.array,
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,

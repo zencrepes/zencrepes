@@ -157,7 +157,7 @@ FetchReposMilestones.propTypes = {
     loading: PropTypes.bool,
     loadFlag: PropTypes.bool,
     log: PropTypes.object.isRequired,
-
+    client: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,

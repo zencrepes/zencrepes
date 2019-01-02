@@ -102,6 +102,7 @@ Staging.propTypes = {
     verifying: PropTypes.bool.isRequired,
     labels: PropTypes.array.isRequired,
     onSuccess: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
 
     setVerifFlag: PropTypes.func.isRequired,
     setVerifying: PropTypes.func.isRequired,

@@ -114,6 +114,7 @@ FetchOrgRepos.propTypes = {
     loading: PropTypes.bool,
     name: PropTypes.string,
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,
