@@ -102,6 +102,11 @@ App.propTypes = {
     emailVerified: PropTypes.bool.isRequired,
     authenticated: PropTypes.bool.isRequired,
     initApp: PropTypes.func.isRequired,
+
+    loadedIssues: PropTypes.number.isRequired,
+    loadedSources: PropTypes.number.isRequired,
+    loadedLabels: PropTypes.number.isRequired,
+    loadedQueries: PropTypes.number.isRequired,
 };
 
 const getUserName = name => ({

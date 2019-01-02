@@ -79,6 +79,7 @@ FetchRepo.propTypes = {
     orgName: PropTypes.string,
     repoName: PropTypes.string,
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func,
     setLoading: PropTypes.func,

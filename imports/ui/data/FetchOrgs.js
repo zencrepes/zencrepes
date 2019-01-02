@@ -177,6 +177,7 @@ FetchOrgs.propTypes = {
     login: PropTypes.string,
     loading: PropTypes.bool.isRequired,
     loadFlag: PropTypes.bool.isRequired,
+    client: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,

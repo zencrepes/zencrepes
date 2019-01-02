@@ -54,5 +54,33 @@ jobs:
             - './.meteor/local/isopacks'
             - './.meteor/local/plugin-cache'
 
+  deploy:
+      machine:
+        enabled: true
+      steps:
+        - run:
+            name: SSH - Clone Repo locally
+            command: |
+              ssh $SSH_USER@$SSH_HOST "rm GitHub/ -R; mkdir ~/GitHub; cd ~/GitHub; git clone https://github.com/Fgerthoffert/zencrepes.git"
 
+        - run:
+            name: SSH - Build Docker image
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/GitHub/zencrepes/; docker build -t fgerthoffer/zencrepes ."
 
+        - run:
+            name: SSH - Run docker-compose up
+            command: |
+              ssh $SSH_USER@$SSH_HOST "export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; docker-compose up -d"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

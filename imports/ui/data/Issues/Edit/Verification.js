@@ -95,6 +95,7 @@ Verification.propTypes = {
     issues: PropTypes.array,
     onSuccess: PropTypes.func,
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 
     setVerifFlag: PropTypes.func,
     setVerifying: PropTypes.func,
