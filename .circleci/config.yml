@@ -71,7 +71,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; docker-compose up -d"
+              ssh $SSH_USER@$SSH_HOST "cd ~/GitHub/zencrepes/; export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; docker-compose up -d"
 
 workflows:
   version: 2
