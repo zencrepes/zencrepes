@@ -48,6 +48,7 @@
     "fibonacci-fast": "^0.2.0",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.10.0",
+    "has-ansi": "^3.0.0",
     "highcharts": "^5.0.15",
     "highcharts-react-official": "^2.0.0",
     "loglevel": "^1.6.1",
