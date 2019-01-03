@@ -106,7 +106,7 @@ jobs:
 
         - run:
             name: SSH - Build Docker image
-            no_output_timeout: 30m
+            no_output_timeout: 60m
             command: |
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffer/zencrepes ."
 
