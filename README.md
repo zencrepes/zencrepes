@@ -4,7 +4,7 @@ ZenCrepes has been created by a PM (excuse the poor programming) to facilitate p
 
 It focuses on three primary objects
 * __Report and search__: Quickly find a relevant issues based on selected criteria (faceted search). For example `List open defects assigned to John or Max in rock and paper repos` or `Display the team's velocity on paper and scissor repos`.
-* __Scrum opeation__: Identify the amount of work left in a sprint, estimate completion based on past velocity, review repartition of open issues.
+* __Scrum opeation__: Identify the amount of work left in a sprint, estimate completion based on past velocity, review repartition of open issues (by repo, by label, by assignees).
 * __Consistency__: Ensure labels and milestones are consistent across multiple organizations and repositories, clean-up when necessary.
 
 ## How it works
