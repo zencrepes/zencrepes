@@ -24,8 +24,9 @@ alanning:roles
 themeteorchef:bert
 ddp-rate-limiter@1.0.7
 service-configuration@1.0.11
-accounts-github@1.4.2
+accounts-github
 swydo:graphql
 frozeman:persistent-minimongo2
 underscore@1.0.10
 okgrow:analytics
+autopublish

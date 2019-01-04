@@ -54,33 +54,86 @@ jobs:
             - './.meteor/local/isopacks'
             - './.meteor/local/plugin-cache'
 
-  deploy:
+  deploy_prod:
       machine:
         enabled: true
       steps:
         - run:
+            name: SSH - Remove previous copy of the repo if present
+            halt_build_on_fail: false
+            command: |
+              ssh $SSH_USER@$SSH_HOST "rm ~/zencrepes_prod/ -R"
+
+        - run:
             name: SSH - Clone Repo locally
             command: |
-              ssh $SSH_USER@$SSH_HOST "rm GitHub/ -R; mkdir ~/GitHub; cd ~/GitHub; git clone https://github.com/Fgerthoffert/zencrepes.git"
+              ssh $SSH_USER@$SSH_HOST "git clone https://github.com/Fgerthoffert/zencrepes.git ~/zencrepes_prod/"
 
         - run:
             name: SSH - Build Docker image
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/GitHub/zencrepes/; docker build -t fgerthoffer/zencrepes ."
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker build -t fgerthoffer/zencrepes ."
+
+        - run:
+            name: SSH - Run docker-compose down
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker-compose down -f docker-compose_prod.yml"
 
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/GitHub/zencrepes/; export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; docker-compose up -d"
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; docker-compose up -d -f docker-compose_prod.yml"
+
+  deploy_dev:
+      machine:
+        enabled: true
+      steps:
+        - run:
+            name: SSH - Remove previous copy of the repo if present
+            halt_build_on_fail: false
+            command: |
+              ssh $SSH_USER@$SSH_HOST "rm ~/zencrepes_dev/ -R"
+
+        - run:
+            name: SSH - Clone Repo locally
+            command: |
+              ssh $SSH_USER@$SSH_HOST "git clone https://github.com/Fgerthoffert/zencrepes.git ~/zencrepes_dev/"
+
+        - run:
+            name: SSH - Moving to develop branch
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; git checkout develop"
+
+        - run:
+            name: SSH - Build Docker image
+            no_output_timeout: 60m
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffer/zencrepes ."
+
+        - run:
+            name: SSH - Run docker-compose down
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker-compose down -f docker-compose_prod.yml"
+
+        - run:
+            name: SSH - Run docker-compose up
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export METEOR_SETTINGS=$METEOR_SETTINGS_DEV; docker-compose up -d -f docker-compose_prod.yml"
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build
-      - deploy:
+      - deploy_prod:
           requires:
             - build
           filters:
             branches:
               only: master
+      - deploy_dev:
+          requires:
+            - build
+          filters:
+            branches:
+              only: develop
