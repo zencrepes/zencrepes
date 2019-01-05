@@ -114,12 +114,12 @@ jobs:
         - run:
             name: SSH - Run docker-compose down
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker-compose down -f docker-compose_prod.yml"
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker-compose down -f docker-compose_dev.yml"
 
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export METEOR_SETTINGS=$METEOR_SETTINGS_DEV; docker-compose up -d -f docker-compose_prod.yml"
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export METEOR_SETTINGS=$METEOR_SETTINGS_DEV; docker-compose up -d -f docker-compose_dev.yml"
 
 workflows:
   version: 2
