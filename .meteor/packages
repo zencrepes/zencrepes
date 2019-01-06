@@ -20,8 +20,8 @@ shell-server@0.4.0            # Server-side component of the `meteor shell` comm
 insecure@1.0.7                # Allow all DB writes from clients (for prototyping)
 react-meteor-data
 accounts-base@1.4.3
-alanning:roles
-themeteorchef:bert
+#alanning:roles
+#themeteorchef:bert
 ddp-rate-limiter@1.0.7
 service-configuration@1.0.11
 accounts-github
