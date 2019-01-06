@@ -1,8 +1,8 @@
 {
-  "name": "github-agile-view",
+  "name": "zencrepes",
   "private": true,
   "scripts": {
-    "start": "meteor run --settings settings-development.json",
+    "start": "meteor run --settings settings.json",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "lint": "eslint .",
     "pretest": "npm run lint --silent"
