@@ -11,3 +11,4 @@ fi
 # Start app
 echo "=> Starting app on port $PORT..."
 exec "$@"
+
