@@ -77,6 +77,7 @@ jobs:
 
         - run:
             name: SSH - Run docker-compose down
+            halt_build_on_fail: false
             command: |
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker-compose down -f docker-compose_prod.yml"
 
@@ -113,6 +114,7 @@ jobs:
 
         - run:
             name: SSH - Run docker-compose down
+            halt_build_on_fail: false
             command: |
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker-compose down -f docker-compose_dev.yml"
 
