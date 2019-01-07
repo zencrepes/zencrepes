@@ -25,7 +25,7 @@ RUN curl -sL https://install.meteor.com | /bin/sh
 
 RUN cd $APP_SOURCE_DIR && \
     export METEOR_ALLOW_SUPERUSER=true && \
-    meteor npm install && \
+    meteor npm install --production && \
     mkdir -p $APP_BUNDLE_DIR && \
     METEOR_PROFILE=100 METEOR_DEBUG_BUILD=1 meteor build --directory $APP_BUNDLE_DIR --server-only && \
     chown -R node:node $APP_BUNDLE_DIR
