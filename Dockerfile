@@ -4,7 +4,7 @@
 FROM node:8.9.0
 MAINTAINER Francois Gerthoffert <fg@mail.gerthoffert.net>
 
-ENV GOSU_VERSION 1.10
+ENV GOSU_VERSION 1.11
 ENV APP_SOURCE_DIR /opt/meteor/src
 ENV APP_BUNDLE_DIR /opt/meteor/dist
 
@@ -15,7 +15,7 @@ RUN apt-get update
 RUN apt-get install -y apt-transport-https ca-certificates
 RUN apt-get install -y --no-install-recommends curl bzip2 bsdtar build-essential python git wget
 
-RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" && \
+RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-i386" && \
     chmod +x /usr/local/bin/gosu && \
     gosu nobody true && \
     apt-get purge -y --auto-remove wget
