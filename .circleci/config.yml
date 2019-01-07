@@ -73,7 +73,7 @@ jobs:
             name: SSH - Build Docker image
             no_output_timeout: 320m
             command: |
-              ssh -vv $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker build -t fgerthoffer/zencrepes ."
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker build -t fgerthoffer/zencrepes ."
 
         - run:
             name: SSH - Run docker-compose down
@@ -110,7 +110,7 @@ jobs:
             name: SSH - Build Docker image
             no_output_timeout: 320m
             command: |
-              ssh -vv $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffer/zencrepes ."
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffer/zencrepes ."
 
         - run:
             name: SSH - Run docker-compose down
