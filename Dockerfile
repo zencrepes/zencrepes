@@ -32,6 +32,7 @@ RUN cd $APP_SOURCE_DIR && \
 
 #COPY $APP_SOURCE_DIR/entrypoint.sh $APP_BUNDLE_DIR/bundle/entrypoint.sh
 RUN mv $APP_SOURCE_DIR/entrypoint.sh $APP_BUNDLE_DIR/bundle/entrypoint.sh
+RUN chmod +x $APP_BUNDLE_DIR/bundle/entrypoint.sh
 
 # Default values for Meteor environment variables
 ENV ROOT_URL http://localhost
