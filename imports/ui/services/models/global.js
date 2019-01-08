@@ -1,5 +1,6 @@
 //https://github.com/pimterry/loglevel
 import * as log from 'loglevel';
+import { Meteor } from 'meteor/meteor';
 
 export default {
     state: {
