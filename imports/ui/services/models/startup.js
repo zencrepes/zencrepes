@@ -1,10 +1,10 @@
 export default {
     state: {
-        loadedIssues: false,
-        loadedSources: false,
-        loadedLabels: false,
-        loadedQueries: false,
-        loadedMilestones: false,
+        loadedIssues: null,
+        loadedSources: null,
+        loadedLabels: null,
+        loadedQueries: null,
+        loadedMilestones: null,
     },
     reducers: {
         setLoadedIssues(state, payload) {return { ...state, loadedIssues: payload };},

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
+//import { Roles } from 'meteor/alanning:roles';
 
 import PropTypes from 'prop-types';
 import autoBind from 'react-autobind';
@@ -51,8 +51,8 @@ class App extends Component {
 
     render() {
         const { props, state, setAfterLoginPath } = this;
-        const {loadedIssues, loadedSources, loadedLabels, loadedQueries} = this.props;
-        if ((!loadedIssues || !loadedSources || !loadedLabels || !loadedQueries) && Meteor.user() !== null) {
+        const {loadedIssues, loadedSources, loadedLabels, loadedQueries, loadedMilestones} = this.props;
+        if ((loadedIssues === null || loadedSources === null || loadedLabels === null|| loadedQueries === null || loadedMilestones === null) && Meteor.user() !== null) {
             return (
                 <div>
                     <Startup />
@@ -62,28 +62,26 @@ class App extends Component {
             return (
                 <ApolloProviderGithub>
                     <UsersFetch />
-                    {!props.loading ? (
-                        <div className="App">
-                            <ErrorBoundary>
-                                <Router>
-                                    <Switch>
-                                        <Route exact name="index" path="/" component={Index} />
-                                        <Public path="/login" component={Login} {...props} {...state} />
-                                        <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/milestones/edit" component={MilestoneEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                        <Public exact path="/terms" component={Terms} {...props} {...state} />
-                                        <Public exact path="/about" component={About} {...props} {...state} />
-                                    </Switch>
-                                </Router>
-                            </ErrorBoundary>
-                        </div>
-                    ) : ''}
+                    <div className="App">
+                        <ErrorBoundary>
+                            <Router>
+                                <Switch>
+                                    <Route exact name="index" path="/" component={Index} />
+                                    <Public path="/login" component={Login} {...props} {...state} />
+                                    <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/milestones/edit" component={MilestoneEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Public exact path="/terms" component={Terms} {...props} {...state} />
+                                    <Public exact path="/about" component={About} {...props} {...state} />
+                                </Switch>
+                            </Router>
+                        </ErrorBoundary>
+                    </div>
                 </ApolloProviderGithub>
             );
         }
@@ -96,17 +94,32 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-    loading: PropTypes.bool.isRequired,
     userId: PropTypes.string,
     emailAddress: PropTypes.string,
     emailVerified: PropTypes.bool.isRequired,
     authenticated: PropTypes.bool.isRequired,
     initApp: PropTypes.func.isRequired,
 
-    loadedIssues: PropTypes.number.isRequired,
-    loadedSources: PropTypes.number.isRequired,
-    loadedLabels: PropTypes.number.isRequired,
-    loadedQueries: PropTypes.number.isRequired,
+    loadedIssues: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.bool,
+    ]),
+    loadedSources: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.bool,
+    ]),
+    loadedLabels: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.bool,
+    ]),
+    loadedQueries: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.bool,
+    ]),
+    loadedMilestones: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.bool,
+    ]),
 };
 
 const getUserName = name => ({
@@ -119,6 +132,7 @@ const mapState = state => ({
     loadedSources: state.startup.loadedSources,
     loadedLabels: state.startup.loadedLabels,
     loadedQueries: state.startup.loadedQueries,
+    loadedMilestones: state.startup.loadedMilestones,
 });
 
 const mapDispatch = dispatch => ({
@@ -131,16 +145,13 @@ export default
             const loggingIn = Meteor.loggingIn();
             const user = Meteor.user();
             const userId = Meteor.userId();
-            const loading = !Roles.subscription.ready();
             const name = user && user.profile && user.profile.name && getUserName(user.profile.name);
             const emailAddress = user && user.emails && user.emails[0].address;
 
             return {
-                loading,
                 loggingIn,
                 authenticated: !loggingIn && !!userId,
                 name: name || emailAddress,
-                roles: !loading && Roles.getRolesForUser(userId),
                 userId,
                 emailAddress,
                 emailVerified: user && user.emails ? user && user.emails && user.emails[0].verified : true,

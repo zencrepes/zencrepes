@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-
 import {
     Settings,
     Calendar,
@@ -23,7 +22,7 @@ import {
 } from 'mdi-material-ui';
 
 import UserMenu from './UserMenu.js';
-
+import {connect} from "react-redux";
 
 const style = theme => ({
     root: {
@@ -48,11 +47,11 @@ class Header extends Component {
     }
 
     render() {
-        const { classes, authenticated } = this.props;
+        const { classes, authenticated, menus } = this.props;
 
         const routes = [
             {path: '/issues', icon: (<ViewDashboard className={classes.leftIcon} />), text: 'Issues', key: 'issues'},
-            {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprint'},
+            {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprints'},
             {path: '/labels', icon: (<Label className={classes.leftIcon} />), text: 'Labels', key: 'labels'},
             {path: '/milestones', icon: (<Calendar className={classes.leftIcon} />), text: 'Milestones', key: 'milestones'},
             {path: '/settings', icon: (<Settings className={classes.leftIcon} />), text: 'Settings', key: 'settings'},
@@ -84,7 +83,13 @@ class Header extends Component {
                                             alignItems="flex-start"
                                             spacing={8}
                                         >
-                                            {routes.map((route) => {
+                                            {routes.filter((route) => {
+                                                if (menus[route.key] !== undefined && menus[route.key] === true) {
+                                                    return true;
+                                                } else {
+                                                    return false;
+                                                }
+                                            }).map((route) => {
                                                 let buttonColor = 'default';
                                                 if (route.key === 'TODO') { // Implement color selection based on path
                                                     buttonColor = 'primary';
@@ -117,15 +122,22 @@ class Header extends Component {
 Header.propTypes = {
     classes: PropTypes.object.isRequired,
     authenticated: PropTypes.bool,
+    menus: PropTypes.object,
 };
 
-export default (
-    withTracker(() => {
-        const loggingIn = Meteor.loggingIn();
-        const userId = Meteor.userId();
+const mapState = state => ({
+    menus: state.global.menus,
+});
 
-        return {
-            authenticated: !loggingIn && !!userId,
-        };
-    })
-    )(withRouter(withStyles(style)(Header)));
+export default
+    connect(mapState, null)(
+        withTracker(() => {
+            const loggingIn = Meteor.loggingIn();
+            const userId = Meteor.userId();
+
+            return {
+                authenticated: !loggingIn && !!userId,
+            };
+        })(withRouter(withStyles(style)(Header)))
+    );
+

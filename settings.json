@@ -1,7 +1,14 @@
 {
   "public": {
     "analyticsSettings": {
-      "Google Analytics" : {"trackingId": "UA-1488177-24"}
+      "Google Analytics" : {"trackingId": "ANALYTICS_ID"}
+    },
+    "menus": {
+      "issues": true,
+      "sprints": true,
+      "milestones": true,
+      "labels": false,
+      "settings": true
     }
   },
   "private": {

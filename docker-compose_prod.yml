@@ -1,16 +1,16 @@
-  zencrepes:
-    image: fgerthoffer/zencrepes
+  zencrepes_prod:
+    image: fgerthoffert/zencrepes
     ports:
       - "8000:3000"
     links:
-      - mongo
+      - mongo_prod
     environment:
       - ROOT_URL=https://zencrepes.io
       - STARTUP_DELAY=20
       - METEOR_SETTINGS=$METEOR_SETTINGS
-      - MONGO_URL=mongodb://mongo:27017/meteor
+      - MONGO_URL=mongodb://mongo_prod:27017/meteor
 
-  mongo:
+  mongo_prod:
     image: mongo:latest
     command: mongod --storageEngine=wiredTiger
 
