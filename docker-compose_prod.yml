@@ -1,5 +1,5 @@
   zencrepes_prod:
-    image: fgerthoffer/zencrepes
+    image: fgerthoffert/zencrepes
     ports:
       - "8000:3000"
     links:
@@ -13,6 +13,4 @@
   mongo_prod:
     image: mongo:latest
     command: mongod --storageEngine=wiredTiger
-    ports:
-      - "27017:27017"
 
