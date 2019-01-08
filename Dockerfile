@@ -25,11 +25,13 @@ RUN curl -sL https://install.meteor.com | /bin/sh
 
 RUN cd $APP_SOURCE_DIR && \
     export METEOR_ALLOW_SUPERUSER=true && \
-    meteor npm install --production && \
+    meteor npm install && \
     mkdir -p $APP_BUNDLE_DIR && \
     METEOR_PROFILE=100 METEOR_DEBUG_BUILD=1 meteor build --directory $APP_BUNDLE_DIR --server-only && \
+    cd $APP_BUNDLE_DIR/bundle/programs/server/ && \
+    meteor npm install --production --verbose && \
     chown -R node:node $APP_BUNDLE_DIR
-
+    
 #COPY $APP_SOURCE_DIR/entrypoint.sh $APP_BUNDLE_DIR/bundle/entrypoint.sh
 RUN mv $APP_SOURCE_DIR/entrypoint.sh $APP_BUNDLE_DIR/bundle/entrypoint.sh
 RUN chmod +x $APP_BUNDLE_DIR/bundle/entrypoint.sh
