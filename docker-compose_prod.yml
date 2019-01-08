@@ -8,7 +8,7 @@
       - ROOT_URL=https://zencrepes.io
       - STARTUP_DELAY=20
       - METEOR_SETTINGS=$METEOR_SETTINGS
-      - MONGO_URL=mongodb://mongo:27017/meteor
+      - MONGO_URL=mongodb://mongo_prod:27017/meteor
 
   mongo_prod:
     image: mongo:latest
