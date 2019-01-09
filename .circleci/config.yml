@@ -117,9 +117,15 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; git checkout develop"
 
         - run:
-            name: SSH - Prepare settings and load environment variable
+            name: SSH - Update settings.json with environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "echo $DEV_GOOGLE_ANALYTICS > ./test.log && sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_dev/settings.json && export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json)"
+              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_dev/settings.json && export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json)"
+
+        - run:
+            name: SSH - Load settings.json in environment variable
+            command: |
+              #ssh $SSH_USER@$SSH_HOST "export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json)"
+              ssh $SSH_USER@$SSH_HOST "export DEV_METEOR_SETTINGS=`cat ~/zencrepes_dev/settings.json`"
 
         - run:
             name: SSH - Build Docker image
