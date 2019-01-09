@@ -103,7 +103,8 @@ jobs:
         - run:
             name: Setup environment variable
             command: |
-              echo "export APP_MENUS=`openssl enc -base64 -d \<<< $DEV_APP_MENUS`" >> $BASH_ENV  
+              echo "export APP_MENUS=`openssl enc -base64 -d \<<< $DEV_APP_MENUS`" >> $BASH_ENV
+              echo $BASH_ENV
               
         - run:
             name: SSH - Remove previous copy of the repo if present
