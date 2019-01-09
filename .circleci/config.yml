@@ -124,8 +124,8 @@ jobs:
         - run:
             name: SSH - Load settings.json in environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "export DEV_METEOR_SETTINGS=\$(cat ~/zencrepes_dev/settings.json); echo $DEV_METEOR_SETTINGS >> ~/dev_export.log"
-              #ssh $SSH_USER@$SSH_HOST bash -c "export DEV_METEOR_SETTINGS=$( (cat ~/zencrepes_dev/settings.json) )"
+              ssh $SSH_USER@$SSH_HOST 'export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); echo $DEV_METEOR_SETTINGS >> ~/dev_export.log'
+              #ssh $SSH_USER@$SSH_HOST bash -c "export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json)"
 
         - run:
             name: SSH - Build Docker image
