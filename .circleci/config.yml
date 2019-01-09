@@ -70,12 +70,6 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "git clone https://github.com/Fgerthoffert/zencrepes.git ~/zencrepes_prod/"
 
         - run:
-            name: SSH - Build Docker image
-            no_output_timeout: 320m
-            command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker build -t fgerthoffert/zencrepes ."
-
-        - run:
             name: SSH - Prepare settings and load environment variable
             command: |
               ssh $SSH_USER@$SSH_HOST bash -c '
@@ -84,6 +78,12 @@ jobs:
                 sed -i "s/METEOR_GITHUB_CLIENTID/$PROD_METEOR_GITHUB_CLIENTID/gi" settings.json
                 sed -i "s/METEOR_GITHUB_CLIENTSECRET/$PROD_METEOR_GITHUB_CLIENTSECRET/gi" settings.json
                 export PROD_METEOR_SETTINGS=$(cat ./settings.json)'
+
+        - run:
+            name: SSH - Build Docker image
+            no_output_timeout: 320m
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker build -t fgerthoffert/zencrepes ."
 
         - run:
             name: SSH - Run docker-compose down
@@ -117,12 +117,6 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; git checkout develop"
 
         - run:
-            name: SSH - Build Docker image
-            no_output_timeout: 320m
-            command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffert/zencrepes ."
-
-        - run:
             name: SSH - Prepare settings and load environment variable
             command: |
               ssh $SSH_USER@$SSH_HOST bash -c '
@@ -131,6 +125,12 @@ jobs:
                 sed -i "s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi" settings.json
                 sed -i "s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi" settings.json
                 export DEV_METEOR_SETTINGS=$(cat ./settings.json)'
+
+        - run:
+            name: SSH - Build Docker image
+            no_output_timeout: 320m
+            command: |
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffert/zencrepes ."
 
         - run:
             name: SSH - Run docker-compose down
