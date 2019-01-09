@@ -53,6 +53,19 @@ A DockerFile (simplified) and docker-compose.yml are provided in the repo, makin
 
 You can also use the circleci config provided, you would need to populate circleci environment variables $METEOR_SETTINGS_DEV and/or $METEOR_SETTINGS_PROD with the content of settings.json as a 1-liner.
 
+### Configuration
+
+#### Menus
+```json
+{
+      "issues": true,
+      "sprints": true,
+      "milestones": true,
+      "labels": false,
+      "settings": true
+    }
+```
+
 ## Contribute
 
 I'd be more than happy to get feedback and external contributions, just submit a PR with your requested changes. Feel free to ping me on [slack](http://slack.overture.bio/) first.
