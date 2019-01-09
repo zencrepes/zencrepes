@@ -94,7 +94,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; export PROD_METEOR_SETTINGS=$(cat ~/zencrepes_prod/settings.json);  docker-compose -f docker-compose_prod.yml up -d "
+              ssh $SSH_USER@$SSH_HOST 'cd ~/zencrepes_prod/; export PROD_METEOR_SETTINGS=$(cat ~/zencrepes_prod/settings.json);  docker-compose -f docker-compose_prod.yml up -d '
 
   deploy_dev:
       machine:
@@ -141,7 +141,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); docker-compose -f docker-compose_dev.yml up -d"
+              ssh $SSH_USER@$SSH_HOST 'cd ~/zencrepes_dev/; export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); docker-compose -f docker-compose_dev.yml up -d'
 
 workflows:
   version: 2
