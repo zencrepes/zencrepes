@@ -119,13 +119,12 @@ jobs:
         - run:
             name: SSH - Update settings.json with environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_dev/settings.json && export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json)"
+              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_dev/settings.json"
 
         - run:
             name: SSH - Load settings.json in environment variable
             command: |
               ssh $SSH_USER@$SSH_HOST 'export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); echo $DEV_METEOR_SETTINGS >> ~/dev_export.log'
-              #ssh $SSH_USER@$SSH_HOST bash -c "export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json)"
 
         - run:
             name: SSH - Build Docker image
@@ -142,7 +141,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; echo $DEV_METEOR_SETTINGS >> ./METEOR_SETTINGS_dev.log; docker-compose -f docker-compose_dev.yml up -d"
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); docker-compose -f docker-compose_dev.yml up -d"
 
 workflows:
   version: 2
