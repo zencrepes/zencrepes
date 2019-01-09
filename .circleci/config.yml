@@ -72,7 +72,7 @@ jobs:
         - run:
             name: SSH - Update settings.json with environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$PROD_GOOGLE_ANALYTICS/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$PROD_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$PROD_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_APP_MENUS/$PROD_APP_MENUS/gi\" ~/zencrepes_dev/settings.json"
+              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$PROD_GOOGLE_ANALYTICS/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$PROD_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$PROD_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_APP_MENUS/$PROD_APP_MENUS/gi\" ~/zencrepes_prod/settings.json"
 
         - run:
             name: SSH - Load settings.json in environment variable
