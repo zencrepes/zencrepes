@@ -1,7 +1,7 @@
 {
   "public": {
     "analyticsSettings": {
-      "Google Analytics" : {"trackingId": "ANALYTICS_ID"}
+      "Google Analytics" : {"trackingId": "GOOGLE_ANALYTICS"}
     },
     "menus": {
       "issues": true,
@@ -15,8 +15,8 @@
     "MAIL_URL": "",
     "OAuth": {
       "github": {
-        "clientId": "",
-        "secret": "",
+        "clientId": "METEOR_GITHUB_CLIENTID",
+        "secret": "METEOR_GITHUB_CLIENTSECRET",
         "loginStyle": "popup"
       }
     }

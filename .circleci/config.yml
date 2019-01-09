@@ -76,6 +76,16 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; docker build -t fgerthoffert/zencrepes ."
 
         - run:
+            name: SSH - Prepare settings and load environment variable
+            command: |
+              ssh $SSH_USER@$SSH_HOST bash -c '
+                cd ~/zencrepes_prod/
+                sed -i "s/GOOGLE_ANALYTICS/c \\$PROD_GOOGLE_ANALYTICS/g" settings.json
+                sed -i "s/METEOR_GITHUB_CLIENTID/c \\$PROD_METEOR_GITHUB_CLIENTID/g" settings.json
+                sed -i "s/METEOR_GITHUB_CLIENTSECRET/c \\$PROD_METEOR_GITHUB_CLIENTSECRET/g" settings.json
+                export PROD_METEOR_SETTINGS=$(cat ./settings.json)'
+
+        - run:
             name: SSH - Run docker-compose down
             halt_build_on_fail: false
             command: |
@@ -84,7 +94,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; echo $METEOR_SETTINGS_PROD >> /tmp/METEOR_SETTINGS_prod; docker-compose -f docker-compose_prod.yml up -d "
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; echo $PROD_METEOR_SETTINGS >> ./METEOR_SETTINGS_prod.log; docker-compose -f docker-compose_prod.yml up -d "
 
   deploy_dev:
       machine:
@@ -113,6 +123,16 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; docker build -t fgerthoffert/zencrepes ."
 
         - run:
+            name: SSH - Prepare settings and load environment variable
+            command: |
+              ssh $SSH_USER@$SSH_HOST bash -c '
+                cd ~/zencrepes_dev/
+                sed -i "s/GOOGLE_ANALYTICS/c \\$DEV_GOOGLE_ANALYTICS/g" settings.json
+                sed -i "s/METEOR_GITHUB_CLIENTID/c \\$DEV_METEOR_GITHUB_CLIENTID/g" settings.json
+                sed -i "s/METEOR_GITHUB_CLIENTSECRET/c \\$DEV_METEOR_GITHUB_CLIENTSECRET/g" settings.json
+                export DEV_METEOR_SETTINGS=$(cat ./settings.json)'
+
+        - run:
             name: SSH - Run docker-compose down
             halt_build_on_fail: false
             command: |
@@ -121,7 +141,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export METEOR_SETTINGS=$METEOR_SETTINGS_DEV; echo $METEOR_SETTINGS_DEV >> /tmp/METEOR_SETTINGS_dev; docker-compose -f docker-compose_dev.yml up -d"
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; echo $DEV_METEOR_SETTINGS >> ./METEOR_SETTINGS_dev.log; docker-compose -f docker-compose_dev.yml up -d"
 
 workflows:
   version: 2
