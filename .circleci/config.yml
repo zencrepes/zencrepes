@@ -70,6 +70,16 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "git clone https://github.com/Fgerthoffert/zencrepes.git ~/zencrepes_prod/"
 
         - run:
+            name: SSH - Update settings.json with environment variable
+            command: |
+              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$PROD_GOOGLE_ANALYTICS/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$PROD_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$PROD_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_prod/settings.json"
+
+        - run:
+            name: SSH - Load settings.json in environment variable
+            command: |
+              ssh $SSH_USER@$SSH_HOST 'export PROD_METEOR_SETTINGS=$(cat ~/zencrepes_prod/settings.json); echo $PROD_METEOR_SETTINGS >> ~/prod_export.log'
+
+        - run:
             name: SSH - Build Docker image
             no_output_timeout: 320m
             command: |
@@ -84,7 +94,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; export METEOR_SETTINGS=$METEOR_SETTINGS_PROD; echo $METEOR_SETTINGS_PROD >> /tmp/METEOR_SETTINGS_prod; docker-compose -f docker-compose_prod.yml up -d "
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; export PROD_METEOR_SETTINGS=$(cat ~/zencrepes_prod/settings.json);  docker-compose -f docker-compose_prod.yml up -d "
 
   deploy_dev:
       machine:
@@ -107,6 +117,16 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; git checkout develop"
 
         - run:
+            name: SSH - Update settings.json with environment variable
+            command: |
+              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_dev/settings.json"
+
+        - run:
+            name: SSH - Load settings.json in environment variable
+            command: |
+              ssh $SSH_USER@$SSH_HOST 'export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); echo $DEV_METEOR_SETTINGS >> ~/dev_export.log'
+
+        - run:
             name: SSH - Build Docker image
             no_output_timeout: 320m
             command: |
@@ -121,7 +141,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export METEOR_SETTINGS=$METEOR_SETTINGS_DEV; echo $METEOR_SETTINGS_DEV >> /tmp/METEOR_SETTINGS_dev; docker-compose -f docker-compose_dev.yml up -d"
+              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); docker-compose -f docker-compose_dev.yml up -d"
 
 workflows:
   version: 2

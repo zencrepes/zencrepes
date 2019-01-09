@@ -7,7 +7,7 @@
     environment:
       - ROOT_URL=https://zencrepes.io
       - STARTUP_DELAY=20
-      - METEOR_SETTINGS=$METEOR_SETTINGS
+      - METEOR_SETTINGS=$PROD_METEOR_SETTINGS
       - MONGO_URL=mongodb://mongo_prod:27017/meteor
 
   mongo_prod:
