@@ -119,7 +119,7 @@ jobs:
         - run:
             name: SSH - Prepare settings and load environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "echo $DEV_GOOGLE_ANALYTICS > ./test.log && cd ~/zencrepes_dev/ && sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" settings.json && export DEV_METEOR_SETTINGS=$(cat ./settings.json)'
+              ssh $SSH_USER@$SSH_HOST "echo $DEV_GOOGLE_ANALYTICS > ./test.log && cd ~/zencrepes_dev/ && sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" settings.json && export DEV_METEOR_SETTINGS=$(cat ./settings.json)"
 
         - run:
             name: SSH - Build Docker image
