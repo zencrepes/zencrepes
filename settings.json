@@ -3,7 +3,7 @@
     "analyticsSettings": {
       "Google Analytics" : {"trackingId": "GOOGLE_ANALYTICS"}
     },
-    "menus": METEOR_APP_MENUS
+    "menus": {}
   },
   "private": {
     "MAIL_URL": "",
