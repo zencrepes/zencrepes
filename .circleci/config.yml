@@ -103,7 +103,8 @@ jobs:
         - run:
             name: Setup environment variable
             command: |
-              echo "export APP_MENUS=`openssl enc -base64 -d \<<< $DEV_APP_MENUS`" >> $BASH_ENV
+              echo $DEV_APPS_MENU
+              echo "export APP_MENUS=`echo $DEV_APPS_MENU | base64 --decode`" >> $BASH_ENV
               cat $BASH_ENV
               
         - run:
