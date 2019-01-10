@@ -103,7 +103,7 @@ jobs:
         - run:
             name: Setup environment variable
             command: |
-              echo $DEV_APPS_MENU
+              echo $DEV_APPS_MENU >> $BASH_ENV && cat $BASH_ENV
               
         - run:
             name: SSH - Remove previous copy of the repo if present
