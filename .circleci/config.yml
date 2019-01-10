@@ -103,9 +103,7 @@ jobs:
         - run:
             name: Setup environment variable
             command: |
-              echo $DEV_APPS_MENU
-              echo "export APP_MENUS=`echo $DEV_APPS_MENU | base64 --decode`" >> $BASH_ENV
-              cat $BASH_ENV
+              APP_MENUS = $DEV_APPS_MENU | base64 --decode && echo $APP_MENUS
               
         - run:
             name: SSH - Remove previous copy of the repo if present
@@ -126,7 +124,7 @@ jobs:
         - run:
             name: SSH - Update settings.json with environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\"  ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_APP_MENUS/$APP_MENUS/gi\" ~/zencrepes_dev/settings.json"
+              APP_MENUS = $DEV_APPS_MENU | base64 --decode && ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\"  ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_APP_MENUS/$APP_MENUS/gi\" ~/zencrepes_dev/settings.json"
 
         - run:
             name: SSH - Load settings.json in environment variable
