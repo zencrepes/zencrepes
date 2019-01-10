@@ -123,6 +123,11 @@ jobs:
               ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\"  ~/zencrepes_dev/settings.json"
 
         - run:
+            name: SSH - Update settings.json with menus content
+            command: |
+              ssh $SSH_USER@$SSH_HOST "jq --argfile menusfile ~/zencrepes_dev/settings_dev_menus.json '.public.menus = $menusfile'  ~/zencrepes_dev/settings.json"
+
+        - run:
             name: SSH - Load settings.json in environment variable
             command: |
               ssh $SSH_USER@$SSH_HOST 'export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); echo $DEV_METEOR_SETTINGS >> ~/dev_export.log'
