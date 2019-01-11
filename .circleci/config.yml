@@ -59,6 +59,11 @@ jobs:
         enabled: true
       steps:
         - run:
+            name: SSH - Installed build dependencies dependencies
+            command: |
+              ssh $SSH_USER@$SSH_HOST "sudo apt-get install -y jq moreutils"
+
+        - run:
             name: SSH - Remove previous copy of the repo if present
             halt_build_on_fail: false
             command: |
@@ -73,6 +78,11 @@ jobs:
             name: SSH - Update settings.json with environment variable
             command: |
               ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$PROD_GOOGLE_ANALYTICS/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$PROD_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_prod/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$PROD_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_prod/settings.json"
+
+        - run:
+            name: SSH - Update settings.json with menus content
+            command: |
+              ssh $SSH_USER@$SSH_HOST "jq --argfile menusfile ~/zencrepes_prod/settings_prod_menus.json '.public.menus = \$menusfile'  ~/zencrepes_prod/settings.json|sponge ~/zencrepes_prod/settings.json"
 
         - run:
             name: SSH - Load settings.json in environment variable
@@ -94,12 +104,17 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_prod/; export PROD_METEOR_SETTINGS=$(cat ~/zencrepes_prod/settings.json);  docker-compose -f docker-compose_prod.yml up -d "
+              ssh $SSH_USER@$SSH_HOST 'cd ~/zencrepes_prod/; export PROD_METEOR_SETTINGS=$(cat ~/zencrepes_prod/settings.json);  docker-compose -f docker-compose_prod.yml up -d '
 
   deploy_dev:
       machine:
         enabled: true
       steps:
+        - run:
+            name: SSH - Installed build dependencies dependencies
+            command: |
+              ssh $SSH_USER@$SSH_HOST "sudo apt-get install -y jq moreutils"
+
         - run:
             name: SSH - Remove previous copy of the repo if present
             halt_build_on_fail: false
@@ -119,7 +134,12 @@ jobs:
         - run:
             name: SSH - Update settings.json with environment variable
             command: |
-              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\" ~/zencrepes_dev/settings.json"
+              ssh $SSH_USER@$SSH_HOST "sed -i \"s/GOOGLE_ANALYTICS/$DEV_GOOGLE_ANALYTICS/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTID/$DEV_METEOR_GITHUB_CLIENTID/gi\" ~/zencrepes_dev/settings.json && sed -i \"s/METEOR_GITHUB_CLIENTSECRET/$DEV_METEOR_GITHUB_CLIENTSECRET/gi\"  ~/zencrepes_dev/settings.json"
+
+        - run:
+            name: SSH - Update settings.json with menus content
+            command: |
+              ssh $SSH_USER@$SSH_HOST "jq --argfile menusfile ~/zencrepes_dev/settings_dev_menus.json '.public.menus = \$menusfile'  ~/zencrepes_dev/settings.json|sponge ~/zencrepes_dev/settings.json"
 
         - run:
             name: SSH - Load settings.json in environment variable
@@ -141,7 +161,7 @@ jobs:
         - run:
             name: SSH - Run docker-compose up
             command: |
-              ssh $SSH_USER@$SSH_HOST "cd ~/zencrepes_dev/; export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); docker-compose -f docker-compose_dev.yml up -d"
+              ssh $SSH_USER@$SSH_HOST 'cd ~/zencrepes_dev/; export DEV_METEOR_SETTINGS=$(cat ~/zencrepes_dev/settings.json); docker-compose -f docker-compose_dev.yml up -d'
 
 workflows:
   version: 2

@@ -3,13 +3,7 @@
     "analyticsSettings": {
       "Google Analytics" : {"trackingId": "GOOGLE_ANALYTICS"}
     },
-    "menus": {
-      "issues": true,
-      "sprints": true,
-      "milestones": true,
-      "labels": false,
-      "settings": true
-    }
+    "menus": {}
   },
   "private": {
     "MAIL_URL": "",
