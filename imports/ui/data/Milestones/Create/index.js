@@ -10,7 +10,7 @@ import Notifications from './Notifications.js';
 
 import RefreshSnackbar from './RefreshSnackbar/index.js';
 
-class MilestonesEdit extends Component {
+class MilestonesCreate extends Component {
     constructor(props) {
         super(props);
     }
@@ -34,8 +34,8 @@ class MilestonesEdit extends Component {
     }
 }
 
-MilestonesEdit.propTypes = {
-    loadModal: PropTypes.bool.isRequired,
+MilestonesCreate.propTypes = {
+    loadModal: PropTypes.bool,
 };
 
-export default MilestonesEdit;
+export default MilestonesCreate;

@@ -7,7 +7,7 @@ import {
     TableHeaderRow,
 } from '@devexpress/dx-react-grid-material-ui';
 
-class AsisgneesTable extends Component {
+class AssigneesTable extends Component {
     constructor(props) {
         super(props);
 
@@ -29,7 +29,7 @@ class AsisgneesTable extends Component {
         const { columns, tableColumnExtensions} = this.state;
 
         return (
-            <div className={classes.root}>
+            <React.Fragment>
                 <Grid
                     rows={assignees}
                     columns={columns}
@@ -38,15 +38,14 @@ class AsisgneesTable extends Component {
                     <TableHeaderRow />
                 </Grid>
                 <i>*Issues with multiple assignees are counted multiple times</i>
-            </div>
+            </React.Fragment>
         );
     }
 }
 
-AsisgneesTable.propTypes = {
-    classes: PropTypes.object.isRequired,
+AssigneesTable.propTypes = {
     assignees: PropTypes.array.isRequired,
 };
 
 
-export default AsisgneesTable;
+export default AssigneesTable;

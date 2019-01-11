@@ -53,7 +53,7 @@ export default {
 
         milestones: [],
 
-        velocity: [],
+        velocity: {},
 
         openCreateSprint: false,
         createSprintName: '',
@@ -146,7 +146,7 @@ export default {
             this.setLabels([]);
             this.setIssues([]);
             this.setRepositories([]);
-            this.setVelocity([]);
+            this.setVelocity({});
             this.setAssignees([]);
             this.setMilestones([]);
 

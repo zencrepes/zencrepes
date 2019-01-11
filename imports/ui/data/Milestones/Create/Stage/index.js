@@ -56,7 +56,7 @@ Stage.propTypes = {
 
     stageFlag: PropTypes.bool.isRequired,
     repos: PropTypes.array.isRequired,
-    milestoneTitle: PropTypes.string.isRequired,
+    milestoneTitle: PropTypes.string,
 
     setStageFlag: PropTypes.func.isRequired,
     setRepos: PropTypes.func.isRequired,

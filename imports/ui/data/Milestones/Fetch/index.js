@@ -30,7 +30,7 @@ class MilestonesFetch extends Component {
 }
 
 MilestonesFetch.propTypes = {
-    loadModal: PropTypes.bool.isRequired,
+    loadModal: PropTypes.bool,
 };
 
 export default MilestonesFetch;

@@ -48,7 +48,7 @@ class Actions extends Component {
 Actions.propTypes = {
     classes: PropTypes.object.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
-    setLoadRepos: PropTypes.object.isRequired,
+    setLoadRepos: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({

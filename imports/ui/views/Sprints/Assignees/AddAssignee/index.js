@@ -46,7 +46,6 @@ class AddAssignee extends Component {
 }
 
 AddAssignee.propTypes = {
-    classes: PropTypes.object.isRequired,
     openAddAssignee: PropTypes.bool.isRequired,
     setOpenAddAssignee: PropTypes.func.isRequired,
 };

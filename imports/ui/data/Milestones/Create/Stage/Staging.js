@@ -176,7 +176,7 @@ class Staging extends Component {
 Staging.propTypes = {
     verifFlag: PropTypes.bool.isRequired,
     verifying: PropTypes.bool.isRequired,
-    milestoneTitle: PropTypes.string.isRequired,
+    milestoneTitle: PropTypes.string,
     repos: PropTypes.array.isRequired,
     onStagingSuccess: PropTypes.func.isRequired,
 

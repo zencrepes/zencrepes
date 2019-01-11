@@ -139,9 +139,9 @@ Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     onSuccess: PropTypes.func.isRequired,
-    milestoneTitle: PropTypes.string.isRequired,
-    milestoneDescription: PropTypes.string.isRequired,
-    milestoneDueDate: PropTypes.string.isRequired,
+    milestoneTitle: PropTypes.string,
+    milestoneDescription: PropTypes.string,
+    milestoneDueDate: PropTypes.string,
     repos: PropTypes.array.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
