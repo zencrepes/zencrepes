@@ -37,7 +37,7 @@ class RefreshSnackbar extends Component {
 
 RefreshSnackbar.propTypes = {
     verifying: PropTypes.bool.isRequired,
-    verifyingMsg: PropTypes.string.isRequired,
+    verifyingMsg: PropTypes.string,
     verifFlag: PropTypes.bool.isRequired,
 };
 
