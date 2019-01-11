@@ -26,7 +26,7 @@ class OpenClosed extends Component {
 }
 
 OpenClosed.propTypes = {
-    milestones: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({

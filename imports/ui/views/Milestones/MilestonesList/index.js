@@ -223,7 +223,7 @@ MilestonesList.propTypes = {
     classes: PropTypes.object.isRequired,
     milestones: PropTypes.array.isRequired,
     query: PropTypes.object.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
 };
 
 

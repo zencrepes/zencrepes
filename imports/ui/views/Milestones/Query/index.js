@@ -50,17 +50,6 @@ class MilestonesQuery extends Component {
         this.setState({ openManageQueryDialog: false });
     };
 
-    saveQuery = (queryName) => {
-        const { saveQuery } = this.props;
-        saveQuery(queryName);
-        this.setState({ openSaveQueryDialog: false });
-    };
-
-    deleteQuery = (query) => {
-        const { deleteQuery } = this.props;
-        deleteQuery(query);
-    };
-
     updateQuery = (valueName, facet) => {
         const { query } = this.props;
         const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
@@ -139,8 +128,6 @@ class MilestonesQuery extends Component {
 MilestonesQuery.propTypes = {
     classes: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    saveQuery: PropTypes.func.isRequired,
-    deleteQuery: PropTypes.func.isRequired,
     query: PropTypes.object.isRequired,
     facets: PropTypes.array.isRequired,
 };
