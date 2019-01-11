@@ -25,7 +25,7 @@ class AssigneesTable extends Component {
     }
 
     render() {
-        const { classes, assignees } = this.props;
+        const { assignees } = this.props;
         const { columns, tableColumnExtensions} = this.state;
 
         return (
