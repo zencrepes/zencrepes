@@ -84,7 +84,8 @@ class Header extends Component {
                                             spacing={8}
                                         >
                                             {routes.filter((route) => {
-                                                if (menus[route.key] !== undefined && menus[route.key] === true) {
+                                                if (menus === {} ) {return true;}
+                                                else if (menus[route.key] !== undefined && menus[route.key] === true) {
                                                     return true;
                                                 } else {
                                                     return false;
