@@ -195,12 +195,12 @@ class Data extends Component {
 Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    action: PropTypes.string.isRequired,
+    action: PropTypes.string,
     onSuccess: PropTypes.func.isRequired,
     milestones: PropTypes.array.isRequired,
-    editMilestoneTitle: PropTypes.string.isRequired,
-    editMilestoneDescription: PropTypes.string.isRequired,
-    editMilestoneDueDate: PropTypes.string.isRequired,
+    editMilestoneTitle: PropTypes.string,
+    editMilestoneDescription: PropTypes.string,
+    editMilestoneDueDate: PropTypes.string,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,

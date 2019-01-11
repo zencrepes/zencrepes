@@ -28,11 +28,9 @@ class LoadMessage extends Component {
 }
 
 LoadMessage.propTypes = {
-    classes: PropTypes.object.isRequired,
-
-    iterateTotal: PropTypes.object.isRequired,
-    iterateCurrent: PropTypes.object.isRequired,
-    loadedCount: PropTypes.object.isRequired,
+    iterateTotal: PropTypes.number.isRequired,
+    iterateCurrent: PropTypes.number.isRequired,
+    loadedCount: PropTypes.number.isRequired,
 };
 
 const mapState = state => ({

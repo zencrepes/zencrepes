@@ -28,10 +28,10 @@ class MongoFilter extends Component {
     };
 
     render() {
-        const { classes, query } = this.props;
+        const { query } = this.props;
         return (
-            <div>
-                <IconButton className={classes.button} aria-label="Help" onClick={this.openDialog}>
+            <React.Fragment>
+                <IconButton aria-label="Help" onClick={this.openDialog}>
                     <HelpIcon />
                 </IconButton>
                 <Dialog
@@ -52,13 +52,12 @@ class MongoFilter extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </React.Fragment>
         )
     }
 }
 
 MongoFilter.propTypes = {
-    classes: PropTypes.object.isRequired,
     query: PropTypes.object.isRequired,
 };
 

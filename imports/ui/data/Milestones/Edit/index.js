@@ -37,7 +37,7 @@ class MilestonesEdit extends Component {
 }
 
 MilestonesEdit.propTypes = {
-    loadModal: PropTypes.bool.isRequired,
+    loadModal: PropTypes.bool,
 };
 
 export default MilestonesEdit;

@@ -53,7 +53,7 @@ Stage.propTypes = {
     classes: PropTypes.object.isRequired,
     stageFlag: PropTypes.bool.isRequired,
     milestones: PropTypes.array.isRequired,
-    action: PropTypes.string.isRequired,
+    action: PropTypes.string,
 
     setStageFlag: PropTypes.func.isRequired,
     setMilestones: PropTypes.func.isRequired,

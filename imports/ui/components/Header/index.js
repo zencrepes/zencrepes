@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
+import _ from 'lodash';
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -84,7 +85,8 @@ class Header extends Component {
                                             spacing={8}
                                         >
                                             {routes.filter((route) => {
-                                                if (menus[route.key] !== undefined && menus[route.key] === true) {
+                                                if (_.isEmpty(menus)) {return true;}
+                                                else if (menus[route.key] !== undefined && menus[route.key] === true) {
                                                     return true;
                                                 } else {
                                                     return false;

@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Fgerthoffert/zencrepes/tree/master.svg?style=svg)](https://circleci.com/gh/Fgerthoffert/zencrepes/tree/master)
+
 # ZenCrepes
 
 ZenCrepes has been created by a PM (excuse the poor programming) to facilitate project management for teams operating solely over GitHub issues across multiple repositories and organizations. 
@@ -27,18 +29,24 @@ ZenCrepes is built on top of Meteor (maybe a bit overkill for the task), which n
 
 ```$json
 {
-  "public": {},
+  "public": {
+    "analyticsSettings": {
+      "Google Analytics" : {"trackingId": "GOOGLE_ANALYTICS"}
+    },
+    "menus": {}
+  },
   "private": {
     "MAIL_URL": "",
     "OAuth": {
       "github": {
-        "clientId": "CLIENTID",
-        "secret": "SECRET",
+        "clientId": "METEOR_GITHUB_CLIENTID",
+        "secret": "METEOR_GITHUB_CLIENTSECRET",
         "loginStyle": "popup"
       }
     }
   }
 }
+
 ```
 
 You can obtain a github secrets by logging into Github.com, then `Your user > Settings > Developer Settings > New OAuth App`.
@@ -56,15 +64,18 @@ You can also use the circleci config provided, you would need to populate circle
 ### Configuration
 
 #### Menus
+
+It is possible to indicate which top level menus should be made available to the running app by updating the menu key in settings.json. If the object is empty `{}`, all menus are shown.
 ```json
 {
-      "issues": true,
-      "sprints": true,
-      "milestones": true,
-      "labels": false,
-      "settings": true
-    }
+    "issues": true,
+    "sprints": true,
+    "milestones": true,
+    "labels": false,
+    "settings": true
+}
 ```
+This is useful to make different menus available depending of the environment.
 
 ## Contribute
 

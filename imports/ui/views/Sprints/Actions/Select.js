@@ -27,8 +27,8 @@ class Select extends Component {
     };
 
     render() {
-        const { classes, selectedSprintName, sprints } = this.props;
-        if (selectedSprintName === null) {
+        const { classes, selectedSprintTitle, sprints } = this.props;
+        if (selectedSprintTitle === '' || selectedSprintTitle === null || selectedSprintTitle === undefined) {
             return null
         } else {
             return (
@@ -39,7 +39,7 @@ class Select extends Component {
                    margin="dense"
                    variant="filled"
                    className={classes.textField}
-                   value={selectedSprintName}
+                   value={selectedSprintTitle}
                    onChange={this.handleChange}
                 >
                     {sprints.map(sprintTitle => (
@@ -55,7 +55,7 @@ class Select extends Component {
 
 Select.propTypes = {
     classes: PropTypes.object.isRequired,
-    selectedSprintName: PropTypes.string.isRequired,
+    selectedSprintTitle: PropTypes.string,
     sprints: PropTypes.array.isRequired,
     loadSuccess: PropTypes.bool.isRequired,
     updateSelectedSprint: PropTypes.func.isRequired,
@@ -64,7 +64,7 @@ Select.propTypes = {
 };
 
 const mapState = state => ({
-    selectedSprintName: state.sprintsView.selectedSprintTitle,
+    selectedSprintTitle: state.sprintsView.selectedSprintTitle,
     sprints: state.sprintsView.sprints,
     loadSuccess: state.issuesFetch.loadSuccess,
 });

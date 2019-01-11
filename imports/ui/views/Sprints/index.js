@@ -38,7 +38,7 @@ class Sprints extends Component {
     }
 
     render() {
-        const { issues, labels, velocity, assignees } = this.props;
+        const { issues, velocity, assignees } = this.props;
         return (
             <General>
                 <IssuesFetch />
@@ -73,7 +73,6 @@ class Sprints extends Component {
                     <Grid item xs={12} sm={6} md={4}>
                         <CurrentCompletion
                             issues={issues}
-                            labels={labels}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -120,12 +119,9 @@ class Sprints extends Component {
 }
 
 Sprints.propTypes = {
-    classes: PropTypes.object.isRequired,
     assignees: PropTypes.array.isRequired,
     issues: PropTypes.array.isRequired,
     velocity: PropTypes.object.isRequired,
-
-    labels: PropTypes.array.isRequired,
 
     initView: PropTypes.func.isRequired,
 };

@@ -91,15 +91,13 @@ class AddRepository extends Component {
 }
 
 AddRepository.propTypes = {
-    classes: PropTypes.object.isRequired,
-
     openAddRepository: PropTypes.bool.isRequired,
     addReposAvailable: PropTypes.array.isRequired,
     addReposSelected: PropTypes.array.isRequired,
     allRepos: PropTypes.array.isRequired,
-    selectedSprintTitle: PropTypes.string.isRequired,
-    selectedSprintDescription: PropTypes.string.isRequired,
-    selectedSprintDueDate: PropTypes.string.isRequired,
+    selectedSprintTitle: PropTypes.string,
+    selectedSprintDescription: PropTypes.string,
+    selectedSprintDueDate: PropTypes.string,
 
     setOpenAddRepository: PropTypes.func.isRequired,
     addRepoUpdateSelected: PropTypes.func.isRequired,

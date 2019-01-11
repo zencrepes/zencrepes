@@ -21,7 +21,6 @@ const styles = theme => ({
 class RefreshAll extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
     }
 
     refreshFull = () => {

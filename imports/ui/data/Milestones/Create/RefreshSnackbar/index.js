@@ -39,7 +39,7 @@ class RefreshSnackbar extends Component {
 RefreshSnackbar.propTypes = {
     verifying: PropTypes.bool.isRequired,
     verifFlag: PropTypes.bool.isRequired,
-    verifyingMsg: PropTypes.bool.isRequired,
+    verifyingMsg: PropTypes.bool,
 };
 
 const mapState = state => ({

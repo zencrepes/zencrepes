@@ -112,9 +112,9 @@ class Summary extends Component {
 
 Summary.propTypes = {
     editSprint: PropTypes.bool.isRequired,
-    selectedSprintDescription: PropTypes.string.isRequired,
-    selectedSprintTitle: PropTypes.string.isRequired,
-    selectedSprintDueDate: PropTypes.string.isRequired,
+    selectedSprintDescription: PropTypes.string,
+    selectedSprintTitle: PropTypes.string,
+    selectedSprintDueDate: PropTypes.string,
     milestones: PropTypes.array.isRequired,
 
     setEditSprint: PropTypes.func.isRequired,

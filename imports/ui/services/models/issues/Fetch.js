@@ -10,6 +10,9 @@ export default {
 
         iterateTotal: 0,        // To show progress, total number of iterations
         iterateCurrent: 0,      // To show progress, current iterations status
+
+        onSuccess: () => {},    // Function to be executed at successful completion
+
     },
     reducers: {
         setLoadFlag(state, loadFlag) {
@@ -32,6 +35,8 @@ export default {
         setIterateTotal(state, payload) {return { ...state, iterateTotal: payload };},
         setIterateCurrent(state, payload) {return { ...state, iterateCurrent: payload };},
         incIterateCurrent(state, payload) {return { ...state, iterateCurrent: state.iterateCurrent + payload };},
+        setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
+
     },
     effects: {
     }

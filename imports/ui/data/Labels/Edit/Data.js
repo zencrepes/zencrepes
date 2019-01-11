@@ -159,20 +159,20 @@ class Data extends Component {
 Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    action: PropTypes.string.isRequired,
+    action: PropTypes.string,
     log: PropTypes.object.isRequired,
 
     selectedRepos: PropTypes.array.isRequired,
     selectedLabels: PropTypes.array.isRequired,
-    selectedName: PropTypes.string.isRequired,
+    selectedName: PropTypes.string,
 
-    updateName: PropTypes.string.isRequired,
-    updateDescription: PropTypes.string.isRequired,
-    updateColor: PropTypes.string.isRequired,
+    updateName: PropTypes.bool.isRequired,
+    updateDescription: PropTypes.bool.isRequired,
+    updateColor: PropTypes.bool.isRequired,
 
-    newName: PropTypes.string.isRequired,
-    newDescription: PropTypes.string.isRequired,
-    newColor: PropTypes.string.isRequired,
+    newName: PropTypes.string,
+    newDescription: PropTypes.string,
+    newColor: PropTypes.string,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,

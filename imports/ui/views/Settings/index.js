@@ -68,8 +68,4 @@ class Settings extends Component {
     }
 }
 
-Settings.propTypes = {
-    children: PropTypes.object.isRequired,
-};
-
 export default Settings;

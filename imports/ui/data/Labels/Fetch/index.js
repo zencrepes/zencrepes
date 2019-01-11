@@ -29,7 +29,7 @@ class LabelsFetch extends Component {
 }
 
 LabelsFetch.propTypes = {
-    loadModal: PropTypes.bool.isRequired,
+    loadModal: PropTypes.bool,
 };
 
 export default LabelsFetch;

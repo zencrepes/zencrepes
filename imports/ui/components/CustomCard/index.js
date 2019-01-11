@@ -110,8 +110,14 @@ CustomCard.propTypes = {
     headerTitle: PropTypes.string,
     headerIcon: PropTypes.object,
     headerFactTitle: PropTypes.string,
-    headerFactValue: PropTypes.string,
-    children: PropTypes.object,
+    headerFactValue: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
+    children: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+    ]),
 };
 
 export default withStyles(styles)(CustomCard);

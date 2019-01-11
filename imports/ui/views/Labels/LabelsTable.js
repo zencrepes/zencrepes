@@ -166,51 +166,47 @@ class LabelsTable extends Component {
     }
 
     render() {
-        const { classes } = this.props;
         const { columns, pageSize, pageSizes, currentPage, colorsColumns, descriptionsColumns, reposColumns, issuesColumns, editLabelColumns, tableColumnExtensions} = this.state;
 
         return (
-            <div className={classes.root}>
-                <Grid
-                    rows={this.formatData()}
-                    columns={columns}
-                >
-                    <PagingState
-                        currentPage={currentPage}
-                        onCurrentPageChange={this.changeCurrentPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={this.changePageSize}
-                    />
-                    <ColorsTypeProvider
-                        for={colorsColumns}
-                    />
-                    <DescriptionsTypeProvider
-                        for={descriptionsColumns}
-                    />
-                    <ReposTypeProvider
-                        for={reposColumns}
-                    />
-                    <IssuesTypeProvider
-                        for={issuesColumns}
-                    />
-                    <EditLabelTypeProvider
-                        for={editLabelColumns}
-                    />
-                    <IntegratedPaging />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                    <Toolbar />
-                    <PagingPanel
-                        pageSizes={pageSizes}
-                    />
-                </Grid>
-            </div>
+            <Grid
+                rows={this.formatData()}
+                columns={columns}
+            >
+                <PagingState
+                    currentPage={currentPage}
+                    onCurrentPageChange={this.changeCurrentPage}
+                    pageSize={pageSize}
+                    onPageSizeChange={this.changePageSize}
+                />
+                <ColorsTypeProvider
+                    for={colorsColumns}
+                />
+                <DescriptionsTypeProvider
+                    for={descriptionsColumns}
+                />
+                <ReposTypeProvider
+                    for={reposColumns}
+                />
+                <IssuesTypeProvider
+                    for={issuesColumns}
+                />
+                <EditLabelTypeProvider
+                    for={editLabelColumns}
+                />
+                <IntegratedPaging />
+                <Table columnExtensions={tableColumnExtensions} />
+                <TableHeaderRow />
+                <Toolbar />
+                <PagingPanel
+                    pageSizes={pageSizes}
+                />
+            </Grid>
         );
     }
 }
 
 LabelsTable.propTypes = {
-    classes: PropTypes.object.isRequired,
     labels: PropTypes.array.isRequired,
 };
 
