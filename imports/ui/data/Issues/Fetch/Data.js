@@ -38,6 +38,7 @@ class Data extends Component {
             incIterateCurrent,
             loadRepos,
             log,
+            onSuccess,
         } = this.props;
 
         //Check if there if we are loading everything or just data for a subset of repositories
@@ -71,6 +72,7 @@ class Data extends Component {
         log.info('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
+        onSuccess();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 issues, but local only has 99
@@ -237,11 +239,14 @@ Data.propTypes = {
     incIterateCurrent: PropTypes.func,
     updateChip: PropTypes.func,
 
+    onSuccess: PropTypes.func,
 };
 
 const mapState = state => ({
     loadFlag: state.issuesFetch.loadFlag,
     loading: state.issuesFetch.loading,
+    onSuccess: state.issuesFetch.onSuccess,
+
     log: state.global.log,
 
     loadRepos: state.issuesFetch.loadRepos,

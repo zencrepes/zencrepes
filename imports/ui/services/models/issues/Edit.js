@@ -9,7 +9,7 @@ export default {
         issues: [],             // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
         verifiedIssues: [],     // Array of issues that were updated in GitHub
 
-        onSuccess: null,        // Function to be executed at successful completion
+        onSuccess: () => {},        // Function to be executed at successful completion
         verifySuccess: false    // Flag to indicate completion
     },
     reducers: {
