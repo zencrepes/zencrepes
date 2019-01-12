@@ -11,7 +11,7 @@ import { cfgIssues } from '../../Minimongo.js';
 
 import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
 import getIssuesStats from '../../utils/getIssuesStats.js';
-import {cfgLabels, cfgMilestones} from "../../Minimongo";
+import { cfgLabels } from "../../Minimongo";
 
 
 class Data extends Component {

@@ -52,13 +52,13 @@ class Refresh extends Component {
     };
 
     refreshLabels = () => {
-        const { labelsSetStageFlag, labelsSetVerifFlag, labelsSetLabels, labelsSetAction, labels, labelsSetOnSuccess, updateLabels, labelsSetVerifying } = this.props;
+        const { labelsSetStageFlag, labelsSetVerifFlag, labelsSetLabels, labelsSetAction, labels, labelsSetOnSuccess, labelsUpdateView, labelsSetVerifying } = this.props;
+        labelsSetOnSuccess(labelsUpdateView);
         labelsSetLabels(labels);
         labelsSetAction('refresh');
         labelsSetVerifying(true);
         labelsSetStageFlag(true);
         labelsSetVerifFlag(true);
-        labelsSetOnSuccess(updateLabels);
         this.setState({ anchorEl: null });
     };
 
