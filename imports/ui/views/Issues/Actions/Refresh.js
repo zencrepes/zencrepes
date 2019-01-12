@@ -83,7 +83,7 @@ class Refresh extends Component {
                     className={classes.button}
                 >
                     <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Refresh Data
+                    Refresh Issues
                 </Button>
                 <Menu
                     id="simple-menu"
