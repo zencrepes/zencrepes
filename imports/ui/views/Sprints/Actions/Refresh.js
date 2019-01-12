@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -105,6 +104,7 @@ Refresh.propTypes = {
     reposSetOnSuccess: PropTypes.func.isRequired,
 
     issues: PropTypes.array.isRequired,
+    milestones: PropTypes.array.isRequired,
     issuesSetStageFlag: PropTypes.func.isRequired,
     issuesSetVerifFlag: PropTypes.func.isRequired,
     issuesSetVerifying: PropTypes.func.isRequired,
