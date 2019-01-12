@@ -175,6 +175,7 @@ class Data extends Component {
 Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    loadRepos: PropTypes.array.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,

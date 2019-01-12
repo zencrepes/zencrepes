@@ -23,7 +23,16 @@ class Staging extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, milestones, onStagingSuccess, setVerifiedMilestones, insVerifiedMilestones, client, log } = this.props;
+        const {
+            setVerifying,
+            setVerifyingMsg,
+            milestones,
+            onStagingSuccess,
+            setVerifiedMilestones,
+            insVerifiedMilestones,
+            client,
+            log
+        } = this.props;
         setVerifiedMilestones([]);
         setVerifyingMsg('About pull data from ' + milestones.length + ' milestones');
 //        for (let milestone of milestones) {

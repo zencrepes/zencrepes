@@ -52,12 +52,12 @@ class Refresh extends Component {
     };
 
     refreshMilestones = () => {
-        const { milestonesSetStageFlag, milestonesSetVerifFlag, milestonesSetMilestones, milestonesSetAction, milestones, milestonesSetOnSuccess, milestonesUpdateView, milestonesSetVerifying } = this.props;
-        milestonesSetOnSuccess(milestonesUpdateView);
+        const { milestonesSetStageFlag, milestonesSetVerifFlag, milestonesSetMilestones, milestonesSetAction, milestones, milestonesSetOnStagingSuccess, milestonesUpdateView, milestonesSetVerifying } = this.props;
+        milestonesSetOnStagingSuccess(milestonesUpdateView);
         milestonesSetMilestones(milestones);
         milestonesSetAction('refresh');
         milestonesSetVerifying(true);
-        milestonesSetStageFlag(true);
+        milestonesSetStageFlag(false);
         milestonesSetVerifFlag(true);
         this.setState({ anchorEl: null });
     };
@@ -112,7 +112,7 @@ Refresh.propTypes = {
     milestonesSetVerifying: PropTypes.func.isRequired,
     milestonesSetMilestones: PropTypes.func.isRequired,
     milestonesSetAction: PropTypes.func.isRequired,
-    milestonesSetOnSuccess: PropTypes.func.isRequired,
+    milestonesSetOnStagingSuccess: PropTypes.func.isRequired,
     milestonesUpdateView: PropTypes.func.isRequired,
 };
 
@@ -130,7 +130,7 @@ const mapDispatch = dispatch => ({
     milestonesSetVerifying: dispatch.milestonesEdit.setVerifying,
     milestonesSetMilestones: dispatch.milestonesEdit.setMilestones,
     milestonesSetAction: dispatch.milestonesEdit.setAction,
-    milestonesSetOnSuccess: dispatch.milestonesEdit.setOnSuccess,
+    milestonesSetOnStagingSuccess: dispatch.milestonesEdit.setOnStagingSuccess,
     milestonesUpdateView: dispatch.milestonesView.updateView,
 });
 

@@ -5,18 +5,15 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 
 import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
 
 const styles = {
-    root: {
-        width: '200px',
-    },
-    textField: {
-        width: '200px',
+    selectedField: {
+        color: '#fff',
     }
 };
 
-class Select extends Component {
+class SelectSprint extends Component {
     constructor(props) {
         super(props);
     }
@@ -32,28 +29,27 @@ class Select extends Component {
             return null
         } else {
             return (
-                <TextField
-                   id="select-query"
-                   select
-                   label="Select an open sprint"
-                   margin="dense"
-                   variant="filled"
-                   className={classes.textField}
-                   value={selectedSprintTitle}
-                   onChange={this.handleChange}
+                <Select
+                    value={selectedSprintTitle}
+                    onChange={this.handleChange}
+                    className={classes.selectedField}
+                    inputProps={{
+                        name: 'age',
+                        id: 'age-simple',
+                    }}
                 >
                     {sprints.map(sprintTitle => (
                         <MenuItem key={sprintTitle} value={sprintTitle}>
                             {sprintTitle}
                         </MenuItem>
                     ))}
-                </TextField>
+                </Select>
             );
         }
     }
 }
 
-Select.propTypes = {
+SelectSprint.propTypes = {
     classes: PropTypes.object.isRequired,
     selectedSprintTitle: PropTypes.string,
     sprints: PropTypes.array.isRequired,
@@ -75,4 +71,4 @@ const mapDispatch = dispatch => ({
     updateView: dispatch.sprintsView.updateView,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Select));
+export default connect(mapState, mapDispatch)(withStyles(styles)(SelectSprint));
