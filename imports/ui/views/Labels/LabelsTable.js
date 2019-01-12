@@ -19,7 +19,6 @@ import {
     Table,
     TableHeaderRow,
     PagingPanel,
-    Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
 const ColorsFormatter = ({ value }) => {
@@ -97,7 +96,7 @@ class LabelsTable extends Component {
             columns: [
                 { name: 'edit', title: 'Edit', getCellValue: row => row.name },
                 { name: 'name', title: 'Label' },
-                { name: 'repos', title: 'Repos Count', getCellValue: row => row.labels },
+                { name: 'repos', title: 'In Repos', getCellValue: row => row.labels },
                 { name: 'issues', title: 'Issues Count', getCellValue: row => row.labels },
                 { name: 'colors', title: 'Colors' },
                 { name: 'descriptions', title: 'Description' },
@@ -197,7 +196,6 @@ class LabelsTable extends Component {
                 <IntegratedPaging />
                 <Table columnExtensions={tableColumnExtensions} />
                 <TableHeaderRow />
-                <Toolbar />
                 <PagingPanel
                     pageSizes={pageSizes}
                 />

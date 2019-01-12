@@ -18,10 +18,6 @@ import MilestonesFacets from './Facets/index.js';
 import MilestonesQuery from './Query/index.js';
 import Actions from './Actions/index.js';
 
-import OpenClosed from './Charts/OpenClosed/index.js';
-import Mixed from './Charts/Mixed/index.js';
-import Empty from './Charts/Empty/index.js';
-
 const style = {
     root: {
         marginRight: '10px'
@@ -88,25 +84,6 @@ class Milestones extends Component {
                         >
                             <Grid item xs={12} sm className={classes.fullWidth}>
                                 <MilestonesQuery />
-                            </Grid>
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="flex-start"
-                                    spacing={8}
-                                >
-                                    <Grid item xs={12} sm={12} md={4}>
-                                        <OpenClosed />
-                                    </Grid>
-                                    <Grid item xs={12} sm={12} md={4}>
-                                        <Mixed />
-                                    </Grid>
-                                    <Grid item xs={12} sm={12} md={4}>
-                                        <Empty />
-                                    </Grid>
-                                </Grid>
                             </Grid>
                             <Grid item xs={12} sm className={classes.fullWidth}>
                                 <MilestonesList />

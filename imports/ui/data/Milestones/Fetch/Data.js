@@ -28,9 +28,24 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setIterateTotal, incIterateCurrent, setIterateCurrent, updateMilestones, log } = this.props;
+        const {
+            setLoading,
+            setLoadSuccess,
+            setIterateTotal,
+            incIterateCurrent,
+            setIterateCurrent,
+            log,
+            loadRepos,
+            onSuccess
+        } = this.props;
 
-        let allRepos = cfgSources.find({}).fetch();
+        //Check if there if we are loading everything or just data for a subset of repositories
+        let reposQuery = {};
+        if (loadRepos.length > 0) {
+            reposQuery = {"id":{"$in":loadRepos}}
+        }
+
+        let allRepos = cfgSources.find(reposQuery).fetch();
         setIterateTotal(allRepos.length);
         setIterateCurrent(0);
         for (let repo of allRepos) {
@@ -51,7 +66,7 @@ class Data extends Component {
         log.info('Load completed: There is a total of ' + cfgMilestones.find({}).count() + ' milestones in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
         setLoadSuccess(true);
-        updateMilestones();
+        onSuccess();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 milestones, but local only has 99
@@ -170,7 +185,7 @@ Data.propTypes = {
     setIterateCurrent: PropTypes.func.isRequired,
     incIterateCurrent: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
-    updateMilestones: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
@@ -179,6 +194,8 @@ Data.propTypes = {
 const mapState = state => ({
     loadFlag: state.milestonesFetch.loadFlag,
     loading: state.milestonesFetch.loading,
+    onSuccess: state.milestonesFetch.onSuccess,
+    loadRepos: state.milestonesFetch.loadRepos,
 
     log: state.global.log,
 });
@@ -195,8 +212,6 @@ const mapDispatch = dispatch => ({
     incIterateCurrent: dispatch.milestonesFetch.incIterateCurrent,
 
     updateChip: dispatch.chip.updateChip,
-    updateMilestones: dispatch.milestonesView.updateMilestones,
-
 });
 
 export default connect(mapState, mapDispatch)(withApollo(Data));
