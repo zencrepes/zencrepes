@@ -328,7 +328,7 @@ class LabelsTable extends Component {
         }
     };
 
-    commitChanges = ({ added, changed, deleted }) => {
+    commitChanges = ({ deleted }) => {
         const {
             labels,
             setLabels,
