@@ -1,12 +1,12 @@
 import { Component } from 'react'
 
+import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import GET_GITHUB_SINGLE_LABEL from '../../../../graphql/getSingleLabel.graphql';
+import GET_GITHUB_SINGLE_LABEL from '../../../../../graphql/getSingleLabel.graphql';
 
-import { cfgLabels } from '../../Minimongo.js';
-import PropTypes from "prop-types";
+import { cfgLabels, cfgSources } from '../../../Minimongo.js';
 
 class Staging extends Component {
     constructor (props) {
@@ -23,13 +23,23 @@ class Staging extends Component {
     };
 
     load = async () => {
-        const { setVerifying, setVerifyingMsg, labels, setVerifiedLabels, onSuccess, insVerifiedLabels, client, log } = this.props;
+        const {
+            setVerifying,
+            setVerifyingMsg,
+            labels,
+            onStagingSuccess,
+            setVerifiedLabels,
+            insVerifiedLabels,
+            client,
+            log
+        } = this.props;
         setVerifiedLabels([]);
         setVerifyingMsg('About pull data from ' + labels.length + ' labels');
 //        for (let label of labels) {
         for (const [idx, label] of labels.entries()) {
+            log.info(label);
             if (this.props.verifying) {
-                let baseMsg = (idx+1) + '/' + labels.length + ' - Fetching label: ' + label.org.login + '/' + label.repo.name + ' - ' + label.name;
+                let baseMsg = (idx+1) + '/' + labels.length + ' - Fetching label: ' + label.org.login + '/' + label.repo.name + '#' + label.number;
                 setVerifyingMsg(baseMsg);
                 let data = {};
                 try {
@@ -45,11 +55,21 @@ class Staging extends Component {
                     });
                 }
                 catch (error) {
-                    log.info(error);
+                    log.warn(error);
                 }
                 log.info(data);
                 if (data.data !== null) {
-                    if (data.data.repository.label === null) {
+                    if (data.data.repository === null) {
+                        // The repository doesn't exist anymore on GitHub.
+                        insVerifiedLabels({
+                            id: label.id,
+                            error: true,
+                            errorMsg: 'This repository doesn\'t exist in GitHub currently. Was it deleted ?',
+                        });
+                        await cfgLabels.remove({'id': label.id});
+                        await cfgSources.update({id: label.repo.id}, { active: false }, {multi: false});
+                    }
+                    else if (data.data.repository.label === null) {
                         // The label doesn't exist anymore on GitHub.
                         insVerifiedLabels({
                             id: label.id,
@@ -75,7 +95,7 @@ class Staging extends Component {
                             insVerifiedLabels({
                                 ...data.data.repository.label,
                                 error: true,
-                                errorMsg: 'This label has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
+                                errorMsg: 'This label has been modified in GitHub since it was last loaded locally. issues Counts are are different',
                             })
                         }
                         await cfgLabels.upsert({
@@ -89,7 +109,7 @@ class Staging extends Component {
             }
         }
         setVerifying(false);
-        onSuccess();
+        onStagingSuccess();
     };
 
     render() {
@@ -101,8 +121,7 @@ Staging.propTypes = {
     verifFlag: PropTypes.bool.isRequired,
     verifying: PropTypes.bool.isRequired,
     labels: PropTypes.array.isRequired,
-    onSuccess: PropTypes.func.isRequired,
-    client: PropTypes.object.isRequired,
+    onStagingSuccess: PropTypes.func.isRequired,
 
     setVerifFlag: PropTypes.func.isRequired,
     setVerifying: PropTypes.func.isRequired,
@@ -110,7 +129,9 @@ Staging.propTypes = {
     setVerifiedLabels: PropTypes.func.isRequired,
     insVerifiedLabels: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
+
     log: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
@@ -118,7 +139,8 @@ const mapState = state => ({
     verifying: state.labelsEdit.verifying,
 
     labels: state.labelsEdit.labels,
-    onSuccess: state.labelsEdit.onSuccess,
+    onStagingSuccess: state.labelsEdit.onStagingSuccess,
+
     log: state.global.log,
 });
 

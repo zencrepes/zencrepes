@@ -112,6 +112,25 @@ export default {
             //{"org.name":{"$in":["Overture","Human Cancer Models Initiative - Catalog"]}}
         },
 
+        async startEditingLabel(label, rootState) {
+            if (label !== undefined) {
+                const labels = rootState.labelsView.labels.filter(lbl => lbl.name === label);
+                this.setLabels(labels);
+
+                const editLabelName = labels[0].name;
+                this.setNewName(editLabelName);
+
+                const editLabelColor = labels[0].color;
+                this.setNewColor(editLabelColor);
+
+                let editLabelDescription = ''
+                if (labels[0].description !== null) {
+                    editLabelDescription = labels[0].description;
+                }
+                this.setNewDescription(editLabelDescription);
+            }
+        },
+
         async resetValues() {
             this.setUpdateName(false);
             this.setUpdateDescription(false);

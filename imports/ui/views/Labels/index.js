@@ -11,7 +11,7 @@ import General from '../../layouts/General/index.js';
 import LabelsFetch from '../../data/Labels/Fetch/index.js';
 import LabelsEdit from '../../data/Labels/Edit/index.js';
 
-import LabelsTable from './LabelsTable.js';
+import LabelsTable from './LabelsTable/index.js';
 import LabelsFacets from './Facets/index.js';
 import LabelsQuery from './Query/index.js';
 import Actions from "./Actions/index.js";
@@ -61,7 +61,7 @@ class Labels extends Component {
         return (
             <General>
                 <Actions />
-                <LabelsEdit loadModal={true} />
+                <LabelsEdit />
                 <LabelsFetch loadModal={false} />
                 <Grid
                     container

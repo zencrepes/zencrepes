@@ -4,7 +4,8 @@ import Data from './Data.js';
 import LoadModal from './LoadModal.js';
 import LoadSnackbar from './LoadSnackbar.js';
 import Notifications from './Notifications.js';
-import Staging from './Staging.js';
+import Stage from './Stage/index.js';
+import Staging from './Stage/Staging.js';
 
 import RefreshSnackbar from './RefreshSnackbar/index.js';
 import PropTypes from "prop-types";
@@ -19,13 +20,14 @@ class LabelsEdit extends Component {
         return (
             <div>
                 <Data />
+                <Stage />
                 <Staging />
                 <RefreshSnackbar />
                 {loadModal &&
-                <LoadModal />
+                    <LoadModal />
                 }
                 {!loadModal &&
-                <LoadSnackbar />
+                    <LoadSnackbar />
                 }
                 <Notifications />
             </div>

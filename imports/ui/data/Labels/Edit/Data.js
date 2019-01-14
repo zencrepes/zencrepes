@@ -4,7 +4,9 @@ import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import {cfgLabels, cfgSources} from "../../Minimongo";
+import { cfgLabels } from "../../Minimongo";
+
+import GET_GITHUB_SINGLE_LABEL from '../../../../graphql/getSingleLabel.graphql';
 
 import GitHubApi from '@octokit/rest';
 import PropTypes from "prop-types";
@@ -40,23 +42,20 @@ class Data extends Component {
 
     load = async () => {
         const {
+            client,
             setChipRemaining,
+            labels,
             setLoading,
             setLoadError,
             setLoadSuccess,
             setLoadedCount,
-            selectedRepos,
-            selectedLabels,
             action,
-            selectedName,
-            updateName,
-            updateDescription,
-            updateColor,
             newName,
             newDescription,
             newColor,
+            log,
+            onSuccess,
             incLoadedCount,
-            log
         } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
@@ -64,6 +63,71 @@ class Data extends Component {
         setLoadSuccess(false);
         setLoadedCount(0);
 
+        log.info(labels);
+        for (let label of labels) {
+            log.info(label);
+            let result = false;
+            if (action === 'update') {
+                const updatePayload = {
+                    owner: label.org.login,
+                    repo: label.repo.name,
+                    current_name: label.name,
+                    name: newName,
+                    color: newColor,
+                    description: newDescription,
+                };
+                log.info(updatePayload);
+                if (label.name === newName && label.color === newColor && label.description === newDescription) {
+                    log.info('Nothing to be changed, not sending a request to GitHub');
+                } else {
+                    try {
+                        result = await this.octokit.issues.updateLabel(updatePayload);
+                    }
+                    catch (error) {
+                        log.info(error);
+                    }
+                    if (result !== false) {
+                        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+
+                        let data = {};
+                        try {
+                            data = await client.query({
+                                query: GET_GITHUB_SINGLE_LABEL,
+                                variables: {
+                                    org_name: label.org.login,
+                                    repo_name: label.repo.name,
+                                    label_name: label.name
+                                },
+                                fetchPolicy: 'no-cache',
+                                errorPolicy: 'ignore',
+                            });
+                        }
+                        catch (error) {
+                            log.info(error);
+                        }
+                        log.info(data);
+                        if (data.data !== null) {
+                            const labelObj = {
+                                ...data.data.repository.label,
+                                repo: label.repo,
+                                org: label.org,
+                            };
+                            log.info(labelObj);
+                            await cfgLabels.upsert({
+                                id: labelObj.id
+                            }, {
+                                $set: labelObj
+                            });
+                        }
+                    }
+                }
+                incLoadedCount(1);
+            }
+        }
+        setLoadSuccess(true);
+        setLoading(false);
+        onSuccess();
+        /*
         if (action === 'update') {
             for (let repo of selectedRepos) {
                 let result = false;
@@ -147,8 +211,7 @@ class Data extends Component {
                 incLoadedCount(1);
             }
         }
-        setLoadSuccess(true);
-        setLoading(false);
+        */
     };
 
     render() {
@@ -161,14 +224,11 @@ Data.propTypes = {
     loading: PropTypes.bool.isRequired,
     action: PropTypes.string,
     log: PropTypes.object.isRequired,
+    labels: PropTypes.array.isRequired,
 
     selectedRepos: PropTypes.array.isRequired,
     selectedLabels: PropTypes.array.isRequired,
     selectedName: PropTypes.string,
-
-    updateName: PropTypes.bool.isRequired,
-    updateDescription: PropTypes.bool.isRequired,
-    updateColor: PropTypes.bool.isRequired,
 
     newName: PropTypes.string,
     newDescription: PropTypes.string,
@@ -182,6 +242,9 @@ Data.propTypes = {
     incLoadedCount: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
     setChipRemaining: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
+
 };
 
 const mapState = state => ({
@@ -193,15 +256,14 @@ const mapState = state => ({
     selectedLabels: state.labelsEdit.selectedLabels,
     selectedName: state.labelsEdit.selectedName,
 
-    updateName: state.labelsEdit.updateName,
-    updateDescription: state.labelsEdit.updateDescription,
-    updateColor: state.labelsEdit.updateColor,
-
     newName: state.labelsEdit.newName,
     newDescription: state.labelsEdit.newDescription,
     newColor: state.labelsEdit.newColor,
 
+    labels: state.labelsEdit.labels,
+
     log: state.global.log,
+    onSuccess: state.labelsEdit.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
