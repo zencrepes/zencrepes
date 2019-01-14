@@ -328,8 +328,10 @@ class LabelsTable extends Component {
         }
     };
 
-    commitChanges = (/*{ added, changed, deleted }*/) => {
+    commitChanges = ({ added, changed, deleted }) => {
         const {
+            labels,
+            setLabels,
             setVerifFlag,
             setAction,
             setOnSuccess,
@@ -337,8 +339,19 @@ class LabelsTable extends Component {
             setStageFlag,
             updateView
         } = this.props;
+        console.log(added);
+        console.log(changed);
+        console.log(deleted);
+
+        if (deleted.length !== 0) {
+            const deleteLabels = labels.filter(lbl => lbl.name === deleted[0]);
+            setLabels(deleteLabels);
+            setAction('delete');
+        } else {
+            setAction('update');
+        }
+
         setOnSuccess(updateView);
-        setAction('update');
         setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
@@ -532,6 +545,7 @@ LabelsTable.propTypes = {
     setVerifying: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
+    setLabels: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -543,6 +557,7 @@ const mapDispatch = dispatch => ({
     setStageFlag: dispatch.labelsEdit.setStageFlag,
     updateView: dispatch.labelsView.updateView,
     setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
+    setLabels: dispatch.labelsEdit.setLabels,
 });
 
 export default connect(null, mapDispatch)(LabelsTable);

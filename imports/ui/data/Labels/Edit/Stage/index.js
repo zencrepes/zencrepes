@@ -43,39 +43,43 @@ class Stage extends Component {
                 <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
                     <DialogTitle id="simple-dialog-title">Review changes</DialogTitle>
                     <DialogContent>
-                        <Typography variant="body1" gutterBottom>
-                            The following values have been staged for update in GitHub
-                        </Typography>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell component="th" scope="row">
-                                        Name
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        Color
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        Description
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell component="th" scope="row">
-                                        {newName}
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        {newDescription}
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        <Typography variant="body1" gutterBottom>
-                                            <SquareIcon color={'#' + newColor} /> ({'#' + newColor})
-                                        </Typography>
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
+                        {action === 'updated' &&
+                            <React.Fragment>
+                                <Typography variant="body1" gutterBottom>
+                                    The following values have been staged for update in GitHub
+                                </Typography>
+                                <Table className={classes.table}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell component="th" scope="row">
+                                                Name
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                Color
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                Description
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell component="th" scope="row">
+                                                {newName}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                {newDescription}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                <Typography variant="body1" gutterBottom>
+                                                    <SquareIcon color={'#' + newColor} /> ({'#' + newColor})
+                                                </Typography>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </React.Fragment>
+                        }
                         <Typography variant="body1" gutterBottom>
                             All nodes listed below will be updated. The system will first verify that local data is in-sync with Github&apos;s if not, update will not be possible.
                         </Typography>

@@ -4,7 +4,7 @@ import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import { cfgLabels } from "../../Minimongo";
+import {cfgLabels} from "../../Minimongo";
 
 import GET_GITHUB_SINGLE_LABEL from '../../../../graphql/getSingleLabel.graphql';
 
@@ -121,8 +121,24 @@ class Data extends Component {
                         }
                     }
                 }
-                incLoadedCount(1);
+            } else if (action === 'delete') {
+                try {
+                    result = await this.octokit.issues.deleteLabel({
+                        owner: label.org.login,
+                        repo: label.repo.name,
+                        name: label.name,
+                    });
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                log.info(result);
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    cfgLabels.remove({id: label.id});
+                }
             }
+            incLoadedCount(1);
         }
         setLoadSuccess(true);
         setLoading(false);
