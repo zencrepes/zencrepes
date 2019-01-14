@@ -339,10 +339,6 @@ class LabelsTable extends Component {
             setStageFlag,
             updateView
         } = this.props;
-        console.log(added);
-        console.log(changed);
-        console.log(deleted);
-
         if (deleted.length !== 0) {
             const deleteLabels = labels.filter(lbl => lbl.name === deleted[0]);
             setLabels(deleteLabels);
