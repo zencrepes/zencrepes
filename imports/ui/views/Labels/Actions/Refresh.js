@@ -57,7 +57,7 @@ class Refresh extends Component {
         labelsSetLabels(labels);
         labelsSetAction('refresh');
         labelsSetVerifying(true);
-        labelsSetStageFlag(true);
+        labelsSetStageFlag(false);
         labelsSetVerifFlag(true);
         this.setState({ anchorEl: null });
     };
