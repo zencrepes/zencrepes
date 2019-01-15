@@ -43,7 +43,7 @@ class Stage extends Component {
                 <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
                     <DialogTitle id="simple-dialog-title">Review changes</DialogTitle>
                     <DialogContent>
-                        {action === 'updated' &&
+                        {(action === 'update' || action === 'create') &&
                             <React.Fragment>
                                 <Typography variant="body1" gutterBottom>
                                     The following values have been staged for update in GitHub
@@ -68,12 +68,12 @@ class Stage extends Component {
                                                 {newName}
                                             </TableCell>
                                             <TableCell component="th" scope="row">
-                                                {newDescription}
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
                                                 <Typography variant="body1" gutterBottom>
                                                     <SquareIcon color={'#' + newColor} /> ({'#' + newColor})
                                                 </Typography>
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                {newDescription}
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>
@@ -81,7 +81,7 @@ class Stage extends Component {
                             </React.Fragment>
                         }
                         <Typography variant="body1" gutterBottom>
-                            All nodes listed below will be updated. The system will first verify that local data is in-sync with Github&apos;s if not, update will not be possible.
+                            All nodes listed below will be updated. ZenCrepes will only allow you to apply changes if GitHub&apos;s data is in-sync with Zencrepes. If not, click on Cancel, verify the data (Zencrepes will have pulled the latest data automatically), then request the modification again.
                         </Typography>
                         <StageTable
                             labels={labels}

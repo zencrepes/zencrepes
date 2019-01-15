@@ -102,18 +102,38 @@ class StageTable extends Component {
                                         {label.repo.name}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <a href={label.url} className={classes.labelTitle} rel="noopener noreferrer" target="_blank">{label.name} <OpenInNewIcon style={{ fontSize: 12 }} /></a>
+                                        {action === 'create' ? (
+                                            <span>n/a</span>
+                                        ) : (
+                                            <a href={label.url} className={classes.labelTitle} rel="noopener noreferrer" target="_blank">{label.name} <OpenInNewIcon style={{ fontSize: 12 }} /></a>
+                                        )}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <Typography variant="body1" gutterBottom>
-                                            <SquareIcon color={'#' + label.color} /> ({'#' + label.color})
-                                        </Typography>
+                                        {action === 'create' ? (
+                                            <span>n/a</span>
+                                        ) : (
+                                            <Typography variant="body1" gutterBottom>
+                                                <SquareIcon color={'#' + label.color} /> ({'#' + label.color})
+                                            </Typography>
+                                        )}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {label.description}
+                                        {action === 'create' ? (
+                                            <span>n/a</span>
+                                        ) : (
+                                            <Typography variant="body1" gutterBottom>
+                                                {label.description}
+                                            </Typography>
+                                        )}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {label.issues.totalCount}
+                                        {action === 'create' ? (
+                                            <span>n/a</span>
+                                        ) : (
+                                            <Typography variant="body1" gutterBottom>
+                                                {label.issues.totalCount}
+                                            </Typography>
+                                        )}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
                                         <VerifState

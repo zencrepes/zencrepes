@@ -150,7 +150,9 @@ const DescriptionsTypeProvider = props => (
 );
 
 const ReposFormatter = ({ value }) => {
-    if (value.length > 1) {
+    if (value === undefined) {
+        return 0;
+    } else if (value.length > 1) {
         return value.length;
     } else {
         return '1 (' + value[0].repo.name + ')';
@@ -160,7 +162,6 @@ ReposFormatter.propTypes = {
     value: PropTypes.array,
 };
 
-
 const ReposTypeProvider = props => (
     <DataTypeProvider
         formatterComponent={ReposFormatter}
@@ -169,7 +170,11 @@ const ReposTypeProvider = props => (
 );
 
 const IssuesFormatter = ({ value }) => {
-    return value.filter(label => label.issues !== undefined).map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
+    if (value === undefined) {
+        return 0
+    } else {
+        return value.filter(label => label.issues !== undefined).map(label => label.issues.totalCount).reduce((acc, count) => acc + count, 0);
+    }
 };
 IssuesFormatter.propTypes = {
     value: PropTypes.array,
@@ -288,13 +293,6 @@ class LabelsTable extends Component {
 
         this.changeSorting = sorting => this.setState({ sorting });
 
-        this.changeAddedRows = addedRows => this.setState({
-            addedRows: addedRows.map(row => (Object.keys(row).length ? row : {
-                amount: 0,
-                discount: 0,
-                saleDate: new Date().toISOString().split('T')[0],
-            })),
-        });
         this.changeRowChanges = rowChanges => this.setState({ rowChanges });
         this.changeCurrentPage = currentPage => this.setState({ currentPage });
         this.changePageSize = pageSize => this.setState({ pageSize });
@@ -316,6 +314,20 @@ class LabelsTable extends Component {
 
     }
 
+    /*
+        This function is just a proxy. it doesn't do much other than recording a "newLabel" line
+     */
+    changeAddedRows = (addedRows) => {
+        //Github requires a color to be set, by default setting this up to white
+        const { setNewColor } = this.props;
+        setNewColor('ffffff');
+        this.setState({
+            addedRows: addedRows.map(row => (Object.keys(row).length ? row : {
+                newLabel: true,
+            })),
+        })
+    };
+
     changeEditingRowIds = (editingRowIds) => {
         const { startEditingLabel } = this.props;
         if (this.state.editingRowIds.length > 0) {
@@ -328,7 +340,7 @@ class LabelsTable extends Component {
         }
     };
 
-    commitChanges = ({ deleted }) => {
+    commitChanges = ({ deleted, added }) => {
         const {
             labels,
             setLabels,
@@ -339,18 +351,31 @@ class LabelsTable extends Component {
             setStageFlag,
             updateView
         } = this.props;
-        if (deleted.length !== 0) {
+        if (added !== undefined && added.length !== 0) {
+            // The plan here is to list repositories for which we'll be adding labels
+            // As a hack, will be using list filtered by repositories
+            let uniqRepos = _.uniqWith(labels, (arrVal, othVal) => {
+                if (arrVal.repo.id === othVal.repo.id) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+            setLabels(uniqRepos);
+            setAction('create');
+        } else if (deleted !== undefined && deleted.length !== 0) {
             const deleteLabels = labels.filter(lbl => lbl.name === deleted[0]);
             setLabels(deleteLabels);
             setAction('delete');
         } else {
             setAction('update');
         }
-
         setOnSuccess(updateView);
         setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
+
 /*
         let { rows } = this.state;
         if (added) {
@@ -534,6 +559,7 @@ class LabelsTable extends Component {
 
 LabelsTable.propTypes = {
     labels: PropTypes.array.isRequired,
+
     startEditingLabel: PropTypes.func.isRequired,
     setVerifFlag: PropTypes.func.isRequired,
     setAction: PropTypes.func.isRequired,
@@ -542,6 +568,7 @@ LabelsTable.propTypes = {
     setStageFlag: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
     setLabels: PropTypes.func.isRequired,
+    setNewColor: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -554,6 +581,7 @@ const mapDispatch = dispatch => ({
     updateView: dispatch.labelsView.updateView,
     setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
     setLabels: dispatch.labelsEdit.setLabels,
+    setNewColor: dispatch.labelsEdit.setNewColor,
 });
 
 export default connect(null, mapDispatch)(LabelsTable);

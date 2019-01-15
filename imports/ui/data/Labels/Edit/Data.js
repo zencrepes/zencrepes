@@ -67,8 +67,71 @@ class Data extends Component {
         for (let label of labels) {
             log.info(label);
             let result = false;
-            if (action === 'update') {
-                const updatePayload = {
+            if (action === 'create') {
+                let createPayload = {
+                    owner: label.org.login,
+                    repo: label.repo.name,
+                    name: newName,
+                    color: newColor,
+                    description: newDescription,
+                };
+                //By default, if no-color is set, assigning white
+                if (newColor === '' || newColor === null) {
+                    createPayload = {
+                        ...createPayload,
+                        color: 'ffffff'
+                    };
+                }
+                log.info(createPayload);
+                try {
+                    if (newDescription.length > 0) {
+                        createPayload = {
+                            ...createPayload,
+                            headers: {
+                                accept: 'application/vnd.github.symmetra-preview+json'
+                            }
+                        };
+                    }
+                    result = await this.octokit.issues.createLabel(createPayload);
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    let data = {};
+                    try {
+                        data = await client.query({
+                            query: GET_GITHUB_SINGLE_LABEL,
+                            variables: {
+                                org_name: label.org.login,
+                                repo_name: label.repo.name,
+                                label_name: newName
+                            },
+                            fetchPolicy: 'no-cache',
+                            errorPolicy: 'ignore',
+                        });
+                    }
+                    catch (error) {
+                        log.info(error);
+                    }
+                    log.info(data);
+                    if (data.data !== null) {
+                        const labelObj = {
+                            ...data.data.repository.label,
+                            repo: label.repo,
+                            org: label.org,
+                        };
+                        log.info(labelObj);
+                        await cfgLabels.upsert({
+                            id: labelObj.id
+                        }, {
+                            $set: labelObj
+                        });
+                    }
+                }
+            } else if (action === 'update') {
+                let updatePayload = {
                     owner: label.org.login,
                     repo: label.repo.name,
                     current_name: label.name,
@@ -81,6 +144,14 @@ class Data extends Component {
                     log.info('Nothing to be changed, not sending a request to GitHub');
                 } else {
                     try {
+                        if (newDescription.length > 0) {
+                            updatePayload = {
+                                ...updatePayload,
+                                headers: {
+                                    accept: 'application/vnd.github.symmetra-preview+json'
+                                }
+                            };
+                        }
                         result = await this.octokit.issues.updateLabel(updatePayload);
                     }
                     catch (error) {
