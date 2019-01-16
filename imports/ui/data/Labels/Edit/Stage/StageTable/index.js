@@ -90,7 +90,6 @@ class StageTable extends Component {
                     </TableHead>
                     <TableBody>
                         {labels.map(label => {
-                            console.log(label);
                             return (
                                 <TableRow key={label.id}>
                                     <TableCell component="th" scope="row">
