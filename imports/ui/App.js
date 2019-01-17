@@ -13,7 +13,6 @@ import Wizard from './views/Wizard/index.js';
 import Sprints from './views/Sprints/index.js';
 import Settings from './views/Settings/index.js';
 import Labels from './views/Labels/index.js';
-import LabelEdit from './views/Labels/Edit/index.js';
 
 import Milestones from './views/Milestones/index.js';
 import MilestoneEdit from './views/Milestones/Edit/index.js';
@@ -72,7 +71,6 @@ class App extends Component {
                                     <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/labels/edit/:name/:id" component={LabelEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/milestones/edit" component={MilestoneEdit} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />

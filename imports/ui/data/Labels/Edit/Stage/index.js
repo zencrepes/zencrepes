@@ -4,18 +4,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
-import SquareIcon from 'mdi-react/SquareIcon';
-
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
 import StageTable from './StageTable/index.js';
@@ -43,49 +36,15 @@ class Stage extends Component {
                 <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
                     <DialogTitle id="simple-dialog-title">Review changes</DialogTitle>
                     <DialogContent>
-                        {(action === 'update' || action === 'create') &&
-                            <React.Fragment>
-                                <Typography variant="body1" gutterBottom>
-                                    The following values have been staged for update in GitHub
-                                </Typography>
-                                <Table className={classes.table}>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell component="th" scope="row">
-                                                Name
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                Color
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                Description
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell component="th" scope="row">
-                                                {newName}
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                <Typography variant="body1" gutterBottom>
-                                                    <SquareIcon color={'#' + newColor} /> ({'#' + newColor})
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                {newDescription}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </React.Fragment>
-                        }
                         <Typography variant="body1" gutterBottom>
-                            All nodes listed below will be updated. ZenCrepes will only allow you to apply changes if GitHub&apos;s data is in-sync with Zencrepes. If not, click on Cancel, verify the data (Zencrepes will have pulled the latest data automatically), then request the modification again.
+                            The following changes have been staged for modification. Changes are only submitting to GitHub once you click on Apply, you cannot go back after clicking.
                         </Typography>
                         <StageTable
                             labels={labels}
                             action={action}
+                            newName={newName}
+                            newDescription={newDescription}
+                            newColor={newColor}
                         />
                     </DialogContent>
                     <DialogActions>

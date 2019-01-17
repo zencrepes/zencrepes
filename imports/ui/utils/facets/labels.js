@@ -32,6 +32,14 @@ const aggregationsModel = {
         nested: false,
         aggregations: {}
     },
+    /*
+    description: {
+        key: 'description',
+        name: 'Descriptions',
+        nested: false,
+        aggregations: {}
+    },
+    */
 };
 
 /*

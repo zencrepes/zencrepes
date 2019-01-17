@@ -159,7 +159,10 @@ class Data extends Component {
                     }
                     if (result !== false) {
                         setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-
+                        let updateName = label.name;
+                        if (label.name !== newName) {
+                            updateName = newName;
+                        }
                         let data = {};
                         try {
                             data = await client.query({
@@ -167,7 +170,7 @@ class Data extends Component {
                                 variables: {
                                     org_name: label.org.login,
                                     repo_name: label.repo.name,
-                                    label_name: label.name
+                                    label_name: updateName
                                 },
                                 fetchPolicy: 'no-cache',
                                 errorPolicy: 'ignore',

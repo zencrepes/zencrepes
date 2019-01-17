@@ -319,8 +319,13 @@ class LabelsTable extends Component {
      */
     changeAddedRows = (addedRows) => {
         //Github requires a color to be set, by default setting this up to white
-        const { setNewColor } = this.props;
-        setNewColor('ffffff');
+        const { setNewColor, setNewDescription, setNewName } = this.props;
+        //Empty data
+        if (addedRows.length > 0) {
+            setNewColor('FC5CA9');
+            setNewDescription('');
+            setNewName('');
+        }
         this.setState({
             addedRows: addedRows.map(row => (Object.keys(row).length ? row : {
                 newLabel: true,
@@ -569,6 +574,8 @@ LabelsTable.propTypes = {
     updateView: PropTypes.func.isRequired,
     setLabels: PropTypes.func.isRequired,
     setNewColor: PropTypes.func.isRequired,
+    setNewName: PropTypes.func.isRequired,
+    setNewDescription: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -582,6 +589,8 @@ const mapDispatch = dispatch => ({
     setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
     setLabels: dispatch.labelsEdit.setLabels,
     setNewColor: dispatch.labelsEdit.setNewColor,
+    setNewName: dispatch.labelsEdit.setNewName,
+    setNewDescription: dispatch.labelsEdit.setNewDescription,
 });
 
 export default connect(null, mapDispatch)(LabelsTable);

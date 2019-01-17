@@ -123,9 +123,11 @@ export default {
                 const editLabelColor = labels[0].color;
                 this.setNewColor(editLabelColor);
 
-                let editLabelDescription = ''
-                if (labels[0].description !== null) {
-                    editLabelDescription = labels[0].description;
+                let editLabelDescription = '';
+                // Get the first label without description
+                const labels_desc = labels.filter(lbl => (lbl.description !== '' && lbl.description !== null));
+                if (labels_desc.length > 0) {
+                    editLabelDescription = labels_desc[0].description;
                 }
                 this.setNewDescription(editLabelDescription);
             }

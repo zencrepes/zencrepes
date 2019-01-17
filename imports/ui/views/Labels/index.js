@@ -61,8 +61,8 @@ class Labels extends Component {
         return (
             <General>
                 <Actions />
-                <LabelsEdit />
                 <LabelsFetch loadModal={false} />
+                <LabelsEdit loadModal={false} />
                 <Grid
                     container
                     direction="row"

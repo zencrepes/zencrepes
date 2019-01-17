@@ -28,8 +28,6 @@ class EditLabelColor extends Component {
 
     render() {
         const { newColor } = this.props;
-//        console.log(newColor);
-
         const styles = reactCSS({
             'default': {
                 color: {

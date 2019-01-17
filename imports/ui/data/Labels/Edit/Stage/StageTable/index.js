@@ -53,7 +53,7 @@ class StageTable extends Component {
     }
 
     render() {
-        const { classes, labels, action } = this.props;
+        const { classes, labels, action, newName, newDescription, newColor  } = this.props;
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>
@@ -77,9 +77,11 @@ class StageTable extends Component {
                             <TableCell component="th" scope="row">
                                 Description
                             </TableCell>
-                            <TableCell component="th" scope="row">
-                                Issues Count
-                            </TableCell>
+                            {action !== 'create' &&
+                                <TableCell component="th" scope="row">
+                                    Issues Count
+                                </TableCell>
+                            }
                             <TableCell component="th" scope="row">
                                 GitHub Verified
                             </TableCell>
@@ -102,39 +104,72 @@ class StageTable extends Component {
                                         {label.repo.name}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {action === 'create' ? (
-                                            <span>n/a</span>
-                                        ) : (
-                                            <a href={label.url} className={classes.labelTitle} rel="noopener noreferrer" target="_blank">{label.name} <OpenInNewIcon style={{ fontSize: 12 }} /></a>
-                                        )}
-                                    </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        {action === 'create' ? (
-                                            <span>n/a</span>
-                                        ) : (
+                                        {action !== 'create' &&
                                             <Typography variant="body1" gutterBottom>
-                                                <SquareIcon color={'#' + label.color} /> ({'#' + label.color})
+                                                {action !== 'delete' &&
+                                                    <b>Old Value: </b>
+                                                }
+                                                <a
+                                                    href={label.url}
+                                                    className={classes.labelTitle}
+                                                    rel="noopener noreferrer" target="_blank">
+                                                        {label.name}
+                                                        <OpenInNewIcon style={{fontSize: 12}}/>
+                                                </a>
                                             </Typography>
-                                        )}
+                                        }
+                                        {action !== 'delete' &&
+                                            <Typography variant="body1" gutterBottom>
+                                                {action !== 'create' &&
+                                                    <b>New Value: </b>
+                                                }
+                                                {newName}
+                                            </Typography>
+                                        }
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {action === 'create' ? (
-                                            <span>n/a</span>
-                                        ) : (
+                                        {action !== 'create' &&
                                             <Typography variant="body1" gutterBottom>
+                                                {action !== 'delete' &&
+                                                    <b>Old Value: </b>
+                                                }
+                                                <SquareIcon color={'#' + label.color}/> ({'#' + label.color})
+                                            </Typography>
+                                        }
+                                        {action !== 'delete' &&
+                                            <Typography variant="body1" gutterBottom>
+                                                {action !== 'create' &&
+                                                    <b>New Value: </b>
+                                                }
+                                                <SquareIcon color={'#' + newColor}/> ({'#' + newColor})
+                                            </Typography>
+                                        }
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        {action !== 'create' &&
+                                            <Typography variant="body1" gutterBottom>
+                                                {action !== 'delete' &&
+                                                    <b>Old Value: </b>
+                                                }
                                                 {label.description}
                                             </Typography>
-                                        )}
+                                        }
+                                        {action !== 'delete' &&
+                                            <Typography variant="body1" gutterBottom>
+                                                {action !== 'create' &&
+                                                    <b>New Value: </b>
+                                                }
+                                                {newDescription}
+                                            </Typography>
+                                        }
                                     </TableCell>
-                                    <TableCell component="th" scope="row">
-                                        {action === 'create' ? (
-                                            <span>n/a</span>
-                                        ) : (
+                                    {action !== 'create' &&
+                                        <TableCell component="th" scope="row">
                                             <Typography variant="body1" gutterBottom>
                                                 {label.issues.totalCount}
                                             </Typography>
-                                        )}
-                                    </TableCell>
+                                        </TableCell>
+                                    }
                                     <TableCell component="th" scope="row">
                                         <VerifState
                                             label={label}
@@ -159,6 +194,10 @@ StageTable.propTypes = {
     classes: PropTypes.object.isRequired,
     labels: PropTypes.array.isRequired,
     action: PropTypes.string.isRequired,
+
+    newName: PropTypes.string.isRequired,
+    newDescription: PropTypes.string.isRequired,
+    newColor: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(StageTable);
