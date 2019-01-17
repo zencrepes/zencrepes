@@ -22,6 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+//import CreateNewFolderIcon from '@material-ui/icons/create_new_folder
 
 import EditLabelColor from './EditLabelColor.js';
 import EditLabelName from './EditLabelName.js';
@@ -460,6 +461,22 @@ class LabelsTable extends Component {
             editingStateColumnExtensions,
         } = this.state;
 
+        /*
+        const CellComponent = ({ children, row, ...restProps }) => (
+            <TableEditColumn.Cell row={row} {...restProps}>
+                {children}
+                <TableEditColumn.Command
+                    id="custom"
+                    text="Show Info"
+                    onExecute={() => {
+                        console.log('add repo');
+                        //showDetails(row);
+                    }} // action callback
+                />
+            </TableEditColumn.Cell>
+        );
+        */
+
         return (
             <React.Fragment>
                 <Grid
@@ -518,6 +535,7 @@ class LabelsTable extends Component {
                         showEditCommand
                         showDeleteCommand
                         commandComponent={Command}
+                        //cellComponent={CellComponent}
                     />
                     <PagingPanel
                         pageSizes={pageSizes}
