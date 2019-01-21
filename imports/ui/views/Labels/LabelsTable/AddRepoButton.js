@@ -19,15 +19,21 @@ class AddRepoButton extends Component {
     };
 
     render() {
-        return (
-            <IconButton onClick={this.addRepo} title="Add to Repositories">
-                <CreateNewFolderIcon />
-            </IconButton>
-        );
+        const { labels, reposCount } = this.props;
+        if (labels.length < reposCount) {
+            return (
+                <IconButton onClick={this.addRepo} title="Add to Repositories">
+                    <CreateNewFolderIcon />
+                </IconButton>
+            );
+        } else {
+            return null;
+        }
     }
 }
 
 AddRepoButton.propTypes = {
+    reposCount: PropTypes.number.isRequired,
     labels: PropTypes.array.isRequired,
 //    setLabels: PropTypes.func.isRequired,
     setOpenAddRepos: PropTypes.func.isRequired,
@@ -35,11 +41,15 @@ AddRepoButton.propTypes = {
     updateAvailableRepos: PropTypes.func.isRequired,
 };
 
+const mapState = state => ({
+    reposCount: state.labelsView.reposCount,
+});
+
 const mapDispatch = dispatch => ({
     //setLabels: dispatch.labelsEdit.setLabels,
     setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
     setAddReposSelected: dispatch.labelsEdit.setAddReposSelected,
-    updateAvailableRepos: dispatch.labelsEdit.updateAvailableRepos
+    updateAvailableRepos: dispatch.labelsEdit.updateAvailableRepos,
 });
 
-export default connect(null, mapDispatch)(AddRepoButton);
+export default connect(mapState, mapDispatch)(AddRepoButton);

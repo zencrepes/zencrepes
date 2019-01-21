@@ -1,4 +1,4 @@
-import { cfgLabels } from '../../../data/Minimongo.js';
+import { cfgLabels, cfgSources } from '../../../data/Minimongo.js';
 import {buildFacets} from "../../../utils/facets/labels.js";
 
 export default {
@@ -7,11 +7,13 @@ export default {
         labels: [],
         facets: [],
 
+        reposCount: 0,
     },
     reducers: {
         setLabels(state, payload) {return { ...state, labels: payload };},
         setQuery(state, payload) {return { ...state, query: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
+        setReposCount(state, payload) {return { ...state, reposCount: payload };},
     },
     effects: {
         async updateLabels(payload, rootState) {
@@ -24,6 +26,7 @@ export default {
         async updateView() {
             this.refreshFacets();
             this.refreshLabels();
+            this.setReposCount(cfgSources.find({'active':true}).count());
         },
         async refreshFacets(payload, rootState) {
             const log = rootState.global.log;
