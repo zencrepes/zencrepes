@@ -27,6 +27,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import EditLabelColor from './EditLabelColor.js';
 import EditLabelName from './EditLabelName.js';
 import EditLabelDescription from './EditLabelDescription.js';
+import AddRepoButton from './AddRepoButton.js';
+import AddRepos from './AddRepos/index.js';
 
 import {
     SortingState,
@@ -152,11 +154,23 @@ const DescriptionsTypeProvider = props => (
 
 const ReposFormatter = ({ value }) => {
     if (value === undefined) {
-        return 0;
+        return (
+            <React.Fragment>
+                0 <AddRepoButton labels={value}/>
+            </React.Fragment>
+        );
     } else if (value.length > 1) {
-        return value.length;
+        return (
+            <React.Fragment>
+                {value.length} <AddRepoButton labels={value}/>
+            </React.Fragment>
+        );
     } else {
-        return '1 (' + value[0].repo.name + ')';
+        return (
+            <React.Fragment>
+                1 ({value[0].repo.name}) <AddRepoButton labels={value}/>
+            </React.Fragment>
+        );
     }
 };
 ReposFormatter.propTypes = {
@@ -479,6 +493,7 @@ class LabelsTable extends Component {
 
         return (
             <React.Fragment>
+                <AddRepos />
                 <Grid
                     rows={this.formatData()}
                     columns={columns}

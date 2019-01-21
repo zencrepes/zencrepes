@@ -25,6 +25,10 @@ export default {
         action: null,               // Action to be performed
         loadedCount: 0,
 
+        openAddRepos: false,        // Boolean to indicate if the add repo window should be displayed
+        addReposAvailable: [],      // Array of available repositories
+        addReposSelected: [],       // Array of selected repositories
+
         selectedName: '',           // Label name currently selected
         deleteWarning: false,       // Display the delete warning
 
@@ -70,6 +74,10 @@ export default {
 
         setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
         incLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},
+
+        setOpenAddRepos(state, payload) {return { ...state, openAddRepos: payload };},
+        setAddReposAvailable(state, payload) {return { ...state, addReposAvailable: payload };},
+        setAddReposSelected(state, payload) {return { ...state, addReposSelected: payload };},
 
         setSelectedName(state, payload) {return { ...state, selectedName: payload };},
         setDeleteWarning(state, payload) {return { ...state, deleteWarning: payload };},
@@ -141,6 +149,36 @@ export default {
             this.setNewDescription('');
             this.setNewColor('');
         },
+
+        async addRepoUpdateSelected(selectedRepos) {
+            this.setAddReposSelected(selectedRepos);
+        },
+
+        async updateAvailableRepos(labels) {
+            //1- Get a list of an array of repos id
+            const selectedLabelsRepos = labels.map(lbl => lbl.repo.id);
+//            console.log(selectedLabelsRepos);
+//            console.log({'active': true, 'id':{'$nin':[selectedLabelsRepos]}});
+//            console.log(JSON.stringify({'active': true, 'id':{'$nin':[selectedLabelsRepos]}}));
+            const availableRepos = cfgSources.find({'active': true, 'id':{'$nin':selectedLabelsRepos}}).fetch();
+//            console.log(availableRepos);
+            this.setAddReposAvailable(availableRepos.map((repo) => {
+                return {
+                    value: repo.id,
+                    label: repo.org.login + "/" + repo.name
+                }
+            }));
+            /*
+            const selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
+            const milestones = cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch()
+            const includedRepos = milestones.map((ms) => ms.repo);
+            const allRepos = cfgSources.find({active: true}).fetch();
+            const availableRepos = _.differenceBy(allRepos, includedRepos, 'id');
+
+            */
+        },
+
+
     }
 };
 
