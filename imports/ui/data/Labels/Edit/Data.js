@@ -73,7 +73,6 @@ class Data extends Component {
                     repo: label.repo.name,
                     name: newName,
                     color: newColor,
-                    description: newDescription,
                 };
                 //By default, if no-color is set, assigning white
                 if (newColor === '' || newColor === null) {
@@ -84,9 +83,10 @@ class Data extends Component {
                 }
                 log.info(createPayload);
                 try {
-                    if (newDescription.length > 0) {
+                    if (newDescription !== null && newDescription.length > 0) {
                         createPayload = {
                             ...createPayload,
+                            description: newDescription,
                             headers: {
                                 accept: 'application/vnd.github.symmetra-preview+json'
                             }
@@ -144,7 +144,7 @@ class Data extends Component {
                     log.info('Nothing to be changed, not sending a request to GitHub');
                 } else {
                     try {
-                        if (newDescription.length > 0) {
+                        if (newDescription !== null && newDescription.length > 0) {
                             updatePayload = {
                                 ...updatePayload,
                                 headers: {

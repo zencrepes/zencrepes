@@ -12,8 +12,19 @@ class AddRepoButton extends Component {
     }
 
     addRepo = () => {
-        const { labels, updateAvailableRepos, setOpenAddRepos, setAddReposSelected } = this.props;
+        const {
+            labels,
+            updateAvailableRepos,
+            setOpenAddRepos,
+            setAddReposSelected,
+            setNewName,
+            setNewDescription,
+            setNewColor,
+        } = this.props;
         updateAvailableRepos(labels);
+        setNewName(labels[0].name);
+        setNewDescription(labels[0].description);
+        setNewColor(labels[0].color);
         setAddReposSelected([]);
         setOpenAddRepos(true);
     };
@@ -35,10 +46,13 @@ class AddRepoButton extends Component {
 AddRepoButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
     labels: PropTypes.array.isRequired,
-//    setLabels: PropTypes.func.isRequired,
     setOpenAddRepos: PropTypes.func.isRequired,
     setAddReposSelected: PropTypes.func.isRequired,
     updateAvailableRepos: PropTypes.func.isRequired,
+
+    setNewName: PropTypes.func.isRequired,
+    setNewDescription: PropTypes.func.isRequired,
+    setNewColor: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -50,6 +64,9 @@ const mapDispatch = dispatch => ({
     setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
     setAddReposSelected: dispatch.labelsEdit.setAddReposSelected,
     updateAvailableRepos: dispatch.labelsEdit.updateAvailableRepos,
+    setNewName: dispatch.labelsEdit.setNewName,
+    setNewDescription: dispatch.labelsEdit.setNewDescription,
+    setNewColor: dispatch.labelsEdit.setNewColor,
 });
 
 export default connect(mapState, mapDispatch)(AddRepoButton);

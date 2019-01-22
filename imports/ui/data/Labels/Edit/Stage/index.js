@@ -67,7 +67,7 @@ Stage.propTypes = {
     setLabels: PropTypes.func.isRequired,
 
     newName: PropTypes.string.isRequired,
-    newDescription: PropTypes.string.isRequired,
+    newDescription: PropTypes.string,
     newColor: PropTypes.string.isRequired,
 };
 

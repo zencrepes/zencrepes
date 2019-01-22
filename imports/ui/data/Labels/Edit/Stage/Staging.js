@@ -73,6 +73,14 @@ class Staging extends Component {
                         await cfgLabels.remove({'id': label.id});
                         await cfgSources.update({id: label.repo.id}, { active: false }, {multi: false});
                     }
+                    else if (data.data.repository.viewerPermission !== 'ADMIN' && data.data.repository.viewerPermission !== 'WRITE') {
+                        // The repository doesn't exist anymore on GitHub.
+                        insVerifiedLabels({
+                            id: label.id,
+                            error: true,
+                            errorMsg: 'Your permissions the necessary permissions on this repository. Your permission: ' + data.data.repository.viewerPermission,
+                        });
+                    }
                     else if (data.data.repository.label === null && action !== 'create') {
                         // The label doesn't exist anymore on GitHub.
                         insVerifiedLabels({

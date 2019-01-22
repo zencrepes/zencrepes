@@ -196,7 +196,7 @@ StageTable.propTypes = {
     action: PropTypes.string.isRequired,
 
     newName: PropTypes.string.isRequired,
-    newDescription: PropTypes.string.isRequired,
+    newDescription: PropTypes.string,
     newColor: PropTypes.string.isRequired,
 };
 

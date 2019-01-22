@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {cfgLabels, cfgSources} from "../../../data/Minimongo";
+import uuidv1 from "uuid/v1";
 
 export default {
     state: {
@@ -150,35 +151,36 @@ export default {
             this.setNewColor('');
         },
 
-        async addRepoUpdateSelected(selectedRepos) {
+        async addRepoUpdateSelected(selectedRepos, rootState) {
             this.setAddReposSelected(selectedRepos);
+            // Prepare labels
+            const labels = selectedRepos.map(lbl => {
+                const repo = cfgSources.findOne({'active': true, 'id': lbl});
+                return {
+                    id: uuidv1(),
+                    repo: repo,
+                    org: repo.org,
+                    number: 0,
+                    name: rootState.labelsEdit.newName,
+                    description: rootState.labelsEdit.newDescription,
+                    color: rootState.labelsEdit.newColor,
+                    issues: {totalCount: 0},
+                    updatedAt: null,
+                }
+            });
+            this.setLabels(labels);
         },
 
         async updateAvailableRepos(labels) {
-            //1- Get a list of an array of repos id
             const selectedLabelsRepos = labels.map(lbl => lbl.repo.id);
-//            console.log(selectedLabelsRepos);
-//            console.log({'active': true, 'id':{'$nin':[selectedLabelsRepos]}});
-//            console.log(JSON.stringify({'active': true, 'id':{'$nin':[selectedLabelsRepos]}}));
             const availableRepos = cfgSources.find({'active': true, 'id':{'$nin':selectedLabelsRepos}}).fetch();
-//            console.log(availableRepos);
             this.setAddReposAvailable(availableRepos.map((repo) => {
                 return {
                     value: repo.id,
                     label: repo.org.login + "/" + repo.name
                 }
             }));
-            /*
-            const selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
-            const milestones = cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch()
-            const includedRepos = milestones.map((ms) => ms.repo);
-            const allRepos = cfgSources.find({active: true}).fetch();
-            const availableRepos = _.differenceBy(allRepos, includedRepos, 'id');
-
-            */
         },
-
-
     }
 };
 

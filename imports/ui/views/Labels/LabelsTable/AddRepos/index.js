@@ -23,54 +23,31 @@ class AddRepos extends Component {
     };
 
     apply = () => {
-        const { setOpenAddRepos } = this.props;
-
-//        console.log('Apply');
-        setOpenAddRepos(false);
-
-        /*
         const {
-            setOpenAddRepository,
-            addReposSelected,
-            allRepos,
-            setStageFlag,
+            setOpenAddRepos,
             setVerifFlag,
-            setVerifying,
-            setRepos,
-            setMilestoneTitle,
-            setMilestoneDescription,
-            setMilestoneDueDate,
-            selectedSprintTitle,
-            selectedSprintDescription,
-            selectedSprintDueDate,
+            setAction,
             setOnSuccess,
-            updateView,
+            setVerifying,
+            setStageFlag,
+            updateView
         } = this.props;
 
-        setOpenAddRepository(false);
-
-        const selectedRepos = addReposSelected.map((r) => {
-            const repoFound = allRepos.filter(repo => r === repo.id);
-            return repoFound[0];
-        });
-        setRepos(selectedRepos);
-        setMilestoneTitle(selectedSprintTitle);
-        setMilestoneDescription(selectedSprintDescription);
-        setMilestoneDueDate(selectedSprintDueDate);
+        setOpenAddRepos(false);
+        setAction('create');
         setOnSuccess(updateView);
         setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
-        */
     };
 
     render() {
-        const { openAddRepos, addReposAvailable, addReposSelected, addRepoUpdateSelected } = this.props;
+        const { openAddRepos, addReposAvailable, addReposSelected, addRepoUpdateSelected, newName } = this.props;
 
         if (openAddRepos) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openAddRepos}>
-                    <DialogTitle id="simple-dialog-title">Add Label to Repos</DialogTitle>
+                    <DialogTitle id="simple-dialog-title">Add {newName} to repos</DialogTitle>
                     <DialogContent>
                         <DualListBox
                             canFilter
@@ -101,26 +78,17 @@ AddRepos.propTypes = {
     openAddRepos: PropTypes.bool.isRequired,
     addReposAvailable: PropTypes.array.isRequired,
     addReposSelected: PropTypes.array.isRequired,
+    newName: PropTypes.string.isRequired,
 
     setOpenAddRepos: PropTypes.func.isRequired,
     addRepoUpdateSelected: PropTypes.func.isRequired,
 
-    /*
-    allRepos: PropTypes.array.isRequired,
-    selectedSprintTitle: PropTypes.string,
-    selectedSprintDescription: PropTypes.string,
-    selectedSprintDueDate: PropTypes.string,
-
-    setStageFlag: PropTypes.func.isRequired,
     setVerifFlag: PropTypes.func.isRequired,
-    setVerifying: PropTypes.func.isRequired,
-    setRepos: PropTypes.func.isRequired,
-    setMilestoneTitle: PropTypes.func.isRequired,
-    setMilestoneDescription: PropTypes.func.isRequired,
-    setMilestoneDueDate: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
+    setVerifying: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
-    */
 };
 
 const mapState = state => ({
@@ -128,33 +96,19 @@ const mapState = state => ({
 
     addReposAvailable: state.labelsEdit.addReposAvailable,
     addReposSelected: state.labelsEdit.addReposSelected,
-
-
-    allRepos: state.sprintsView.allRepos,
-
-    selectedSprintTitle: state.sprintsView.selectedSprintTitle,
-    selectedSprintDescription: state.sprintsView.selectedSprintDescription,
-    selectedSprintDueDate: state.sprintsView.selectedSprintDueDate,
-
+    newName: state.labelsEdit.newName,
 });
 
 const mapDispatch = dispatch => ({
     setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
     addRepoUpdateSelected: dispatch.labelsEdit.addRepoUpdateSelected,
 
-    setStageFlag: dispatch.milestonesCreate.setStageFlag,
-    setVerifFlag: dispatch.milestonesCreate.setVerifFlag,
-    setVerifying: dispatch.milestonesCreate.setVerifying,
-
-    setRepos: dispatch.milestonesCreate.setRepos,
-
-    setMilestoneTitle: dispatch.milestonesCreate.setMilestoneTitle,
-    setMilestoneDescription: dispatch.milestonesCreate.setMilestoneDescription,
-    setMilestoneDueDate: dispatch.milestonesCreate.setMilestoneDueDate,
-
-    setOnSuccess: dispatch.milestonesCreate.setOnSuccess,
-
-    updateView: dispatch.sprintsView.updateView,
+    setVerifFlag: dispatch.labelsEdit.setVerifFlag,
+    setAction: dispatch.labelsEdit.setAction,
+    setOnSuccess: dispatch.labelsEdit.setOnSuccess,
+    setVerifying: dispatch.labelsEdit.setVerifying,
+    setStageFlag: dispatch.labelsEdit.setStageFlag,
+    updateView: dispatch.labelsView.updateView,
 });
 
 export default connect(mapState, mapDispatch)(AddRepos);
