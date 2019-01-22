@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 
 import IconButton from '@material-ui/core/IconButton';
-import CreateNewFolderIcon from '@material-ui/icons/createNewFolder';
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
 class AddRepoButton extends Component {
     constructor (props) {
