@@ -11,11 +11,19 @@ class EditLabelDescription extends Component {
 
     handleChange = (event) => {
         const { setNewDescription } = this.props;
-        setNewDescription(event.target.value);
+        if (event.target.value === '') {
+            setNewDescription(null);
+        } else {
+            setNewDescription(event.target.value);
+        }
     };
 
     render() {
         const { newDescription } = this.props;
+        let description = newDescription;
+        if (description === null) {
+            description = '';
+        }
         return (
             <Input
                 placeholder="Enter a description"

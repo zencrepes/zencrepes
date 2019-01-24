@@ -31,7 +31,7 @@ class AddRepoButton extends Component {
 
     render() {
         const { labels, reposCount } = this.props;
-        if (labels.length < reposCount) {
+        if (labels !== undefined && labels.length < reposCount) {
             return (
                 <IconButton onClick={this.addRepo} title="Add to Repositories">
                     <CreateNewFolderIcon />
@@ -45,7 +45,7 @@ class AddRepoButton extends Component {
 
 AddRepoButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
-    labels: PropTypes.array.isRequired,
+    labels: PropTypes.array,
     setOpenAddRepos: PropTypes.func.isRequired,
     setAddReposSelected: PropTypes.func.isRequired,
     updateAvailableRepos: PropTypes.func.isRequired,

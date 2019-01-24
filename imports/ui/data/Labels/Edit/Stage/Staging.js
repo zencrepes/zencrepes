@@ -63,7 +63,18 @@ class Staging extends Component {
                 }
                 log.info(data);
                 if (data.data !== null) {
-                    if (data.data.repository === null) {
+                    if (data.data !== undefined) {
+                        this.props.updateChip(data.data.rateLimit);
+                    }
+                    if (data.data === undefined) {
+                        // The repository doesn't exist anymore on GitHub.
+                        insVerifiedLabels({
+                            id: label.id,
+                            error: true,
+                            errorMsg: 'Unable to communicate with GitHub, please check your network connectivity',
+                        });
+                    }
+                    else if (data.data.repository === null) {
                         // The repository doesn't exist anymore on GitHub.
                         insVerifiedLabels({
                             id: label.id,
@@ -126,7 +137,6 @@ class Staging extends Component {
                             $set: data.data.repository.label
                         });
                     }
-                    this.props.updateChip(data.data.rateLimit);
                 }
             }
         }

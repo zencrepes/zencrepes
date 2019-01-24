@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import SquareIcon from 'mdi-react/SquareIcon';
-
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import Typography from '@material-ui/core/Typography';
 
 import RemoveButton from './RemoveButton.js';
 import VerifState from './VerifState.js';
+
+import NameField from './NameField.js';
+import ColorField from './ColorField.js';
+import DescriptionField from './DescriptionField.js';
 
 import green from "@material-ui/core/colors/green";
 import red from "@material-ui/core/colors/red";
@@ -78,9 +79,14 @@ class StageTable extends Component {
                                 Description
                             </TableCell>
                             {action !== 'create' &&
-                                <TableCell component="th" scope="row">
-                                    Issues Count
-                                </TableCell>
+                                <React.Fragment>
+                                    <TableCell component="th" scope="row">
+                                        Issues
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        PRs
+                                    </TableCell>
+                                </React.Fragment>
                             }
                             <TableCell component="th" scope="row">
                                 GitHub Verified
@@ -104,71 +110,40 @@ class StageTable extends Component {
                                         {label.repo.name}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {action !== 'create' &&
-                                            <Typography variant="body1" gutterBottom>
-                                                {action !== 'delete' &&
-                                                    <b>Old Value: </b>
-                                                }
-                                                <a
-                                                    href={label.url}
-                                                    className={classes.labelTitle}
-                                                    rel="noopener noreferrer" target="_blank">
-                                                        {label.name}
-                                                        <OpenInNewIcon style={{fontSize: 12}}/>
-                                                </a>
-                                            </Typography>
-                                        }
-                                        {action !== 'delete' &&
-                                            <Typography variant="body1" gutterBottom>
-                                                {action !== 'create' &&
-                                                    <b>New Value: </b>
-                                                }
-                                                {newName}
-                                            </Typography>
-                                        }
+                                        <NameField
+                                            action={action}
+                                            name={label.name}
+                                            url={label.url}
+                                            newName={newName}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {action !== 'create' &&
-                                            <Typography variant="body1" gutterBottom>
-                                                {action !== 'delete' &&
-                                                    <b>Old Value: </b>
-                                                }
-                                                <SquareIcon color={'#' + label.color}/> ({'#' + label.color})
-                                            </Typography>
-                                        }
-                                        {action !== 'delete' &&
-                                            <Typography variant="body1" gutterBottom>
-                                                {action !== 'create' &&
-                                                    <b>New Value: </b>
-                                                }
-                                                <SquareIcon color={'#' + newColor}/> ({'#' + newColor})
-                                            </Typography>
-                                        }
+                                        <ColorField
+                                            action={action}
+                                            color={label.color}
+                                            newColor={newColor}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {action !== 'create' &&
-                                            <Typography variant="body1" gutterBottom>
-                                                {action !== 'delete' &&
-                                                    <b>Old Value: </b>
-                                                }
-                                                {label.description}
-                                            </Typography>
-                                        }
-                                        {action !== 'delete' &&
-                                            <Typography variant="body1" gutterBottom>
-                                                {action !== 'create' &&
-                                                    <b>New Value: </b>
-                                                }
-                                                {newDescription}
-                                            </Typography>
-                                        }
+                                        <DescriptionField
+                                            action={action}
+                                            description={label.description}
+                                            newDescription={newDescription}
+                                        />
                                     </TableCell>
                                     {action !== 'create' &&
-                                        <TableCell component="th" scope="row">
-                                            <Typography variant="body1" gutterBottom>
-                                                {label.issues.totalCount}
-                                            </Typography>
-                                        </TableCell>
+                                        <React.Fragment>
+                                            <TableCell component="th" scope="row">
+                                                <Typography variant="body1" gutterBottom>
+                                                    {label.issues.totalCount}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                <Typography variant="body1" gutterBottom>
+                                                    {label.pullRequests.totalCount}
+                                                </Typography>
+                                            </TableCell>
+                                        </React.Fragment>
                                     }
                                     <TableCell component="th" scope="row">
                                         <VerifState

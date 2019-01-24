@@ -43,7 +43,7 @@ export default {
         updateColor: false,         // Flag to indicate if the color should be updated
 
         newName: '',                // Name to update to
-        newDescription: '',         // Description to update to
+        newDescription: null,         // Description to update to
         newColor: '',               // Color to update to
     },
     reducers: {

@@ -49,7 +49,9 @@ class Stage extends Component {
                     </DialogContent>
                     <DialogActions>
                         <CancelButton />
-                        <ApplyButton />
+                        {labels.length > 0 &&
+                            <ApplyButton />
+                        }
                     </DialogActions>
                 </Dialog>
             </div>

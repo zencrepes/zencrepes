@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import DualListBox from 'react-dual-listbox';
+import Typography from "@material-ui/core/Typography/Typography";
 
 class AddRepos extends Component {
     constructor (props) {
@@ -47,8 +48,11 @@ class AddRepos extends Component {
         if (openAddRepos) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openAddRepos}>
-                    <DialogTitle id="simple-dialog-title">Add {newName} to repos</DialogTitle>
+                    <DialogTitle id="simple-dialog-title">Add {newName}</DialogTitle>
                     <DialogContent>
+                        <Typography color="textSecondary">
+                            Please select repositories this label should be added to
+                        </Typography>
                         <DualListBox
                             canFilter
                             options={addReposAvailable}
@@ -62,9 +66,11 @@ class AddRepos extends Component {
                         <Button onClick={this.cancel} color="primary" autoFocus>
                             Cancel
                         </Button>
-                        <Button onClick={this.apply} color="primary" autoFocus>
-                            Apply
-                        </Button>
+                        {addReposSelected.length >0 &&
+                            <Button onClick={this.apply} color="primary" autoFocus>
+                                Apply
+                            </Button>
+                        }
                     </DialogActions>
                 </Dialog>
             );

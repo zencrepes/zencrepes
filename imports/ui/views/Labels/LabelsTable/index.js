@@ -29,7 +29,7 @@ import EditLabelName from './EditLabelName.js';
 import EditLabelDescription from './EditLabelDescription.js';
 import AddRepoButton from './AddRepoButton.js';
 import AddRepos from './AddRepos/index.js';
-
+import ReposTable from './ReposTable/index.js';
 import {
     SortingState,
     EditingState,
@@ -37,6 +37,7 @@ import {
     IntegratedPaging,
     IntegratedSorting,
     DataTypeProvider,
+    RowDetailState,
 } from '@devexpress/dx-react-grid';
 import {
     Grid,
@@ -45,8 +46,20 @@ import {
     TableEditRow,
     TableEditColumn,
     PagingPanel,
+    TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
 import {connect} from "react-redux";
+
+const RowDetail = ({ row }) => {
+    return (
+        <ReposTable
+            labels={row.labels}
+        />
+    );
+};
+RowDetail.propTypes = {
+    row: PropTypes.object,
+};
 
 const AddButton = ({ onExecute }) => (
     <div style={{ textAlign: 'center' }}>
@@ -203,6 +216,25 @@ const IssuesTypeProvider = props => (
     />
 );
 
+const PrFormatter = ({ value }) => {
+    if (value === undefined) {
+        return 0
+    } else {
+        return value.filter(label => label.pullRequests !== undefined).map(label => label.pullRequests.totalCount).reduce((acc, count) => acc + count, 0);
+    }
+};
+PrFormatter.propTypes = {
+    value: PropTypes.array,
+};
+
+
+const PrTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={PrFormatter}
+        {...props}
+    />
+);
+
 const LookupEditCellBase = ({
                                 availableColumnValues, value, onValueChange,
                             }) => (
@@ -266,7 +298,8 @@ class LabelsTable extends Component {
             columns: [
                 { name: 'name', title: 'Label' },
                 { name: 'repos', title: 'In Repos', getCellValue: row => row.labels },
-                { name: 'issues', title: 'Issues Count', getCellValue: row => row.labels },
+                { name: 'issues', title: 'Issues', getCellValue: row => row.labels },
+                { name: 'pr', title: 'PRs', getCellValue: row => row.labels },
                 { name: 'colors', title: 'Colors' },
                 { name: 'descriptions', title: 'Description' },
             ],
@@ -275,6 +308,7 @@ class LabelsTable extends Component {
                 { columnName: 'name', width: 200 },
                 { columnName: 'repos', width: 150 },
                 { columnName: 'issues', width: 90 },
+                { columnName: 'pr', width: 90 },
                 { columnName: 'colors', width: 150 },
             ],
             columnOrder: ['name', 'repos', 'issues', 'colors', 'descriptions'],
@@ -282,9 +316,11 @@ class LabelsTable extends Component {
             descriptionsColumns: ['descriptions'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
+            prColumns: ['pr'],
             editingStateColumnExtensions: [
                 { columnName: 'repos', editingEnabled: false },
                 { columnName: 'issues', editingEnabled: false },
+                { columnName: 'pr', editingEnabled: false },
             ],
             sorting: [],
             editingRowIds: [],
@@ -339,7 +375,7 @@ class LabelsTable extends Component {
         if (addedRows.length > 0) {
             setNewColor('FC5CA9');
             setNewDescription('');
-            setNewName('');
+            setNewName('New Label');
         }
         this.setState({
             addedRows: addedRows.map(row => (Object.keys(row).length ? row : {
@@ -355,7 +391,7 @@ class LabelsTable extends Component {
             this.setState({ editingRowIds: editLabel });
             startEditingLabel(editLabel[0]);
         } else {
-            this.setState({ editingRowIds })
+            this.setState({ editingRowIds });
             startEditingLabel(editingRowIds[0]);
         }
     };
@@ -472,6 +508,7 @@ class LabelsTable extends Component {
             descriptionsColumns,
             reposColumns,
             issuesColumns,
+            prColumns,
             editingStateColumnExtensions,
         } = this.state;
 
@@ -519,6 +556,9 @@ class LabelsTable extends Component {
                         onAddedRowsChange={this.changeAddedRows}
                         onCommitChanges={this.commitChanges}
                     />
+                    <RowDetailState
+                        defaultExpandedRowIds={[]}
+                    />
                     <ColorsTypeProvider
                         for={colorsColumns}
                     />
@@ -530,6 +570,9 @@ class LabelsTable extends Component {
                     />
                     <IssuesTypeProvider
                         for={issuesColumns}
+                    />
+                    <PrTypeProvider
+                        for={prColumns}
                     />
                     <IntegratedSorting />
                     <IntegratedPaging />
@@ -551,6 +594,9 @@ class LabelsTable extends Component {
                         showDeleteCommand
                         commandComponent={Command}
                         //cellComponent={CellComponent}
+                    />
+                    <TableRowDetail
+                        contentComponent={RowDetail}
                     />
                     <PagingPanel
                         pageSizes={pageSizes}
