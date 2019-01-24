@@ -34,8 +34,23 @@ class Staging extends Component {
             action,
             log,
             newName,
+            newDescription,
+            newColor,
         } = this.props;
         setVerifiedLabels([]);
+        log.info(newDescription);
+        log.info(newColor);
+        /*
+        console.log('Filter out labels that will not change');
+        const differentLabels = labels.filter((lbl) => {
+            if (lbl.name === newName && lbl.color === newColor && (lbl.description === newDescription || (newDescription === '' && lbl.description === null))) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+        console.log(differentLabels);
+        */
         setVerifyingMsg('About pull data from ' + labels.length + ' labels');
 //        for (let label of labels) {
         for (const [idx, label] of labels.entries()) {
@@ -154,6 +169,8 @@ Staging.propTypes = {
     verifying: PropTypes.bool.isRequired,
     action: PropTypes.string,
     newName: PropTypes.string,
+    newColor: PropTypes.string,
+    newDescription: PropTypes.string,
     labels: PropTypes.array.isRequired,
     onStagingSuccess: PropTypes.func.isRequired,
 
@@ -173,6 +190,8 @@ const mapState = state => ({
     verifying: state.labelsEdit.verifying,
     action: state.labelsEdit.action,
     newName: state.labelsEdit.newName,
+    newColor: state.labelsEdit.newColor,
+    newDescription: state.labelsEdit.newDescription,
 
     labels: state.labelsEdit.labels,
     onStagingSuccess: state.labelsEdit.onStagingSuccess,

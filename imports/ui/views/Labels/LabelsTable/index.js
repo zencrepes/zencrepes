@@ -280,6 +280,8 @@ const EditCell = (props) => {
         return (<TableEditRow.Cell {...props} ><ReposFormatter value={row.labels} /></TableEditRow.Cell>);
     } else if (column.name === 'issues') {
         return (<TableEditRow.Cell {...props} ><IssuesFormatter value={row.labels} /></TableEditRow.Cell>);
+    } else if (column.name === 'pullRequests') {
+        return (<TableEditRow.Cell {...props} ><PrFormatter value={row.pullRequests} /></TableEditRow.Cell>);
     }
     return <TableEditRow.Cell {...props} />;
 };
@@ -299,7 +301,7 @@ class LabelsTable extends Component {
                 { name: 'name', title: 'Label' },
                 { name: 'repos', title: 'In Repos', getCellValue: row => row.labels },
                 { name: 'issues', title: 'Issues', getCellValue: row => row.labels },
-                { name: 'pr', title: 'PRs', getCellValue: row => row.labels },
+                { name: 'pullRequests', title: 'PRs', getCellValue: row => row.labels },
                 { name: 'colors', title: 'Colors' },
                 { name: 'descriptions', title: 'Description' },
             ],
@@ -308,19 +310,19 @@ class LabelsTable extends Component {
                 { columnName: 'name', width: 200 },
                 { columnName: 'repos', width: 150 },
                 { columnName: 'issues', width: 90 },
-                { columnName: 'pr', width: 90 },
+                { columnName: 'pullRequests', width: 90 },
                 { columnName: 'colors', width: 150 },
             ],
-            columnOrder: ['name', 'repos', 'issues', 'colors', 'descriptions'],
+            columnOrder: ['name', 'repos', 'issues', 'pullRequests', 'colors', 'descriptions'],
             colorsColumns: ['colors'],
             descriptionsColumns: ['descriptions'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
-            prColumns: ['pr'],
+            prColumns: ['pullRequests'],
             editingStateColumnExtensions: [
                 { columnName: 'repos', editingEnabled: false },
                 { columnName: 'issues', editingEnabled: false },
-                { columnName: 'pr', editingEnabled: false },
+                { columnName: 'pullRequests', editingEnabled: false },
             ],
             sorting: [],
             editingRowIds: [],

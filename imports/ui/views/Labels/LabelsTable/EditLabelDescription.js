@@ -30,7 +30,7 @@ class EditLabelDescription extends Component {
                 inputProps={{
                     'aria-label': 'Description',
                 }}
-                value={newDescription}
+                value={description}
                 onChange={this.handleChange}
             />
         );
