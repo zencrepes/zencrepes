@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 import { Component } from 'react'
 
 import { connect } from "react-redux";
@@ -36,14 +38,24 @@ class Data extends Component {
         let users = [];
 
         for (let i = 0; i < loadUsers.length; i++) {
-            let data = await client.query({
-                query: GET_USER_DATA,
-                variables: {login: loadUsers[i]},
-                fetchPolicy: 'no-cache',
-                errorPolicy: 'ignore',
-            });
-            updateChip(data.data.rateLimit);
-            users.push(data.data.user);
+            let data = {};
+            try {
+                data = await client.query({
+                    query: GET_USER_DATA,
+                    variables: {login: loadUsers[i]},
+                    fetchPolicy: 'no-cache',
+                    errorPolicy: 'ignore',
+                });
+            }
+            catch (error) {
+                log.warn(error);
+            }
+            if (data.data !== undefined) {
+                updateChip(data.data.rateLimit);
+                users.push(data.data.user);
+            } else {
+                Meteor.logout();
+            }
         }
         refreshUsers(users);
         log.info('Load completed: There is a total of ' + users.length + ' users in memory');

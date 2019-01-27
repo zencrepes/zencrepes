@@ -46,7 +46,7 @@ class Refresh extends Component {
         const allRepos = _.uniqBy(labels.map(label => label.repo), 'id');
         //Get list of repositories for current query
         reposSetOnSuccess(labelsUpdateView);
-        reposSetLoadRepos(allRepos);
+        reposSetLoadRepos(allRepos.map(r => r.id));
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
@@ -71,7 +71,7 @@ class Refresh extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, labels } = this.props;
         const { anchorEl } = this.state;
 
         return (
@@ -83,7 +83,7 @@ class Refresh extends Component {
                     className={classes.button}
                 >
                     <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Refresh Labels
+                    Load Labels
                 </Button>
                 <Menu
                     id="simple-menu"
@@ -92,8 +92,18 @@ class Refresh extends Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.refreshAllRepos}>Across all Repositories</MenuItem>
-                    <MenuItem onClick={this.refreshSelectedRepos}>Across selected Repositories</MenuItem>
-                    <MenuItem onClick={this.refreshLabels}>Filtered Labels</MenuItem>
+                    <MenuItem
+                        onClick={this.refreshSelectedRepos}
+                        disabled={labels.length === 0 ? true : false}
+                    >
+                        Across selected Repositories
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.refreshLabels}
+                        disabled={labels.length === 0 ? true : false}
+                    >
+                        Displayed Labels
+                    </MenuItem>
                 </Menu>
             </div>
         )

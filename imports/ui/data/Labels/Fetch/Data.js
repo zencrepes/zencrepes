@@ -88,7 +88,7 @@ class Data extends Component {
                     log.warn(error);
                 }
                 log.info(repoObj);
-                if (data.data !== null) {
+                if (data.data !== undefined && data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
                     // Check if the repository actually exist and labels were returned

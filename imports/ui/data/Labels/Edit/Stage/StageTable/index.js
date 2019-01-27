@@ -17,6 +17,9 @@ import NameField from './NameField.js';
 import ColorField from './ColorField.js';
 import DescriptionField from './DescriptionField.js';
 
+import OrgLink from '../../../../../components/Common/OrgLink/index.js';
+import RepoLink from '../../../../../components/Common/RepoLink/index.js';
+
 import green from "@material-ui/core/colors/green";
 import red from "@material-ui/core/colors/red";
 
@@ -104,10 +107,14 @@ class StageTable extends Component {
                                         {action}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {label.org.login}
+                                        <OrgLink
+                                            org={label.org}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {label.repo.name}
+                                        <RepoLink
+                                            repo={label.repo}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
                                         <NameField

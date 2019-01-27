@@ -42,6 +42,12 @@ export default {
             const labels = cfgLabels.find(rootState.labelsView.query).fetch();
             this.setLabels(labels);
         },
+        async clearLabels() {
+            cfgLabels.remove({});
+            this.setLabels([]);
+            this.setQuery({});
+            this.updateView();
+        },
     }
 };
 

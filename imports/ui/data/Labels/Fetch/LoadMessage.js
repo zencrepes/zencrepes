@@ -19,7 +19,7 @@ class LoadMessage extends Component {
 
         return (
             <React.Fragment>
-                <span id="message-id">Things are loading, {loadedCount} Labels found</span>
+                <span id="message-id">Loading, {loadedCount} Labels found</span>
                 <LinearProgress color="primary" variant="determinate" value={this.getProgressValue()} />
             </React.Fragment>
         );

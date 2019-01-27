@@ -14,6 +14,10 @@ import Typography from '@material-ui/core/Typography';
 
 import RemoveButton from './RemoveButton.js';
 
+import RepoLink from '../../../../components/Common/RepoLink/index.js';
+import OrgLink from '../../../../components/Common/OrgLink/index.js';
+import LabelLink from '../../../../components/Common/LabelLink/index.js';
+
 const styles = {
     table: {
         width: '70%'
@@ -37,6 +41,9 @@ class ReposTable extends Component {
                 <TableHead>
                     <TableRow>
                         <TableCell component="th" scope="row">
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                            Name
                         </TableCell>
                         <TableCell component="th" scope="row">
                             Organization
@@ -68,10 +75,19 @@ class ReposTable extends Component {
                                     />
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    {label.org.login}
+                                    <LabelLink
+                                        label={label}
+                                    />
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    {label.repo.name}
+                                    <OrgLink
+                                        org={label.org}
+                                    />
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    <RepoLink
+                                        repo={label.repo}
+                                    />
                                 </TableCell>
                                 <TableCell component="th" scope="row">
                                     <Typography variant="body1" gutterBottom>
@@ -90,7 +106,11 @@ class ReposTable extends Component {
                                 </TableCell>
                                 <TableCell component="th" scope="row">
                                     <Typography variant="body1" gutterBottom>
-                                        {label.pullRequests.totalCount}
+                                        {label.pullRequests !== undefined &&
+                                            <React.Fragment>
+                                                {label.pullRequests.totalCount}
+                                            </React.Fragment>
+                                        }
                                     </Typography>
                                 </TableCell>
                             </TableRow>

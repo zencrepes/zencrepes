@@ -15,6 +15,7 @@ import LabelsTable from './LabelsTable/index.js';
 import LabelsFacets from './Facets/index.js';
 import LabelsQuery from './Query/index.js';
 import Actions from "./Actions/index.js";
+import NoData from "./NoData/index.js";
 
 const style = {
     root: {
@@ -63,32 +64,38 @@ class Labels extends Component {
                 <Actions />
                 <LabelsFetch loadModal={false} />
                 <LabelsEdit loadModal={false} />
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item >
-                        <LabelsFacets />
-                    </Grid>
-                    <Grid item xs={12} sm container>
+                {labels.length === 0 ? (
+                    <NoData />
+                ) : (
+                    <React.Fragment>
                         <Grid
                             container
-                            direction="column"
+                            direction="row"
                             justify="flex-start"
                             alignItems="flex-start"
+                            spacing={8}
                         >
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <LabelsQuery />
+                            <Grid item >
+                                <LabelsFacets />
                             </Grid>
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <LabelsTable labels={labels}/>
+                            <Grid item xs={12} sm container>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                >
+                                    <Grid item xs={12} sm className={classes.fullWidth}>
+                                        <LabelsQuery />
+                                    </Grid>
+                                    <Grid item xs={12} sm className={classes.fullWidth}>
+                                        <LabelsTable labels={labels}/>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
+                    </React.Fragment>
+                )}
             </General>
         );
     }

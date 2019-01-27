@@ -172,16 +172,10 @@ const ReposFormatter = ({ value }) => {
                 0 <AddRepoButton labels={value}/>
             </React.Fragment>
         );
-    } else if (value.length > 1) {
-        return (
-            <React.Fragment>
-                {value.length} <AddRepoButton labels={value}/>
-            </React.Fragment>
-        );
     } else {
         return (
             <React.Fragment>
-                1 ({value[0].repo.name}) <AddRepoButton labels={value}/>
+                {value.length} <AddRepoButton labels={value}/>
             </React.Fragment>
         );
     }
@@ -299,11 +293,11 @@ class LabelsTable extends Component {
         this.state = {
             columns: [
                 { name: 'name', title: 'Label' },
-                { name: 'repos', title: 'In Repos', getCellValue: row => row.labels },
-                { name: 'issues', title: 'Issues', getCellValue: row => row.labels },
-                { name: 'pullRequests', title: 'PRs', getCellValue: row => row.labels },
                 { name: 'colors', title: 'Colors' },
                 { name: 'descriptions', title: 'Description' },
+                { name: 'issues', title: 'Issues', getCellValue: row => row.labels },
+                { name: 'pullRequests', title: 'PRs', getCellValue: row => row.labels },
+                { name: 'repos', title: 'Repos', getCellValue: row => row.labels },
             ],
             tableColumnExtensions: [
 //                { columnName: 'edit', width: 60 },
@@ -313,7 +307,7 @@ class LabelsTable extends Component {
                 { columnName: 'pullRequests', width: 90 },
                 { columnName: 'colors', width: 150 },
             ],
-            columnOrder: ['name', 'repos', 'issues', 'pullRequests', 'colors', 'descriptions'],
+            columnOrder: ['name', 'colors', 'descriptions', 'issues', 'pullRequests', 'repos'],
             colorsColumns: ['colors'],
             descriptionsColumns: ['descriptions'],
             reposColumns: ['repos'],
