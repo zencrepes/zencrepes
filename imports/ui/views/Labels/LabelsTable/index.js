@@ -302,7 +302,7 @@ class LabelsTable extends Component {
             tableColumnExtensions: [
 //                { columnName: 'edit', width: 60 },
                 { columnName: 'name', width: 200 },
-                { columnName: 'repos', width: 150 },
+                { columnName: 'repos', width: 110 },
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pullRequests', width: 90 },
                 { columnName: 'colors', width: 150 },
@@ -427,25 +427,6 @@ class LabelsTable extends Component {
         setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
-
-/*
-        let { rows } = this.state;
-        if (added) {
-            const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
-            rows = [
-                ...rows,
-                ...added.map((row, index) => ({
-                    id: startingAddedId + index,
-                    ...row,
-                })),
-            ];
-        }
-        if (changed) {
-            rows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
-        }
-        this.setState({ rows, deletingRows: deleted || getStateDeletingRows() });
-        */
-
     };
 
     formatData() {
@@ -508,22 +489,6 @@ class LabelsTable extends Component {
             editingStateColumnExtensions,
         } = this.state;
 
-        /*
-        const CellComponent = ({ children, row, ...restProps }) => (
-            <TableEditColumn.Cell row={row} {...restProps}>
-                {children}
-                <TableEditColumn.Command
-                    id="custom"
-                    text="Show Info"
-                    onExecute={() => {
-                        console.log('add repo');
-                        //showDetails(row);
-                    }} // action callback
-                />
-            </TableEditColumn.Cell>
-        );
-        */
-
         return (
             <React.Fragment>
                 <AddRepos />
@@ -584,12 +549,10 @@ class LabelsTable extends Component {
                         cellComponent={EditCell}
                     />
                     <TableEditColumn
-                        width={170}
                         showAddCommand={!addedRows.length}
                         showEditCommand
                         showDeleteCommand
                         commandComponent={Command}
-                        //cellComponent={CellComponent}
                     />
                     <TableRowDetail
                         contentComponent={RowDetail}
