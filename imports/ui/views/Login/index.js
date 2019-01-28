@@ -108,8 +108,7 @@ class Login extends Component {
                             </div>
                             <p className={classes.subtitle}>Agile analytics and management over GitHub organizations & repositories made easy!</p>
                             <p className={classes.paragraph}>ZenCrepes operates across repositories and organizations and facilitates batch modifications. Welcome consistency!</p>
-                            <p className={classes.paragraph}>If you update content, ZenCrepes will first stage the changes and <b><u>you&apos;ll have to confirm</u></b>
-                                before pushing to GitHub.</p>
+                            <p className={classes.paragraph}>When batch updating content, ZenCrepes will first stage the changes and <b><u>will ask you to confirm</u></b> before pushing to GitHub.</p>
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <h4 className={classes.secondTitle}>Get Started</h4>
