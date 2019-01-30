@@ -1,20 +1,35 @@
 export default {
     state: {
         loading: false,             // Flag indicating something is loading
-        loadingMsg: '',             // Message to be displayed in the modal or the snackbar
-        loadingMsgAlt: '',          // Alternative message (2nd line) to be displayed in the modal or the snackbar
+        loadingMsg: null,             // Message to be displayed in the modal or the snackbar
+        loadingMsgAlt: null,          // Alternative message (2nd line) to be displayed in the modal or the snackbar
         loadingModal: true,         // True to display a modal, false to display a snackbar
         loadingIterateCurrent: 0,   // For progressbar, current count
         loadingIterateTotal: 0,     // For progressbar, maximum count
         loadingSuccess: false,      // Flag indicating if loading was successful
-        loadingSuccessMsg:'',       // Message to be displayed at the end of loading (successful or not)
+        loadingSuccessMsg: null,       // Message to be displayed at the end of loading (successful or not)
 
         onSuccess: () => {},        // Function to be executed on load Success
         onCancel: () => {},         // Function to be executed on load Cancel
         onFailure: () => {},        // Function to be executed on load Failure
     },
     reducers: {
-        setLoading(state, payload) {return { ...state, loading: payload };},
+        // When setting loading to false, reset all messages and flag to initial state.
+        setLoading(state, payload) {
+            if (payload === true) {
+                return { ...state, loading: payload };
+            } else {
+                return {
+                    ...state,
+                    loading: payload,
+                    loadingMsg: null,
+                    loadingMsgAlt: null,
+                    loadingModal: true,
+                    loadingIterateCurrent: 0,
+                    loadingIterateTotal: 0,
+                };
+            }
+        },
         setLoadingMsg(state, payload) {return { ...state, loadingMsg: payload };},
         setLoadingMsgAlt(state, payload) {return { ...state, loadingMsgAlt: payload };},
         setLoadingModal(state, payload) {return { ...state, loadingModal: payload };},
