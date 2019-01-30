@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import PropTypes from 'prop-types';
-import {connect} from "react-redux";
-
 import Snackbar from "@material-ui/core/Snackbar";
 
 import LoadMessage from './LoadMessage.js';
@@ -13,12 +10,10 @@ class LoadSnackbar extends Component {
     }
 
     render() {
-        const { loading } = this.props;
-
         return (
             <Snackbar
                 anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                open={loading}
+                open={true}
                 ContentProps={{
                     'aria-describedby': 'message-id',
                 }}
@@ -28,12 +23,4 @@ class LoadSnackbar extends Component {
     }
 }
 
-LoadSnackbar.propTypes = {
-    loading: PropTypes.bool.isRequired,
-};
-
-const mapState = state => ({
-    loading: state.labelsFetch.loading,
-});
-
-export default connect(mapState, null)(LoadSnackbar);
+export default LoadSnackbar;

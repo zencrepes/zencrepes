@@ -31,10 +31,10 @@ class NoData extends Component {
     }
 
     refreshAllRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, reposSetOnSuccess, labelsUpdateView  } = this.props;
-        reposSetOnSuccess(labelsUpdateView);
-        reposSetLoadRepos([]);
-        reposSetLoadFlag(true);
+        const { setLoadFlag, setLoadRepos, setOnSuccess, updateView  } = this.props;
+        setOnSuccess(updateView);
+        setLoadRepos([]);
+        setLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
@@ -67,11 +67,11 @@ class NoData extends Component {
 NoData.propTypes = {
     classes: PropTypes.object.isRequired,
     labels: PropTypes.array.isRequired,
-    reposSetLoadFlag: PropTypes.func.isRequired,
-    reposSetLoadRepos: PropTypes.func.isRequired,
-    reposSetOnSuccess: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setLoadRepos: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
 
-    labelsUpdateView: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -79,10 +79,10 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    reposSetLoadFlag: dispatch.labelsFetch.setLoadFlag,
-    reposSetLoadRepos: dispatch.labelsFetch.setLoadRepos,
-    reposSetOnSuccess: dispatch.labelsFetch.setOnSuccess,
-    labelsUpdateView: dispatch.labelsView.updateView,
+    setLoadFlag: dispatch.labelsFetch.setLoadFlag,
+    setLoadRepos: dispatch.labelsFetch.setLoadRepos,
+    setOnSuccess: dispatch.labelsFetch.setOnSuccess,
+    updateView: dispatch.labelsView.updateView,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(NoData));

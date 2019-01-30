@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
 
 import Data from './Data.js';
-import LoadModal from './LoadModal.js';
-import LoadSnackbar from './LoadSnackbar.js';
-import Notifications from './Notifications.js';
 
 class LabelsFetch extends Component {
     constructor(props) {
@@ -12,24 +8,12 @@ class LabelsFetch extends Component {
     }
 
     render() {
-        const { loadModal } = this.props;
         return (
-            <div>
+            <React.Fragment>
                 <Data />
-                <Notifications />
-                {loadModal &&
-                    <LoadModal />
-                }
-                {!loadModal &&
-                    <LoadSnackbar />
-                }
-            </div>
+            </React.Fragment>
         );
     }
 }
-
-LabelsFetch.propTypes = {
-    loadModal: PropTypes.bool,
-};
 
 export default LabelsFetch;

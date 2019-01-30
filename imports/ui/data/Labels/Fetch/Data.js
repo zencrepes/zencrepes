@@ -14,8 +14,8 @@ import PropTypes from "prop-types";
 class Data extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
         this.errorRetry = 0;
+        this.labelsCount = 0;
     }
 
     componentDidUpdate = (prevProps) => {
@@ -30,10 +30,13 @@ class Data extends Component {
     load = async () => {
         const {
             setLoading,
+            setLoadingMsgAlt,
             setLoadSuccess,
-            setIterateTotal,
-            incIterateCurrent,
-            setIterateCurrent,
+            setLoadingIterateTotal,
+            incLoadingIterateCurrent,
+            setLoadingIterateCurrent,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
             log,
             loadRepos,
             onSuccess
@@ -46,8 +49,9 @@ class Data extends Component {
         }
 
         let allRepos = cfgSources.find(reposQuery).fetch();
-        setIterateTotal(allRepos.length);
-        setIterateCurrent(0);
+        setLoading(true);
+        setLoadingIterateTotal(allRepos.filter(repo => repo.active === true).length);
+        setLoadingIterateCurrent(0);
         for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any labels attached to this repo (if any)
@@ -55,16 +59,20 @@ class Data extends Component {
                 await cfgLabels.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
                 log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.labels.totalCount + ' labels');
+                setLoadingMsgAlt('Fetching labels from ' + repo.org.login + '/' + repo.name);
                 await this.getLabelsPagination(null, 5, repo);
+                incLoadingIterateCurrent(1);
+                setLoadingSuccessMsg('Fetched ' + this.labelsCount + ' labels');
             }
-            incIterateCurrent(1);
         }
 
         log.info('Will be deleting ' + cfgLabels.find({active: false}).count() + ' labels attached to disabled repositories');
         await cfgLabels.remove({active: false});
 
         log.info('Load completed: There is a total of ' + cfgLabels.find({}).count() + ' labels in memory');
-        setLoading(false);  // Set to true to indicate labels are done loading.
+        setLoadingSuccess(true);
+        setLoading(false);          // Set to false to indicate labels are done loading.
+        this.labelsCount = 0;
         setLoadSuccess(true);
         onSuccess();
     };
@@ -120,7 +128,10 @@ class Data extends Component {
     };
 
     ingestLabels = async (data, repoObj) => {
-        const { incLoadedCount, log } = this.props;
+        const {
+            setLoadingMsg,
+            log
+        } = this.props;
 
         let lastCursor = null;
         for (var currentLabel of data.data.repository.labels.edges) {
@@ -136,7 +147,8 @@ class Data extends Component {
             }, {
                 $set: labelObj
             });
-            incLoadedCount(1);
+            this.labelsCount = this.labelsCount + 1;
+            setLoadingMsg(this.labelsCount + ' labels loaded');
             //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentLabel.cursor
         }
@@ -154,40 +166,59 @@ Data.propTypes = {
     loadRepos: PropTypes.array,
 
     setLoadFlag: PropTypes.func.isRequired,
-    setLoading: PropTypes.func.isRequired,
     setLoadSuccess: PropTypes.func.isRequired,
-    setLoadedCount: PropTypes.func.isRequired,
-    incLoadedCount: PropTypes.func.isRequired,
-    setIterateTotal: PropTypes.func.isRequired,
-    setIterateCurrent: PropTypes.func.isRequired,
-    incIterateCurrent: PropTypes.func.isRequired,
-    updateChip: PropTypes.func.isRequired,
+//    setLoadedCount: PropTypes.func.isRequired,
+//    incLoadedCount: PropTypes.func.isRequired,
+//    setIterateTotal: PropTypes.func.isRequired,
+//    setIterateCurrent: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
     onSuccess: PropTypes.func.isRequired,
+
+    setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    incLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.labelsFetch.loadFlag,
-    loading: state.labelsFetch.loading,
     onSuccess: state.labelsFetch.onSuccess,
 
     log: state.global.log,
 
     loadRepos: state.labelsFetch.loadRepos,
+
+    loading: state.global.loading,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsFetch.setLoadFlag,
-    setLoading: dispatch.labelsFetch.setLoading,
     setLoadSuccess: dispatch.labelsFetch.setLoadSuccess,
     setLoadedCount: dispatch.labelsFetch.setLoadedCount,
 
-    incLoadedCount: dispatch.labelsFetch.incLoadedCount,
-    setIterateTotal: dispatch.labelsFetch.setIterateTotal,
-    setIterateCurrent: dispatch.labelsFetch.setIterateCurrent,
-    incIterateCurrent: dispatch.labelsFetch.incIterateCurrent,
+//    incLoadedCount: dispatch.labelsFetch.incLoadedCount,
+//    setIterateTotal: dispatch.labelsFetch.setIterateTotal,
+//    setIterateCurrent: dispatch.labelsFetch.setIterateCurrent,
+//    incIterateCurrent: dispatch.labelsFetch.incIterateCurrent,
+
+    setLoading: dispatch.global.setLoading,
+    setLoadingMsg: dispatch.global.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.global.setLoadingMsgAlt,
+    setLoadingModal: dispatch.global.setLoadingModal,
+    setLoadingIterateCurrent: dispatch.global.setLoadingIterateCurrent,
+    incLoadingIterateCurrent: dispatch.global.incLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.global.setLoadingIterateTotal,
+    setLoadingSuccess: dispatch.global.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.global.setLoadingSuccessMsg,
 
     updateChip: dispatch.chip.updateChip,
 });

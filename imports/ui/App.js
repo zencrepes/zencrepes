@@ -29,6 +29,7 @@ import ApolloProviderGithub from './services/ApolloProviderGithub.js';
 
 import UsersFetch from './data/Users/Fetch/index.js';
 import Startup from './components/Startup/index.js';
+import Loading from './components/Loading/index.js';
 
 import ErrorBoundary from './ErrorBoundary.js';
 
@@ -61,6 +62,7 @@ class App extends Component {
             return (
                 <ApolloProviderGithub>
                     <UsersFetch />
+                    <Loading />
                     <div className="App">
                         <ErrorBoundary>
                             <Router>
