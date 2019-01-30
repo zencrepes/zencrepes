@@ -4,7 +4,9 @@ import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import {cfgLabels, cfgSources} from "../../Minimongo";
+import {cfgLabels} from "../../Minimongo";
+
+import GET_GITHUB_SINGLE_LABEL from '../../../../graphql/getSingleLabel.graphql';
 
 import GitHubApi from '@octokit/rest';
 import PropTypes from "prop-types";
@@ -40,115 +42,190 @@ class Data extends Component {
 
     load = async () => {
         const {
+            client,
             setChipRemaining,
+            labels,
             setLoading,
             setLoadError,
-            setLoadSuccess,
+            setLoadingSuccess,
+            setLoadingSuccessMsg,
+            setLoadingModal,
+            setLoadingMsg,
+            setLoadingMsgAlt,
             setLoadedCount,
-            selectedRepos,
-            selectedLabels,
             action,
-            selectedName,
-            updateName,
-            updateDescription,
-            updateColor,
             newName,
             newDescription,
             newColor,
+            log,
+            onSuccess,
             incLoadedCount,
-            log
         } = this.props;
-
+        setLoadingModal(true);
+        setLoadingMsgAlt('');
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
-        setLoadSuccess(false);
+        setLoadingSuccess(false);
         setLoadedCount(0);
 
-        if (action === 'update') {
-            for (let repo of selectedRepos) {
-                let result = false;
-                // Test if label already exists
-                let currentLabel = cfgLabels.findOne({name: selectedName, 'repo.id': repo});
-                let currentRepo = cfgSources.findOne({id: repo});
-                let updateObj = {
-                    owner: currentRepo.org.login,
-                    repo: currentRepo.name,
+        log.info(labels);
+        for (let label of labels) {
+            log.info(label);
+            let result = false;
+            if (action === 'create') {
+                setLoadingMsg('Creating label ' + label.name + ' in ' + label.org.login + '/' + label.repo.name);
+                let createPayload = {
+                    owner: label.org.login,
+                    repo: label.repo.name,
+                    name: newName,
+                    color: newColor,
+                };
+                //By default, if no-color is set, assigning white
+                if (newColor === '' || newColor === null) {
+                    createPayload = {
+                        ...createPayload,
+                        color: 'ffffff'
+                    };
                 }
-                if (currentLabel !== undefined) {
-                    updateObj['current_name'] = selectedName;
-                    // This label exists, will be updating
-
-                    if (updateName !== false && currentLabel.name !== newName) {
-                        updateObj['name'] = newName;
+                log.info(createPayload);
+                try {
+                    if (newDescription !== null && newDescription.length > 0) {
+                        createPayload = {
+                            ...createPayload,
+                            description: newDescription,
+                            headers: {
+                                accept: 'application/vnd.github.symmetra-preview+json'
+                            }
+                        };
                     }
-                    if (updateColor !== false && currentLabel.color !== newColor.replace('#', '')) {
-                        updateObj['color'] = newColor.replace('#', '');
-                    }
-                    if (updateDescription !== false && currentLabel.description !== newDescription) {
-                        updateObj['description'] = newDescription;
-                    }
-                    if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
-                        log.info('Nothing to be changed, not sending a request to GitHub');
-                    } else {
-                        try {
-                            result = await this.octokit.issues.updateLabel(updateObj);
-                        }
-                        catch (error) {
-                            log.info(error);
-                        }
-                    }
-                } else {
-                    // This lable doesn't exist, will be creating
-                    updateObj['name'] = newName;
-                    if (updateName === false) {updateObj['name'] = selectedName;}
-
-                    updateObj['color'] = newColor.replace('#', '');
-
-                    if (updateDescription !== false) {updateObj['description'] = newDescription;}
+                    result = await this.octokit.issues.createLabel(createPayload);
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    let data = {};
                     try {
-                        result = await this.octokit.issues.createLabel(updateObj);
+                        data = await client.query({
+                            query: GET_GITHUB_SINGLE_LABEL,
+                            variables: {
+                                org_name: label.org.login,
+                                repo_name: label.repo.name,
+                                label_name: newName
+                            },
+                            fetchPolicy: 'no-cache',
+                            errorPolicy: 'ignore',
+                        });
                     }
                     catch (error) {
                         log.info(error);
                     }
+                    log.info(data);
+                    if (data.data !== null) {
+                        const labelObj = {
+                            ...data.data.repository.label,
+                            repo: label.repo,
+                            org: label.org,
+                        };
+                        log.info(labelObj);
+                        await cfgLabels.upsert({
+                            id: labelObj.id
+                        }, {
+                            $set: labelObj
+                        });
+                    }
+                }
+            } else if (action === 'update') {
+                setLoadingMsg('Updating label ' + label.name + ' in ' + label.org.login + '/' + label.repo.name);
+                let updatePayload = {
+                    owner: label.org.login,
+                    repo: label.repo.name,
+                    current_name: label.name,
+                    name: newName,
+                    color: newColor,
+                    description: newDescription,
+                };
+                log.info(updatePayload);
+                if (label.name === newName && label.color === newColor && label.description === newDescription) {
+                    log.info('Nothing to be changed, not sending a request to GitHub');
+                } else {
+                    try {
+                        if (newDescription !== null && newDescription.length > 0) {
+                            updatePayload = {
+                                ...updatePayload,
+                                headers: {
+                                    accept: 'application/vnd.github.symmetra-preview+json'
+                                }
+                            };
+                        }
+                        result = await this.octokit.issues.updateLabel(updatePayload);
+                    }
+                    catch (error) {
+                        log.info(error);
+                    }
+                    if (result !== false) {
+                        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                        let updateName = label.name;
+                        if (label.name !== newName) {
+                            updateName = newName;
+                        }
+                        let data = {};
+                        try {
+                            data = await client.query({
+                                query: GET_GITHUB_SINGLE_LABEL,
+                                variables: {
+                                    org_name: label.org.login,
+                                    repo_name: label.repo.name,
+                                    label_name: updateName
+                                },
+                                fetchPolicy: 'no-cache',
+                                errorPolicy: 'ignore',
+                            });
+                        }
+                        catch (error) {
+                            log.info(error);
+                        }
+                        log.info(data);
+                        if (data.data !== null) {
+                            const labelObj = {
+                                ...data.data.repository.label,
+                                repo: label.repo,
+                                org: label.org,
+                            };
+                            log.info(labelObj);
+                            await cfgLabels.upsert({
+                                id: labelObj.id
+                            }, {
+                                $set: labelObj
+                            });
+                        }
+                    }
+                }
+            } else if (action === 'delete') {
+                setLoadingMsg('Deleting label ' + label.name + ' from ' + label.org.login + '/' + label.repo.name);
+                try {
+                    result = await this.octokit.issues.deleteLabel({
+                        owner: label.org.login,
+                        repo: label.repo.name,
+                        name: label.name,
+                    });
+                }
+                catch (error) {
+                    log.info(error);
                 }
                 log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    let labelObj = {
-                        id: result.data.node_id,
-                        url: result.data.url,
-                        color: result.data.color,
-                        name: result.data.name,
-                        isDefault: result.data.default,
-                        repo: currentRepo,
-                        refreshed: true,
-                    };
-                    if (updateDescription !== false) {
-                        labelObj['description'] = newDescription;
-                    }
-                    await cfgLabels.upsert({
-                        id: labelObj.id
-                    }, {
-                        $set: labelObj
-                    });
-                    incLoadedCount(1);
+                    cfgLabels.remove({id: label.id});
                 }
             }
-        } else if (action === 'delete') {
-            for (let label of selectedLabels) {
-                const result = await this.octokit.issues.deleteLabel({
-                    owner: label.org.login,
-                    repo: label.repo.name,
-                    name: label.name
-                });
-                setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                cfgLabels.remove({id: label.id});
-                incLoadedCount(1);
-            }
+            incLoadedCount(1);
         }
-        setLoadSuccess(true);
+        setLoadingSuccessMsg('Update Completed');
+        setLoadingSuccess(true);
         setLoading(false);
+        onSuccess();
     };
 
     render() {
@@ -161,14 +238,11 @@ Data.propTypes = {
     loading: PropTypes.bool.isRequired,
     action: PropTypes.string,
     log: PropTypes.object.isRequired,
+    labels: PropTypes.array.isRequired,
 
     selectedRepos: PropTypes.array.isRequired,
     selectedLabels: PropTypes.array.isRequired,
     selectedName: PropTypes.string,
-
-    updateName: PropTypes.bool.isRequired,
-    updateDescription: PropTypes.bool.isRequired,
-    updateColor: PropTypes.bool.isRequired,
 
     newName: PropTypes.string,
     newDescription: PropTypes.string,
@@ -176,42 +250,54 @@ Data.propTypes = {
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+
     setLoadError: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
     setLoadedCount: PropTypes.func.isRequired,
     incLoadedCount: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
     setChipRemaining: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
+
 };
 
 const mapState = state => ({
     loadFlag: state.labelsEdit.loadFlag,
-    loading: state.labelsEdit.loading,
     action: state.labelsEdit.action,
 
     selectedRepos: state.labelsEdit.selectedRepos,
     selectedLabels: state.labelsEdit.selectedLabels,
     selectedName: state.labelsEdit.selectedName,
 
-    updateName: state.labelsEdit.updateName,
-    updateDescription: state.labelsEdit.updateDescription,
-    updateColor: state.labelsEdit.updateColor,
-
     newName: state.labelsEdit.newName,
     newDescription: state.labelsEdit.newDescription,
     newColor: state.labelsEdit.newColor,
 
+    labels: state.labelsEdit.labels,
+
     log: state.global.log,
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsEdit.setLoadFlag,
-    setLoading: dispatch.labelsEdit.setLoading,
     setLoadError: dispatch.labelsEdit.setLoadError,
-    setLoadSuccess: dispatch.labelsEdit.setLoadSuccess,
 
     setLoadedCount: dispatch.labelsEdit.setLoadedCount,
     incLoadedCount: dispatch.labelsEdit.incLoadedCount,
+
+    setLoading: dispatch.loading.setLoading,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingModal: dispatch.loading.setLoadingModal,
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,

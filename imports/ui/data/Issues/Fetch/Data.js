@@ -11,7 +11,7 @@ import { cfgIssues } from '../../Minimongo.js';
 
 import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
 import getIssuesStats from '../../utils/getIssuesStats.js';
-import {cfgLabels, cfgMilestones} from "../../Minimongo";
+import { cfgLabels } from "../../Minimongo";
 
 
 class Data extends Component {
@@ -70,7 +70,7 @@ class Data extends Component {
         }
 
         log.info('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues in memory');
-        setLoading(false);  // Set to true to indicate milestones are done loading.
+        setLoading(false);  // Set to true to indicate issues are done loading.
         setLoadSuccess(true);
         onSuccess();
     };
@@ -192,6 +192,7 @@ class Data extends Component {
                     $set: issueObj
                 });
 
+                /*
                 if (issueObj.milestone !== null) {
                     let milestoneObj = issueObj.milestone;
                     milestoneObj['repo'] = repoObj;
@@ -202,6 +203,7 @@ class Data extends Component {
                         $set: milestoneObj
                     });
                 }
+                */
 
                 incLoadedCount(1);
             }

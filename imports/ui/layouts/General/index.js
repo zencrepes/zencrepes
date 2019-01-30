@@ -2,22 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from '../../components/Header/index.js';
 import Footer from '../../components/Footer/index.js';
 
 const style = {
     root: {
-    },
-
-    fullWidth :{
-        width: '100%',
+        minHeight: '100vh',
     },
 
     fullWidthCenter :{
         width: '100%',
-//        minHeight: 'calc(100vh - 130px)',
+        minHeight: 'calc(100vh - 130px)',
     },
 };
 
@@ -28,26 +25,19 @@ class General extends Component {
 
     render() {
         const { classes, children } = this.props;
+
         return (
             <div className={classes.root}>
-                <Grid
-                    container
-                    direction="column"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                >
-                    <Grid item xs={12} sm className={classes.fullWidth}>
-                        <Header />
-                    </Grid>
-                    <Grid item xs={12} sm className={classes.fullWidthCenter}>
-                        {children}
-                    </Grid>
-                    <Grid item xs={12} sm className={classes.fullWidth}>
-                        <Footer />
-                    </Grid>
-                </Grid>
+                <CssBaseline />
+                <Header />
+                <main className={classes.fullWidthCenter}>
+                    {children}
+                </main>
+                <footer>
+                    <Footer />
+                </footer>
             </div>
-        );
+        )
     }
 }
 

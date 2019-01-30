@@ -3,22 +3,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
-import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import PointsSwitch from './PointsSwitch.js';
-
 import Refresh from './Refresh.js';
 
-const styles = {
-    root: {
-    },
-    toolbarButtons: {
-        flex: 1,
-    },
-};
-
+import Grid from '@material-ui/core/Grid';
 
 class Actions extends Component {
     constructor (props) {
@@ -27,30 +18,36 @@ class Actions extends Component {
 
     render() {
         const {
-            classes,
             setDefaultPoints,
             defaultPoints,
         } = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static" color="primary" className={classes.appBar}>
-                    <Toolbar>
-                        <div className={classes.toolbarButtons}>
+            <AppBar position="static" color="primary">
+                <Toolbar>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm container>
                             <Refresh />
-                        </div>
-                        <PointsSwitch
-                            defaultPoints={defaultPoints}
-                            setDefaultPoints={setDefaultPoints}
-                        />
-                    </Toolbar>
-                </AppBar>
-            </div>
+                        </Grid>
+                        <Grid item >
+                            <PointsSwitch
+                                defaultPoints={defaultPoints}
+                                setDefaultPoints={setDefaultPoints}
+                            />
+                        </Grid>
+                    </Grid>
+                </Toolbar>
+            </AppBar>
         );
     }
 }
 
 Actions.propTypes = {
-    classes: PropTypes.object.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
     setDefaultPoints: PropTypes.func.isRequired,
 };
@@ -63,4 +60,4 @@ const mapDispatch = dispatch => ({
     setDefaultPoints: dispatch.issuesView.setDefaultPoints,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Actions));
+export default connect(mapState, mapDispatch)(Actions);

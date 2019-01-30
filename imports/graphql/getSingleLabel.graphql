@@ -6,6 +6,7 @@ query ($org_name: String!, $repo_name: String!, $label_name: String!){
     resetAt
   }
   repository(owner:$org_name, name:$repo_name) {
+    viewerPermission
     label(name: $label_name) {
       id
       url
@@ -17,6 +18,9 @@ query ($org_name: String!, $repo_name: String!, $label_name: String!){
       createdAt
       updatedAt
       issues(first: 1) {
+        totalCount
+      }
+      pullRequests(first: 1) {
         totalCount
       }
     }

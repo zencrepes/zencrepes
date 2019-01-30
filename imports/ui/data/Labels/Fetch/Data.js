@@ -14,8 +14,8 @@ import PropTypes from "prop-types";
 class Data extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
         this.errorRetry = 0;
+        this.labelsCount = 0;
     }
 
     componentDidUpdate = (prevProps) => {
@@ -28,11 +28,30 @@ class Data extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, setIterateTotal, incIterateCurrent, setIterateCurrent, updateLabels, log } = this.props;
+        const {
+            setLoading,
+            setLoadingMsgAlt,
+            setLoadSuccess,
+            setLoadingIterateTotal,
+            incLoadingIterateCurrent,
+            setLoadingIterateCurrent,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
+            log,
+            loadRepos,
+            onSuccess
+        } = this.props;
 
-        let allRepos = cfgSources.find({}).fetch();
-        setIterateTotal(allRepos.length);
-        setIterateCurrent(0);
+        //Check if there if we are loading everything or just data for a subset of repositories
+        let reposQuery = {};
+        if (loadRepos.length > 0) {
+            reposQuery = {"id":{"$in":loadRepos}}
+        }
+
+        let allRepos = cfgSources.find(reposQuery).fetch();
+        setLoading(true);
+        setLoadingIterateTotal(allRepos.filter(repo => repo.active === true).length);
+        setLoadingIterateCurrent(0);
         for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any labels attached to this repo (if any)
@@ -40,18 +59,22 @@ class Data extends Component {
                 await cfgLabels.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
                 log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.labels.totalCount + ' labels');
+                setLoadingMsgAlt('Fetching labels from ' + repo.org.login + '/' + repo.name);
                 await this.getLabelsPagination(null, 5, repo);
+                incLoadingIterateCurrent(1);
+                setLoadingSuccessMsg('Fetched ' + this.labelsCount + ' labels');
             }
-            incIterateCurrent(1);
         }
 
         log.info('Will be deleting ' + cfgLabels.find({active: false}).count() + ' labels attached to disabled repositories');
         await cfgLabels.remove({active: false});
 
         log.info('Load completed: There is a total of ' + cfgLabels.find({}).count() + ' labels in memory');
-        setLoading(false);  // Set to true to indicate labels are done loading.
+        setLoadingSuccess(true);
+        setLoading(false);          // Set to false to indicate labels are done loading.
+        this.labelsCount = 0;
         setLoadSuccess(true);
-        updateLabels();
+        onSuccess();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 labels, but local only has 99
@@ -73,7 +96,7 @@ class Data extends Component {
                     log.warn(error);
                 }
                 log.info(repoObj);
-                if (data.data !== null) {
+                if (data.data !== undefined && data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
                     // Check if the repository actually exist and labels were returned
@@ -105,7 +128,10 @@ class Data extends Component {
     };
 
     ingestLabels = async (data, repoObj) => {
-        const { incLoadedCount, log } = this.props;
+        const {
+            setLoadingMsg,
+            log
+        } = this.props;
 
         let lastCursor = null;
         for (var currentLabel of data.data.repository.labels.edges) {
@@ -121,7 +147,8 @@ class Data extends Component {
             }, {
                 $set: labelObj
             });
-            incLoadedCount(1);
+            this.labelsCount = this.labelsCount + 1;
+            setLoadingMsg(this.labelsCount + ' labels loaded');
             //console.log('LoadRepos: Added: ' + data.data.viewer.organization.login + " / " + currentRepo.node.name);
             lastCursor = currentLabel.cursor
         }
@@ -136,42 +163,64 @@ class Data extends Component {
 Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    loadRepos: PropTypes.array,
 
     setLoadFlag: PropTypes.func.isRequired,
-    setLoading: PropTypes.func.isRequired,
     setLoadSuccess: PropTypes.func.isRequired,
-    setLoadedCount: PropTypes.func.isRequired,
-    incLoadedCount: PropTypes.func.isRequired,
-    setIterateTotal: PropTypes.func.isRequired,
-    setIterateCurrent: PropTypes.func.isRequired,
-    incIterateCurrent: PropTypes.func.isRequired,
-    updateChip: PropTypes.func.isRequired,
-    updateLabels: PropTypes.func.isRequired,
+//    setLoadedCount: PropTypes.func.isRequired,
+//    incLoadedCount: PropTypes.func.isRequired,
+//    setIterateTotal: PropTypes.func.isRequired,
+//    setIterateCurrent: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+
+    setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    incLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.labelsFetch.loadFlag,
-    loading: state.labelsFetch.loading,
+    onSuccess: state.labelsFetch.onSuccess,
 
     log: state.global.log,
+
+    loadRepos: state.labelsFetch.loadRepos,
+
+    loading: state.loading.loading,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsFetch.setLoadFlag,
-    setLoading: dispatch.labelsFetch.setLoading,
     setLoadSuccess: dispatch.labelsFetch.setLoadSuccess,
     setLoadedCount: dispatch.labelsFetch.setLoadedCount,
 
-    incLoadedCount: dispatch.labelsFetch.incLoadedCount,
-    setIterateTotal: dispatch.labelsFetch.setIterateTotal,
-    setIterateCurrent: dispatch.labelsFetch.setIterateCurrent,
-    incIterateCurrent: dispatch.labelsFetch.incIterateCurrent,
+//    incLoadedCount: dispatch.labelsFetch.incLoadedCount,
+//    setIterateTotal: dispatch.labelsFetch.setIterateTotal,
+//    setIterateCurrent: dispatch.labelsFetch.setIterateCurrent,
+//    incIterateCurrent: dispatch.labelsFetch.incIterateCurrent,
+
+    setLoading: dispatch.loading.setLoading,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingModal: dispatch.loading.setLoadingModal,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    incLoadingIterateCurrent: dispatch.loading.incLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
 
     updateChip: dispatch.chip.updateChip,
-    updateLabels: dispatch.labelsView.updateLabels,
 });
 
 export default connect(mapState, mapDispatch)(withApollo(Data));

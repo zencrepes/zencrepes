@@ -10,7 +10,6 @@ import CustomCard from "../../../components/CustomCard/index.js";
 
 import Edit from './Edit/index.js';
 import CloseSprint from './CloseSprint.js';
-import RefreshIssues from './RefreshIssues.js';
 import AddRepositoryButton from './AddRepositoryButton.js';
 
 import AddRepository from './AddRepository/index.js';
@@ -95,9 +94,6 @@ class Summary extends Component {
                         }
                             <Grid item >
                                 <CloseSprint />
-                            </Grid>
-                            <Grid item >
-                                <RefreshIssues />
                             </Grid>
                             <Grid item >
                                 <AddRepositoryButton />

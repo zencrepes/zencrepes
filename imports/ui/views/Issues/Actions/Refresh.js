@@ -14,6 +14,9 @@ import {connect} from "react-redux";
 const styles = theme => ({
     root: {
     },
+    button: {
+        color: '#fff',
+    },
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
@@ -72,14 +75,15 @@ class Refresh extends Component {
         const { anchorEl } = this.state;
 
         return (
-            <React.Fragment>
+            <div className={classes.root}>
                 <Button
                     aria-owns={anchorEl ? 'simple-menu' : undefined}
                     aria-haspopup="true"
                     onClick={this.handleClick}
+                    className={classes.button}
                 >
                     <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Refresh Data
+                    Refresh Issues
                 </Button>
                 <Menu
                     id="simple-menu"
@@ -91,7 +95,7 @@ class Refresh extends Component {
                     <MenuItem onClick={this.refreshSelectedRepos}>Across selected Repositories</MenuItem>
                     <MenuItem onClick={this.refreshIssues}>Filtered Issues</MenuItem>
                 </Menu>
-            </React.Fragment>
+            </div>
         )
     }
 }

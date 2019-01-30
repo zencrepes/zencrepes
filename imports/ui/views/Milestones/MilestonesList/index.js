@@ -21,7 +21,6 @@ import {
     Table,
     TableHeaderRow,
     PagingPanel,
-    Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
 const StatesFormatter = ({ value }) => {
@@ -209,7 +208,6 @@ class MilestonesList extends Component {
                     <IntegratedPaging />
                     <Table columnExtensions={tableColumnExtensions} />
                     <TableHeaderRow />
-                    <Toolbar />
                     <PagingPanel
                         pageSizes={pageSizes}
                     />
