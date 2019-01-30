@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Button from '@material-ui/core/Button';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-import FlaskEmptyOutlineIcon from 'mdi-react/FlaskEmptyOutlineIcon';
+import LabelIcon from 'mdi-react/LabelIcon';
 
 const styles = theme => ({
     root: {
@@ -50,7 +50,7 @@ class NoData extends Component {
                         textAlign: 'center'
                     }}
                 >
-                    <FlaskEmptyOutlineIcon size={64} /><br />
+                    <LabelIcon size={64} /><br />
                     <span>No Labels in memory</span><br />
                     <Button
                         onClick={this.refreshAllRepos}
