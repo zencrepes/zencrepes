@@ -51,6 +51,7 @@ class Data extends Component {
             setLoadingSuccessMsg,
             setLoadingModal,
             setLoadingMsg,
+            setLoadingMsgAlt,
             setLoadedCount,
             action,
             newName,
@@ -61,6 +62,7 @@ class Data extends Component {
             incLoadedCount,
         } = this.props;
         setLoadingModal(true);
+        setLoadingMsgAlt('');
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
         setLoadingSuccess(false);
@@ -249,6 +251,7 @@ Data.propTypes = {
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
     setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
     setLoadingModal: PropTypes.func.isRequired,
 
     setLoadError: PropTypes.func.isRequired,
@@ -293,6 +296,7 @@ const mapDispatch = dispatch => ({
     setLoadingSuccess: dispatch.loading.setLoadingSuccess,
     setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
     setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
     setLoadingModal: dispatch.loading.setLoadingModal,
 
     updateChip: dispatch.chip.updateChip,

@@ -46,6 +46,7 @@ class Staging extends Component {
             setLoading,
             setLoadingModal,
             setLoadingMsg,
+            setLoadingMsgAlt,
             setLoadingSuccessMsg,
             setLoadingSuccess,
             setStageFlag,
@@ -70,6 +71,7 @@ class Staging extends Component {
             setVerifiedLabels([]);
             this.verifErrors = 0;
             setLoadingMsg('About pull data from ' + labelsToUpdate.length + ' labels');
+            setLoadingMsgAlt('');
             await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
             for (const [idx, label] of labelsToUpdate.entries()) {
                 log.info(label);
@@ -213,6 +215,7 @@ Staging.propTypes = {
     client: PropTypes.object.isRequired,
     setLoading: PropTypes.func.isRequired,
     setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
     setLoadingModal: PropTypes.func.isRequired,
     setLoadingSuccessMsg: PropTypes.func.isRequired,
     setLoadingSuccess: PropTypes.func.isRequired,
@@ -242,6 +245,7 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
     setLoading: dispatch.loading.setLoading,
     setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
     setLoadingModal: dispatch.loading.setLoadingModal,
     setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
     setLoadingSuccess: dispatch.loading.setLoadingSuccess,
