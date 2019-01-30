@@ -11,6 +11,7 @@ import { cfgLabels, cfgSources } from '../../../Minimongo.js';
 class Staging extends Component {
     constructor (props) {
         super(props);
+        this.verifErrors = 0;
     }
 
     componentDidUpdate = (prevProps) => {
@@ -24,6 +25,11 @@ class Staging extends Component {
 
     load = async () => {
         const {
+            setLoading,
+            setLoadingModal,
+            setLoadingMsg,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
             setVerifying,
             setVerifyingMsg,
             labels,
@@ -37,29 +43,23 @@ class Staging extends Component {
             newDescription,
             newColor,
         } = this.props;
+        setLoading(true);
+        setLoadingModal(false);
         setVerifiedLabels([]);
+        this.verifErrors = 0;
         log.info(newDescription);
         log.info(newColor);
-        /*
-        console.log('Filter out labels that will not change');
-        const differentLabels = labels.filter((lbl) => {
-            if (lbl.name === newName && lbl.color === newColor && (lbl.description === newDescription || (newDescription === '' && lbl.description === null))) {
-                return false;
-            } else {
-                return true;
-            }
-        });
-        console.log(differentLabels);
-        */
-        setVerifyingMsg('About pull data from ' + labels.length + ' labels');
+        console.log('test');
+        setLoadingMsg('About pull data from ' + labels.length + ' labels');
 //        for (let label of labels) {
         for (const [idx, label] of labels.entries()) {
             log.info(label);
-            if (this.props.verifying) {
-                let baseMsg = (idx+1) + '/' + labels.length + ' - Verifying label: ' + label.org.login + '/' + label.repo.name + '#' + label.number;
+            if (this.props.loading !== 'abcd') {
+                let baseMsg = (idx+1) + '/' + labels.length + ' - Verifying label: ' + label.org.login + '/' + label.repo.name + '#' + label.name;
                 let labelName = label.name;
                 if (action === 'create') {labelName = newName;}
-                setVerifyingMsg(baseMsg);
+                setLoadingMsg(baseMsg);
+//                setVerifyingMsg(baseMsg);
                 let data = {};
                 try {
                     data = await client.query({
@@ -88,6 +88,7 @@ class Staging extends Component {
                             error: true,
                             errorMsg: 'Unable to communicate with GitHub, please check your network connectivity',
                         });
+                        this.verifErrors++;
                     }
                     else if (data.data.repository === null) {
                         // The repository doesn't exist anymore on GitHub.
@@ -98,6 +99,7 @@ class Staging extends Component {
                         });
                         await cfgLabels.remove({'id': label.id});
                         await cfgSources.update({id: label.repo.id}, { active: false }, {multi: false});
+                        this.verifErrors++;
                     }
                     else if (data.data.repository.viewerPermission !== 'ADMIN' && data.data.repository.viewerPermission !== 'WRITE') {
                         // The repository doesn't exist anymore on GitHub.
@@ -106,6 +108,7 @@ class Staging extends Component {
                             error: true,
                             errorMsg: 'Your permissions the necessary permissions on this repository. Your permission: ' + data.data.repository.viewerPermission,
                         });
+                        this.verifErrors++;
                     }
                     else if (data.data.repository.label === null && action !== 'create') {
                         // The label doesn't exist anymore on GitHub.
@@ -115,36 +118,40 @@ class Staging extends Component {
                             errorMsg: 'This label doesn\'t exist in GitHub currently. Was it deleted ?',
                         });
                         await cfgLabels.remove({'id': label.id});
+                        this.verifErrors++;
                     } else if (data.data.repository.label === null && action === 'create') {
                         // The label doesn't exist in the repository, meaning all-clear for creating.
                         insVerifiedLabels({
                             ...label,
                             error: false,
-                        })
+                        });
                     } else if (data.data.repository.label !== null && action === 'create') {
                         insVerifiedLabels({
                             ...label,
                             error: true,
                             errorMsg: 'This label already exists in GitHub. Please rename instead of creating a label.',
-                        })
+                        });
+                        this.verifErrors++;
                     } else {
                         if (data.data.repository.label.updatedAt === label.updatedAt && data.data.repository.label.issues.totalCount === label.issues.totalCount) {
                             insVerifiedLabels({
                                 ...data.data.repository.label,
                                 error: false,
-                            })
+                            });
                         } else if (data.data.repository.label.updatedAt !== label.updatedAt) {
                             insVerifiedLabels({
                                 ...data.data.repository.label,
                                 error: true,
                                 errorMsg: 'This label has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
-                            })
+                            });
+                            this.verifErrors++;
                         } else if (data.data.repository.label.issues.totalCount !== label.issues.totalCount) {
                             insVerifiedLabels({
                                 ...data.data.repository.label,
                                 error: true,
                                 errorMsg: 'This label has been modified in GitHub since it was last loaded locally. issues Counts are are different',
-                            })
+                            });
+                            this.verifErrors++;
                         }
                         await cfgLabels.upsert({
                             id: data.data.repository.label.id
@@ -155,7 +162,10 @@ class Staging extends Component {
                 }
             }
         }
-        setVerifying(false);
+//        setVerifying(false);
+        setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' errors');
+        setLoadingSuccess(true);
+        setLoading(false);
         onStagingSuccess();
     };
 
@@ -167,6 +177,7 @@ class Staging extends Component {
 Staging.propTypes = {
     verifFlag: PropTypes.bool.isRequired,
     verifying: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     action: PropTypes.string,
     newName: PropTypes.string,
     newColor: PropTypes.string,
@@ -183,6 +194,12 @@ Staging.propTypes = {
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+
 };
 
 const mapState = state => ({
@@ -197,6 +214,7 @@ const mapState = state => ({
     onStagingSuccess: state.labelsEdit.onStagingSuccess,
 
     log: state.global.log,
+    loading: state.global.loading,
 });
 
 const mapDispatch = dispatch => ({
@@ -207,6 +225,12 @@ const mapDispatch = dispatch => ({
     insVerifiedLabels: dispatch.labelsEdit.insVerifiedLabels,
 
     updateChip: dispatch.chip.updateChip,
+    setLoading: dispatch.global.setLoading,
+    setLoadingMsg: dispatch.global.setLoadingMsg,
+    setLoadingModal: dispatch.global.setLoadingModal,
+    setLoadingSuccessMsg: dispatch.global.setLoadingSuccessMsg,
+    setLoadingSuccess: dispatch.global.setLoadingSuccess,
+
 });
 
 export default connect(mapState, mapDispatch)(withApollo(Staging));

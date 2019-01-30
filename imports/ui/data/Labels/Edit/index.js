@@ -22,7 +22,13 @@ class LabelsEdit extends Component {
                 <Data />
                 <Stage />
                 <Staging />
-                <RefreshSnackbar />
+            </div>
+        );
+    }
+}
+
+/*
+               <RefreshSnackbar />
                 {loadModal &&
                     <LoadModal />
                 }
@@ -30,10 +36,9 @@ class LabelsEdit extends Component {
                     <LoadSnackbar />
                 }
                 <Notifications />
-            </div>
-        );
-    }
-}
+
+
+ */
 
 LabelsEdit.propTypes = {
     loadModal: PropTypes.bool,
