@@ -2,6 +2,6 @@
   "issues": true,
   "sprints": false,
   "milestones": false,
-  "labels": false,
+  "labels": true,
   "settings": false
 }
