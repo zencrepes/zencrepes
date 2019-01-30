@@ -31,7 +31,6 @@ class Data extends Component {
         const {
             setLoading,
             setLoadingMsgAlt,
-            setLoadSuccess,
             setLoadingIterateTotal,
             incLoadingIterateCurrent,
             setLoadingIterateCurrent,
@@ -73,14 +72,13 @@ class Data extends Component {
         setLoadingSuccess(true);
         setLoading(false);          // Set to false to indicate labels are done loading.
         this.labelsCount = 0;
-        setLoadSuccess(true);
         onSuccess();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 labels, but local only has 99
     // Query increment should not be just 1 since if the missing labels is far down, this will generate a large number of calls
     getLabelsPagination = async (cursor, increment, repoObj) => {
-        const { client, setLoadSuccess, setLoading, log } = this.props;
+        const { client, setLoading, log } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
@@ -121,7 +119,6 @@ class Data extends Component {
                 }
             } else {
                 log.warn('Got too many load errors, stopping');
-                setLoadSuccess(false);
                 setLoading(false);
             }
         }
@@ -166,15 +163,9 @@ Data.propTypes = {
     loadRepos: PropTypes.array,
 
     setLoadFlag: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
-//    setLoadedCount: PropTypes.func.isRequired,
-//    incLoadedCount: PropTypes.func.isRequired,
-//    setIterateTotal: PropTypes.func.isRequired,
-//    setIterateCurrent: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
-    onSuccess: PropTypes.func.isRequired,
 
     setLoading: PropTypes.func.isRequired,
     setLoadingMsg: PropTypes.func.isRequired,
@@ -185,30 +176,23 @@ Data.propTypes = {
     setLoadingIterateTotal: PropTypes.func.isRequired,
     setLoadingSuccess: PropTypes.func.isRequired,
     setLoadingSuccessMsg: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
 
     updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.labelsFetch.loadFlag,
-    onSuccess: state.labelsFetch.onSuccess,
+    loadRepos: state.labelsFetch.loadRepos,
 
     log: state.global.log,
 
-    loadRepos: state.labelsFetch.loadRepos,
-
     loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsFetch.setLoadFlag,
-    setLoadSuccess: dispatch.labelsFetch.setLoadSuccess,
-    setLoadedCount: dispatch.labelsFetch.setLoadedCount,
-
-//    incLoadedCount: dispatch.labelsFetch.incLoadedCount,
-//    setIterateTotal: dispatch.labelsFetch.setIterateTotal,
-//    setIterateCurrent: dispatch.labelsFetch.setIterateCurrent,
-//    incIterateCurrent: dispatch.labelsFetch.incIterateCurrent,
 
     setLoading: dispatch.loading.setLoading,
     setLoadingMsg: dispatch.loading.setLoadingMsg,

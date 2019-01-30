@@ -81,7 +81,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsFetch.setLoadFlag,
     setLoadRepos: dispatch.labelsFetch.setLoadRepos,
-    setOnSuccess: dispatch.labelsFetch.setOnSuccess,
+    setOnSuccess: dispatch.loading.setOnSuccess,
     updateView: dispatch.labelsView.updateView,
 });
 
