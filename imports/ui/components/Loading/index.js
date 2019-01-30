@@ -44,12 +44,12 @@ Loading.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    cancelLoading: dispatch.global.cancelLoading,
+    cancelLoading: dispatch.loading.cancelLoading,
 });
 
 const mapState = state => ({
-    loadingModal: state.global.loadingModal,
-    loading: state.global.loading,
+    loadingModal: state.loading.loadingModal,
+    loading: state.loading.loading,
 });
 
 export default connect(mapState, mapDispatch)(Loading);

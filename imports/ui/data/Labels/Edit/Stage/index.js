@@ -31,31 +31,35 @@ class Stage extends Component {
 
     render() {
         const { classes, stageFlag, labels, action, newName, newDescription, newColor } = this.props;
-        return (
-            <div className={classes.root}>
-                <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
-                    <DialogTitle id="simple-dialog-title">Review changes</DialogTitle>
-                    <DialogContent>
-                        <Typography variant="body1" gutterBottom>
-                            The following changes have been staged for modification. Changes are only submitting to GitHub once you click on Apply, you cannot go back after clicking.
-                        </Typography>
-                        <StageTable
-                            labels={labels}
-                            action={action}
-                            newName={newName}
-                            newDescription={newDescription}
-                            newColor={newColor}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <CancelButton />
-                        {labels.length > 0 &&
+        if (stageFlag === true) {
+            return (
+                <div className={classes.root}>
+                    <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
+                        <DialogTitle id="simple-dialog-title">Review changes</DialogTitle>
+                        <DialogContent>
+                            <Typography variant="body1" gutterBottom>
+                                The following changes have been staged for modification. Changes are only submitting to GitHub once you click on Apply, you cannot go back after clicking.
+                            </Typography>
+                            <StageTable
+                                labels={labels}
+                                action={action}
+                                newName={newName}
+                                newDescription={newDescription}
+                                newColor={newColor}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <CancelButton />
+                            {labels.length > 0 &&
                             <ApplyButton />
-                        }
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
+                            }
+                        </DialogActions>
+                    </Dialog>
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 }
 

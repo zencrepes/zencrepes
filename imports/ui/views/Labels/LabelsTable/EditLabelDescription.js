@@ -11,7 +11,7 @@ class EditLabelDescription extends Component {
 
     handleChange = (event) => {
         const { setNewDescription } = this.props;
-        if (event.target.value === '') {
+        if (!event.target.value) {
             setNewDescription(null);
         } else {
             setNewDescription(event.target.value);

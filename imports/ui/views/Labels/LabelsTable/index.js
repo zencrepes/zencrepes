@@ -358,7 +358,6 @@ class LabelsTable extends Component {
         this.changeColumnOrder = (order) => {
             this.setState({ columnOrder: order });
         };
-
     }
 
     /*
@@ -370,7 +369,7 @@ class LabelsTable extends Component {
         //Empty data
         if (addedRows.length > 0) {
             setNewColor('FC5CA9');
-            setNewDescription('');
+            setNewDescription(null);
             setNewName('New Label');
         }
         this.setState({
@@ -399,7 +398,6 @@ class LabelsTable extends Component {
             setVerifFlag,
             setAction,
             setOnSuccess,
-            setVerifying,
             setStageFlag,
             updateView
         } = this.props;
@@ -424,7 +422,6 @@ class LabelsTable extends Component {
             setAction('update');
         }
         setOnSuccess(updateView);
-        setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
     };
@@ -607,7 +604,6 @@ LabelsTable.propTypes = {
     setVerifFlag: PropTypes.func.isRequired,
     setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
-    setVerifying: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
     setLabels: PropTypes.func.isRequired,
@@ -620,8 +616,6 @@ const mapDispatch = dispatch => ({
     startEditingLabel: dispatch.labelsEdit.startEditingLabel,
     setVerifFlag: dispatch.labelsEdit.setVerifFlag,
     setAction: dispatch.labelsEdit.setAction,
-    setOnSuccess: dispatch.labelsEdit.setOnSuccess,
-    setVerifying: dispatch.labelsEdit.setVerifying,
     setStageFlag: dispatch.labelsEdit.setStageFlag,
     updateView: dispatch.labelsView.updateView,
     setDeleteWarning: dispatch.labelsEdit.setDeleteWarning,
@@ -629,6 +623,9 @@ const mapDispatch = dispatch => ({
     setNewColor: dispatch.labelsEdit.setNewColor,
     setNewName: dispatch.labelsEdit.setNewName,
     setNewDescription: dispatch.labelsEdit.setNewDescription,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
+
 });
 
 export default connect(null, mapDispatch)(LabelsTable);

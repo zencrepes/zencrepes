@@ -11,11 +11,10 @@ class RemoveButton extends Component {
     }
 
     remove = () => {
-        const { label, setLabels, setAction, setOnSuccess, updateView, setVerifying, setStageFlag, setVerifFlag} = this.props;
+        const { label, setLabels, setAction, setOnSuccess, updateView, setStageFlag, setVerifFlag} = this.props;
         setLabels([label]);
         setAction('delete');
         setOnSuccess(updateView);
-        setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
     };
@@ -36,7 +35,6 @@ RemoveButton.propTypes = {
     setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
-    setVerifying: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
     setVerifFlag: PropTypes.func.isRequired,
 };
@@ -44,11 +42,11 @@ RemoveButton.propTypes = {
 const mapDispatch = dispatch => ({
     setVerifFlag: dispatch.labelsEdit.setVerifFlag,
     setAction: dispatch.labelsEdit.setAction,
-    setOnSuccess: dispatch.labelsEdit.setOnSuccess,
-    setVerifying: dispatch.labelsEdit.setVerifying,
     setStageFlag: dispatch.labelsEdit.setStageFlag,
     updateView: dispatch.labelsView.updateView,
     setLabels: dispatch.labelsEdit.setLabels,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
 });
 
 export default connect(null, mapDispatch)(RemoveButton);

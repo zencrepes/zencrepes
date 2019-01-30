@@ -197,7 +197,7 @@ const mapState = state => ({
 
     loadRepos: state.labelsFetch.loadRepos,
 
-    loading: state.global.loading,
+    loading: state.loading.loading,
 });
 
 const mapDispatch = dispatch => ({
@@ -210,15 +210,15 @@ const mapDispatch = dispatch => ({
 //    setIterateCurrent: dispatch.labelsFetch.setIterateCurrent,
 //    incIterateCurrent: dispatch.labelsFetch.incIterateCurrent,
 
-    setLoading: dispatch.global.setLoading,
-    setLoadingMsg: dispatch.global.setLoadingMsg,
-    setLoadingMsgAlt: dispatch.global.setLoadingMsgAlt,
-    setLoadingModal: dispatch.global.setLoadingModal,
-    setLoadingIterateCurrent: dispatch.global.setLoadingIterateCurrent,
-    incLoadingIterateCurrent: dispatch.global.incLoadingIterateCurrent,
-    setLoadingIterateTotal: dispatch.global.setLoadingIterateTotal,
-    setLoadingSuccess: dispatch.global.setLoadingSuccess,
-    setLoadingSuccessMsg: dispatch.global.setLoadingSuccessMsg,
+    setLoading: dispatch.loading.setLoading,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingModal: dispatch.loading.setLoadingModal,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    incLoadingIterateCurrent: dispatch.loading.incLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
 
     updateChip: dispatch.chip.updateChip,
 });

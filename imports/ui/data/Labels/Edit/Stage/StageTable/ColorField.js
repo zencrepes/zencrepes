@@ -33,14 +33,10 @@ class ColorField extends Component {
             return (
                 <Typography variant="body1" gutterBottom>
                     <b>Old Value: </b>
-                    <Typography variant="body1" gutterBottom>
-                        <SquareIcon color={'#' + color}/> ({'#' + color})
-                    </Typography>
+                    <SquareIcon color={'#' + color}/> ({'#' + color})
                     <br />
                     <b>New Value: </b>
-                    <Typography variant="body1" gutterBottom>
-                        <SquareIcon color={'#' + newColor}/> ({'#' + newColor})
-                    </Typography>
+                    <SquareIcon color={'#' + newColor}/> ({'#' + newColor})
                 </Typography>
             )
         }

@@ -61,9 +61,9 @@ Notifications.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.global.loading,
-    loadingSuccess: state.global.loadingSuccess,
-    loadingSuccessMsg: state.global.loadingSuccessMsg,
+    loading: state.loading.loading,
+    loadingSuccess: state.loading.loadingSuccess,
+    loadingSuccessMsg: state.loading.loadingSuccessMsg,
 });
 
 export default connect(mapState, null)(withStyles(styles)(Notifications));

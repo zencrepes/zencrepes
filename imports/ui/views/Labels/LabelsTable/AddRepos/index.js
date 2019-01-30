@@ -111,10 +111,11 @@ const mapDispatch = dispatch => ({
 
     setVerifFlag: dispatch.labelsEdit.setVerifFlag,
     setAction: dispatch.labelsEdit.setAction,
-    setOnSuccess: dispatch.labelsEdit.setOnSuccess,
     setVerifying: dispatch.labelsEdit.setVerifying,
     setStageFlag: dispatch.labelsEdit.setStageFlag,
     updateView: dispatch.labelsView.updateView,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
 });
 
 export default connect(mapState, mapDispatch)(AddRepos);

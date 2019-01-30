@@ -34,10 +34,10 @@ LoadMessage.propTypes = {
 };
 
 const mapState = state => ({
-    loadingMsg: state.global.loadingMsg,
-    loadingMsgAlt: state.global.loadingMsgAlt,
-    loadingIterateCurrent: state.global.loadingIterateCurrent,
-    loadingIterateTotal: state.global.loadingIterateTotal,
+    loadingMsg: state.loading.loadingMsg,
+    loadingMsgAlt: state.loading.loadingMsgAlt,
+    loadingIterateCurrent: state.loading.loadingIterateCurrent,
+    loadingIterateTotal: state.loading.loadingIterateTotal,
 });
 
 export default connect(mapState, null)(LoadMessage);

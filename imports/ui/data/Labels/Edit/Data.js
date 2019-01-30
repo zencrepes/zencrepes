@@ -47,7 +47,10 @@ class Data extends Component {
             labels,
             setLoading,
             setLoadError,
-            setLoadSuccess,
+            setLoadingSuccess,
+            setLoadingSuccessMsg,
+            setLoadingModal,
+            setLoadingMsg,
             setLoadedCount,
             action,
             newName,
@@ -57,10 +60,10 @@ class Data extends Component {
             onSuccess,
             incLoadedCount,
         } = this.props;
-
+        setLoadingModal(true);
         setLoading(true);       // Set loading to true to indicate content is actually loading.
         setLoadError(false);
-        setLoadSuccess(false);
+        setLoadingSuccess(false);
         setLoadedCount(0);
 
         log.info(labels);
@@ -68,6 +71,7 @@ class Data extends Component {
             log.info(label);
             let result = false;
             if (action === 'create') {
+                setLoadingMsg('Creating label ' + label.name + ' in ' + label.org.login + '/' + label.repo.name);
                 let createPayload = {
                     owner: label.org.login,
                     repo: label.repo.name,
@@ -131,6 +135,7 @@ class Data extends Component {
                     }
                 }
             } else if (action === 'update') {
+                setLoadingMsg('Updating label ' + label.name + ' in ' + label.org.login + '/' + label.repo.name);
                 let updatePayload = {
                     owner: label.org.login,
                     repo: label.repo.name,
@@ -196,6 +201,7 @@ class Data extends Component {
                     }
                 }
             } else if (action === 'delete') {
+                setLoadingMsg('Deleting label ' + label.name + ' from ' + label.org.login + '/' + label.repo.name);
                 try {
                     result = await this.octokit.issues.deleteLabel({
                         owner: label.org.login,
@@ -214,94 +220,10 @@ class Data extends Component {
             }
             incLoadedCount(1);
         }
-        setLoadSuccess(true);
+        setLoadingSuccessMsg('Update Completed');
+        setLoadingSuccess(true);
         setLoading(false);
         onSuccess();
-        /*
-        if (action === 'update') {
-            for (let repo of selectedRepos) {
-                let result = false;
-                // Test if label already exists
-                let currentLabel = cfgLabels.findOne({name: selectedName, 'repo.id': repo});
-                let currentRepo = cfgSources.findOne({id: repo});
-                let updateObj = {
-                    owner: currentRepo.org.login,
-                    repo: currentRepo.name,
-                }
-                if (currentLabel !== undefined) {
-                    updateObj['current_name'] = selectedName;
-                    // This label exists, will be updating
-
-                    if (updateName !== false && currentLabel.name !== newName) {
-                        updateObj['name'] = newName;
-                    }
-                    if (updateColor !== false && currentLabel.color !== newColor.replace('#', '')) {
-                        updateObj['color'] = newColor.replace('#', '');
-                    }
-                    if (updateDescription !== false && currentLabel.description !== newDescription) {
-                        updateObj['description'] = newDescription;
-                    }
-                    if (!updateObj.hasOwnProperty('name') && !updateObj.hasOwnProperty('color') && !updateObj.hasOwnProperty('description')) {
-                        log.info('Nothing to be changed, not sending a request to GitHub');
-                    } else {
-                        try {
-                            result = await this.octokit.issues.updateLabel(updateObj);
-                        }
-                        catch (error) {
-                            log.info(error);
-                        }
-                    }
-                } else {
-                    // This lable doesn't exist, will be creating
-                    updateObj['name'] = newName;
-                    if (updateName === false) {updateObj['name'] = selectedName;}
-
-                    updateObj['color'] = newColor.replace('#', '');
-
-                    if (updateDescription !== false) {updateObj['description'] = newDescription;}
-                    try {
-                        result = await this.octokit.issues.createLabel(updateObj);
-                    }
-                    catch (error) {
-                        log.info(error);
-                    }
-                }
-                log.info(result);
-                if (result !== false) {
-                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    let labelObj = {
-                        id: result.data.node_id,
-                        url: result.data.url,
-                        color: result.data.color,
-                        name: result.data.name,
-                        isDefault: result.data.default,
-                        repo: currentRepo,
-                        refreshed: true,
-                    };
-                    if (updateDescription !== false) {
-                        labelObj['description'] = newDescription;
-                    }
-                    await cfgLabels.upsert({
-                        id: labelObj.id
-                    }, {
-                        $set: labelObj
-                    });
-                    incLoadedCount(1);
-                }
-            }
-        } else if (action === 'delete') {
-            for (let label of selectedLabels) {
-                const result = await this.octokit.issues.deleteLabel({
-                    owner: label.org.login,
-                    repo: label.repo.name,
-                    name: label.name
-                });
-                setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                cfgLabels.remove({id: label.id});
-                incLoadedCount(1);
-            }
-        }
-        */
     };
 
     render() {
@@ -326,8 +248,12 @@ Data.propTypes = {
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+
     setLoadError: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
     setLoadedCount: PropTypes.func.isRequired,
     incLoadedCount: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
@@ -339,7 +265,6 @@ Data.propTypes = {
 
 const mapState = state => ({
     loadFlag: state.labelsEdit.loadFlag,
-    loading: state.labelsEdit.loading,
     action: state.labelsEdit.action,
 
     selectedRepos: state.labelsEdit.selectedRepos,
@@ -353,17 +278,22 @@ const mapState = state => ({
     labels: state.labelsEdit.labels,
 
     log: state.global.log,
-    onSuccess: state.labelsEdit.onSuccess,
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsEdit.setLoadFlag,
-    setLoading: dispatch.labelsEdit.setLoading,
     setLoadError: dispatch.labelsEdit.setLoadError,
-    setLoadSuccess: dispatch.labelsEdit.setLoadSuccess,
 
     setLoadedCount: dispatch.labelsEdit.setLoadedCount,
     incLoadedCount: dispatch.labelsEdit.incLoadedCount,
+
+    setLoading: dispatch.loading.setLoading,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingModal: dispatch.loading.setLoadingModal,
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,

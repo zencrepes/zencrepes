@@ -17,6 +17,9 @@ export { default as waffle } from './waffle.js';
 // Global: Available throughout the app for base lifecycle (logs and so on)
 export { default as global } from './global.js';
 
+// State management around loading data from GitHub
+export { default as loading } from './loading.js';
+
 // Milestones
 export { default as milestonesView } from './milestones/View.js';
 export { default as milestonesEdit } from './milestones/Edit.js';
