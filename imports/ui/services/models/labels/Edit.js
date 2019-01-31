@@ -99,9 +99,6 @@ export default {
         },
 
         async resetValues() {
-            this.setUpdateName(false);
-            this.setUpdateDescription(false);
-            this.setUpdateColor(false);
             this.setNewName('');
             this.setNewDescription(null);
             this.setNewColor('');

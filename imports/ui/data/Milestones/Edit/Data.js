@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Component } from 'react'
 
-import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
@@ -10,6 +9,7 @@ import { cfgMilestones } from "../../Minimongo";
 import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
 
 import GitHubApi from '@octokit/rest';
+import PropTypes from 'prop-types';
 
 class Data extends Component {
     constructor (props) {
@@ -44,32 +44,34 @@ class Data extends Component {
         const {
             client,
             setChipRemaining,
-            setLoading,
-            setLoadError,
-            setLoadSuccess,
-            setLoadedCount,
             milestones,
+            setLoadingSuccess,
+            setLoadingSuccessMsg,
+            setLoadingModal,
+            setLoadingMsg,
+            setLoadingMsgAlt,
             action,
-            incrementLoadedCount,
-            updateMilestones,
-            onSuccess,
-
-            editMilestoneTitle,
-            editMilestoneDescription,
-            editMilestoneDueDate,
+            newTitle,
+            newDueOn,
+            newState,
             log,
+            onSuccess,
         } = this.props;
 
+        setLoadingModal(true);
+        setLoadingMsgAlt('');
         setLoading(true);       // Set loading to true to indicate content is actually loading.
-        setLoadError(false);
-        setLoadSuccess(false);
-        setLoadedCount(0);
+        setLoadingSuccess(false);
 
         log.info(milestones);
         for (let milestone of milestones) {
             log.info(milestone);
             let result = false;
-            if (action === 'close') {
+            if (action === 'create') {
+                setLoadingMsg('Creating Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
+                //TODO - To be implemented
+            } else if (action === 'close') {
+                setLoadingMsg('Closing Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
                 try {
                     result = await this.octokit.issues.updateMilestone({
                         owner: milestone.org.login,
@@ -92,6 +94,7 @@ class Data extends Component {
                     });
                 }
             } else if (action === 'delete') {
+                setLoadingMsg('Deleting Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
                 try {
                     result = await this.octokit.issues.deleteMilestone({
                         owner: milestone.org.login,
@@ -109,6 +112,8 @@ class Data extends Component {
                     cfgMilestones.remove({id: milestone.id});
                 }
             } else if (action === 'update') {
+                setLoadingMsg('Updating Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
+
                 let updatePayload = {
                     owner: milestone.org.login,
                     repo: milestone.repo.name,
@@ -178,13 +183,10 @@ class Data extends Component {
                 }
             }
         }
-        setLoadSuccess(true);
+        setLoadingSuccessMsg('Update Completed');
+        setLoadingSuccess(true);
         setLoading(false);
-        updateMilestones();
-        if (onSuccess !== null && onSuccess !== undefined) {
-            log.info(onSuccess);
-            onSuccess();
-        }
+        onSuccess();
     };
 
     render() {
@@ -196,52 +198,51 @@ Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     action: PropTypes.string,
-    onSuccess: PropTypes.func.isRequired,
+    log: PropTypes.object.isRequired,
     milestones: PropTypes.array.isRequired,
-    editMilestoneTitle: PropTypes.string,
-    editMilestoneDescription: PropTypes.string,
-    editMilestoneDueDate: PropTypes.string,
+
+    newTitle: PropTypes.string,
+    newState: PropTypes.string,
+    newDueOn: PropTypes.string,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
-    setLoadError: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
-    setLoadedCount: PropTypes.func.isRequired,
-    incrementLoadedCount: PropTypes.func.isRequired,
-    updateMilestones: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+
     updateChip: PropTypes.func.isRequired,
     setChipRemaining: PropTypes.func.isRequired,
-
-    log: PropTypes.object.isRequired,
+    onSuccess: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.milestonesEdit.loadFlag,
-    loading: state.milestonesEdit.loading,
     action: state.milestonesEdit.action,
-
-    onSuccess: state.milestonesEdit.onSuccess,
 
     milestones: state.milestonesEdit.milestones,
 
-    editMilestoneTitle: state.milestonesEdit.editMilestoneTitle,
-    editMilestoneDescription: state.milestonesEdit.editMilestoneDescription,
-    editMilestoneDueDate: state.milestonesEdit.editMilestoneDueDate,
+    newTitle: state.labelsEdit.newTitle,
+    newState: state.labelsEdit.newState,
+    newDueOn: state.labelsEdit.newDueOn,
 
     log: state.global.log,
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
-    setLoading: dispatch.milestonesEdit.setLoading,
-    setLoadError: dispatch.milestonesEdit.setLoadError,
-    setLoadSuccess: dispatch.milestonesEdit.setLoadSuccess,
+    setLoadFlag: dispatch.labelsEdit.setLoadFlag,
 
-    setLoadedCount: dispatch.milestonesEdit.setLoadedCount,
-    incrementLoadedCount: dispatch.milestonesEdit.incrementLoadedCount,
-
-    updateMilestones: dispatch.milestonesView.updateMilestones,
+    setLoading: dispatch.loading.setLoading,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingModal: dispatch.loading.setLoadingModal,
 
     updateChip: dispatch.chip.updateChip,
     setChipRemaining: dispatch.chip.setRemaining,

@@ -33,30 +33,48 @@ class Refresh extends Component {
     }
 
     refreshAllRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, reposSetOnSuccess, milestonesUpdateView  } = this.props;
-        reposSetOnSuccess(milestonesUpdateView);
+        const {
+            reposSetLoadFlag,
+            reposSetLoadRepos,
+            setOnSuccess,
+            milestonesUpdateView
+        } = this.props;
+        setOnSuccess(milestonesUpdateView);
         reposSetLoadRepos([]);
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
     refreshSelectedRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, milestones, reposSetOnSuccess, milestonesUpdateView } = this.props;
+        const {
+            reposSetLoadFlag,
+            reposSetLoadRepos,
+            milestones,
+            setOnSuccess,
+            milestonesUpdateView
+        } = this.props;
 
-        const allRepos = _.uniqBy(milestones.map(label => label.repo), 'id');
+        const allRepos = _.uniqBy(milestones.map(milestone => milestone.repo), 'id');
         //Get list of repositories for current query
-        reposSetOnSuccess(milestonesUpdateView);
-        reposSetLoadRepos(allRepos);
+        setOnSuccess(milestonesUpdateView);
+        reposSetLoadRepos(allRepos.map(r => r.id));
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
     refreshMilestones = () => {
-        const { milestonesSetStageFlag, milestonesSetVerifFlag, milestonesSetMilestones, milestonesSetAction, milestones, milestonesSetOnStagingSuccess, milestonesUpdateView, milestonesSetVerifying } = this.props;
-        milestonesSetOnStagingSuccess(milestonesUpdateView);
+        const {
+            milestonesSetStageFlag,
+            milestonesSetVerifFlag,
+            milestonesSetMilestones,
+            milestonesSetAction,
+            milestones,
+            setOnSuccess,
+            milestonesUpdateView
+        } = this.props;
+        setOnSuccess(milestonesUpdateView);
         milestonesSetMilestones(milestones);
         milestonesSetAction('refresh');
-        milestonesSetVerifying(true);
         milestonesSetStageFlag(false);
         milestonesSetVerifFlag(true);
         this.setState({ anchorEl: null });
@@ -71,7 +89,7 @@ class Refresh extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, milestones } = this.props;
         const { anchorEl } = this.state;
 
         return (
@@ -83,7 +101,7 @@ class Refresh extends Component {
                     className={classes.button}
                 >
                     <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                    Refresh Milestones
+                    Load Milestones
                 </Button>
                 <Menu
                     id="simple-menu"
@@ -92,8 +110,18 @@ class Refresh extends Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.refreshAllRepos}>Across all Repositories</MenuItem>
-                    <MenuItem onClick={this.refreshSelectedRepos}>Across selected Repositories</MenuItem>
-                    <MenuItem onClick={this.refreshMilestones}>Filtered Milestones</MenuItem>
+                    <MenuItem
+                        onClick={this.refreshSelectedRepos}
+                        disabled={milestones.length === 0 ? true : false}
+                    >
+                        Across selected Repositories
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.refreshMilestones}
+                        disabled={milestones.length === 0 ? true : false}
+                    >
+                        Displayed Milestones
+                    </MenuItem>
                 </Menu>
             </div>
         )
@@ -104,15 +132,14 @@ Refresh.propTypes = {
     classes: PropTypes.object.isRequired,
     reposSetLoadFlag: PropTypes.func.isRequired,
     reposSetLoadRepos: PropTypes.func.isRequired,
-    reposSetOnSuccess: PropTypes.func.isRequired,
+
+    setOnSuccess: PropTypes.func.isRequired,
 
     milestones: PropTypes.array.isRequired,
     milestonesSetStageFlag: PropTypes.func.isRequired,
     milestonesSetVerifFlag: PropTypes.func.isRequired,
-    milestonesSetVerifying: PropTypes.func.isRequired,
     milestonesSetMilestones: PropTypes.func.isRequired,
     milestonesSetAction: PropTypes.func.isRequired,
-    milestonesSetOnStagingSuccess: PropTypes.func.isRequired,
     milestonesUpdateView: PropTypes.func.isRequired,
 };
 
@@ -123,15 +150,15 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     reposSetLoadFlag: dispatch.milestonesFetch.setLoadFlag,
     reposSetLoadRepos: dispatch.milestonesFetch.setLoadRepos,
-    reposSetOnSuccess: dispatch.milestonesFetch.setOnSuccess,
 
     milestonesSetStageFlag: dispatch.milestonesEdit.setStageFlag,
     milestonesSetVerifFlag: dispatch.milestonesEdit.setVerifFlag,
-    milestonesSetVerifying: dispatch.milestonesEdit.setVerifying,
     milestonesSetMilestones: dispatch.milestonesEdit.setMilestones,
     milestonesSetAction: dispatch.milestonesEdit.setAction,
-    milestonesSetOnStagingSuccess: dispatch.milestonesEdit.setOnStagingSuccess,
     milestonesUpdateView: dispatch.milestonesView.updateView,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));

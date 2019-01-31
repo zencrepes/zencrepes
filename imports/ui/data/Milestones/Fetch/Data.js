@@ -14,8 +14,8 @@ import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
 class Data extends Component {
     constructor (props) {
         super(props);
-        this.state = {};
         this.errorRetry = 0;
+        this.milestonesCount = 0;
     }
 
     componentDidUpdate = (prevProps) => {
@@ -30,10 +30,12 @@ class Data extends Component {
     load = async () => {
         const {
             setLoading,
-            setLoadSuccess,
-            setIterateTotal,
-            incIterateCurrent,
-            setIterateCurrent,
+            setLoadingMsgAlt,
+            setLoadingIterateTotal,
+            incLoadingIterateCurrent,
+            setLoadingIterateCurrent,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
             log,
             loadRepos,
             onSuccess
@@ -46,8 +48,9 @@ class Data extends Component {
         }
 
         let allRepos = cfgSources.find(reposQuery).fetch();
-        setIterateTotal(allRepos.length);
-        setIterateCurrent(0);
+        setLoading(true);
+        setLoadingIterateTotal(allRepos.filter(repo => repo.active === true).length);
+        setLoadingIterateCurrent(0);
         for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any milestones attached to this repo (if any)
@@ -55,24 +58,27 @@ class Data extends Component {
                 await cfgMilestones.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
                 log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.milestones.totalCount + ' milestones');
+                setLoadingMsgAlt('Fetching milestones from ' + repo.org.login + '/' + repo.name);
                 await this.getMilestonesPagination(null, 5, repo);
+                incLoadingIterateCurrent(1);
+                setLoadingSuccessMsg('Fetched ' + this.milestonesCount + ' labels');
             }
-            incIterateCurrent(1);
         }
 
         log.info('Will be deleting ' + cfgMilestones.find({active: false}).count() + ' milestones attached to disabled repositories');
         await cfgMilestones.remove({active: false});
 
         log.info('Load completed: There is a total of ' + cfgMilestones.find({}).count() + ' milestones in memory');
-        setLoading(false);  // Set to true to indicate milestones are done loading.
-        setLoadSuccess(true);
+        setLoadingSuccess(true);
+        setLoading(false);          // Set to false to indicate labels are done loading.
+        this.milestonesCount = 0;
         onSuccess();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 milestones, but local only has 99
     // Query increment should not be just 1 since if the missing milestones is far down, this will generate a large number of calls
     getMilestonesPagination = async (cursor, increment, repoObj) => {
-        const { client, setLoadSuccess, setLoading, log } = this.props;
+        const { client, setLoading, log } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
@@ -88,7 +94,7 @@ class Data extends Component {
                     log.info(error);
                 }
                 log.info(repoObj);
-                if (data.data !== null) {
+                if (data.data !== undefined && data.data !== null) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
                     // Check if the repository actually exist and milestones were returned
@@ -113,14 +119,16 @@ class Data extends Component {
                 }
             } else {
                 log.info('Got too many load errors, stopping');
-                setLoadSuccess(false);
                 setLoading(false);
             }
         }
     };
 
     ingestMilestones = async (data, repoObj) => {
-        const { incLoadedCount, log } = this.props;
+        const {
+            setLoadingMsg,
+            log
+        } = this.props;
         let lastCursor = null;
         let stopLoad = false;
         log.info(data);
@@ -154,8 +162,9 @@ class Data extends Component {
                 }, {
                     $set: milestoneObj
                 });
-                incLoadedCount(1);
             }
+            this.milestonesCount = this.milestonesCount + 1;
+            setLoadingMsg(this.milestonesCount + ' milestones loaded');
             lastCursor = currentMilestone.cursor;
         }
         if (lastCursor === null) {
@@ -175,42 +184,49 @@ class Data extends Component {
 Data.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    loadRepos: PropTypes.array.isRequired,
+    loadRepos: PropTypes.array,
 
     setLoadFlag: PropTypes.func.isRequired,
-    setLoading: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
-    setLoadedCount: PropTypes.func.isRequired,
-    incLoadedCount: PropTypes.func.isRequired,
-    setIterateTotal: PropTypes.func.isRequired,
-    setIterateCurrent: PropTypes.func.isRequired,
-    incIterateCurrent: PropTypes.func.isRequired,
-    updateChip: PropTypes.func.isRequired,
-    onSuccess: PropTypes.func.isRequired,
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
+
+    setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    incLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.milestonesFetch.loadFlag,
-    loading: state.milestonesFetch.loading,
-    onSuccess: state.milestonesFetch.onSuccess,
     loadRepos: state.milestonesFetch.loadRepos,
 
     log: state.global.log,
+
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.milestonesFetch.setLoadFlag,
-    setLoading: dispatch.milestonesFetch.setLoading,
-    setLoadSuccess: dispatch.milestonesFetch.setLoadSuccess,
-    setLoadedCount: dispatch.milestonesFetch.setLoadedCount,
 
-    incLoadedCount: dispatch.milestonesFetch.incLoadedCount,
-    setIterateTotal: dispatch.milestonesFetch.setIterateTotal,
-    setIterateCurrent: dispatch.milestonesFetch.setIterateCurrent,
-    incIterateCurrent: dispatch.milestonesFetch.incIterateCurrent,
+    setLoading: dispatch.loading.setLoading,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingModal: dispatch.loading.setLoadingModal,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    incLoadingIterateCurrent: dispatch.loading.incLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
 
     updateChip: dispatch.chip.updateChip,
 });
