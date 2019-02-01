@@ -4,13 +4,12 @@ import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import {cfgLabels, cfgMilestones} from "../../Minimongo";
+import { cfgMilestones } from "../../Minimongo";
 
 import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
 
 import GitHubApi from '@octokit/rest';
 import PropTypes from 'prop-types';
-import GET_GITHUB_SINGLE_LABEL from "../../../../graphql/getSingleLabel.graphql";
 
 class Data extends Component {
     constructor (props) {
@@ -54,8 +53,8 @@ class Data extends Component {
             setLoadingMsgAlt,
             action,
             newTitle,
-            newDueOn,
-            newState,
+            //newDueOn,
+            //newState,
             log,
             onSuccess,
         } = this.props;
@@ -133,7 +132,7 @@ class Data extends Component {
                 log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    incrementLoadedCount(1);
+                    //incrementLoadedCount(1);
                     await cfgMilestones.update({
                         id: milestone.id
                     }, {
@@ -159,12 +158,13 @@ class Data extends Component {
                 }
             } else if (action === 'update') {
                 setLoadingMsg('Updating Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
-
+/*
                 let updatePayload = {
                     owner: milestone.org.login,
                     repo: milestone.repo.name,
                     number: milestone.number,
                 };
+
                 if (editMilestoneTitle !== null) {
                     updatePayload = {
                         ...updatePayload,
@@ -194,7 +194,7 @@ class Data extends Component {
                 log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    incrementLoadedCount(1);
+                    //incrementLoadedCount(1);
 
                     let data = {};
                     try {
@@ -227,6 +227,7 @@ class Data extends Component {
                         });
                     }
                 }
+                */
             }
         }
         setLoadingSuccessMsg('Update Completed');

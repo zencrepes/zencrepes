@@ -16,7 +16,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 //import CreateNewFolderIcon from '@material-ui/icons/create_new_folder
 
-import EditMilestoneState from './EditMilestoneState.js';
+//import EditMilestoneState from './EditMilestoneState.js';
 import EditMilestoneTitle from './EditMilestoneTitle.js';
 import EditMilestoneDueOn from './EditMilestoneDueOn.js';
 import AddRepoButton from './AddRepoButton.js';
@@ -418,7 +418,7 @@ class MilestonesTable extends Component {
                     return false;
                 }
             });
-            console.log(uniqRepos);
+//            console.log(uniqRepos);
             const createMilestones = uniqRepos.map((mls) => {
                 return {
                     org: mls.org,
@@ -489,7 +489,7 @@ class MilestonesTable extends Component {
             addedRows,
             rowChanges,
             currentPage,
-            deletingRows,
+//            deletingRows,
             pageSize,
             pageSizes,
             dueOnColumns,

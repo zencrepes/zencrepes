@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
-import Input from '@material-ui/core/Input';
 import TextField from "@material-ui/core/TextField/TextField";
 
 class EditMilestoneDueOn extends Component {

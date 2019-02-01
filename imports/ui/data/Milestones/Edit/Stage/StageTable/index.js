@@ -8,7 +8,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 import RemoveButton from './RemoveButton.js';
 import VerifState from './VerifState.js';
@@ -176,6 +175,9 @@ StageTable.propTypes = {
     classes: PropTypes.object.isRequired,
     milestones: PropTypes.array.isRequired,
     action: PropTypes.string.isRequired,
+    newTitle: PropTypes.string,
+    newState: PropTypes.string,
+    newDueOn: PropTypes.string,
 };
 
 export default withStyles(styles)(StageTable);

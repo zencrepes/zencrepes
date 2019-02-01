@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from "@material-ui/core/Typography/Typography";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 class DueOnField extends Component {
     constructor (props) {

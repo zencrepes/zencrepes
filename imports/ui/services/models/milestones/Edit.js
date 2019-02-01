@@ -78,7 +78,6 @@ export default {
         },
 
         async startEditingMilestone(milestone, rootState) {
-            console.log('startEditingMilestone');
             if (milestone !== undefined) {
                 const milestones = rootState.milestonesView.milestones.filter(mls => mls.title === milestone);
                 this.setMilestones(milestones);
@@ -95,7 +94,6 @@ export default {
                 if (milestones_due.length > 0) {
                     editMilestoneDueOn = milestones_due[0].dueOn;
                 }
-                console.log(editMilestoneDueOn);
                 this.setNewDueOn(editMilestoneDueOn);
             }
         },

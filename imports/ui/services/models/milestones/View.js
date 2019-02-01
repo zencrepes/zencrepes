@@ -1,6 +1,5 @@
-import { cfgMilestones } from '../../../data/Minimongo.js';
+import { cfgMilestones, cfgSources } from '../../../data/Minimongo.js';
 import {buildFacets} from "../../../utils/facets/milestones.js";
-import {cfgLabels, cfgSources} from "../../../data/Minimongo";
 
 export default {
     state: {
