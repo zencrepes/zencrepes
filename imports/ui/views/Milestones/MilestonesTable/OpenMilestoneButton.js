@@ -13,7 +13,7 @@ class OpenMilestoneButton extends Component {
 
     addRepo = () => {
         const {
-            labels,
+            milestones,
             updateAvailableRepos,
             setOpenAddRepos,
             setAddReposSelected,
@@ -21,19 +21,19 @@ class OpenMilestoneButton extends Component {
             setNewDescription,
             setNewColor,
         } = this.props;
-        updateAvailableRepos(labels);
-        setNewName(labels[0].name);
-        setNewDescription(labels[0].description);
-        setNewColor(labels[0].color);
+        updateAvailableRepos(milestones);
+        setNewName(milestones[0].name);
+        setNewDescription(milestones[0].description);
+        setNewColor(milestones[0].color);
         setAddReposSelected([]);
         setOpenAddRepos(true);
     };
 
     render() {
-        const { labels, reposCount } = this.props;
-        if (labels !== undefined && labels.length < reposCount) {
+        const { milestones, reposCount } = this.props;
+        if (milestones !== undefined && milestones.length > 0) {
             return (
-                <IconButton onClick={this.addRepo} title="Add to Repositories">
+                <IconButton onClick={this.addRepo} title="Open Milestones">
                     <SignDirectionIcon />
                 </IconButton>
             );
@@ -45,7 +45,7 @@ class OpenMilestoneButton extends Component {
 
 OpenMilestoneButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
-    labels: PropTypes.array,
+    milestones: PropTypes.array,
     setOpenAddRepos: PropTypes.func.isRequired,
     setAddReposSelected: PropTypes.func.isRequired,
     updateAvailableRepos: PropTypes.func.isRequired,
@@ -56,17 +56,17 @@ OpenMilestoneButton.propTypes = {
 };
 
 const mapState = state => ({
-    reposCount: state.labelsView.reposCount,
+    reposCount: state.milestonesView.reposCount,
 });
 
 const mapDispatch = dispatch => ({
-    //setLabels: dispatch.labelsEdit.setLabels,
-    setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
-    setAddReposSelected: dispatch.labelsEdit.setAddReposSelected,
-    updateAvailableRepos: dispatch.labelsEdit.updateAvailableRepos,
-    setNewName: dispatch.labelsEdit.setNewName,
-    setNewDescription: dispatch.labelsEdit.setNewDescription,
-    setNewColor: dispatch.labelsEdit.setNewColor,
+    //setMilestones: dispatch.milestonesEdit.setMilestones,
+    setOpenAddRepos: dispatch.milestonesEdit.setOpenAddRepos,
+    setAddReposSelected: dispatch.milestonesEdit.setAddReposSelected,
+    updateAvailableRepos: dispatch.milestonesEdit.updateAvailableRepos,
+    setNewName: dispatch.milestonesEdit.setNewName,
+    setNewDescription: dispatch.milestonesEdit.setNewDescription,
+    setNewColor: dispatch.milestonesEdit.setNewColor,
 });
 
 export default connect(mapState, mapDispatch)(OpenMilestoneButton);

@@ -22,6 +22,9 @@ import EditMilestoneDueOn from './EditMilestoneDueOn.js';
 import AddRepoButton from './AddRepoButton.js';
 import AddRepos from './AddRepos/index.js';
 import ReposTable from './ReposTable/index.js';
+import CloseMilestoneButton from './CloseMilestoneButton.js';
+import OpenMilestoneButton from './OpenMilestoneButton.js';
+
 import {
     SortingState,
     EditingState,
@@ -151,10 +154,18 @@ const DueOnTypeProvider = props => (
 );
 
 const StateFormatter = ({ value }) => {
+    console.log(value);
     if (value === undefined) {
         return 'OPEN';
     } else if (value.length > 1) {
-        return 'MIXED';
+        console.log(value.filter(mls => mls.name === 'OPEN'));
+        console.log(value.filter(mls => mls.name === 'CLOSED'));
+        return (
+            <React.Fragment>
+                MIXED <CloseMilestoneButton milestones={value.filter(mls => mls.name === 'OPEN')[0].items}/>
+                <OpenMilestoneButton milestones={value.filter(mls => mls.name === 'CLOSED')[0].items}/>
+            </React.Fragment>
+        );
     } else {
         return value[0].name;
     }
@@ -309,7 +320,7 @@ class MilestonesTable extends Component {
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pullRequests', width: 90 },
                 { columnName: 'dueOn', width: 200 },
-                { columnName: 'state', width: 90 },
+                { columnName: 'state', width: 150 },
             ],
             columnOrder: ['title', 'dueOn', 'state', 'issues', 'pullRequests', 'repos'],
             dueOnColumns: ['dueOn'],

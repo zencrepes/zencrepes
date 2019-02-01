@@ -30,10 +30,11 @@ class CloseMilestoneButton extends Component {
     };
 
     render() {
-        const { labels, reposCount } = this.props;
-        if (labels !== undefined && labels.length < reposCount) {
+        const { milestones } = this.props;
+        console.log(milestones);
+        if (milestones !== undefined && milestones.length > 0) {
             return (
-                <IconButton onClick={this.addRepo} title="Add to Repositories">
+                <IconButton onClick={this.addRepo} title="Close Milestones">
                     <CheckIcon />
                 </IconButton>
             );
