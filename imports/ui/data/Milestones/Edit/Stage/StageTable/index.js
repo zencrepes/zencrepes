@@ -12,9 +12,16 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 import RemoveButton from './RemoveButton.js';
 import VerifState from './VerifState.js';
+import TitleField from "./TitleField.js";
+import StateField from "./StateField.js";
+import DueOnField from "./DueOnField.js";
+
+import OrgLink from '../../../../../components/Common/OrgLink/index.js';
+import RepoLink from '../../../../../components/Common/RepoLink/index.js';
 
 import green from "@material-ui/core/colors/green";
 import red from "@material-ui/core/colors/red";
+import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = theme => ({
     root: {
@@ -50,7 +57,7 @@ class StageTable extends Component {
     }
 
     render() {
-        const { classes, milestones, action } = this.props;
+        const { classes, milestones, action, newTitle, newDueOn, newState } = this.props;
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>
@@ -66,14 +73,24 @@ class StageTable extends Component {
                                 Repository
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                Milestone
+                                Title
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                                Due On
                             </TableCell>
                             <TableCell component="th" scope="row">
                                 State
                             </TableCell>
-                            <TableCell component="th" scope="row">
-                                Issues Count
-                            </TableCell>
+                            {action !== 'create' &&
+                                <React.Fragment>
+                                    <TableCell component="th" scope="row">
+                                        Issues
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        PRs
+                                    </TableCell>
+                                </React.Fragment>
+                            }
                             <TableCell component="th" scope="row">
                                 GitHub Verified
                             </TableCell>
@@ -90,20 +107,51 @@ class StageTable extends Component {
                                         {action}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {milestone.org.login}
+                                        <OrgLink
+                                            org={milestone.org}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {milestone.repo.name}
+                                        <RepoLink
+                                            repo={milestone.repo}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <a href={milestone.url} className={classes.milestoneTitle} rel="noopener noreferrer" target="_blank">{milestone.title} <OpenInNewIcon style={{ fontSize: 12 }} /></a>
+                                        <TitleField
+                                            action={action}
+                                            title={milestone.title}
+                                            url={milestone.url}
+                                            newTitle={newTitle}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {milestone.state}
+                                        <DueOnField
+                                            action={action}
+                                            dueOn={milestone.dueOn}
+                                            newDueOn={newDueOn}
+                                        />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {milestone.issues.totalCount}
+                                        <StateField
+                                            action={action}
+                                            state={milestone.state}
+                                            newState={newState}
+                                        />
                                     </TableCell>
+                                    {action !== 'create' &&
+                                        <React.Fragment>
+                                            <TableCell component="th" scope="row">
+                                                <Typography variant="body1" gutterBottom>
+                                                    {milestone.issues.totalCount}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                <Typography variant="body1" gutterBottom>
+                                                    {milestone.pullRequests.totalCount}
+                                                </Typography>
+                                            </TableCell>
+                                        </React.Fragment>
+                                    }
                                     <TableCell component="th" scope="row">
                                         <VerifState
                                             milestone={milestone}

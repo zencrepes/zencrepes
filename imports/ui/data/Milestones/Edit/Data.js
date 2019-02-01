@@ -4,12 +4,13 @@ import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import { cfgMilestones } from "../../Minimongo";
+import {cfgLabels, cfgMilestones} from "../../Minimongo";
 
 import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
 
 import GitHubApi from '@octokit/rest';
 import PropTypes from 'prop-types';
+import GET_GITHUB_SINGLE_LABEL from "../../../../graphql/getSingleLabel.graphql";
 
 class Data extends Component {
     constructor (props) {
@@ -45,6 +46,7 @@ class Data extends Component {
             client,
             setChipRemaining,
             milestones,
+            setLoading,
             setLoadingSuccess,
             setLoadingSuccessMsg,
             setLoadingModal,
@@ -69,7 +71,52 @@ class Data extends Component {
             let result = false;
             if (action === 'create') {
                 setLoadingMsg('Creating Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
-                //TODO - To be implemented
+                //To simplify implementation, for now creating is limited to the minimum required fields.
+                let createPayload = {
+                    owner: milestone.org.login,
+                    repo: milestone.repo.name,
+                    title: newTitle,
+                };
+                log.info(createPayload);
+                try {
+                    result = await this.octokit.issues.createMilestone(createPayload);
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    let data = {};
+                    try {
+                        data = await client.query({
+                            query: GET_GITHUB_SINGLE_MILESTONE,
+                            variables: {
+                                org_name: milestone.org.login,
+                                repo_name: milestone.repo.name,
+                                milestone_number: result.data.number
+                            },
+                            fetchPolicy: 'no-cache',
+                            errorPolicy: 'ignore',
+                        });
+                    }
+                    catch (error) {
+                        log.info(error);
+                    }
+                    log.info(data);
+                    if (data.data !== null) {
+                        const milestoneObj = {
+                            ...data.data.repository.milestone,
+                            repo: milestone.repo,
+                            org: milestone.org,
+                        };
+                        log.info(milestoneObj);
+                        await cfgMilestones.upsert({
+                            id: milestoneObj.id
+                        }, {
+                            $set: milestoneObj
+                        });
+                    }
+                }
             } else if (action === 'close') {
                 setLoadingMsg('Closing Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
                 try {
@@ -108,7 +155,6 @@ class Data extends Component {
                 log.info(result);
                 if (result !== false) {
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    incrementLoadedCount(1);
                     cfgMilestones.remove({id: milestone.id});
                 }
             } else if (action === 'update') {
@@ -225,9 +271,9 @@ const mapState = state => ({
 
     milestones: state.milestonesEdit.milestones,
 
-    newTitle: state.labelsEdit.newTitle,
-    newState: state.labelsEdit.newState,
-    newDueOn: state.labelsEdit.newDueOn,
+    newTitle: state.milestonesEdit.newTitle,
+    newState: state.milestonesEdit.newState,
+    newDueOn: state.milestonesEdit.newDueOn,
 
     log: state.global.log,
     loading: state.loading.loading,
@@ -235,7 +281,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setLoadFlag: dispatch.labelsEdit.setLoadFlag,
+    setLoadFlag: dispatch.milestonesEdit.setLoadFlag,
 
     setLoading: dispatch.loading.setLoading,
     setLoadingSuccess: dispatch.loading.setLoadingSuccess,

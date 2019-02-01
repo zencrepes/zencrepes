@@ -31,7 +31,7 @@ class EditMilestoneTitle extends Component {
 
 EditMilestoneTitle.propTypes = {
     newTitle: PropTypes.string.isRequired,
-    setNewName: PropTypes.func.isRequired,
+    setNewTitle: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

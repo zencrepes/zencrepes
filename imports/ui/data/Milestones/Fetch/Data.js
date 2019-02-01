@@ -61,7 +61,7 @@ class Data extends Component {
                 setLoadingMsgAlt('Fetching milestones from ' + repo.org.login + '/' + repo.name);
                 await this.getMilestonesPagination(null, 5, repo);
                 incLoadingIterateCurrent(1);
-                setLoadingSuccessMsg('Fetched ' + this.milestonesCount + ' labels');
+                setLoadingSuccessMsg('Fetched ' + this.milestonesCount + ' milestones');
             }
         }
 

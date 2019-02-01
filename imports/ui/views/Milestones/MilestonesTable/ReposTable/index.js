@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import SquareIcon from 'mdi-react/SquareIcon';
-
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,7 +15,7 @@ import RemoveButton from './RemoveButton.js';
 
 import RepoLink from '../../../../components/Common/RepoLink/index.js';
 import OrgLink from '../../../../components/Common/OrgLink/index.js';
-import LabelLink from '../../../../components/Common/LabelLink/index.js';
+import MilestoneLink from '../../../../components/Common/MilestoneLink/index.js';
 
 const styles = {
     blank: {
@@ -26,7 +24,7 @@ const styles = {
     table: {
         //width: '70%'
     },
-    labelTitle: {
+    milestoneTitle: {
         fontSize: '1rm',
         color: '#000000!important',
         textDecoration: "none",
@@ -39,7 +37,7 @@ class ReposTable extends Component {
     }
 
     render() {
-        const { classes, labels  } = this.props;
+        const { classes, milestones  } = this.props;
         return (
             <Grid
                 container
@@ -67,10 +65,13 @@ class ReposTable extends Component {
                                     Repository
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    Color
+                                    Title
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    Description
+                                    State
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    DueOn
                                 </TableCell>
                                 <TableCell component="th" scope="row" padding="dense">
                                     Issues
@@ -81,50 +82,55 @@ class ReposTable extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {labels.map(label => {
+                            {milestones.map(milestone => {
                                 return (
-                                    <TableRow key={label.id}>
+                                    <TableRow key={milestone.id}>
                                         <TableCell component="th" scope="row" padding="none">
                                             <RemoveButton
-                                                label={label}
+                                                milestone={milestone}
                                             />
                                         </TableCell>
                                         <TableCell component="th" scope="row">
-                                            <LabelLink
-                                                label={label}
+                                            <MilestoneLink
+                                                milestone={milestone}
                                             />
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             <OrgLink
-                                                org={label.org}
+                                                org={milestone.org}
                                             />
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             <RepoLink
-                                                repo={label.repo}
+                                                repo={milestone.repo}
+                                            />
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            <MilestoneLink
+                                                milestone={milestone}
                                             />
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             <Typography variant="body1" gutterBottom>
-                                                <SquareIcon color={'#' + label.color}/> ({'#' + label.color})
+                                                {milestone.state}
                                             </Typography>
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             <Typography variant="body1" gutterBottom>
-                                                {label.description}
+                                                {milestone.dueOn}
                                             </Typography>
                                         </TableCell>
                                         <TableCell component="th" scope="row" padding="dense">
                                             <Typography variant="body1" gutterBottom>
-                                                {label.issues.totalCount}
+                                                {milestone.issues.totalCount}
                                             </Typography>
                                         </TableCell>
                                         <TableCell component="th" scope="row" padding="dense">
                                             <Typography variant="body1" gutterBottom>
-                                                {label.pullRequests !== undefined &&
-                                                <React.Fragment>
-                                                    {label.pullRequests.totalCount}
-                                                </React.Fragment>
+                                                {milestone.pullRequests !== undefined &&
+                                                    <React.Fragment>
+                                                        {milestone.pullRequests.totalCount}
+                                                    </React.Fragment>
                                                 }
                                             </Typography>
                                         </TableCell>
@@ -144,7 +150,7 @@ class ReposTable extends Component {
 
 ReposTable.propTypes = {
     classes: PropTypes.object.isRequired,
-    labels: PropTypes.array.isRequired,
+    milestones: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles)(ReposTable);

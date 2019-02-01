@@ -11,8 +11,8 @@ class RemoveButton extends Component {
     }
 
     remove = () => {
-        const { label, setLabels, setAction, setOnSuccess, updateView, setStageFlag, setVerifFlag} = this.props;
-        setLabels([label]);
+        const { milestone, setMilestones, setAction, setOnSuccess, updateView, setStageFlag, setVerifFlag} = this.props;
+        setMilestones([milestone]);
         setAction('delete');
         setOnSuccess(updateView);
         setStageFlag(true);
@@ -29,9 +29,9 @@ class RemoveButton extends Component {
 }
 
 RemoveButton.propTypes = {
-    label: PropTypes.object.isRequired,
+    milestone: PropTypes.object.isRequired,
 
-    setLabels: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
     setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
@@ -40,11 +40,11 @@ RemoveButton.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
-    setVerifFlag: dispatch.labelsEdit.setVerifFlag,
-    setAction: dispatch.labelsEdit.setAction,
-    setStageFlag: dispatch.labelsEdit.setStageFlag,
-    updateView: dispatch.labelsView.updateView,
-    setLabels: dispatch.labelsEdit.setLabels,
+    setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
+    setAction: dispatch.milestonesEdit.setAction,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    updateView: dispatch.milestonesView.updateView,
+    setMilestones: dispatch.milestonesEdit.setMilestones,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });

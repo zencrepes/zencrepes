@@ -6,6 +6,7 @@ query ($org_name: String!, $repo_name: String!, $milestone_number: Int!){
     resetAt
   }
   repository(owner:$org_name, name:$repo_name) {
+    viewerPermission
     milestone(number: $milestone_number) {
       id
       createdAt

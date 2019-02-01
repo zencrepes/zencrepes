@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
 import Input from '@material-ui/core/Input';
+import TextField from "@material-ui/core/TextField/TextField";
 
 class EditMilestoneDueOn extends Component {
     constructor(props) {
@@ -19,18 +20,20 @@ class EditMilestoneDueOn extends Component {
     };
 
     render() {
-        const { newDueOn } = this.props;
-        let dueOn = newDueOn;
-        if (dueOn === null) {
-            dueOn = '';
+        const { value } = this.props;
+        let dueOn = new Date();
+        if (value !== undefined) {
+            dueOn = new Date(value[0].dueOn);
         }
+        const formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
         return (
-            <Input
-                placeholder="Enter a due date"
-                inputProps={{
-                    'aria-label': 'Description',
+            <TextField
+                id="date"
+                type="date"
+                defaultValue={formattedDueOn}
+                InputLabelProps={{
+                    shrink: true,
                 }}
-                value={dueOn}
                 onChange={this.handleChange}
             />
         );
@@ -38,16 +41,12 @@ class EditMilestoneDueOn extends Component {
 }
 
 EditMilestoneDueOn.propTypes = {
-    newDueOn: PropTypes.string,
+    value: PropTypes.array,
     setNewDueOn: PropTypes.func.isRequired,
 };
-
-const mapState = state => ({
-    newDueOn: state.milestonesEdit.newDueOn,
-});
 
 const mapDispatch = dispatch => ({
     setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
 });
 
-export default connect(mapState, mapDispatch)(EditMilestoneDueOn);
+export default connect(null, mapDispatch)(EditMilestoneDueOn);

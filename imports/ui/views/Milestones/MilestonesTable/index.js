@@ -3,20 +3,12 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Paper from '@material-ui/core/Paper';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TableCell from '@material-ui/core/TableCell';
-
-import SquareIcon from 'mdi-react/SquareIcon';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -49,6 +41,7 @@ import {
     TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
 import {connect} from "react-redux";
+import uuidv1 from "uuid/v1";
 
 const RowDetail = ({ row }) => {
     return (
@@ -136,7 +129,12 @@ Command.propTypes = {
 
 const DueOnFormatter = ({ value }) => {
     if (value[0].name === undefined) {return '';}
-    else {return value[0].name;}
+    else {
+        const dueOn = new Date(value[0].name);
+        const formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
+
+        return formattedDueOn;
+    }
 /*    return value.map(color => (
         <SquareIcon key={color.name} color={color.name} />
     ))*/
@@ -153,9 +151,13 @@ const DueOnTypeProvider = props => (
 );
 
 const StateFormatter = ({ value }) => {
-    console.log(value);
-    if (value[0].name === undefined) {return '';}
-    else {return value[0].name;}
+    if (value === undefined) {
+        return 'OPEN';
+    } else if (value.length > 1) {
+        return 'MIXED';
+    } else {
+        return value[0].name;
+    }
 };
 StateFormatter.propTypes = {
     value: PropTypes.array,
@@ -270,9 +272,9 @@ const EditCell = (props) => {
     if (column.name === 'title') {
         return (<TableEditRow.Cell {...props} ><EditMilestoneTitle /></TableEditRow.Cell>);
     } else if (column.name === 'dueOn') {
-        return (<TableEditRow.Cell {...props} ><EditMilestoneDueOn /></TableEditRow.Cell>);
+        return (<TableEditRow.Cell {...props} ><EditMilestoneDueOn value={row.milestones} /></TableEditRow.Cell>);
     } else if (column.name === 'state') {
-        return (<TableEditRow.Cell {...props} ><EditMilestoneState /></TableEditRow.Cell>);
+        return (<TableEditRow.Cell {...props} ><StateFormatter value={row.milestones} /></TableEditRow.Cell>);
     } else if (column.name === 'repos') {
         return (<TableEditRow.Cell {...props} ><ReposFormatter value={row.milestones} /></TableEditRow.Cell>);
     } else if (column.name === 'issues') {
@@ -296,18 +298,17 @@ class MilestonesTable extends Component {
         this.state = {
             columns: [
                 { name: 'title', title: 'Title' },
-                { name: 'state', title: 'State' },
                 { name: 'dueOn', title: 'Due On' },
+                { name: 'state', title: 'State' },
                 { name: 'issues', title: 'Issues', getCellValue: row => row.milestones },
                 { name: 'pullRequests', title: 'PRs', getCellValue: row => row.milestones },
                 { name: 'repos', title: 'Repos', getCellValue: row => row.milestones },
             ],
             tableColumnExtensions: [
-//                { columnName: 'edit', width: 60 },
                 { columnName: 'repos', width: 110 },
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pullRequests', width: 90 },
-                { columnName: 'dueOn', width: 110 },
+                { columnName: 'dueOn', width: 200 },
                 { columnName: 'state', width: 90 },
             ],
             columnOrder: ['title', 'dueOn', 'state', 'issues', 'pullRequests', 'repos'],
@@ -317,6 +318,7 @@ class MilestonesTable extends Component {
             issuesColumns: ['issues'],
             prColumns: ['pullRequests'],
             editingStateColumnExtensions: [
+                { columnName: 'state', editingEnabled: false },
                 { columnName: 'repos', editingEnabled: false },
                 { columnName: 'issues', editingEnabled: false },
                 { columnName: 'pullRequests', editingEnabled: false },
@@ -368,15 +370,16 @@ class MilestonesTable extends Component {
      */
     changeAddedRows = (addedRows) => {
         //Github requires a color to be set, by default setting this up to white
-        const { setNewColor, setNewDescription, setNewName } = this.props;
+        const { setNewState, setNewTitle, setNewDueOn } = this.props;
         //Empty data
         if (addedRows.length > 0) {
-            setNewColor('FC5CA9');
-            setNewDescription(null);
-            setNewName('New Milestone');
+            setNewState('OPEN');
+            setNewTitle('New Milestone');
+            setNewDueOn(new Date().toISOString());
         }
         this.setState({
             addedRows: addedRows.map(row => (Object.keys(row).length ? row : {
+                state: 'OPEN',
                 newMilestone: true,
             })),
         })
@@ -407,7 +410,7 @@ class MilestonesTable extends Component {
         if (added !== undefined && added.length !== 0) {
             // The plan here is to list repositories for which we'll be adding milestones
             // As a hack, will be using list filtered by repositories
-            let uniqRepos = _.uniqWith(milestones, (arrVal, othVal) => {
+            const uniqRepos = _.uniqWith(milestones, (arrVal, othVal) => {
                 if (arrVal.repo.id === othVal.repo.id) {
                     return true;
                 }
@@ -415,10 +418,18 @@ class MilestonesTable extends Component {
                     return false;
                 }
             });
-            setMilestones(uniqRepos);
+            console.log(uniqRepos);
+            const createMilestones = uniqRepos.map((mls) => {
+                return {
+                    org: mls.org,
+                    repo: mls.repo,
+                    id: uuidv1(),
+                }
+            });
+            setMilestones(createMilestones);
             setAction('create');
         } else if (deleted !== undefined && deleted.length !== 0) {
-            const deleteMilestones = milestones.filter(lbl => lbl.name === deleted[0]);
+            const deleteMilestones = milestones.filter(mls => mls.title === deleted[0]);
             setMilestones(deleteMilestones);
             setAction('delete');
         } else {
@@ -594,7 +605,6 @@ const mapDispatch = dispatch => ({
     setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
-
 });
 
 export default connect(null, mapDispatch)(MilestonesTable);

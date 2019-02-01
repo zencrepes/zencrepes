@@ -78,108 +78,109 @@ class Staging extends Component {
             for (const [idx, milestone] of milestonesToUpdate.entries()) {
                 log.info(milestone);
                 if (this.props.loading === true) {
-                    let baseMsg = (idx + 1) + '/' + milestones.length + ' - Fetching milestone: ' + milestone.org.login + '/' + milestone.repo.name + '#' + milestone.number;
-                    setLoadingMsg(baseMsg);
-                    let data = {};
-                    try {
-                        data = await client.query({
-                            query: GET_GITHUB_SINGLE_MILESTONE,
-                            variables: {
-                                org_name: milestone.org.login,
-                                repo_name: milestone.repo.name,
-                                milestone_number: milestone.number
-                            },
-                            fetchPolicy: 'no-cache',
-                            errorPolicy: 'ignore',
+                    // First, verify if a milestone with this title already exists in the repo
+                    if (cfgMilestones.find({'title': newTitle, 'repo.id' : milestone.repo.id}).count() > 0) {
+                        insVerifiedMilestones({
+                            ...milestone,
+                            error: true,
+                            errorMsg: 'This milestone already exists in this repository. Please pick a different title.',
                         });
-                    }
-                    catch (error) {
-                        log.warn(error);
-                    }
-                    log.info(data);
-                    if (data.data !== null) {
-                        if (data.data !== undefined) {
-                            this.props.updateChip(data.data.rateLimit);
-                        }
-                        if (data.data === undefined) {
-                            // The repository doesn't exist anymore on GitHub.
-                            insVerifiedMilestones({
-                                id: milestone.id,
-                                error: true,
-                                errorMsg: 'Unable to communicate with GitHub, please check your network connectivity',
-                            });
-                            this.verifErrors++;
-                        }
-                        else if (data.data.repository === null) {
-                            // The repository doesn't exist anymore on GitHub.
-                            insVerifiedMilestones({
-                                id: milestone.id,
-                                error: true,
-                                errorMsg: 'This repository doesn\'t exist in GitHub currently. Was it deleted ?',
-                            });
-                            await cfgMilestones.remove({'id': milestone.id});
-                            await cfgSources.update({id: milestone.repo.id}, { active: false }, {multi: false});
-                            this.verifErrors++;
-                        }
-                        else if (data.data.repository.viewerPermission !== 'ADMIN' && data.data.repository.viewerPermission !== 'WRITE') {
-                            // The repository doesn't exist anymore on GitHub.
-                            insVerifiedMilestones({
-                                id: milestone.id,
-                                error: true,
-                                errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
-                            });
-                            this.verifErrors++;
-                        }
-                        else if (data.data.repository.milestone === null && action !== 'create') {
-                            insVerifiedMilestones({
-                                id: milestone.id,
-                                error: true,
-                                errorMsg: 'This milestone doesn\'t exist in GitHub currently. Was it deleted ?',
-                            });
-                            await cfgMilestones.remove({'id': milestone.id});
-                            this.verifErrors++;
-                        }
-                        else if (data.data.repository.milestone === null && action === 'create') {
-                            // The milestone doesn't exist in the repository, meaning all-clear for creating.
-                            insVerifiedMilestones({
-                                ...milestone,
-                                error: false,
+                        this.verifErrors++;
+                    } else if (action !== 'create') {
+                        let baseMsg = (idx + 1) + '/' + milestones.length + ' - Fetching milestone: ' + milestone.org.login + '/' + milestone.repo.name + '#' + milestone.number;
+                        setLoadingMsg(baseMsg);
+                        let data = {};
+                        try {
+                            data = await client.query({
+                                query: GET_GITHUB_SINGLE_MILESTONE,
+                                variables: {
+                                    org_name: milestone.org.login,
+                                    repo_name: milestone.repo.name,
+                                    milestone_number: milestone.number
+                                },
+                                fetchPolicy: 'no-cache',
+                                errorPolicy: 'ignore',
                             });
                         }
-                        else if (data.data.repository.milestone !== null && action === 'create') {
-                            insVerifiedMilestones({
-                                ...milestone,
-                                error: true,
-                                errorMsg: 'This milestone already exists in GitHub. Please rename instead of creating a milestone.',
-                            });
-                            this.verifErrors++;
-                        } else {
-                            if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
-                                insVerifiedMilestones({
-                                    ...data.data.repository.milestone,
-                                    error: false,
-                                })
+                        catch (error) {
+                            log.warn(error);
+                        }
+                        log.info(data);
+                        if (data.data !== null) {
+                            if (data.data !== undefined) {
+                                this.props.updateChip(data.data.rateLimit);
                             }
-                            else if (data.data.repository.milestone.updatedAt !== milestone.updatedAt) {
+                            if (data.data === undefined) {
+                                // The repository doesn't exist anymore on GitHub.
                                 insVerifiedMilestones({
-                                    ...data.data.repository.milestone,
+                                    id: milestone.id,
                                     error: true,
-                                    errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
-                                })
+                                    errorMsg: 'Unable to communicate with GitHub, please check your network connectivity',
+                                });
+                                this.verifErrors++;
+                            }
+                            else if (data.data.repository === null) {
+                                // The repository doesn't exist anymore on GitHub.
+                                insVerifiedMilestones({
+                                    id: milestone.id,
+                                    error: true,
+                                    errorMsg: 'This repository doesn\'t exist in GitHub currently. Was it deleted ?',
+                                });
+                                await cfgMilestones.remove({'id': milestone.id});
+                                await cfgSources.update({id: milestone.repo.id}, {active: false}, {multi: false});
+                                this.verifErrors++;
+                            }
+                            else if (data.data.repository.viewerPermission !== 'ADMIN' && data.data.repository.viewerPermission !== 'WRITE') {
+                                // The repository doesn't exist anymore on GitHub.
+                                insVerifiedMilestones({
+                                    id: milestone.id,
+                                    error: true,
+                                    errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
+                                });
+                                this.verifErrors++;
+                            }
+                            else if (data.data.repository.milestone === null && action !== 'create') {
+                                insVerifiedMilestones({
+                                    id: milestone.id,
+                                    error: true,
+                                    errorMsg: 'This milestone doesn\'t exist in GitHub currently. Was it deleted ?',
+                                });
+                                await cfgMilestones.remove({'id': milestone.id});
+                                this.verifErrors++;
+                            }
+                            else {
+                                if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
+                                    insVerifiedMilestones({
+                                        ...data.data.repository.milestone,
+                                        error: false,
+                                    })
+                                }
+                                else if (data.data.repository.milestone.updatedAt !== milestone.updatedAt) {
+                                    insVerifiedMilestones({
+                                        ...data.data.repository.milestone,
+                                        error: true,
+                                        errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
+                                    })
 
-                            } else if (data.data.repository.milestone.issues.totalCount !== milestone.issues.totalCount) {
-                                insVerifiedMilestones({
-                                    ...data.data.repository.milestone,
-                                    error: true,
-                                    errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. issues Counts are are different',
-                                })
+                                } else if (data.data.repository.milestone.issues.totalCount !== milestone.issues.totalCount) {
+                                    insVerifiedMilestones({
+                                        ...data.data.repository.milestone,
+                                        error: true,
+                                        errorMsg: 'This milestone has been modified in GitHub since it was last loaded locally. issues Counts are are different',
+                                    })
+                                }
+                                await cfgMilestones.upsert({
+                                    id: data.data.repository.milestone.id
+                                }, {
+                                    $set: data.data.repository.milestone
+                                });
                             }
-                            await cfgMilestones.upsert({
-                                id: data.data.repository.milestone.id
-                            }, {
-                                $set: data.data.repository.milestone
-                            });
                         }
+                    } else {
+                        insVerifiedMilestones({
+                            ...milestone,
+                            error: false,
+                        });
                     }
                 }
             }
