@@ -12,6 +12,7 @@ class CloseMilestoneButton extends Component {
     }
 
     addRepo = () => {
+        /*
         const {
             labels,
             updateAvailableRepos,
@@ -22,16 +23,17 @@ class CloseMilestoneButton extends Component {
             setNewColor,
         } = this.props;
         updateAvailableRepos(labels);
-        setNewName(labels[0].name);
-        setNewDescription(labels[0].description);
+        setNewTitle(labels[0].name);
+        setNewDueOn(labels[0].description);
         setNewColor(labels[0].color);
         setAddReposSelected([]);
         setOpenAddRepos(true);
+        */
     };
 
     render() {
         const { milestones } = this.props;
-        console.log(milestones);
+//        console.log(milestones);
         if (milestones !== undefined && milestones.length > 0) {
             return (
                 <IconButton onClick={this.addRepo} title="Close Milestones">
@@ -46,28 +48,27 @@ class CloseMilestoneButton extends Component {
 
 CloseMilestoneButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
-    labels: PropTypes.array,
+    milestones: PropTypes.array,
     setOpenAddRepos: PropTypes.func.isRequired,
     setAddReposSelected: PropTypes.func.isRequired,
     updateAvailableRepos: PropTypes.func.isRequired,
 
-    setNewName: PropTypes.func.isRequired,
-    setNewDescription: PropTypes.func.isRequired,
-    setNewColor: PropTypes.func.isRequired,
+    setNewTitle: PropTypes.func.isRequired,
+    setNewDueOn: PropTypes.func.isRequired,
+    setNewState: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-    reposCount: state.labelsView.reposCount,
+    reposCount: state.milestonesView.reposCount,
 });
 
 const mapDispatch = dispatch => ({
-    //setLabels: dispatch.labelsEdit.setLabels,
-    setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
-    setAddReposSelected: dispatch.labelsEdit.setAddReposSelected,
-    updateAvailableRepos: dispatch.labelsEdit.updateAvailableRepos,
-    setNewName: dispatch.labelsEdit.setNewName,
-    setNewDescription: dispatch.labelsEdit.setNewDescription,
-    setNewColor: dispatch.labelsEdit.setNewColor,
+    setOpenAddRepos: dispatch.milestonesEdit.setOpenAddRepos,
+    setAddReposSelected: dispatch.milestonesEdit.setAddReposSelected,
+    updateAvailableRepos: dispatch.milestonesEdit.updateAvailableRepos,
+    setNewTitle: dispatch.milestonesEdit.setNewTitle,
+    setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
+    setNewState: dispatch.milestonesEdit.setNewState,
 });
 
 export default connect(mapState, mapDispatch)(CloseMilestoneButton);

@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 import RemoveButton from './RemoveButton.js';
+import EditButton from './EditButton.js';
 
 import RepoLink from '../../../../components/Common/RepoLink/index.js';
 import OrgLink from '../../../../components/Common/OrgLink/index.js';
@@ -71,7 +72,7 @@ class ReposTable extends Component {
                                     State
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    DueOn
+                                    Due On
                                 </TableCell>
                                 <TableCell component="th" scope="row" padding="dense">
                                     Issues
@@ -83,10 +84,18 @@ class ReposTable extends Component {
                         </TableHead>
                         <TableBody>
                             {milestones.map(milestone => {
+                                let formattedDueOn = 'Not Set';
+                                if (milestone.dueOn !== null) {
+                                    const dueOn = new Date(milestone.dueOn);
+                                    formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
+                                }
                                 return (
                                     <TableRow key={milestone.id}>
                                         <TableCell component="th" scope="row" padding="none">
                                             <RemoveButton
+                                                milestone={milestone}
+                                            />
+                                            <EditButton
                                                 milestone={milestone}
                                             />
                                         </TableCell>
@@ -117,7 +126,7 @@ class ReposTable extends Component {
                                         </TableCell>
                                         <TableCell component="th" scope="row">
                                             <Typography variant="body1" gutterBottom>
-                                                {milestone.dueOn}
+                                                {formattedDueOn}
                                             </Typography>
                                         </TableCell>
                                         <TableCell component="th" scope="row" padding="dense">

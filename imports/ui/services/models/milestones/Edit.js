@@ -21,9 +21,11 @@ export default {
 
         allRepos: [],
 
-        newTitle: '',                // Title to update to
+        newTitle: '',               // Title to update to
         newState: 'OPEN',           // State to update to
         newDueOn: '',               // DueOn to update to
+        newDescription: '',         // Description to update to
+        openEditDialog: false,      // Open or close edit dialog
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -51,6 +53,8 @@ export default {
         setNewTitle(state, payload) {return { ...state, newTitle: payload };},
         setNewState(state, payload) {return { ...state, newState: payload };},
         setNewDueOn(state, payload) {return { ...state, newDueOn: payload };},
+        setNewDescription(state, payload) {return { ...state, newDescription: payload };},
+        setOpenEditDialog(state, payload) {return { ...state, openEditDialog: payload };},
     },
 
     effects: {

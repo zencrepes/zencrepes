@@ -78,7 +78,7 @@ Stage.propTypes = {
 
     newTitle: PropTypes.string.isRequired,
     newState: PropTypes.string.isRequired,
-    newDueOn: PropTypes.string.isRequired,
+    newDueOn: PropTypes.string,
 };
 
 const mapState = state => ({

@@ -12,6 +12,8 @@ import General from '../../layouts/General/index.js';
 import MilestonesFetch from '../../data/Milestones/Fetch/index.js';
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 
+import MilestonesEditDialog from './Edit/index.js';
+
 import MilestonesFacets from './Facets/index.js';
 import MilestonesQuery from './Query/index.js';
 import Actions from './Actions/index.js';
@@ -65,6 +67,7 @@ class Milestones extends Component {
                 <Actions />
                 <MilestonesEdit loadModal={true} />
                 <MilestonesFetch loadModal={false} />
+                <MilestonesEditDialog />
                 {milestones.length === 0 ? (
                     <NoData />
                 ) : (

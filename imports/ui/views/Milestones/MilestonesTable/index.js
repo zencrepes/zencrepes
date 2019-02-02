@@ -131,16 +131,12 @@ Command.propTypes = {
 
 
 const DueOnFormatter = ({ value }) => {
-    if (value[0].name === undefined) {return '';}
-    else {
+    let formattedDueOn = 'Not Set';
+    if (value[0].name !== null) {
         const dueOn = new Date(value[0].name);
-        const formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
-
-        return formattedDueOn;
+        formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
     }
-/*    return value.map(color => (
-        <SquareIcon key={color.name} color={color.name} />
-    ))*/
+    return formattedDueOn;
 };
 DueOnFormatter.propTypes = {
     value: PropTypes.array,
@@ -154,20 +150,26 @@ const DueOnTypeProvider = props => (
 );
 
 const StateFormatter = ({ value }) => {
-    console.log(value);
+//    console.log(value);
     if (value === undefined) {
         return 'OPEN';
-    } else if (value.length > 1) {
-        console.log(value.filter(mls => mls.name === 'OPEN'));
-        console.log(value.filter(mls => mls.name === 'CLOSED'));
-        return (
-            <React.Fragment>
-                MIXED <CloseMilestoneButton milestones={value.filter(mls => mls.name === 'OPEN')[0].items}/>
-                <OpenMilestoneButton milestones={value.filter(mls => mls.name === 'CLOSED')[0].items}/>
-            </React.Fragment>
-        );
     } else {
-        return value[0].name;
+        const openMilestones = value.filter(mls => mls.name === 'OPEN');
+        const closedMilestones = value.filter(mls => mls.name === 'CLOSED');
+        if (openMilestones.length > 1 && closedMilestones > 1) {
+            return (
+                <React.Fragment>
+                    MIXED <CloseMilestoneButton milestones={openMilestones[0].items}/>
+                    <OpenMilestoneButton milestones={closedMilestones[0].items}/>
+                </React.Fragment>
+            );
+        } else {
+            if (value[0].name === undefined) {
+                return value[0].state;
+            } else {
+                return value[0].name;
+            }
+        }
     }
 };
 StateFormatter.propTypes = {
@@ -244,35 +246,6 @@ const PrTypeProvider = props => (
         {...props}
     />
 );
-
-const LookupEditCellBase = ({
-                                availableColumnValues, value, onValueChange,
-                            }) => (
-    <TableCell
-    >
-        <Select
-            value={value}
-            onChange={event => onValueChange(event.target.value)}
-            input={(
-                <Input
-                />
-            )}
-        >
-            {availableColumnValues.map(item => (
-                <MenuItem key={item} value={item}>
-                    {item}
-                </MenuItem>
-            ))}
-        </Select>
-    </TableCell>
-);
-LookupEditCellBase.propTypes = {
-    availableColumnValues: PropTypes.array,
-    value: PropTypes.string,
-    onValueChange: PropTypes.func,
-};
-
-export const LookupEditCell = (LookupEditCellBase);
 
 const Cell = (props) => {
     return <Table.Cell {...props} />;
@@ -381,25 +354,54 @@ class MilestonesTable extends Component {
      */
     changeAddedRows = (addedRows) => {
         //Github requires a color to be set, by default setting this up to white
-        const { setNewState, setNewTitle, setNewDueOn } = this.props;
+        const {
+            setNewState,
+            setNewTitle,
+            setNewDueOn,
+            setOpenEditDialog,
+            milestones,
+            setMilestones,
+            setAction,
+            setOnSuccess,
+            updateView,
+        } = this.props;
         //Empty data
         if (addedRows.length > 0) {
             setNewState('OPEN');
             setNewTitle('New Milestone');
-            setNewDueOn(new Date().toISOString());
+            setNewDueOn(null);
+            const uniqRepos = _.uniqWith(milestones, (arrVal, othVal) => {
+                if (arrVal.repo.id === othVal.repo.id) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+            const createMilestones = uniqRepos.map((mls) => {
+                return {
+                    org: mls.org,
+                    repo: mls.repo,
+                    id: uuidv1(),
+                }
+            });
+            setMilestones(createMilestones);
+            setAction('create');
+            setOnSuccess(updateView);
+            setOpenEditDialog(true);
         }
         this.setState({
-            addedRows: addedRows.map(row => (Object.keys(row).length ? row : {
-                state: 'OPEN',
-                newMilestone: true,
-            })),
+            addedRows: [],
         })
     };
 
     changeEditingRowIds = (editingRowIds) => {
         const { startEditingMilestone } = this.props;
+        console.log(editingRowIds);
+
         if (this.state.editingRowIds.length > 0) {
             const editMilestone = editingRowIds.filter(el => el !== this.state.editingRowIds[0]);
+            console.log(editMilestone);
             this.setState({ editingRowIds: editMilestone });
             startEditingMilestone(editMilestone[0]);
         } else {
@@ -601,6 +603,7 @@ MilestonesTable.propTypes = {
     setNewState: PropTypes.func.isRequired,
     setNewTitle: PropTypes.func.isRequired,
     setNewDueOn: PropTypes.func.isRequired,
+    setOpenEditDialog: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -614,6 +617,8 @@ const mapDispatch = dispatch => ({
     setNewState: dispatch.milestonesEdit.setNewState,
     setNewTitle: dispatch.milestonesEdit.setNewTitle,
     setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
+
+    setOpenEditDialog: dispatch.milestonesEdit.setOpenEditDialog,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });
