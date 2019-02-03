@@ -396,18 +396,35 @@ class MilestonesTable extends Component {
     };
 
     changeEditingRowIds = (editingRowIds) => {
-        const { startEditingMilestone } = this.props;
-        console.log(editingRowIds);
+        const {
+            startEditingMilestone,
+            setOnSuccess,
+            setMilestones,
+            milestones,
+            updateView
+        } = this.props;
+//        console.log(editingRowIds);
+        const milestoneTitle = editingRowIds[0];
+        const editMilestones = milestones.filter(mls => mls.title === milestoneTitle);
+        setMilestones(editMilestones);
+        startEditingMilestone();
+//        console.log(editMilestones);
+        this.setState({ editingRowIds: [] });
 
+        /*
         if (this.state.editingRowIds.length > 0) {
-            const editMilestone = editingRowIds.filter(el => el !== this.state.editingRowIds[0]);
-            console.log(editMilestone);
-            this.setState({ editingRowIds: editMilestone });
+            const milestoneTitle = editingRowIds.filter(el => el !== this.state.editingRowIds[0])[0];
+            setOnSuccess(updateView);
+            const editMilestones = milestones.filter(mls => mls.title === milestoneTitle);
+            setMilestones(editMilestones);
             startEditingMilestone(editMilestone[0]);
+            this.setState({ editingRowIds: [] });
         } else {
-            this.setState({ editingRowIds });
+            setOnSuccess(updateView);
             startEditingMilestone(editingRowIds[0]);
-        }
+            this.setState({ editingRowIds: [] });
+        }*/
+
     };
 
     commitChanges = ({ deleted, added }) => {

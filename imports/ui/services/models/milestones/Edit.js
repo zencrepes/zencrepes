@@ -82,24 +82,32 @@ export default {
         },
 
         async startEditingMilestone(milestone, rootState) {
-            if (milestone !== undefined) {
-                const milestones = rootState.milestonesView.milestones.filter(mls => mls.title === milestone);
-                this.setMilestones(milestones);
+            const milestones = rootState.milestonesEdit.milestones;
 
-                const editMilestoneTitle = milestones[0].title;
-                this.setNewTitle(editMilestoneTitle);
+            const editMilestoneTitle = milestones[0].title;
+            this.setNewTitle(editMilestoneTitle);
 
-                const editMilestoneState = milestones[0].state;
-                this.setNewState(editMilestoneState);
+            const editMilestoneState = milestones[0].state;
+            this.setNewState(editMilestoneState);
 
-                let editMilestoneDueOn = new Date().toISOString();
-                // Get the first milestone without dueOn
-                const milestones_due = milestones.filter(mls => (mls.dueOn !== '' && mls.dueOn !== null));
-                if (milestones_due.length > 0) {
-                    editMilestoneDueOn = milestones_due[0].dueOn;
-                }
-                this.setNewDueOn(editMilestoneDueOn);
+            let editMilestoneDueOn = null;
+            // Get the first milestone without dueOn
+            const milestones_due = milestones.filter(mls => (mls.dueOn !== '' && mls.dueOn !== null));
+            if (milestones_due.length > 0) {
+                editMilestoneDueOn = milestones_due[0].dueOn;
             }
+            this.setNewDueOn(editMilestoneDueOn);
+
+            let editMilestoneDescription = null;
+            console.log(milestones);
+            const milestones_description = milestones.filter(mls => (mls.description !== '' && mls.description !== null));
+            if (milestones_description.length > 0) {
+                editMilestoneDescription = milestones_description[0].description;
+            }
+            this.setNewDescription(editMilestoneDescription);
+
+            this.setAction('update');
+            this.setOpenEditDialog(true);
         },
 
         async resetValues() {

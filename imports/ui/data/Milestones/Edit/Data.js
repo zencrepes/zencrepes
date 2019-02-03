@@ -275,6 +275,7 @@ const mapState = state => ({
     newTitle: state.milestonesEdit.newTitle,
     newState: state.milestonesEdit.newState,
     newDueOn: state.milestonesEdit.newDueOn,
+    newDescription: state.milestonesEdit.newDescription,
 
     log: state.global.log,
     loading: state.loading.loading,
