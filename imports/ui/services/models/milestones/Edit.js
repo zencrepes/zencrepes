@@ -99,7 +99,6 @@ export default {
             this.setNewDueOn(editMilestoneDueOn);
 
             let editMilestoneDescription = null;
-            console.log(milestones);
             const milestones_description = milestones.filter(mls => (mls.description !== '' && mls.description !== null));
             if (milestones_description.length > 0) {
                 editMilestoneDescription = milestones_description[0].description;
@@ -146,6 +145,7 @@ export default {
                     milestone: repo.org.login + "/" + repo.name
                 }
             }));
+            
         },
     }
 };

@@ -22,8 +22,6 @@ class EditButton extends Component {
             setNewDueOn,
             setNewDescription,
         } = this.props;
-
-        console.log(milestone);
         setMilestones([milestone]);
         setAction('update');
         setOnSuccess(updateView);

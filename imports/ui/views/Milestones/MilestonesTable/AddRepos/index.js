@@ -40,15 +40,15 @@ class AddRepos extends Component {
     };
 
     render() {
-        const { openAddRepos, addReposAvailable, addReposSelected, addRepoUpdateSelected, newName } = this.props;
+        const { openAddRepos, addReposAvailable, addReposSelected, addRepoUpdateSelected, newTitle } = this.props;
 
         if (openAddRepos) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openAddRepos}>
-                    <DialogTitle id="simple-dialog-title">Add {newName}</DialogTitle>
+                    <DialogTitle id="simple-dialog-title">Add {newTitle}</DialogTitle>
                     <DialogContent>
                         <Typography color="textSecondary">
-                            Please select repositories this label should be added to
+                            Please select repositories this milestone should be added to
                         </Typography>
                         <DualListBox
                             canFilter
@@ -81,7 +81,7 @@ AddRepos.propTypes = {
     openAddRepos: PropTypes.bool.isRequired,
     addReposAvailable: PropTypes.array.isRequired,
     addReposSelected: PropTypes.array.isRequired,
-    newName: PropTypes.string.isRequired,
+    newTitle: PropTypes.string.isRequired,
 
     setOpenAddRepos: PropTypes.func.isRequired,
     addRepoUpdateSelected: PropTypes.func.isRequired,
@@ -94,21 +94,21 @@ AddRepos.propTypes = {
 };
 
 const mapState = state => ({
-    openAddRepos: state.labelsEdit.openAddRepos,
+    openAddRepos: state.milestonesEdit.openAddRepos,
 
-    addReposAvailable: state.labelsEdit.addReposAvailable,
-    addReposSelected: state.labelsEdit.addReposSelected,
-    newName: state.labelsEdit.newName,
+    addReposAvailable: state.milestonesEdit.addReposAvailable,
+    addReposSelected: state.milestonesEdit.addReposSelected,
+    newTitle: state.milestonesEdit.newTitle,
 });
 
 const mapDispatch = dispatch => ({
-    setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
-    addRepoUpdateSelected: dispatch.labelsEdit.addRepoUpdateSelected,
+    setOpenAddRepos: dispatch.milestonesEdit.setOpenAddRepos,
+    addRepoUpdateSelected: dispatch.milestonesEdit.addRepoUpdateSelected,
 
-    setVerifFlag: dispatch.labelsEdit.setVerifFlag,
-    setAction: dispatch.labelsEdit.setAction,
-    setStageFlag: dispatch.labelsEdit.setStageFlag,
-    updateView: dispatch.labelsView.updateView,
+    setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
+    setAction: dispatch.milestonesEdit.setAction,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    updateView: dispatch.milestonesView.updateView,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });

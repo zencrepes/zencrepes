@@ -5,18 +5,12 @@ import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import TableCell from '@material-ui/core/TableCell';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-//import CreateNewFolderIcon from '@material-ui/icons/create_new_folder
 
-//import EditMilestoneState from './EditMilestoneState.js';
 import EditMilestoneTitle from './EditMilestoneTitle.js';
 import EditMilestoneDueOn from './EditMilestoneDueOn.js';
 import AddRepoButton from './AddRepoButton.js';
@@ -398,33 +392,14 @@ class MilestonesTable extends Component {
     changeEditingRowIds = (editingRowIds) => {
         const {
             startEditingMilestone,
-            setOnSuccess,
             setMilestones,
             milestones,
-            updateView
         } = this.props;
-//        console.log(editingRowIds);
         const milestoneTitle = editingRowIds[0];
         const editMilestones = milestones.filter(mls => mls.title === milestoneTitle);
         setMilestones(editMilestones);
         startEditingMilestone();
-//        console.log(editMilestones);
         this.setState({ editingRowIds: [] });
-
-        /*
-        if (this.state.editingRowIds.length > 0) {
-            const milestoneTitle = editingRowIds.filter(el => el !== this.state.editingRowIds[0])[0];
-            setOnSuccess(updateView);
-            const editMilestones = milestones.filter(mls => mls.title === milestoneTitle);
-            setMilestones(editMilestones);
-            startEditingMilestone(editMilestone[0]);
-            this.setState({ editingRowIds: [] });
-        } else {
-            setOnSuccess(updateView);
-            startEditingMilestone(editingRowIds[0]);
-            this.setState({ editingRowIds: [] });
-        }*/
-
     };
 
     commitChanges = ({ deleted, added }) => {

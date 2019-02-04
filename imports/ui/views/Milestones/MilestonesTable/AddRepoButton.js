@@ -20,11 +20,13 @@ class AddRepoButton extends Component {
             setNewTitle,
             setNewDueOn,
             setNewState,
+            setNewDescription,
         } = this.props;
         updateAvailableRepos(milestones);
         setNewTitle(milestones[0].title);
         setNewDueOn(milestones[0].dueOn);
         setNewState(milestones[0].state);
+        setNewDescription(milestones[0].description);
         setAddReposSelected([]);
         setOpenAddRepos(true);
     };
@@ -53,6 +55,7 @@ AddRepoButton.propTypes = {
     setNewTitle: PropTypes.func.isRequired,
     setNewDueOn: PropTypes.func.isRequired,
     setNewState: PropTypes.func.isRequired,
+    setNewDescription: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -67,6 +70,7 @@ const mapDispatch = dispatch => ({
     setNewTitle: dispatch.milestonesEdit.setNewTitle,
     setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
     setNewState: dispatch.milestonesEdit.setNewState,
+    setNewDescription: dispatch.milestonesEdit.setNewDescription,
 });
 
 export default connect(mapState, mapDispatch)(AddRepoButton);

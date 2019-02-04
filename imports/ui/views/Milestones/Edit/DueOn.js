@@ -22,7 +22,7 @@ class DueOn extends Component {
 
     render() {
         const { newDueOn } = this.props;
-        console.log(newDueOn);
+//        console.log(newDueOn);
         let formattedDueOn = null;
         if (newDueOn !== null) {
             let endDate = new Date(newDueOn);

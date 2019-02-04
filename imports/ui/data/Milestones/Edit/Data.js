@@ -4,7 +4,7 @@ import { Component } from 'react'
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
-import { cfgMilestones } from "../../Minimongo";
+import { cfgMilestones } from "../../Minimongo.js";
 
 import GET_GITHUB_SINGLE_MILESTONE from '../../../../graphql/getSingleMilestone.graphql';
 
@@ -53,8 +53,9 @@ class Data extends Component {
             setLoadingMsgAlt,
             action,
             newTitle,
-            //newDueOn,
-            //newState,
+            newDueOn,
+//            newState,
+            newDescription,
             log,
             onSuccess,
         } = this.props;
@@ -76,6 +77,18 @@ class Data extends Component {
                     repo: milestone.repo.name,
                     title: newTitle,
                 };
+                if (newDescription !== null) {
+                    createPayload = {
+                        ...updatePayload,
+                        description: newDescription
+                    };
+                }
+                if (newDueOn !== null) {
+                    createPayload = {
+                        ...updatePayload,
+                        dueOn: newDueOn
+                    };
+                }
                 log.info(createPayload);
                 try {
                     result = await this.octokit.issues.createMilestone(createPayload);
@@ -158,76 +171,77 @@ class Data extends Component {
                 }
             } else if (action === 'update') {
                 setLoadingMsg('Updating Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
-/*
+                let updateMilestone = false;
                 let updatePayload = {
                     owner: milestone.org.login,
                     repo: milestone.repo.name,
                     number: milestone.number,
                 };
-
-                if (editMilestoneTitle !== null) {
+                if (newDescription !== milestone.description) {
                     updatePayload = {
                         ...updatePayload,
-                        title: editMilestoneTitle,
-                    }
+                        description: newDescription
+                    };
+                    updateMilestone = true;
                 }
-                if (editMilestoneDescription !== null) {
+                if (newTitle !== milestone.title) {
                     updatePayload = {
                         ...updatePayload,
-                        description: editMilestoneDescription,
-                    }
+                        title: newTitle
+                    };
+                    updateMilestone = true;
                 }
-                if (editMilestoneDueDate !== null) {
-                    log.info(editMilestoneDueDate);
+                if (newDueOn !== milestone.dueOn) {
                     updatePayload = {
                         ...updatePayload,
-                        due_on: editMilestoneDueDate,
-                    }
+                        dueOn: newDueOn
+                    };
+                    updateMilestone = true;
                 }
                 log.info(updatePayload);
-                try {
-                    result = await this.octokit.issues.updateMilestone(updatePayload);
-                }
-                catch (error) {
-                    log.info(error);
-                }
-                log.info(result);
-                if (result !== false) {
-                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    //incrementLoadedCount(1);
-
-                    let data = {};
+                if (updateMilestone === false ) {
+                    log.info('Nothing to be changed, not sending a request to GitHub');
+                } else {
                     try {
-                        data = await client.query({
-                            query: GET_GITHUB_SINGLE_MILESTONE,
-                            variables: {
-                                org_name: milestone.org.login,
-                                repo_name: milestone.repo.name,
-                                milestone_number: milestone.number
-                            },
-                            fetchPolicy: 'no-cache',
-                            errorPolicy: 'ignore',
-                        });
+                        result = await this.octokit.issues.updateMilestone(updatePayload);
                     }
                     catch (error) {
                         log.info(error);
                     }
-                    log.info(data);
-                    if (data.data !== null) {
-                        const milestoneObj = {
-                            ...data.data.repository.milestone,
-                            repo: milestone.repo,
-                            org: milestone.org,
-                        };
-                        log.info(milestoneObj);
-                        await cfgMilestones.upsert({
-                            id: milestoneObj.id
-                        }, {
-                            $set: milestoneObj
-                        });
+                    if (result !== false) {
+                        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                        let data = {};
+                        try {
+                            data = await client.query({
+                                query: GET_GITHUB_SINGLE_MILESTONE,
+                                variables: {
+                                    org_name: milestone.org.login,
+                                    repo_name: milestone.repo.name,
+                                    milestone_number: result.data.number
+                                },
+                                fetchPolicy: 'no-cache',
+                                errorPolicy: 'ignore',
+                            });
+                        }
+                        catch (error) {
+                            log.info(error);
+                        }
+                        log.info(data);
+                        if (data.data !== null) {
+                            const milestoneObj = {
+                                ...data.data.repository.milestone,
+                                repo: milestone.repo,
+                                org: milestone.org,
+                            };
+                            log.info(milestoneObj);
+                            await cfgMilestones.upsert({
+                                id: milestoneObj.id
+                            }, {
+                                $set: milestoneObj
+                            });
+                        }
                     }
                 }
-                */
             }
         }
         setLoadingSuccessMsg('Update Completed');
@@ -251,6 +265,7 @@ Data.propTypes = {
     newTitle: PropTypes.string,
     newState: PropTypes.string,
     newDueOn: PropTypes.string,
+    newDescription: PropTypes.string,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
