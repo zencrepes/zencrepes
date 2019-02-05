@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
 
-import PropTypes from "prop-types";
-
 import Data from './Data.js';
-import LoadModal from './LoadModal.js';
 import Stage from './Stage/index.js';
 import Staging from './Stage/Staging.js';
-import LoadSnackbar from './LoadSnackbar.js';
-import Notifications from './Notifications.js';
-
-import RefreshSnackbar from './RefreshSnackbar/index.js';
 
 class MilestonesEdit extends Component {
     constructor(props) {
@@ -17,27 +10,14 @@ class MilestonesEdit extends Component {
     }
 
     render() {
-        const { loadModal } = this.props;
         return (
-            <div>
+            <React.Fragment>
                 <Data />
-                <RefreshSnackbar />
                 <Stage />
                 <Staging />
-                {loadModal &&
-                    <LoadModal />
-                }
-                {!loadModal &&
-                    <LoadSnackbar />
-                }
-                <Notifications />
-            </div>
+            </React.Fragment>
         );
     }
 }
-
-MilestonesEdit.propTypes = {
-    loadModal: PropTypes.bool,
-};
 
 export default MilestonesEdit;

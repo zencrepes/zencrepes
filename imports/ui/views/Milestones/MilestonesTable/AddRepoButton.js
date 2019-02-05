@@ -5,7 +5,6 @@ import {connect} from "react-redux";
 
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
 class AddRepoButton extends Component {
@@ -15,27 +14,29 @@ class AddRepoButton extends Component {
 
     addRepo = () => {
         const {
-            labels,
+            milestones,
             updateAvailableRepos,
             setOpenAddRepos,
             setAddReposSelected,
-            setNewName,
+            setNewTitle,
+            setNewDueOn,
+            setNewState,
             setNewDescription,
-            setNewColor,
         } = this.props;
-        updateAvailableRepos(labels);
-        setNewName(labels[0].name);
-        setNewDescription(labels[0].description);
-        setNewColor(labels[0].color);
+        updateAvailableRepos(milestones);
+        setNewTitle(milestones[0].title);
+        setNewDueOn(milestones[0].dueOn);
+        setNewState(milestones[0].state);
+        setNewDescription(milestones[0].description);
         setAddReposSelected([]);
         setOpenAddRepos(true);
     };
 
     render() {
-        const { labels, reposCount } = this.props;
-        if (labels !== undefined && labels.length < reposCount) {
+        const { milestones, reposCount } = this.props;
+        if (milestones !== undefined && milestones.length < reposCount) {
             return (
-                <Tooltip title="Add Label to repositories">
+                <Tooltip title="Add Milestone to repositories">
                     <IconButton onClick={this.addRepo}>
                         <CreateNewFolderIcon />
                     </IconButton>
@@ -49,28 +50,30 @@ class AddRepoButton extends Component {
 
 AddRepoButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
-    labels: PropTypes.array,
+    milestones: PropTypes.array,
     setOpenAddRepos: PropTypes.func.isRequired,
     setAddReposSelected: PropTypes.func.isRequired,
     updateAvailableRepos: PropTypes.func.isRequired,
 
-    setNewName: PropTypes.func.isRequired,
+    setNewTitle: PropTypes.func.isRequired,
+    setNewDueOn: PropTypes.func.isRequired,
+    setNewState: PropTypes.func.isRequired,
     setNewDescription: PropTypes.func.isRequired,
-    setNewColor: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-    reposCount: state.labelsView.reposCount,
+    reposCount: state.milestonesView.reposCount,
 });
 
 const mapDispatch = dispatch => ({
-    //setLabels: dispatch.labelsEdit.setLabels,
-    setOpenAddRepos: dispatch.labelsEdit.setOpenAddRepos,
-    setAddReposSelected: dispatch.labelsEdit.setAddReposSelected,
-    updateAvailableRepos: dispatch.labelsEdit.updateAvailableRepos,
-    setNewName: dispatch.labelsEdit.setNewName,
-    setNewDescription: dispatch.labelsEdit.setNewDescription,
-    setNewColor: dispatch.labelsEdit.setNewColor,
+    //setMilestones: dispatch.milestonesEdit.setMilestones,
+    setOpenAddRepos: dispatch.milestonesEdit.setOpenAddRepos,
+    setAddReposSelected: dispatch.milestonesEdit.setAddReposSelected,
+    updateAvailableRepos: dispatch.milestonesEdit.updateAvailableRepos,
+    setNewTitle: dispatch.milestonesEdit.setNewTitle,
+    setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
+    setNewState: dispatch.milestonesEdit.setNewState,
+    setNewDescription: dispatch.milestonesEdit.setNewDescription,
 });
 
 export default connect(mapState, mapDispatch)(AddRepoButton);

@@ -30,7 +30,15 @@ class Stage extends Component {
     }
 
     render() {
-        const { classes, stageFlag, labels, action, newName, newDescription, newColor } = this.props;
+        const {
+            classes,
+            stageFlag,
+            labels,
+            action,
+            newName,
+            newDescription,
+            newColor,
+        } = this.props;
         if (stageFlag === true) {
             return (
                 <div className={classes.root}>
@@ -51,7 +59,7 @@ class Stage extends Component {
                         <DialogActions>
                             <CancelButton />
                             {labels.length > 0 &&
-                            <ApplyButton />
+                                <ApplyButton />
                             }
                         </DialogActions>
                     </Dialog>

@@ -127,12 +127,11 @@ class Staging extends Component {
                             insVerifiedLabels({
                                 id: label.id,
                                 error: true,
-                                errorMsg: 'Your permissions the necessary permissions on this repository. Your permission: ' + data.data.repository.viewerPermission,
+                                errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
                             });
                             this.verifErrors++;
                         }
                         else if (data.data.repository.label === null && action !== 'create') {
-                            // The label doesn't exist anymore on GitHub.
                             insVerifiedLabels({
                                 id: label.id,
                                 error: true,

@@ -1,71 +1,68 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
 
-import General from '../../../layouts/General/index.js';
+import Description from './Description.js';
+import DueOn from './DueOn.js';
+import Title from './Title.js';
+import CancelButton from './CancelButton.js';
+import SaveButton from './SaveButton.js';
 
-import Content from './Content/index.js';
-import Repositories from './Repositories/index.js';
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import Dialog from "@material-ui/core/Dialog/Dialog";
 
-class MilestoneEdit extends Component {
+class MilestonesEditDialog extends Component {
     constructor(props) {
         super(props);
     }
 
-    //https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
-    componentDidMount() {
-        const { updateQuery } = this.props;
-        const params = new URLSearchParams(this.props.location.search);
-        const queryUrl = params.get('q');
-        if (queryUrl === null) {
-            updateQuery({});
-        } else {
-            updateQuery(JSON.parse(queryUrl));
-        }
-    }
-
     render() {
-        //var moment = require('moment');
-        //const dueDate = moment(selectedMilestoneDueDate).utc().format('ddd MMM D, YYYY');
+        const {
+            openEditDialog
+        } = this.props;
 
         return (
-            <General>
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item xs={12} sm={6} md={7}>
-                        <Content />
+            <Dialog
+                aria-labelledby="simple-dialog-title"
+                fullWidth={true}
+                maxWidth="lg"
+                open={openEditDialog}
+            >
+                <DialogContent>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={12} sm container>
+                            <Title />
+                        </Grid>
+                        <Grid item >
+                            <DueOn />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={5}>
-                        <Repositories />
-                    </Grid>
-                </Grid>
-
-            </General>
+                    <Description />
+                </DialogContent>
+                <DialogActions>
+                    <CancelButton />
+                    <SaveButton />
+                </DialogActions>
+            </Dialog>
         );
     }
 }
 
-MilestoneEdit.propTypes = {
-    selectedMilestoneTitle: PropTypes.string.isRequired,
-    selectedMilestoneDueDate: PropTypes.string.isRequired,
-    updateQuery: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired,
+MilestonesEditDialog.propTypes = {
+    openEditDialog: PropTypes.bool.isRequired,
 };
 
 const mapState = state => ({
-    selectedMilestoneTitle: state.milestonesEdit.selectedMilestoneTitle,
-    selectedMilestoneDueDate: state.milestonesEdit.selectedMilestoneDueDate,
+    openEditDialog: state.milestonesEdit.openEditDialog,
 });
 
-const mapDispatch = dispatch => ({
-    updateQuery: dispatch.milestonesEdit.updateQuery,
-});
-
-export default connect(mapState, mapDispatch)(MilestoneEdit);
+export default connect(mapState, null)(MilestonesEditDialog);
