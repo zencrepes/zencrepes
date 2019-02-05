@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import CustomCard from "../../../components/CustomCard/index.js";
 
 import Edit from './Edit/index.js';
-import CloseSprint from './CloseSprint.js';
+//import CloseSprint from './CloseSprint.js';
 import AddRepositoryButton from './AddRepositoryButton.js';
 
 import AddRepository from './AddRepository/index.js';
@@ -92,9 +92,7 @@ class Summary extends Component {
                                 </Button>
                             </Grid>
                         }
-                            <Grid item >
-                                <CloseSprint />
-                            </Grid>
+
                             <Grid item >
                                 <AddRepositoryButton />
                             </Grid>

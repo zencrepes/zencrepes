@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import {connect} from "react-redux";
 
 class RemoveButton extends Component {
@@ -21,9 +23,11 @@ class RemoveButton extends Component {
 
     render() {
         return (
-            <IconButton aria-label="Delete" onClick={this.remove}>
-                <DeleteIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Remove Milestone from repositories">
+                <IconButton aria-label="Delete" onClick={this.remove}>
+                    <DeleteIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
         );
     }
 }

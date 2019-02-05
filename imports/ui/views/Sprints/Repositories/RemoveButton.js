@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import {connect} from "react-redux";
 
 class RemoveButton extends Component {
@@ -11,36 +13,34 @@ class RemoveButton extends Component {
     }
 
     remove = () => {
-        const { milestone, setStageFlag, setVerifFlag, setMilestones, setAction, setVerifying, setOnSuccess, updateView } = this.props;
+        const { milestone, setMilestones, setAction, setOnSuccess, updateView, setStageFlag, setVerifFlag} = this.props;
         setMilestones([milestone]);
-        setOnSuccess(updateView);
         setAction('delete');
-        setVerifying(true);
+        setOnSuccess(updateView);
         setStageFlag(true);
         setVerifFlag(true);
     };
 
     render() {
         return (
-            <IconButton aria-label="Delete" onClick={this.remove}>
-                <DeleteIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Remove Milestone from repositories">
+                <IconButton aria-label="Delete" onClick={this.remove}>
+                    <DeleteIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
         );
     }
 }
 
 RemoveButton.propTypes = {
-    verifiedRepos: PropTypes.array.isRequired,
-    repos: PropTypes.array.isRequired,
     milestone: PropTypes.object.isRequired,
 
-    setStageFlag: PropTypes.func.isRequired,
-    setVerifFlag: PropTypes.func.isRequired,
-    setVerifying: PropTypes.func.isRequired,
     setMilestones: PropTypes.func.isRequired,
     setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -49,14 +49,12 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    setStageFlag: dispatch.milestonesEdit.setStageFlag,
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
-    setVerifying: dispatch.milestonesEdit.setVerifying,
-
-    setMilestones: dispatch.milestonesEdit.setMilestones,
     setAction: dispatch.milestonesEdit.setAction,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    setMilestones: dispatch.milestonesEdit.setMilestones,
 
-    setOnSuccess: dispatch.milestonesEdit.setOnSuccess,
+    setOnSuccess: dispatch.loading.setOnSuccess,
 
     updateView: dispatch.sprintsView.updateView,
 });

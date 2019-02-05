@@ -25,7 +25,6 @@ import IssuesFetch from '../../data/Issues/Fetch/index.js';
 import IssuesEdit from '../../data/Issues/Edit/index.js';
 
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
-import MilestonesCreate from '../../data/Milestones/Create/index.js';
 
 class Sprints extends Component {
     constructor(props) {
@@ -44,7 +43,6 @@ class Sprints extends Component {
                 <IssuesFetch />
                 <IssuesEdit />
                 <MilestonesEdit />
-                <MilestonesCreate />
                 <Actions />
                 <Grid
                     container
