@@ -249,9 +249,13 @@ class Data extends Component {
                     number: milestone.number,
                 };
                 if (newDescription !== milestone.description) {
+                    let updateDescription = newDescription;
+                    if (newDescription === null) {
+                        updateDescription = '';
+                    }
                     updatePayload = {
                         ...updatePayload,
-                        description: newDescription
+                        description: updateDescription
                     };
                     updateMilestone = true;
                 }
