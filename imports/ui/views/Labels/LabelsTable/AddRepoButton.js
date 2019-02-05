@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
 class AddRepoButton extends Component {
@@ -33,9 +35,11 @@ class AddRepoButton extends Component {
         const { labels, reposCount } = this.props;
         if (labels !== undefined && labels.length < reposCount) {
             return (
-                <IconButton onClick={this.addRepo} title="Add to Repositories">
-                    <CreateNewFolderIcon />
-                </IconButton>
+                <Tooltip title="Add Label to repositories">
+                    <IconButton onClick={this.addRepo}>
+                        <CreateNewFolderIcon />
+                    </IconButton>
+                </Tooltip>
             );
         } else {
             return null;

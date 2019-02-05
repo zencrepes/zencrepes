@@ -81,7 +81,6 @@ class Data extends Component {
 
     load = async () => {
         const {
-//            client,
             setChipRemaining,
             milestones,
             setLoading,
@@ -93,7 +92,6 @@ class Data extends Component {
             action,
             newTitle,
             newDueOn,
-//            newState,
             newDescription,
             log,
             onSuccess,
