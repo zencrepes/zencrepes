@@ -28,7 +28,7 @@ class StateField extends Component {
                     {state}
                 </Typography>
             );
-        } else if (action === 'update' && state !== newState) {
+        } else if ((action === 'update' && state !== newState) || action === 'close' ||  action === 'open') {
             return (
                 <Typography variant="body1" gutterBottom>
                     <b>Old Value: </b> {state}

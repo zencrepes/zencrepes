@@ -40,9 +40,48 @@ class Data extends Component {
         }
     }
 
-    load = async () => {
+    updateMilestone = async (milestone, result) => {
         const {
             client,
+            setChipRemaining,
+            log,
+        } = this.props;
+        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+        let data = {};
+        try {
+            data = await client.query({
+                query: GET_GITHUB_SINGLE_MILESTONE,
+                variables: {
+                    org_name: milestone.org.login,
+                    repo_name: milestone.repo.name,
+                    milestone_number: result.data.number
+                },
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
+            });
+        }
+        catch (error) {
+            log.info(error);
+        }
+        log.info(data);
+        if (data.data !== null) {
+            const milestoneObj = {
+                ...data.data.repository.milestone,
+                repo: milestone.repo,
+                org: milestone.org,
+            };
+            log.info(milestoneObj);
+            await cfgMilestones.upsert({
+                id: milestoneObj.id
+            }, {
+                $set: milestoneObj
+            });
+        }
+    };
+
+    load = async () => {
+        const {
+//            client,
             setChipRemaining,
             milestones,
             setLoading,
@@ -97,6 +136,9 @@ class Data extends Component {
                     log.info(error);
                 }
                 if (result !== false) {
+                    await this.updateMilestone(milestone, result);
+
+                    /*
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     let data = {};
                     try {
@@ -128,6 +170,7 @@ class Data extends Component {
                             $set: milestoneObj
                         });
                     }
+                    */
                 }
             } else if (action === 'close') {
                 setLoadingMsg('Closing Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
@@ -144,6 +187,8 @@ class Data extends Component {
                 }
                 log.info(result);
                 if (result !== false) {
+                    await this.updateMilestone(milestone, result);
+                    /*
                     setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                     //incrementLoadedCount(1);
                     await cfgMilestones.update({
@@ -151,6 +196,34 @@ class Data extends Component {
                     }, {
                         $set: {state: 'CLOSED'}
                     });
+                    */
+                }
+            } else if (action === 'open') {
+                setLoadingMsg('Opening Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
+                try {
+                    result = await this.octokit.issues.updateMilestone({
+                        owner: milestone.org.login,
+                        repo: milestone.repo.name,
+                        number: milestone.number,
+                        state: 'open',
+                    });
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                log.info(result);
+                if (result !== false) {
+                    await this.updateMilestone(milestone, result);
+
+                    /*
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    //incrementLoadedCount(1);
+                    await cfgMilestones.update({
+                        id: milestone.id
+                    }, {
+                        $set: {state: 'OPEN'}
+                    });
+                    */
                 }
             } else if (action === 'delete') {
                 setLoadingMsg('Deleting Milestone ' + milestone.title + ' in ' + milestone.org.login + '/' + milestone.repo.name);
@@ -209,6 +282,8 @@ class Data extends Component {
                         log.info(error);
                     }
                     if (result !== false) {
+                        await this.updateMilestone(milestone, result);
+                        /*
                         setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
                         let data = {};
                         try {
@@ -240,6 +315,7 @@ class Data extends Component {
                                 $set: milestoneObj
                             });
                         }
+                        */
                     }
                 }
             }

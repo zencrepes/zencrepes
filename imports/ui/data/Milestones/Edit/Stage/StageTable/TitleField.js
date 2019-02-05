@@ -11,7 +11,7 @@ class TitleField extends Component {
 
     render() {
         const { action, title, url, newTitle } = this.props;
-        if (action === 'delete') {
+        if (action === 'delete' || action === 'close' ||  action === 'open') {
             return (
                 <Typography variant="body1" gutterBottom>
                     <a

@@ -23,7 +23,7 @@ class DescriptionField extends Component {
         const { action, description, newDescription } = this.props;
         const truncDescription = this.truncate(description);
         const truncNewDescription = this.truncate(newDescription);
-        if (action === 'delete') {
+        if (action === 'delete' || action === 'close' ||  action === 'open') {
             return (
                 <Typography variant="body1" gutterBottom>
                     {truncDescription}

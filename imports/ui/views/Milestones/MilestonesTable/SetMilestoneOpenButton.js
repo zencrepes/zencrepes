@@ -3,41 +3,50 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 
-import IconButton from '@material-ui/core/IconButton';
 import SignDirectionIcon from 'mdi-react/SignDirectionIcon';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 class SetMilestoneOpenButton extends Component {
     constructor (props) {
         super(props);
     }
 
-    addRepo = () => {
-        /*
+    openMilestones = () => {
         const {
             milestones,
-            updateAvailableRepos,
-            setOpenAddRepos,
-            setAddReposSelected,
-            setNewName,
+            setMilestones,
+            setAction,
+            setVerifFlag,
+            setStageFlag,
+            setOnSuccess,
+            setNewTitle,
             setNewDescription,
-            setNewColor,
+            setNewDueOn,
+            setNewState,
+            updateView,
         } = this.props;
-        updateAvailableRepos(milestones);
-        setNewName(milestones[0].name);
+        setMilestones(milestones);
+        setNewTitle(milestones[0].title);
         setNewDescription(milestones[0].description);
-        setNewColor(milestones[0].color);
-        setAddReposSelected([]);
-        setOpenAddRepos(true);
-        */
+        setNewDueOn(milestones[0].dueOn);
+        setNewState('open');
+        setAction('open');
+        setOnSuccess(updateView);
+        setStageFlag(true);
+        setVerifFlag(true);
     };
 
     render() {
         const { milestones } = this.props;
+//        console.log(milestones);
         if (milestones !== undefined && milestones.length > 0) {
             return (
-                <IconButton onClick={this.addRepo} title="Open Milestones">
-                    <SignDirectionIcon />
-                </IconButton>
+                <Tooltip title="Open Milestones">
+                    <IconButton onClick={this.openMilestones} >
+                        <SignDirectionIcon />
+                    </IconButton>
+                </Tooltip>
             );
         } else {
             return null;
@@ -46,28 +55,36 @@ class SetMilestoneOpenButton extends Component {
 }
 
 SetMilestoneOpenButton.propTypes = {
-    reposCount: PropTypes.number.isRequired,
     milestones: PropTypes.array,
-    setOpenAddRepos: PropTypes.func.isRequired,
-    setAddReposSelected: PropTypes.func.isRequired,
-    updateAvailableRepos: PropTypes.func.isRequired,
 
+    setAction: PropTypes.func.isRequired,
     setNewTitle: PropTypes.func.isRequired,
     setNewDueOn: PropTypes.func.isRequired,
     setNewState: PropTypes.func.isRequired,
+    setNewDescription: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
+    setMilestones: PropTypes.func.isRequired,
+
+    updateView: PropTypes.func.isRequired,
+
+    setOnSuccess: PropTypes.func.isRequired,
 };
 
-const mapState = state => ({
-    reposCount: state.milestonesView.reposCount,
-});
-
 const mapDispatch = dispatch => ({
-    setOpenAddRepos: dispatch.milestonesEdit.setOpenAddRepos,
-    setAddReposSelected: dispatch.milestonesEdit.setAddReposSelected,
-    updateAvailableRepos: dispatch.milestonesEdit.updateAvailableRepos,
+    setAction: dispatch.milestonesEdit.setAction,
     setNewTitle: dispatch.milestonesEdit.setNewTitle,
     setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
     setNewState: dispatch.milestonesEdit.setNewState,
+    setNewDescription: dispatch.milestonesEdit.setNewDescription,
+    setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
+    setStageFlag: dispatch.milestonesEdit.setStageFlag,
+    setMilestones: dispatch.milestonesEdit.setMilestones,
+
+    updateView: dispatch.milestonesView.updateView,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
 });
 
-export default connect(mapState, mapDispatch)(SetMilestoneOpenButton);
+export default connect(null, mapDispatch)(SetMilestoneOpenButton);
+

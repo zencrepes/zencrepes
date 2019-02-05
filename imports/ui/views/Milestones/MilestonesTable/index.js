@@ -146,25 +146,42 @@ const DueOnTypeProvider = props => (
 );
 
 const StateFormatter = ({ value }) => {
-//    console.log(value);
     if (value === undefined) {
         return 'OPEN';
     } else {
         const openMilestones = value.filter(mls => mls.name === 'OPEN');
         const closedMilestones = value.filter(mls => mls.name === 'CLOSED');
-        if (openMilestones.length > 1 && closedMilestones > 1) {
+        if (value.length > 1) {
             return (
                 <React.Fragment>
-                    MIXED <SetMilestoneClosedButton milestones={openMilestones[0].items}/>
+                    <SetMilestoneClosedButton milestones={openMilestones[0].items}/>
                     <SetMilestoneOpenButton milestones={closedMilestones[0].items}/>
+                    MIXED
                 </React.Fragment>
             );
         } else {
+            if (value[0].name === 'OPEN') {
+                return (
+                    <React.Fragment>
+                        <SetMilestoneClosedButton milestones={openMilestones[0].items}/>
+                        OPEN
+                    </React.Fragment>
+                );
+            } else {
+                return (
+                    <React.Fragment>
+                        <SetMilestoneOpenButton milestones={closedMilestones[0].items}/>
+                        CLOSED
+                    </React.Fragment>
+                );
+            }
+            /*
             if (value[0].name === undefined) {
                 return value[0].state;
             } else {
                 return value[0].name;
             }
+            */
         }
     }
 };
@@ -289,7 +306,7 @@ class MilestonesTable extends Component {
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pullRequests', width: 90 },
                 { columnName: 'dueOn', width: 200 },
-                { columnName: 'state', width: 150 },
+                { columnName: 'state', width: 200 },
             ],
             columnOrder: ['title', 'dueOn', 'state', 'issues', 'pullRequests', 'repos'],
             dueOnColumns: ['dueOn'],
