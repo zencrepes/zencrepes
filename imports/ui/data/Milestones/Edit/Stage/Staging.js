@@ -89,6 +89,7 @@ class Staging extends Component {
                     } else if (action !== 'create') {
                         let baseMsg = (idx + 1) + '/' + milestones.length + ' - Fetching milestone: ' + milestone.org.login + '/' + milestone.repo.name + '#' + milestone.number;
                         setLoadingMsg(baseMsg);
+                        log.info(baseMsg);
                         let data = {};
                         try {
                             data = await client.query({
