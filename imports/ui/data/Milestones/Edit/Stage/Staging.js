@@ -148,6 +148,14 @@ class Staging extends Component {
                                 await cfgMilestones.remove({'id': milestone.id});
                                 this.verifErrors++;
                             }
+                            else if (data.data.repository.milestone.id !== milestone.id && action !== 'create') {
+                                insVerifiedMilestones({
+                                    id: milestone.id,
+                                    error: true,
+                                    errorMsg: 'There seems to be an ID mismatch between your local copy and GitHub, please clear all your Milestones and reload. This can happen if a milestone was created with the same number than a previously deleted milestone.',
+                                });
+                                this.verifErrors++;
+                            }
                             else {
                                 if (data.data.repository.milestone.updatedAt === milestone.updatedAt && data.data.repository.milestone.issues.totalCount === milestone.issues.totalCount) {
                                     insVerifiedMilestones({
