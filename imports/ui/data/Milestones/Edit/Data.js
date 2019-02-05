@@ -79,14 +79,14 @@ class Data extends Component {
                 };
                 if (newDescription !== null) {
                     createPayload = {
-                        ...updatePayload,
+                        ...createPayload,
                         description: newDescription
                     };
                 }
                 if (newDueOn !== null) {
                     createPayload = {
-                        ...updatePayload,
-                        dueOn: newDueOn
+                        ...createPayload,
+                        due_on: newDueOn
                     };
                 }
                 log.info(createPayload);
@@ -194,7 +194,7 @@ class Data extends Component {
                 if (newDueOn !== milestone.dueOn) {
                     updatePayload = {
                         ...updatePayload,
-                        dueOn: newDueOn
+                        due_on: newDueOn
                     };
                     updateMilestone = true;
                 }

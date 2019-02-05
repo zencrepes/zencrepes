@@ -34,6 +34,7 @@ class Stage extends Component {
             newTitle,
             newState,
             newDueOn,
+            newDescription,
         } = this.props;
         if (stageFlag === true) {
             return (
@@ -50,6 +51,7 @@ class Stage extends Component {
                                 newTitle={newTitle}
                                 newState={newState}
                                 newDueOn={newDueOn}
+                                newDescription={newDescription}
                             />
                         </DialogContent>
                         <DialogActions>
@@ -79,6 +81,7 @@ Stage.propTypes = {
     newTitle: PropTypes.string.isRequired,
     newState: PropTypes.string.isRequired,
     newDueOn: PropTypes.string,
+    newDescription: PropTypes.string,
 };
 
 const mapState = state => ({
@@ -89,6 +92,7 @@ const mapState = state => ({
     newTitle: state.milestonesEdit.newTitle,
     newState: state.milestonesEdit.newState,
     newDueOn: state.milestonesEdit.newDueOn,
+    newDescription: state.milestonesEdit.newDescription,
 });
 
 const mapDispatch = dispatch => ({

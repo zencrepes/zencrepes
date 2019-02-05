@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import IconButton from '@material-ui/core/IconButton';
 import SignDirectionIcon from 'mdi-react/SignDirectionIcon';
 
-class OpenMilestoneButton extends Component {
+class SetMilestoneOpenButton extends Component {
     constructor (props) {
         super(props);
     }
@@ -45,7 +45,7 @@ class OpenMilestoneButton extends Component {
     }
 }
 
-OpenMilestoneButton.propTypes = {
+SetMilestoneOpenButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
     milestones: PropTypes.array,
     setOpenAddRepos: PropTypes.func.isRequired,
@@ -70,4 +70,4 @@ const mapDispatch = dispatch => ({
     setNewState: dispatch.milestonesEdit.setNewState,
 });
 
-export default connect(mapState, mapDispatch)(OpenMilestoneButton);
+export default connect(mapState, mapDispatch)(SetMilestoneOpenButton);

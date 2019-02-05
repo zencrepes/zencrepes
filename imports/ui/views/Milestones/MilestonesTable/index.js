@@ -16,8 +16,8 @@ import EditMilestoneDueOn from './EditMilestoneDueOn.js';
 import AddRepoButton from './AddRepoButton.js';
 import AddRepos from './AddRepos/index.js';
 import ReposTable from './ReposTable/index.js';
-import CloseMilestoneButton from './CloseMilestoneButton.js';
-import OpenMilestoneButton from './OpenMilestoneButton.js';
+import SetMilestoneClosedButton from './SetMilestoneClosedButton.js';
+import SetMilestoneOpenButton from './SetMilestoneOpenButton.js';
 
 import {
     SortingState,
@@ -125,10 +125,12 @@ Command.propTypes = {
 
 
 const DueOnFormatter = ({ value }) => {
+//    console.log(value[0].name);
     let formattedDueOn = 'Not Set';
     if (value[0].name !== null) {
-        const dueOn = new Date(value[0].name);
-        formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
+        formattedDueOn = value[0].name.slice(0,10);
+//        const dueOn = new Date(value[0].name);
+//        formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
     }
     return formattedDueOn;
 };
@@ -153,8 +155,8 @@ const StateFormatter = ({ value }) => {
         if (openMilestones.length > 1 && closedMilestones > 1) {
             return (
                 <React.Fragment>
-                    MIXED <CloseMilestoneButton milestones={openMilestones[0].items}/>
-                    <OpenMilestoneButton milestones={closedMilestones[0].items}/>
+                    MIXED <SetMilestoneClosedButton milestones={openMilestones[0].items}/>
+                    <SetMilestoneOpenButton milestones={closedMilestones[0].items}/>
                 </React.Fragment>
             );
         } else {

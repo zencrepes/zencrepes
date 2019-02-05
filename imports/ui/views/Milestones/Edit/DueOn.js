@@ -22,12 +22,6 @@ class DueOn extends Component {
 
     render() {
         const { newDueOn } = this.props;
-//        console.log(newDueOn);
-        let formattedDueOn = null;
-        if (newDueOn !== null) {
-            let endDate = new Date(newDueOn);
-            formattedDueOn = endDate.getFullYear() + "-" + (endDate.getMonth()+1 < 10 ? '0' : '') + (endDate.getMonth()+1) + "-" + (endDate.getDate() < 10 ? '0' : '') + (endDate.getDate());
-        }
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DatePicker
@@ -36,7 +30,7 @@ class DueOn extends Component {
                     label="Due On"
                     emptyLabel="Not Set"
                     clearable
-                    value={formattedDueOn}
+                    value={newDueOn}
                     onChange={this.changeMilestoneEndDate}
                 />
             </MuiPickersUtilsProvider>

@@ -14,6 +14,7 @@ import VerifState from './VerifState.js';
 import TitleField from "./TitleField.js";
 import StateField from "./StateField.js";
 import DueOnField from "./DueOnField.js";
+import DescriptionField from "./DescriptionField.js";
 
 import OrgLink from '../../../../../components/Common/OrgLink/index.js';
 import RepoLink from '../../../../../components/Common/RepoLink/index.js';
@@ -56,7 +57,7 @@ class StageTable extends Component {
     }
 
     render() {
-        const { classes, milestones, action, newTitle, newDueOn, newState } = this.props;
+        const { classes, milestones, action, newTitle, newDueOn, newState, newDescription } = this.props;
         return (
             <div className={classes.root}>
                 <Table className={classes.table}>
@@ -73,6 +74,9 @@ class StageTable extends Component {
                             </TableCell>
                             <TableCell component="th" scope="row">
                                 Title
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                                Description
                             </TableCell>
                             <TableCell component="th" scope="row">
                                 Due On
@@ -121,6 +125,13 @@ class StageTable extends Component {
                                             title={milestone.title}
                                             url={milestone.url}
                                             newTitle={newTitle}
+                                        />
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        <DescriptionField
+                                            action={action}
+                                            description={milestone.description}
+                                            newDescription={newDescription}
                                         />
                                     </TableCell>
                                     <TableCell component="th" scope="row">
@@ -178,6 +189,7 @@ StageTable.propTypes = {
     newTitle: PropTypes.string,
     newState: PropTypes.string,
     newDueOn: PropTypes.string,
+    newDescription: PropTypes.string,
 };
 
 export default withStyles(styles)(StageTable);

@@ -128,6 +128,7 @@ export default {
                     title: rootState.milestonesEdit.newTitle,
                     dueOn: rootState.milestonesEdit.newDueOn,
                     state: rootState.milestonesEdit.newState,
+                    description: rootState.milestonesEdit.newDescription,
                     issues: {totalCount: 0},
                     pullRequests: {totalCount: 0},
                     updatedAt: null,
@@ -142,10 +143,10 @@ export default {
             this.setAddReposAvailable(availableRepos.map((repo) => {
                 return {
                     value: repo.id,
-                    milestone: repo.org.login + "/" + repo.name
+                    label: repo.org.login + "/" + repo.name
                 }
             }));
-            
+
         },
     }
 };

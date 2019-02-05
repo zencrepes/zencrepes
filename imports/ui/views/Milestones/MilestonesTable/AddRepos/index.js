@@ -41,7 +41,6 @@ class AddRepos extends Component {
 
     render() {
         const { openAddRepos, addReposAvailable, addReposSelected, addRepoUpdateSelected, newTitle } = this.props;
-
         if (openAddRepos) {
             return (
                 <Dialog aria-labelledby="simple-dialog-title" open={openAddRepos}>

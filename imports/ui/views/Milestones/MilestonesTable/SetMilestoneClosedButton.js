@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import IconButton from '@material-ui/core/IconButton';
 import CheckIcon from '@material-ui/icons/Check';
 
-class CloseMilestoneButton extends Component {
+class SetMilestoneClosedButton extends Component {
     constructor (props) {
         super(props);
     }
@@ -46,7 +46,7 @@ class CloseMilestoneButton extends Component {
     }
 }
 
-CloseMilestoneButton.propTypes = {
+SetMilestoneClosedButton.propTypes = {
     reposCount: PropTypes.number.isRequired,
     milestones: PropTypes.array,
     setOpenAddRepos: PropTypes.func.isRequired,
@@ -71,4 +71,4 @@ const mapDispatch = dispatch => ({
     setNewState: dispatch.milestonesEdit.setNewState,
 });
 
-export default connect(mapState, mapDispatch)(CloseMilestoneButton);
+export default connect(mapState, mapDispatch)(SetMilestoneClosedButton);

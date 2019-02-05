@@ -86,8 +86,9 @@ class ReposTable extends Component {
                             {milestones.map(milestone => {
                                 let formattedDueOn = 'Not Set';
                                 if (milestone.dueOn !== null) {
-                                    const dueOn = new Date(milestone.dueOn);
-                                    formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
+//                                    const dueOn = new Date(milestone.dueOn);
+//                                    formattedDueOn = dueOn.getFullYear() + "-" + (dueOn.getMonth()+1 < 10 ? '0' : '') + (dueOn.getMonth()+1) + "-" + (dueOn.getDate() < 10 ? '0' : '') + (dueOn.getDate());
+                                    formattedDueOn = milestone.dueOn.slice(0,10);
                                 }
                                 return (
                                     <TableRow key={milestone.id}>
