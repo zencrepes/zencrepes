@@ -12,7 +12,7 @@ class Loading extends Component {
     }
 
     render() {
-        const { loading, loadingModal, cancelLoading } = this.props;
+        const { loading, loadingModal, cancelLoading, loadingTitle } = this.props;
         if (loading === true) {
             return (
                 <React.Fragment>
@@ -20,6 +20,7 @@ class Loading extends Component {
                     {loadingModal ? (
                         <LoadModal
                             cancelLoading={cancelLoading}
+                            loadingTitle={loadingTitle}
                         />
                     ) : (
                         <LoadSnackbar
@@ -49,6 +50,7 @@ const mapDispatch = dispatch => ({
 
 const mapState = state => ({
     loadingModal: state.loading.loadingModal,
+    loadingTitle: state.loading.loadingTitle,
     loading: state.loading.loading,
 });
 

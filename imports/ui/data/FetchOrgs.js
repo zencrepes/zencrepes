@@ -45,9 +45,16 @@ class FetchOrgs extends Component {
     };
 
     load = async () => {
-        const { setLoading, setLoadSuccess, login, log } = this.props;
+        const {
+            setLoading,
+            setLoadingTitle,
+            setLoadSuccess,
+            login,
+            log,
+        } = this.props;
 
         setLoading(true);  // Set setLoading to true to indicate repositories are actually loading.
+        setLoadingTitle('Fetching data...');
         log.info('Initiate Organizations load');
         await this.getOrgsPagination(null, 10);
         log.info('Oranization loaded: ' + this.githubOrgs.length);
@@ -105,7 +112,13 @@ class FetchOrgs extends Component {
 
     //TODO - Redo with some better logic and no mutations!
     getReposPagination = async (cursor, increment, OrgObj, type) => {
-        const { client, updateChip, log } = this.props;
+        const {
+            client,
+            updateChip,
+            log,
+            setLoadingIterateCurrent,
+            setLoadingIterateTotal,
+        } = this.props;
         if (OrgObj !== null) {
             let data = {};
             let repositories = {};
@@ -134,6 +147,8 @@ class FetchOrgs extends Component {
             log.info('Current count: ' + this.orgReposCount[OrgObj.id]);
             log.info('Total count: ' + repositories.totalCount);
             log.info('Query increment: ' + queryIncrement);
+            setLoadingIterateCurrent(this.orgReposCount[OrgObj.id]);
+            setLoadingIterateTotal(repositories.totalCount);
             if (queryIncrement > 0) {
                 await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
             }
@@ -141,7 +156,8 @@ class FetchOrgs extends Component {
     };
 
     loadRepositories = async (repositories, OrgObj) => {
-        const { setIncrementLoadedRepos, log } = this.props;
+        const { setIncrementLoadedRepos, log, setLoadingMsgAlt, setLoadingMsg } = this.props;
+        setLoadingMsg('Loading from ' + OrgObj.login + ' organization');
 
         let lastCursor = null;
         for (var currentRepo of repositories.edges) {
@@ -165,6 +181,8 @@ class FetchOrgs extends Component {
         setIncrementLoadedRepos(Object.entries(repositories.edges).length);
         this.orgReposCount[OrgObj.id] = this.orgReposCount[OrgObj.id] + Object.entries(repositories.edges).length;
         this.totalReposCount = this.totalReposCount + Object.entries(repositories.edges).length;
+        setLoadingMsgAlt('Fetched a total of ' + this.totalReposCount + ' repositories');
+
         return lastCursor;
     };
 
@@ -194,22 +212,29 @@ FetchOrgs.propTypes = {
 
 const mapState = state => ({
     login: state.githubFetchOrgs.login,
-
-    loading: state.githubFetchOrgs.loading,
     loadFlag: state.githubFetchOrgs.loadFlag,
+
+    loading: state.loading.loading,
 
     log: state.global.log,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
-    setLoading: dispatch.githubFetchOrgs.setLoading,
+
     setLoadError: dispatch.githubFetchOrgs.setLoadError,
     setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
     setLoadedOrgs: dispatch.githubFetchOrgs.setLoadedOrgs,
     setLoadedRepos: dispatch.githubFetchOrgs.setLoadedRepos,
     setIncrementLoadedOrgs: dispatch.githubFetchOrgs.setIncrementLoadedOrgs,
     setIncrementLoadedRepos: dispatch.githubFetchOrgs.setIncrementLoadedRepos,
+
+    setLoading: dispatch.loading.setLoading,
+    setLoadingTitle: dispatch.loading.setLoadingTitle,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
 
     updateChip: dispatch.chip.updateChip,
 });

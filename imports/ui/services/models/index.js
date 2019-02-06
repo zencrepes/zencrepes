@@ -51,3 +51,4 @@ export { default as wizardView } from './wizard/View.js';
 
 // Settings
 export { default as settingsView } from './settings/View.js';
+export { default as settingsFetch } from './settings/Fetch.js';

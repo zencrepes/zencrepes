@@ -1,8 +1,9 @@
 export default {
     state: {
         loading: false,             // Flag indicating something is loading
-        loadingMsg: null,             // Message to be displayed in the modal or the snackbar
-        loadingMsgAlt: null,          // Alternative message (2nd line) to be displayed in the modal or the snackbar
+        loadingTitle: null,         // Title to be displayed
+        loadingMsg: null,           // Message to be displayed in the modal or the snackbar
+        loadingMsgAlt: null,        // Alternative message (2nd line) to be displayed in the modal or the snackbar
         loadingModal: true,         // True to display a modal, false to display a snackbar
         loadingIterateCurrent: 0,   // For progressbar, current count
         loadingIterateTotal: 0,     // For progressbar, maximum count
@@ -22,6 +23,7 @@ export default {
                 return {
                     ...state,
                     loading: payload,
+                    loadingTitle: null,
                     loadingMsg: null,
                     loadingMsgAlt: null,
                     loadingModal: true,
@@ -30,6 +32,7 @@ export default {
                 };
             }
         },
+        setLoadingTitle(state, payload) {return { ...state, loadingTitle: payload };},
         setLoadingMsg(state, payload) {return { ...state, loadingMsg: payload };},
         setLoadingMsgAlt(state, payload) {return { ...state, loadingMsgAlt: payload };},
         setLoadingModal(state, payload) {return { ...state, loadingModal: payload };},

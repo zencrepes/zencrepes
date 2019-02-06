@@ -8,10 +8,6 @@ import FetchOrgRepos  from '../../../data/FetchOrgRepos.js';
 import FetchRepo  from '../../../data/FetchRepo.js';
 import FetchOrgs  from '../../../data/FetchOrgs.js';
 
-import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
-import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
-import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
-
 import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
 
 import IssuesFetch from '../../../data/Issues/Fetch/index.js';
@@ -19,6 +15,7 @@ import IssuesFetch from '../../../data/Issues/Fetch/index.js';
 import CustomCard from "../../../components/CustomCard/index.js";
 
 import Stats from './Stats.js';
+import Scan from './Scan/index.js';
 
 class Repositories extends Component {
     constructor(props) {
@@ -45,15 +42,7 @@ class Repositories extends Component {
                     spacing={8}
                 >
                     <Grid item xs={6} sm container>
-                        <CustomCard
-                            headerTitle="Scan for repositories"
-                            headerFactTitle=""
-                            headerFactValue=""
-                        >
-                            <ScanOrgs />
-                            <ScanOrgRepos />
-                            <ScanRepo />
-                        </CustomCard>
+                        <Scan />
                     </Grid>
                     <Grid item xs={6} sm container>
                         <CustomCard
