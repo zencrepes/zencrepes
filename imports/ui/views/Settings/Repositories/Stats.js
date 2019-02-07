@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
 import Grid from "@material-ui/core/Grid/Grid";
+import StatsCharts from './StatsCharts/index.js';
 
 const styles = {
     root: {
@@ -18,6 +19,10 @@ const styles = {
     },
     loading: {
         flexGrow: 1,
+    },
+    pieHeight: {
+        height: '150px',
+        width: '150px',
     },
 };
 
@@ -44,6 +49,12 @@ class Stats extends Component {
             milestonesCountLoaded,
         } = this.props;
 
+        /*
+                    Organization
+                    {orgCountSelected} / {orgCountTotal}
+
+         */
+
         return (
             <React.Fragment>
             <Grid
@@ -56,28 +67,40 @@ class Stats extends Component {
                 <Grid item xs={12} sm container className={classes.blank}>
 
                 </Grid>
-                <Grid item >
-                    Organization
-                    {orgCountSelected} / {orgCountTotal}
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
+                        selected={orgCountSelected}
+                        total={orgCountTotal}
+                        title="Orgs"
+                    />
                 </Grid>
-                <Grid item >
-                    Repositories
-                    {selectedRepos.length} / {availableRepos.length}
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
+                        selected={selectedRepos.length}
+                        total={availableRepos.length}
+                        title="Repos"
+                    />
                 </Grid>
-                <Grid item >
-                    Issues
-                    {issuesCountSelected} / {issuesCountTotal} <br />
-                    Loaded: {issuesCountLoaded}
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
+                        selected={issuesCountSelected}
+                        total={issuesCountTotal}
+                        title="Issues"
+                    />
                 </Grid>
-                <Grid item >
-                    Milestones
-                    {milestonesCountSelected} / {milestonesCountTotal}<br />
-                    Loaded: {labelsCountLoaded}
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
+                        selected={milestonesCountSelected}
+                        total={milestonesCountTotal}
+                        title="Milestones"
+                    />
                 </Grid>
-                <Grid item >
-                    Labels
-                    {labelsCountSelected} / {labelsCountTotal}<br />
-                    Loaded: {milestonesCountLoaded}
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
+                        selected={labelsCountSelected}
+                        total={labelsCountTotal}
+                        title="Labels"
+                    />
                 </Grid>
                 <Grid item xs={12} sm container className={classes.blank}>
 

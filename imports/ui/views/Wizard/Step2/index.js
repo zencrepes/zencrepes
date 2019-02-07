@@ -8,9 +8,8 @@ import FetchOrgs  from '../../../data/FetchOrgs.js';
 
 import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
 
-import ScanOrgs from '../../../components/Settings/Repositories/ScanOrgs.js';
-import ScanOrgRepos from '../../../components/Settings/Repositories/ScanOrgRepos.js';
-import ScanRepo from '../../../components/Settings/Repositories/ScanRepo.js';
+import Scan from '../../../components/Settings/Repositories/Scan/index.js';
+
 
 class Step2 extends Component {
     constructor(props) {
@@ -31,9 +30,7 @@ class Step2 extends Component {
                     spacing={8}
                 >
                     <Grid item xs={6} sm container>
-                        <ScanOrgs />
-                        <ScanOrgRepos />
-                        <ScanRepo />
+                        <Scan />
                     </Grid>
                     <Grid item xs={6} sm container>
                         <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />

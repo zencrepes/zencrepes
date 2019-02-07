@@ -108,23 +108,6 @@ class UserMenu extends Component {
                             </ListItemIcon>
                             <ListItemText primary={connectedUser.name} />
                         </ListItem>
-                        <NavLink
-                            to="/settings"
-                            className={classes.item}
-                            activeClassName="active"
-                            key={"settings"}
-                        >
-                            <ListItem button className={classes.itemLink}>
-                                <ListItemIcon className={classes.itemIcon}>
-                                    <Settings />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={"Settings"}
-                                    className={classes.itemText}
-                                    disableTypography={true}
-                                />
-                            </ListItem>
-                        </NavLink>
                         <ListItem onClick={this.logout} button>
                             <ListItemIcon>
                                 <Logout />

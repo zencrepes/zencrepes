@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
     cfgSources,
     cfgLabels,
@@ -9,6 +11,8 @@ export default {
     state: {
         selectedRepos: [],
         availableRepos: [],
+
+        treeNodes: [],          // Formated nodes for treeview
 
         orgCountTotal: 0,
         orgCountSelected: 0,
@@ -25,6 +29,7 @@ export default {
     reducers: {
         setSelectedRepos(state, payload) {return { ...state, selectedRepos: payload };},
         setAvailableRepos(state, payload) {return { ...state, availableRepos: payload };},
+        setTreeNodes(state, payload) {return { ...state, treeNodes: payload };},
 
         setOrgCountTotal(state, payload) {return { ...state, orgCountTotal: payload };},
         setOrgCountSelected(state, payload) {return { ...state, orgCountSelected: payload };},
@@ -45,8 +50,58 @@ export default {
             this.setSelectedRepos(cfgSources.find({active: true}).fetch());
             this.setAvailableRepos(cfgSources.find({}).fetch());
 
+            this.updateTreeNodes(cfgSources.find({}).fetch());
             this.updateCounts();
 //            this.setMilestones(cfgMilestones.find(rootState.milestonesView.query).fetch());
+        },
+
+        async clearRepos() {
+            cfgSources.remove({});
+            this.setSelectedRepos([]);
+            this.setAvailableRepos([]);
+
+            this.updateTreeNodes([]);
+            this.updateCounts();
+        },
+
+
+        async updateTreeNodes(allRepos, rootState) {
+            const log = rootState.global.log;
+            const t0 = performance.now();
+
+            const uniqueOrgs = _.toArray(_.groupBy(allRepos, 'org.login'));
+            const treeNodes = uniqueOrgs.map((org) => {
+                return {
+                    label: org[0].org.name,
+                    value: org[0].org.login,
+                    children: org.map((repo) => {
+                        return {
+                            label: repo.name,
+                            value: repo.id
+                        };
+                    })
+                };
+            });
+            this.setTreeNodes(treeNodes);
+
+            const t1 = performance.now();
+            log.info("updateTreeNodes - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async updateCheckedRepos(checked, rootState) {
+            const log = rootState.global.log;
+            const t0 = performance.now();
+
+            await cfgSources.update({}, { $set: { active: false } }, {multi: true});
+            checked.forEach(async (checkedId) => {
+                await cfgSources.update({id: checkedId}, { $set: { active: true } }, {multi: false});
+            });
+            this.setSelectedRepos(cfgSources.find({ active: true }).fetch());
+
+            const t1 = performance.now();
+            log.info("updateTreeNodes - took " + (t1 - t0) + " milliseconds.");
+
+            this.updateCounts();
         },
 
         async updateCounts(payload, rootState) {

@@ -12,10 +12,8 @@ import Treeview from '../../../components/Settings/Repositories/Treeview/index.j
 
 import IssuesFetch from '../../../data/Issues/Fetch/index.js';
 
-import CustomCard from "../../../components/CustomCard/index.js";
-
 import Stats from './Stats.js';
-import Scan from './Scan/index.js';
+import Scan from "../../../components/Settings/Repositories/Scan/index.js";
 
 class Repositories extends Component {
     constructor(props) {
@@ -23,9 +21,6 @@ class Repositories extends Component {
     }
 
     render() {
-        const {
-            selectedRepos
-        } = this.props;
 
         return (
             <React.Fragment>
@@ -45,13 +40,12 @@ class Repositories extends Component {
                         <Scan />
                     </Grid>
                     <Grid item xs={6} sm container>
-                        <CustomCard
-                            headerTitle="Select repositories to load from"
-                            headerFactTitle="Selected repos"
-                            headerFactValue={selectedRepos.length}
-                        >
-                            <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
-                        </CustomCard>
+                        <Treeview
+                            all={{}}
+                            selected={{active: true}}
+                            enable={{active: true}}
+                            disable={{active: false}}
+                        />
                     </Grid>
                 </Grid>
             </React.Fragment>
@@ -59,11 +53,4 @@ class Repositories extends Component {
     }
 }
 
-Repositories.propTypes = {
-};
-
-const mapState = state => ({
-    selectedRepos: state.settingsView.selectedRepos,
-});
-
-export default connect(mapState, null)(Repositories);
+export default Repositories;

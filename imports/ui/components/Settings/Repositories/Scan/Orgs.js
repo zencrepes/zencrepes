@@ -33,8 +33,9 @@ class Orgs extends Component {
     }
 
     reloadRepos = () => {
-        const { setLoadFlag, connectedUser, setLogin } = this.props;
+        const { setLoadFlag, connectedUser, setLogin, initView, setOnSuccess } = this.props;
         setLogin(connectedUser.login);
+        setOnSuccess(initView);
         setLoadFlag(true);
     };
 
@@ -60,22 +61,9 @@ class Orgs extends Component {
                     </div>
                 </CardActions>
             </Card>
-
         );
     }
 }
-
-/*
-        return (
-            <CustomCard
-                headerTitle="Affiliated GitHub Repositories & Organizations"
-                headerFactTitle={null}
-                headerFactValue={null}
-            >
-                <ScanOrgs />
-            </CustomCard>
-        );
- */
 
 Orgs.propTypes = {
 
@@ -84,6 +72,9 @@ Orgs.propTypes = {
 const mapDispatch = dispatch => ({
     setLogin: dispatch.githubFetchOrgs.setLogin,
     setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
+
+    initView: dispatch.settingsView.initView,
+    setOnSuccess: dispatch.loading.setOnSuccess,
 });
 
 

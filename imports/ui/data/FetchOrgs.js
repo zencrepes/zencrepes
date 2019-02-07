@@ -48,13 +48,19 @@ class FetchOrgs extends Component {
         const {
             setLoading,
             setLoadingTitle,
+            setLoadingMsg,
             setLoadSuccess,
             login,
             log,
-        } = this.props;
+            onSuccess,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
+    } = this.props;
 
         setLoading(true);  // Set setLoading to true to indicate repositories are actually loading.
         setLoadingTitle('Fetching data...');
+        setLoadingMsg('Connecting to GitHub');
+
         log.info('Initiate Organizations load');
         await this.getOrgsPagination(null, 10);
         log.info('Oranization loaded: ' + this.githubOrgs.length);
@@ -76,10 +82,14 @@ class FetchOrgs extends Component {
         // Remove archived repositories, we don't want to take care of those since no actions are allowed
         cfgSources.remove({'isArchived':true});
 
+        setLoadingSuccessMsg('Loaded ' + this.totalReposCount + ' repos');
+        setLoadingSuccess(true);
+
         setLoading(false);
         if (this.totalReposCount > 0) {
             setLoadSuccess(true);
         }
+        onSuccess();
     };
 
     getOrgsPagination = async (cursor, increment) => {
@@ -215,6 +225,7 @@ const mapState = state => ({
     loadFlag: state.githubFetchOrgs.loadFlag,
 
     loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 
     log: state.global.log,
 });
@@ -235,6 +246,8 @@ const mapDispatch = dispatch => ({
     setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
     setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
     setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
 
     updateChip: dispatch.chip.updateChip,
 });

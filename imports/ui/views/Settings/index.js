@@ -8,11 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import General from '../../layouts/General/index.js';
 
 import Repositories from './Repositories/index.js';
-import StoryPoints from './StoryPoints/index.js';
-import ImportPoints from './ImportPoints/index.js';
+//import StoryPoints from './StoryPoints/index.js';
+//import ImportPoints from './ImportPoints/index.js';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
+
+import Actions from './Actions/index.js';
 
 /*
 function TabContainer(props) {
@@ -58,6 +60,8 @@ class Settings extends Component {
 //        const { value } = this.state;
         return (
             <General>
+                <Actions />
+
                 <Repositories/>
             </General>
         );
