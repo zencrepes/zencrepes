@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import ScanOrgs from '../../../../components/Settings/Repositories/ScanOrgs.js';
-import ScanOrgRepos from '../../../../components/Settings/Repositories/ScanOrgRepos.js';
-import ScanRepo from '../../../../components/Settings/Repositories/ScanRepo.js';
-
-import CustomCard from "../../../../components/CustomCard/index.js";
+import {withStyles} from "@material-ui/core";
 import Card from "@material-ui/core/Card/Card";
 import CardContent from "@material-ui/core/CardContent/CardContent";
 import Typography from "@material-ui/core/Typography/Typography";
-import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import CardActions from "@material-ui/core/CardActions/CardActions";
 import Button from "@material-ui/core/Button/Button";
-import {withStyles} from "@material-ui/core";
 
 const styles = {
     root: {
@@ -39,13 +34,11 @@ class Orgs extends Component {
         setLoadFlag(true);
     };
 
-
     render() {
         const { classes, loading } = this.props;
-
         return (
             <Card className={classes.root}>
-                <CardContent className={classes.cardContent} >
+                <CardContent>
                     <Typography className={classes.title} color="textSecondary">
                         Affiliated GitHub Repositories & Organizations
                     </Typography>
@@ -53,12 +46,10 @@ class Orgs extends Component {
                         Scans all Github organization associated with your Github account as well as your own repositories.
                     </Typography>
                 </CardContent>
-                <CardActions className={classes.cardActions} >
-                    <div className={classes.actionButtons} >
-                        <Button color="primary" variant="contained" className={classes.button} onClick={this.reloadRepos} disabled={loading}>
-                            Scan
-                        </Button>
-                    </div>
+                <CardActions>
+                    <Button color="primary" variant="contained" onClick={this.reloadRepos} disabled={loading}>
+                        Scan
+                    </Button>
                 </CardActions>
             </Card>
         );
@@ -66,7 +57,14 @@ class Orgs extends Component {
 }
 
 Orgs.propTypes = {
+    classes: PropTypes.object.isRequired,
+    connectedUser: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
 
+    setLogin: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    initView: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({

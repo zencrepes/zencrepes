@@ -40,20 +40,11 @@ class Stats extends Component {
             orgCountSelected,
             issuesCountTotal,
             issuesCountSelected,
-            issuesCountLoaded,
             labelsCountTotal,
             labelsCountSelected,
-            labelsCountLoaded,
             milestonesCountTotal,
             milestonesCountSelected,
-            milestonesCountLoaded,
         } = this.props;
-
-        /*
-                    Organization
-                    {orgCountSelected} / {orgCountTotal}
-
-         */
 
         return (
             <React.Fragment>
@@ -112,9 +103,21 @@ class Stats extends Component {
 }
 
 Stats.propTypes = {
-//    classes: PropTypes.object.isRequired,
-//    loading: PropTypes.bool.isRequired,
+    classes: PropTypes.object.isRequired,
+    selectedRepos: PropTypes.array.isRequired,
+    availableRepos: PropTypes.array.isRequired,
 
+    orgCountTotal: PropTypes.number.isRequired,
+    orgCountSelected: PropTypes.number.isRequired,
+    issuesCountTotal: PropTypes.number.isRequired,
+    issuesCountSelected: PropTypes.number.isRequired,
+    issuesCountLoaded: PropTypes.number.isRequired,
+    labelsCountTotal: PropTypes.number.isRequired,
+    labelsCountSelected: PropTypes.number.isRequired,
+    labelsCountLoaded: PropTypes.number.isRequired,
+    milestonesCountTotal: PropTypes.number.isRequired,
+    milestonesCountSelected: PropTypes.number.isRequired,
+    milestonesCountLoaded: PropTypes.number.isRequired,
 };
 
 const mapState = state => ({

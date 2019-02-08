@@ -86,19 +86,28 @@ class FetchRepo extends Component {
 }
 
 FetchRepo.propTypes = {
-    loading: PropTypes.bool,
-    loadFlag: PropTypes.bool,
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+
     orgName: PropTypes.string,
     repoName: PropTypes.string,
+
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
 
-    setLoadFlag: PropTypes.func,
-    setLoading: PropTypes.func,
-    setLoadError: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
-    updateChip: PropTypes.func,
-    setRepoData: PropTypes.func,
+    setLoadFlag: PropTypes.func.isRequired,
+
+    setLoading: PropTypes.func.isRequired,
+    setLoadingTitle: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

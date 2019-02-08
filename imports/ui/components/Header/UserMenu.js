@@ -3,7 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
 
-import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
+import { GithubCircle, Logout } from 'mdi-material-ui'
 
 const style = theme => ({
     root: {

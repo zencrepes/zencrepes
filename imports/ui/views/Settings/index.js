@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-
-
 import General from '../../layouts/General/index.js';
 
 import Repositories from './Repositories/index.js';
-//import StoryPoints from './StoryPoints/index.js';
-//import ImportPoints from './ImportPoints/index.js';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
 
 import Actions from './Actions/index.js';
 
@@ -67,6 +60,10 @@ class Settings extends Component {
         );
     }
 }
+
+Settings.propTypes = {
+    initView: PropTypes.func.isRequired,
+};
 
 /*
 Previous Tabs logic

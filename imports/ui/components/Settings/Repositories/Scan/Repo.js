@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 import Grid from "@material-ui/core/Grid/Grid";
 import {withStyles} from "@material-ui/core";
@@ -52,7 +53,7 @@ class Repo extends Component {
 
         return (
             <Card className={classes.root}>
-                <CardContent className={classes.cardContent} >
+                <CardContent>
                     <Typography className={classes.title} color="textSecondary">
                         An Individual Repository
                     </Typography>
@@ -91,12 +92,10 @@ class Repo extends Component {
                     </Grid>
 
                 </CardContent>
-                <CardActions className={classes.cardActions} >
-                    <div className={classes.actionButtons} >
-                        <Button color="primary" variant="contained" className={classes.button} onClick={this.loadRepo} disabled={loading}>
-                            Scan
-                        </Button>
-                    </div>
+                <CardActions>
+                    <Button color="primary" variant="contained" onClick={this.loadRepo} disabled={loading}>
+                        Scan
+                    </Button>
                 </CardActions>
             </Card>
         );
@@ -104,7 +103,16 @@ class Repo extends Component {
 }
 
 Repo.propTypes = {
+    classes: PropTypes.object.isRequired,
+    orgName: PropTypes.string,
+    repoName: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
 
+    setLoadFlag: PropTypes.func.isRequired,
+    setOrgName: PropTypes.func.isRequired,
+    setRepoName: PropTypes.func.isRequired,
+    initView: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({

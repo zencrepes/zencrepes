@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 import Input from '@material-ui/core/Input';
 import {withStyles} from "@material-ui/core";
@@ -47,7 +48,7 @@ class OrgRepos extends Component {
 
         return (
             <Card className={classes.root}>
-                <CardContent className={classes.cardContent} >
+                <CardContent>
                     <Typography className={classes.title} color="textSecondary">
                         Repositories from an Organization
                     </Typography>
@@ -64,12 +65,10 @@ class OrgRepos extends Component {
                         onChange={this.handleChange}
                     />
                 </CardContent>
-                <CardActions className={classes.cardActions} >
-                    <div className={classes.actionButtons} >
-                        <Button color="primary" variant="contained" className={classes.button} onClick={this.loadRepos} disabled={loading}>
-                            Scan
-                        </Button>
-                    </div>
+                <CardActions>
+                    <Button color="primary" variant="contained" onClick={this.loadRepos} disabled={loading}>
+                        Scan
+                    </Button>
                 </CardActions>
             </Card>
         );
@@ -77,7 +76,13 @@ class OrgRepos extends Component {
 }
 
 OrgRepos.propTypes = {
-
+    classes: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    orgName: PropTypes.string,
+    setOrgName: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    initView: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({

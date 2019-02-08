@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
@@ -77,6 +76,11 @@ class Treeview extends Component {
 
 Treeview.propTypes = {
     classes: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    selectedRepos: PropTypes.array.isRequired,
+    availableRepos: PropTypes.array.isRequired,
+    treeNodes: PropTypes.array.isRequired,
+    updateCheckedRepos: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

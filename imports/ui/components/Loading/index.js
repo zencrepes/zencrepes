@@ -38,9 +38,9 @@ class Loading extends Component {
 }
 
 Loading.propTypes = {
-    loadingModal: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-
+    loadingModal: PropTypes.bool.isRequired,
+    loadingTitle: PropTypes.string,
     cancelLoading: PropTypes.func.isRequired,
 };
 

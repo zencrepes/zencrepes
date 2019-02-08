@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { ResponsivePie } from '@nivo/pie'
-import {connect} from "react-redux";
-import {withStyles} from "@material-ui/core/styles/index";
+import PropTypes from "prop-types";
+import { withStyles } from '@material-ui/core/styles';
 
+import { ResponsivePie } from '@nivo/pie'
 
 const styles = {
     root: {
@@ -171,5 +171,12 @@ class StatsCharts extends Component {
         );
     }
 }
+
+StatsCharts.propTypes = {
+    classes: PropTypes.object.isRequired,
+    selected: PropTypes.number.isRequired,
+    total: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+};
 
 export default withStyles(styles)(StatsCharts);

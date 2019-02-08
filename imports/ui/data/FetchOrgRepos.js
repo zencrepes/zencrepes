@@ -147,19 +147,26 @@ class FetchOrgRepos extends Component {
 FetchOrgRepos.propTypes = {
     loadFlag: PropTypes.bool,
     loading: PropTypes.bool,
+    onSuccess: PropTypes.func.isRequired,
     name: PropTypes.string,
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
 
-    setLoadFlag: PropTypes.func,
-    setLoading: PropTypes.func,
-    setLoadError: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
-    updateChip: PropTypes.func,
+    setLoadFlag: PropTypes.func.isRequired,
+    setAvailableRepos: PropTypes.func.isRequired,
+    setLoadedRepos: PropTypes.func.isRequired,
+    incrementLoadedRepos: PropTypes.func.isRequired,
 
-    setAvailableRepos: PropTypes.func,
-    setLoadedRepos: PropTypes.func,
-    incrementLoadedRepos: PropTypes.func,
+    setLoading: PropTypes.func.isRequired,
+    setLoadingTitle: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

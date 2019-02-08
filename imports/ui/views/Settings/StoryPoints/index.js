@@ -7,7 +7,7 @@ import CreatePointsLabels from '../../../data/CreatePointsLabels.js';
 
 import Fibonacci from './Fibonacci.js';
 import EnabledRepos from './EnabledRepos/index.js';
-//import SyncLabels from './SyncLabels.js';
+import SyncLabels from './SyncLabels.js';
 
 class StoryPoints extends Component {
     constructor(props) {

@@ -45,8 +45,7 @@ export default {
     },
 
     effects: {
-        async initView(payload, rootState) {
-            console.log('initView');
+        async initView() {
             this.setSelectedRepos(cfgSources.find({active: true}).fetch());
             this.setAvailableRepos(cfgSources.find({}).fetch());
 

@@ -36,11 +36,10 @@ class FetchOrgs extends Component {
     }
 
     resetCounts = () => {
-        const { setLoadedOrgs, setLoadedRepos, setLoadSuccess} = this.props;
+        const { setLoadedOrgs, setLoadedRepos} = this.props;
         this.githubOrgs = [];
         setLoadedOrgs(0);
         setLoadedRepos(0);
-        setLoadSuccess(false);
         this.totalReposCount = 0;
     };
 
@@ -49,7 +48,6 @@ class FetchOrgs extends Component {
             setLoading,
             setLoadingTitle,
             setLoadingMsg,
-            setLoadSuccess,
             login,
             log,
             onSuccess,
@@ -86,9 +84,6 @@ class FetchOrgs extends Component {
         setLoadingSuccess(true);
 
         setLoading(false);
-        if (this.totalReposCount > 0) {
-            setLoadSuccess(true);
-        }
         onSuccess();
     };
 
@@ -203,21 +198,29 @@ class FetchOrgs extends Component {
 
 FetchOrgs.propTypes = {
     login: PropTypes.string,
-    loading: PropTypes.bool.isRequired,
     loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    log: PropTypes.object.isRequired,
+
     client: PropTypes.object.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
-    setLoading: PropTypes.func.isRequired,
-    setLoadError: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
-    updateChip: PropTypes.func.isRequired,
-
     setLoadedOrgs: PropTypes.func.isRequired,
     setLoadedRepos: PropTypes.func.isRequired,
     setIncrementLoadedOrgs: PropTypes.func.isRequired,
     setIncrementLoadedRepos: PropTypes.func.isRequired,
-    log: PropTypes.object.isRequired,
+
+    setLoading: PropTypes.func.isRequired,
+    setLoadingTitle: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -233,8 +236,6 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
 
-    setLoadError: dispatch.githubFetchOrgs.setLoadError,
-    setLoadSuccess: dispatch.githubFetchOrgs.setLoadSuccess,
     setLoadedOrgs: dispatch.githubFetchOrgs.setLoadedOrgs,
     setLoadedRepos: dispatch.githubFetchOrgs.setLoadedRepos,
     setIncrementLoadedOrgs: dispatch.githubFetchOrgs.setIncrementLoadedOrgs,

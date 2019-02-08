@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 
 import Grid from "@material-ui/core/Grid/Grid";
 
@@ -40,12 +38,7 @@ class Repositories extends Component {
                         <Scan />
                     </Grid>
                     <Grid item xs={6} sm container>
-                        <Treeview
-                            all={{}}
-                            selected={{active: true}}
-                            enable={{active: true}}
-                            disable={{active: false}}
-                        />
+                        <Treeview />
                     </Grid>
                 </Grid>
             </React.Fragment>
