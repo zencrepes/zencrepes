@@ -52,13 +52,20 @@ class Refresh extends Component {
     };
 
     refreshIssues = () => {
-        const { issuesSetStageFlag, issuesSetVerifFlag, issuesSetIssues, issuesSetAction, issues, setOnSuccess, issuesUpdateView, issuesSetVerifying } = this.props;
+        const {
+            issuesSetStageFlag,
+            issuesSetVerifFlag,
+            issuesSetIssues,
+            issuesSetAction,
+            issues,
+            setOnSuccess,
+            issuesUpdateView
+        } = this.props;
+        setOnSuccess(issuesUpdateView);
         issuesSetIssues(issues);
         issuesSetAction('refresh');
-        issuesSetVerifying(true);
-        issuesSetStageFlag(true);
+        issuesSetStageFlag(false);
         issuesSetVerifFlag(true);
-        setOnSuccess(issuesUpdateView);
         this.setState({ anchorEl: null });
     };
 
@@ -104,12 +111,12 @@ Refresh.propTypes = {
     classes: PropTypes.object.isRequired,
     reposSetLoadFlag: PropTypes.func.isRequired,
     reposSetLoadRepos: PropTypes.func.isRequired,
+
     setOnSuccess: PropTypes.func.isRequired,
 
     issues: PropTypes.array.isRequired,
     issuesSetStageFlag: PropTypes.func.isRequired,
     issuesSetVerifFlag: PropTypes.func.isRequired,
-    issuesSetVerifying: PropTypes.func.isRequired,
     issuesSetIssues: PropTypes.func.isRequired,
     issuesSetAction: PropTypes.func.isRequired,
     issuesUpdateView: PropTypes.func.isRequired,
@@ -125,7 +132,6 @@ const mapDispatch = dispatch => ({
 
     issuesSetStageFlag: dispatch.issuesEdit.setStageFlag,
     issuesSetVerifFlag: dispatch.issuesEdit.setVerifFlag,
-    issuesSetVerifying: dispatch.issuesEdit.setVerifying,
     issuesSetIssues: dispatch.issuesEdit.setIssues,
     issuesSetAction: dispatch.issuesEdit.setAction,
     issuesUpdateView: dispatch.issuesView.updateView,

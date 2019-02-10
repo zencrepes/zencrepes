@@ -42,7 +42,13 @@ class Refresh extends Component {
     };
 
     refreshSelectedRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, milestones, setOnSuccess, sprintsUpdateView } = this.props;
+        const {
+            reposSetLoadFlag,
+            reposSetLoadRepos,
+            milestones,
+            setOnSuccess,
+            sprintsUpdateView
+        } = this.props;
 
         setOnSuccess(sprintsUpdateView);
         reposSetLoadRepos(milestones.map(milestone => milestone.repo.id));
@@ -70,12 +76,11 @@ class Refresh extends Component {
     };
 
     refreshIssues = () => {
-        const { issuesSetStageFlag, issuesSetVerifFlag, issuesSetIssues, issuesSetAction, issues, setOnSuccess, sprintsUpdateView, issuesSetVerifying } = this.props;
+        const { issuesSetStageFlag, issuesSetVerifFlag, issuesSetIssues, issuesSetAction, issues, setOnSuccess, sprintsUpdateView } = this.props;
         setOnSuccess(sprintsUpdateView);
         issuesSetIssues(issues);
         issuesSetAction('refresh');
-        issuesSetVerifying(true);
-        issuesSetStageFlag(true);
+        issuesSetStageFlag(false);
         issuesSetVerifFlag(true);
         this.setState({ anchorEl: null });
     };
@@ -142,7 +147,6 @@ Refresh.propTypes = {
     milestones: PropTypes.array.isRequired,
     issuesSetStageFlag: PropTypes.func.isRequired,
     issuesSetVerifFlag: PropTypes.func.isRequired,
-    issuesSetVerifying: PropTypes.func.isRequired,
     issuesSetIssues: PropTypes.func.isRequired,
     issuesSetAction: PropTypes.func.isRequired,
     sprintsUpdateView: PropTypes.func.isRequired,
@@ -170,7 +174,6 @@ const mapDispatch = dispatch => ({
 
     issuesSetStageFlag: dispatch.issuesEdit.setStageFlag,
     issuesSetVerifFlag: dispatch.issuesEdit.setVerifFlag,
-    issuesSetVerifying: dispatch.issuesEdit.setVerifying,
     issuesSetIssues: dispatch.issuesEdit.setIssues,
     issuesSetAction: dispatch.issuesEdit.setAction,
 

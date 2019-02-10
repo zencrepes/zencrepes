@@ -67,6 +67,13 @@ export default {
             this.updateView();
         },
 
+        async clearIssues() {
+            cfgIssues.remove({});
+            this.setIssues([]);
+            this.setQuery({});
+            this.updateView();
+        },
+
         async updateView() {
             this.refreshQueries();
             this.refreshFacets();

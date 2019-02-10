@@ -104,6 +104,11 @@ class Wizard extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        const { initView } = this.props;
+        initView();
+    }
+
     handleNext = () => {
         const { activeStep, changeActiveStep, steps, history } = this.props;
         if (activeStep === steps.length -1) { // User clicked on finish
@@ -175,6 +180,7 @@ Wizard.propTypes = {
     changeActiveStep: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     issues: PropTypes.number,
+    initView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -185,6 +191,8 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     changeActiveStep: dispatch.wizardView.changeActiveStep,
+    initView: dispatch.settingsView.initView,
+
 });
 
 export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Wizard)));

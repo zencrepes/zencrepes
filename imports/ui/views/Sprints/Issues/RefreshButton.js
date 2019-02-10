@@ -13,21 +13,19 @@ class RefreshButton extends Component {
 
     edit = () => {
         const {
-            issuesSetStageFlag,
-            issuesSetVerifFlag,
-            issuesSetIssues,
-            issuesSetAction,
+            setStageFlag,
+            setVerifFlag,
+            setIssues,
+            setAction,
             issues,
-            issuesSetOnSuccess,
-            sprintsUpdateView,
-            issuesSetVerifying
+            setOnSuccess,
+            updateView
         } = this.props;
-        issuesSetOnSuccess(sprintsUpdateView);
-        issuesSetIssues(issues);
-        issuesSetAction('refresh');
-        issuesSetVerifying(true);
-        issuesSetStageFlag(true);
-        issuesSetVerifFlag(true);
+        setOnSuccess(updateView);
+        setIssues(issues);
+        setAction('refresh');
+        setStageFlag(false);
+        setVerifFlag(true);
     };
 
     render() {
@@ -44,13 +42,13 @@ class RefreshButton extends Component {
 RefreshButton.propTypes = {
     issues: PropTypes.array.isRequired,
 
-    issuesSetStageFlag: PropTypes.func.isRequired,
-    issuesSetVerifFlag: PropTypes.func.isRequired,
-    issuesSetVerifying: PropTypes.func.isRequired,
-    issuesSetIssues: PropTypes.func.isRequired,
-    issuesSetAction: PropTypes.func.isRequired,
-    issuesSetOnSuccess: PropTypes.func.isRequired,
-    sprintsUpdateView: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setIssues: PropTypes.func.isRequired,
+    setAction: PropTypes.func.isRequired,
+
+    setOnSuccess: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -58,14 +56,13 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-    issuesSetStageFlag: dispatch.issuesEdit.setStageFlag,
-    issuesSetVerifFlag: dispatch.issuesEdit.setVerifFlag,
-    issuesSetVerifying: dispatch.issuesEdit.setVerifying,
-    issuesSetIssues: dispatch.issuesEdit.setIssues,
-    issuesSetAction: dispatch.issuesEdit.setAction,
-    issuesSetOnSuccess: dispatch.issuesEdit.setOnSuccess,
-    sprintsUpdateView: dispatch.sprintsView.updateView,
+    setStageFlag: dispatch.issuesEdit.setStageFlag,
+    setVerifFlag: dispatch.issuesEdit.setVerifFlag,
+    setIssues: dispatch.issuesEdit.setIssues,
+    setAction: dispatch.issuesEdit.setAction,
 
+    setOnSuccess: dispatch.loading.setOnSuccess,
+    updateView: dispatch.sprintsView.updateView,
 });
 
 export default connect(mapState, mapDispatch)(RefreshButton);

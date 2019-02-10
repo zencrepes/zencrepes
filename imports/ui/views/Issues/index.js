@@ -18,6 +18,8 @@ import IssuesQuery from './Query/index.js';
 import IssuesTabs from './Tabs/index.js';
 import IssuesContent from './Content/index.js';
 
+import NoData from './NoData/index.js';
+
 const style = {
     root: {
         marginRight: '10px'
@@ -58,41 +60,47 @@ class Issues extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, issues } = this.props;
         return (
             <General>
                 <IssuesFetch />
                 <IssuesEdit />
-                <Actions />
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item >
-                        <IssuesFacets />
-                    </Grid>
-                    <Grid item xs={12} sm container>
+                {issues.length === 0 ? (
+                    <NoData />
+                ) : (
+                    <React.Fragment>
+                        <Actions />
                         <Grid
                             container
-                            direction="column"
+                            direction="row"
                             justify="flex-start"
                             alignItems="flex-start"
+                            spacing={8}
                         >
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <IssuesQuery />
+                            <Grid item >
+                                <IssuesFacets />
                             </Grid>
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <IssuesTabs />
-                            </Grid>
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <IssuesContent />
+                            <Grid item xs={12} sm container>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                >
+                                    <Grid item xs={12} sm className={classes.fullWidth}>
+                                        <IssuesQuery />
+                                    </Grid>
+                                    <Grid item xs={12} sm className={classes.fullWidth}>
+                                        <IssuesTabs />
+                                    </Grid>
+                                    <Grid item xs={12} sm className={classes.fullWidth}>
+                                        <IssuesContent />
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
+                    </React.Fragment>
+                )}
             </General>
         );
     }
@@ -102,10 +110,15 @@ Issues.propTypes = {
     classes: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    issues: PropTypes.array.isRequired,
 };
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
 });
 
-export default connect(null, mapDispatch)(withRouter(withStyles(style)(Issues)));
+const mapState = state => ({
+    issues: state.issuesView.issues,
+});
+
+export default connect(mapState, mapDispatch)(withRouter(withStyles(style)(Issues)));
