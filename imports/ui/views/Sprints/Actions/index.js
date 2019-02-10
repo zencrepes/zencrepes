@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import SelectSprint from './SelectSprint.js';
-import Create from './Create';
+//import Create from './Create';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -31,7 +31,6 @@ class Actions extends Component {
                             <Refresh />
                         </Grid>
                         <Grid item >
-                            <Create />
                         </Grid>
                     </Grid>
                 </Toolbar>

@@ -23,14 +23,11 @@ import {
 
 export default {
     state: {
+        query: {},
         sprints: [],
         selectedSprintTitle: null,
         selectedSprintDescription: null,
         selectedSprintDueDate: null,
-        editSprint: false,
-        editSprintTitle: null,
-        editSprintDescription: null,
-        editSprintDueDate: null,
 
         assignees: [],
         availableAssignees: [],
@@ -54,22 +51,14 @@ export default {
         milestones: [],
 
         velocity: {},
-
-        openCreateSprint: false,
-        createSprintName: '',
-        createSprintEndDate: '',
-        searchIssue: '',
-        selectedIssue: null,
     },
     reducers: {
+        setQuery(state, payload) {return { ...state, query: payload };},
+
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setSelectedSprintTitle(state, payload) {return { ...state, selectedSprintTitle: payload };},
         setSelectedSprintDescription(state, payload) {return { ...state, selectedSprintDescription: payload };},
         setSelectedSprintDueDate(state, payload) {return { ...state, selectedSprintDueDate: payload };},
-        setEditSprint(state, payload) {return { ...state, editSprint: payload };},
-        setEditSprintTitle(state, payload) {return { ...state, editSprintTitle: payload };},
-        setEditSprintDescription(state, payload) {return { ...state, editSprintDescription: payload };},
-        setEditSprintDueDate(state, payload) {return { ...state, editSprintDueDate: payload };},
 
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
@@ -94,15 +83,73 @@ export default {
         setVelocity(state, payload) {return { ...state, velocity: payload };},
 
         setLabels(state, payload) {return { ...state, labels: payload };},
-
-        setOpenCreateSprint(state, payload) {return { ...state, openCreateSprint: payload };},
-        setCreateSprintName(state, payload) {return { ...state, createSprintName: payload };},
-        setCreateSprintEndDate(state, payload) {return { ...state, createSprintEndDate: payload };},
-        setSearchIssue(state, payload) {return { ...state, searchIssue: payload };},
-        setSelectedIssue(state, payload) {return { ...state, selectedIssue: payload };},
-
     },
     effects: {
+        async updateQuery(query, rootState) {
+            this.setQuery(query);
+            // Generate available sprints based on query, removing milestone title
+            let sprintsQuery = JSON.parse(JSON.stringify(query)); //TODO - Replace this with something better to copy object ?
+            if (sprintsQuery['title'] !== undefined) {
+                delete sprintsQuery['title'];
+            }
+
+            const sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+            this.setSprints(sprints);
+
+            // If there was no sprint selected, if the query is blank, automatically select the first sprint in the array of sprints
+            if (rootState.sprintsView.selectedSprintTitle === null && sprints[0] !== undefined && query === {}) {
+                this.setSelectedSprintTitle(sprints[0]);
+            }
+
+            if (query.title !== undefined) {
+                const currentMilestone = cfgMilestones.findOne(query);
+                if (currentMilestone.title !== undefined) {
+                    this.setSelectedSprintTitle(currentMilestone.title);
+                    this.updateView();
+                }
+            }
+        },
+
+        async updateView(payload, rootState) {
+            let selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
+            let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintTitle]}};
+
+            // Create an array of assignees involved in a particular sprint
+            let assignees = getAssigneesRepartition(cfgIssues.find(currentSprintFilter).fetch());
+            this.setAssignees(assignees);
+
+            let allAssignees = getAssignees(cfgIssues.find({}).fetch());
+            let assigneesDifference = _.differenceBy(allAssignees, assignees, 'id');
+            this.setAvailableAssignees(assigneesDifference);
+            this.setFilteredAvailableAssignees(assigneesDifference);
+            this.setAvailableAssigneesFilter('');
+
+            let repositories = getRepositoriesRepartition(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch(), cfgIssues.find(currentSprintFilter).fetch());
+            this.setRepositories(repositories);
+            this.setMilestones(repositories);
+
+            let labels = getLabelsRepartition(cfgIssues.find(currentSprintFilter).fetch());
+            this.setLabels(labels);
+
+            let allRepositories = getRepositories(cfgIssues.find({}).fetch());
+            let repositoriesDifference = _.differenceBy(allRepositories, repositories, 'id');
+            this.setAvailableRepositories(repositoriesDifference);
+            this.setFilteredAvailableRepositories(repositoriesDifference);
+            this.setAvailableRepositoriesFilter('');
+
+            if (selectedSprintTitle !== null) {
+                this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+            }
+
+            this.updateVelocity(assignees);
+
+            this.updateDescriptionDate();
+
+            this.updateAvailableRepos();
+
+            this.updateAvailableSprints();
+        },
+
         async initView() {
             this.refreshSprints();
 
@@ -133,26 +180,6 @@ export default {
             this.setAddReposSelected(selectedRepos);
         },
 
-        async createSprint() {
-            this.setSelectedSprintTitle(null);
-            this.setSelectedSprintDescription(null);
-            this.setSelectedSprintDueDate(null);
-
-            this.setEditSprintTitle('New Sprint');
-            this.setEditSprintDescription(null);
-            this.setEditSprintDueDate(new Date().toISOString());
-            this.setEditSprint(true);
-
-            this.setLabels([]);
-            this.setIssues([]);
-            this.setRepositories([]);
-            this.setVelocity({});
-            this.setAssignees([]);
-            this.setMilestones([]);
-
-            this.setAddReposSelected([]);
-        },
-
         async updateAvailableRepos(payload, rootState) {
             const selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
             const milestones = cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch()
@@ -167,63 +194,7 @@ export default {
             }));
         },
 
-        async saveSprint(payload, rootState) {
-            this.setSelectedSprintTitle(rootState.sprintsView.editSprintTitle);
-            this.setSelectedSprintDescription(rootState.sprintsView.editSprintDescription);
-            this.setSelectedSprintDueDate(rootState.sprintsView.editSprintDueDate);
-            this.setEditSprint(false);
-        },
 
-
-        async updateView(payload, rootState) {
-            /*
-            console.log('Update Sprint');
-            console.log(selectedSprintTitle);
-            console.log(rootState.sprintsView.selectedSprintTitle);
-            if (selectedSprintTitle === null) {
-                selectedSprintTitle = rootState.sprintPlanning.selectedSprintTitle;
-            }
-            this.setSelectedSprintTitle(selectedSprintTitle);
-*/
-            let selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
-            let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintTitle]}};
-
-            // Create an array of assignees involved in a particular sprint
-            let assignees = getAssigneesRepartition(cfgIssues.find(currentSprintFilter).fetch());
-            this.setAssignees(assignees);
-
-            let allAssignees = getAssignees(cfgIssues.find({}).fetch());
-            let assigneesDifference = _.differenceBy(allAssignees, assignees, 'id');
-            this.setAvailableAssignees(assigneesDifference);
-            this.setFilteredAvailableAssignees(assigneesDifference);
-            this.setAvailableAssigneesFilter('');
-
-            let repositories = getRepositoriesRepartition(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch(), cfgIssues.find(currentSprintFilter).fetch());
-            this.setRepositories(repositories);
-
-            let labels = getLabelsRepartition(cfgIssues.find(currentSprintFilter).fetch());
-            this.setLabels(labels);
-
-            let allRepositories = getRepositories(cfgIssues.find({}).fetch());
-            let repositoriesDifference = _.differenceBy(allRepositories, repositories, 'id');
-            this.setAvailableRepositories(repositoriesDifference);
-            this.setFilteredAvailableRepositories(repositoriesDifference);
-            this.setAvailableRepositoriesFilter('');
-
-            if (selectedSprintTitle !== null) {
-                this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
-            }
-
-            this.setMilestones(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch());
-
-            this.updateVelocity(assignees);
-
-            this.updateDescriptionDate();
-
-            this.updateAvailableRepos();
-
-            this.updateAvailableSprints();
-        },
 
         async updateVelocity(assignees, rootState) {
             //Build velocity based on past assignees performance
@@ -320,12 +291,5 @@ export default {
             this.updateVelocity(currentRepositories);
         },
 
-        async sprintCreated(payload, rootState) {
-            const log = rootState.global.log;
-
-            log.info('sprintCreated');
-            log.info(payload);
-            log.info(rootState);
-        }
     }
 };

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import {connect} from "react-redux";
+import Tooltip from '@material-ui/core/Tooltip';
 
 class EditButton extends Component {
     constructor (props) {
@@ -12,7 +13,7 @@ class EditButton extends Component {
 
     edit = () => {
         const {
-            milestone,
+            milestones,
             setMilestones,
             setAction,
             setOnSuccess,
@@ -22,26 +23,28 @@ class EditButton extends Component {
             setNewDueOn,
             setNewDescription,
         } = this.props;
-        setMilestones([milestone]);
+        setMilestones(milestones);
         setAction('update');
         setOnSuccess(updateView);
-        setNewTitle(milestone.title);
-        setNewDueOn(milestone.dueOn);
-        setNewDescription(milestone.description);
+        setNewTitle(milestones[0].title);
+        setNewDueOn(milestones[0].dueOn);
+        setNewDescription(milestones[0].description);
         setOpenEditDialog(true);
     };
 
     render() {
         return (
-            <IconButton aria-label="Edit" onClick={this.edit}>
-                <EditIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Edit milestone title, description, due date">
+                <IconButton aria-label="Edit" onClick={this.edit}>
+                    <EditIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
         );
     }
 }
 
 EditButton.propTypes = {
-    milestone: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
 
     setMilestones: PropTypes.func.isRequired,
     setAction: PropTypes.func.isRequired,
@@ -55,8 +58,9 @@ EditButton.propTypes = {
 };
 
 const mapDispatch = dispatch => ({
+    updateView: dispatch.sprintsView.updateView,
+
     setAction: dispatch.milestonesEdit.setAction,
-    updateView: dispatch.milestonesView.updateView,
     setMilestones: dispatch.milestonesEdit.setMilestones,
     setOpenEditDialog: dispatch.milestonesEdit.setOpenEditDialog,
 

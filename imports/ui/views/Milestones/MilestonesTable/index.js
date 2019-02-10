@@ -14,7 +14,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import EditMilestoneTitle from './EditMilestoneTitle.js';
 import EditMilestoneDueOn from './EditMilestoneDueOn.js';
 import AddRepoButton from './AddRepoButton.js';
-import AddRepos from './AddRepos/index.js';
+import AddRepos from '../../../components/Milestones/AddRepos/index.js';
 import ReposTable from './ReposTable/index.js';
 import SetMilestoneClosedButton from './SetMilestoneClosedButton.js';
 import SetMilestoneOpenButton from './SetMilestoneOpenButton.js';
@@ -521,12 +521,13 @@ class MilestonesTable extends Component {
             reposColumns,
             issuesColumns,
             prColumns,
+            updateView,
             editingStateColumnExtensions,
         } = this.state;
 
         return (
             <React.Fragment>
-                <AddRepos />
+                <AddRepos updateView={updateView}/>
                 <Grid
                     rows={this.formatData()}
                     columns={columns}
@@ -622,7 +623,6 @@ const mapDispatch = dispatch => ({
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
     setAction: dispatch.milestonesEdit.setAction,
     setStageFlag: dispatch.milestonesEdit.setStageFlag,
-    updateView: dispatch.milestonesView.updateView,
     setDeleteWarning: dispatch.milestonesEdit.setDeleteWarning,
     setMilestones: dispatch.milestonesEdit.setMilestones,
     setNewState: dispatch.milestonesEdit.setNewState,
@@ -630,6 +630,8 @@ const mapDispatch = dispatch => ({
     setNewDueOn: dispatch.milestonesEdit.setNewDueOn,
 
     setOpenEditDialog: dispatch.milestonesEdit.setOpenEditDialog,
+
+    updateView: dispatch.milestonesView.updateView,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });

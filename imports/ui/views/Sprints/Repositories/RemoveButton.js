@@ -43,11 +43,6 @@ RemoveButton.propTypes = {
     setVerifFlag: PropTypes.func.isRequired,
 };
 
-const mapState = state => ({
-    verifiedRepos: state.milestonesCreate.verifiedRepos,
-    repos: state.milestonesCreate.repos,
-});
-
 const mapDispatch = dispatch => ({
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
     setAction: dispatch.milestonesEdit.setAction,
@@ -59,4 +54,4 @@ const mapDispatch = dispatch => ({
     updateView: dispatch.sprintsView.updateView,
 });
 
-export default connect(mapState, mapDispatch)(RemoveButton);
+export default connect(null, mapDispatch)(RemoveButton);

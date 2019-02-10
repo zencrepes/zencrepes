@@ -107,7 +107,6 @@ const mapDispatch = dispatch => ({
     setVerifFlag: dispatch.milestonesEdit.setVerifFlag,
     setAction: dispatch.milestonesEdit.setAction,
     setStageFlag: dispatch.milestonesEdit.setStageFlag,
-    updateView: dispatch.milestonesView.updateView,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });
