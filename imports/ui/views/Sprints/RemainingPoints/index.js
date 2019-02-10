@@ -34,7 +34,7 @@ class RemainingPoints extends Component {
         return (
             <CustomCard
                 headerTitle="Remaining"
-                headerFactTitle="Remaining work"
+                headerFactTitle="Remaining points"
                 headerFactValue={openPoints + " Pts"}
             >
                 <ReposTreemap

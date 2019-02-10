@@ -30,6 +30,10 @@ class Data extends Component {
         }
     };
 
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
     load = async () => {
         const {
             setLoading,
@@ -55,6 +59,7 @@ class Data extends Component {
         setLoading(true);
         setLoadingIterateTotal(scanRepos.filter(repo => repo.active === true).length);
         setLoadingIterateCurrent(0);
+        await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
 
         for (let repo of cfgSources.find(reposQuery).fetch()) {
             if (repo.active === false) {

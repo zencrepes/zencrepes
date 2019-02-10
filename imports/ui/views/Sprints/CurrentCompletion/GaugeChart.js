@@ -22,7 +22,7 @@ class GaugeChart extends Component {
         const options = {
             chart: {
                 type: 'solidgauge',
-                height: 300,
+                height: 150,
             },
 
             title: null,
@@ -79,7 +79,7 @@ class GaugeChart extends Component {
             yAxis: {
                 ...options.yAxis,
                 title: {
-                    y: -70,
+                    y: -40,
                     text: title
                 },
                 max: max,
@@ -95,9 +95,6 @@ class GaugeChart extends Component {
                         '<span style="font-size:12px;color:silver">{legend}</span></div>'
                         */
                 },
-                tooltip: {
-                    valueSuffix: ' km/h'
-                }
             }]
         };
         return (

@@ -21,6 +21,10 @@ import {
     populateTicketsPerWeek
 } from "../../../utils/velocity/index.js";
 
+import {
+    refreshBurndown,
+} from "../../../utils/sprintburn/index.js";
+
 export default {
     state: {
         query: {},
@@ -52,6 +56,7 @@ export default {
         milestones: [],
 
         velocity: {},
+        burndown: {},
 
         autoRefreshEnable: false,       // Enable auto-refresh of repository issues
         autoRefreshTimer: 120,            // Time between auto-refresh
@@ -90,6 +95,8 @@ export default {
         setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
+
+        setBurndown(state, payload) {return { ...state, burndown: payload };},
 
         setLabels(state, payload) {return { ...state, labels: payload };},
 
@@ -152,15 +159,15 @@ export default {
             this.setFilteredAvailableAssignees(assigneesDifference);
             this.setAvailableAssigneesFilter('');
 
-            let repositories = getRepositoriesRepartition(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch(), cfgIssues.find(currentSprintFilter).fetch());
-            this.setRepositories(repositories);
-            this.setMilestones(repositories);
+            const milestones = getRepositoriesRepartition(cfgMilestones.find({'title':{'$in':[selectedSprintTitle]}}).fetch(), cfgIssues.find(currentSprintFilter).fetch());
+            this.setRepositories(milestones);
+            this.setMilestones(milestones);
 
             let labels = getLabelsRepartition(cfgIssues.find(currentSprintFilter).fetch());
             this.setLabels(labels);
 
             let allRepositories = getRepositories(cfgIssues.find({}).fetch());
-            let repositoriesDifference = _.differenceBy(allRepositories, repositories, 'id');
+            let repositoriesDifference = _.differenceBy(allRepositories, milestones, 'id');
             this.setAvailableRepositories(repositoriesDifference);
             this.setFilteredAvailableRepositories(repositoriesDifference);
             this.setAvailableRepositoriesFilter('');
@@ -171,12 +178,17 @@ export default {
 
             this.updateVelocity(assignees);
 
+            this.updateBurndown(currentSprintFilter, milestones[0]);
+
             this.updateDescriptionDate();
 
             this.updateAvailableRepos();
 
             this.updateAvailableSprints();
+
         },
+
+
 
         async initView() {
             this.refreshSprints();
@@ -203,6 +215,12 @@ export default {
             await this.setSelectedSprintTitle(selectedSprintTitle);
             this.updateView();
         },
+
+        async updateBurndown(currentSprintFilter, rootState, milestone) {
+            const burndown = refreshBurndown(currentSprintFilter, cfgIssues, milestone, rootState.sprintsView.velocity);
+            this.setBurndown(burndown)
+        },
+
 
         async addRepoUpdateSelected(selectedRepos) {
             this.setAddReposSelected(selectedRepos);

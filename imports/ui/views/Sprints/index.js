@@ -20,6 +20,7 @@ import Summary from './Summary/index.js';
 import RemainingPoints from './RemainingPoints/index.js';
 
 import CurrentCompletion from './CurrentCompletion/index.js';
+import Burndown from './Burndown/index.js';
 
 import NoData from './NoData/index.js';
 
@@ -68,7 +69,7 @@ class Sprints extends Component {
     }
 
     render() {
-        const { issues, velocity, assignees, sprints } = this.props;
+        const { issues, velocity, burndown, assignees, sprints } = this.props;
         return (
             <General>
                 <IssuesFetch />
@@ -88,14 +89,19 @@ class Sprints extends Component {
                             alignItems="flex-start"
                             spacing={8}
                         >
-                            <Grid item xs={12} sm={6} md={8}>
-                                <Summary />
+                            <Grid item xs={12} sm={6} md={4}>
+                                <CurrentCompletion
+                                    issues={issues}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
                                 <RemainingPoints
                                     assignees={assignees}
                                     issues={issues}
                                 />
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={4}>
+                                <DaysToCompletion />
                             </Grid>
                         </Grid>
                         <Grid
@@ -105,19 +111,27 @@ class Sprints extends Component {
                             alignItems="flex-start"
                             spacing={8}
                         >
-                            <Grid item xs={12} sm={6} md={4}>
-                                <CurrentCompletion
-                                    issues={issues}
+                            <Grid item xs={12} sm={12} md={12}>
+                                <Summary />
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={8}
+                        >
+                            <Grid item xs={12} sm={6} md={6}>
+                                <Burndown
+                                    burndown={burndown}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
+                            <Grid item xs={12} sm={6} md={6}>
                                 <VelocityWeeks
                                     velocity={velocity}
                                     defaultPoints={true}
                                 />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <DaysToCompletion />
                             </Grid>
                         </Grid>
                         <Grid
@@ -160,6 +174,7 @@ Sprints.propTypes = {
     issues: PropTypes.array.isRequired,
     sprints: PropTypes.array.isRequired,
     velocity: PropTypes.object.isRequired,
+    burndown: PropTypes.object.isRequired,
 
     initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
@@ -170,6 +185,7 @@ const mapState = state => ({
     assignees: state.sprintsView.assignees,
     issues: state.sprintsView.issues,
     velocity: state.sprintsView.velocity,
+    burndown: state.sprintsView.burndown,
     sprints: state.sprintsView.sprints,
 });
 
