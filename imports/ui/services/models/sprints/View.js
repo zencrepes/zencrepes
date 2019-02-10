@@ -25,6 +25,7 @@ export default {
     state: {
         query: {},
         sprints: [],
+        showClosed: false,
         selectedSprintTitle: null,
         selectedSprintDescription: null,
         selectedSprintDueDate: null,
@@ -51,11 +52,19 @@ export default {
         milestones: [],
 
         velocity: {},
+
+        autoRefreshEnable: false,       // Enable auto-refresh of repository issues
+        autoRefreshTimer: 120,            // Time between auto-refresh
+        autoRefreshCount: 0,            // Auto-refresh count
+        autoRefreshMaxCount: 20,        // Maximum number of times to auto-refresh
+        autoRefreshDefaultTimer: 120,   // Default timer
     },
+
     reducers: {
         setQuery(state, payload) {return { ...state, query: payload };},
 
         setSprints(state, payload) {return { ...state, sprints: payload };},
+        setShowClosed(state, payload) {return { ...state, showClosed: payload };},
         setSelectedSprintTitle(state, payload) {return { ...state, selectedSprintTitle: payload };},
         setSelectedSprintDescription(state, payload) {return { ...state, selectedSprintDescription: payload };},
         setSelectedSprintDueDate(state, payload) {return { ...state, selectedSprintDueDate: payload };},
@@ -83,6 +92,11 @@ export default {
         setVelocity(state, payload) {return { ...state, velocity: payload };},
 
         setLabels(state, payload) {return { ...state, labels: payload };},
+
+        setAutoRefreshEnable(state, payload) {return { ...state, autoRefreshEnable: payload };},
+        setAutoRefreshTimer(state, payload) {return { ...state, autoRefreshTimer: payload };},
+        setAutoRefreshCount(state, payload) {return { ...state, autoRefreshCount: payload };},
+        setAutoRefreshMaxCount(state, payload) {return { ...state, autoRefreshMaxCount: payload };},
     },
     effects: {
         async updateQuery(query, rootState) {
@@ -93,11 +107,15 @@ export default {
                 delete sprintsQuery['title'];
             }
 
-            const sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+            let milestonesQuery = {'state':{'$in':['OPEN']}};
+            if (rootState.sprintsView.showClosed) {
+                milestonesQuery = {};
+            }
+            const sprints = Object.keys(_.groupBy(cfgMilestones.find(milestonesQuery).fetch(), 'title')).sort();
             this.setSprints(sprints);
 
             // If there was no sprint selected, if the query is blank, automatically select the first sprint in the array of sprints
-            if (rootState.sprintsView.selectedSprintTitle === null && sprints[0] !== undefined && query === {}) {
+            if (rootState.sprintsView.selectedSprintTitle === null && sprints[0] !== undefined && _.isEmpty(query, true)) {
                 this.setSelectedSprintTitle(sprints[0]);
             }
 
@@ -108,6 +126,16 @@ export default {
                     this.updateView();
                 }
             }
+        },
+
+        async updateShowClosed(showClosed) {
+            let milestonesQuery = {'state':{'$in':['OPEN']}};
+            if (showClosed) {
+                milestonesQuery = {};
+            }
+            const sprints = Object.keys(_.groupBy(cfgMilestones.find(milestonesQuery).fetch(), 'title')).sort();
+            this.setSprints(sprints);
+            this.setShowClosed(showClosed);
         },
 
         async updateView(payload, rootState) {
@@ -159,16 +187,16 @@ export default {
             this.updateView();
         },
         async refreshSprints() {
-            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
-            this.setSprints(sprints);
-            this.updateSelectedSprint(sprints[0]);
+//            this.setSprints(sprints);
+//            this.updateSelectedSprint(sprints[0]);
         },
 
         async updateAvailableSprints() {
-            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
+//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
 //            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
-            this.setSprints(sprints);
+//            this.setSprints(sprints);
         },
 
         async updateSelectedSprint(selectedSprintTitle) {

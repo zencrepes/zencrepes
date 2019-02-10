@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
 import SelectSprint from './SelectSprint.js';
-//import Create from './Create';
-
 import Grid from '@material-ui/core/Grid';
 
 import Refresh from './Refresh.js';
+import ClosedSwitch from './ClosedSwitch.js';
 
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
@@ -31,6 +30,7 @@ class Actions extends Component {
                             <Refresh />
                         </Grid>
                         <Grid item >
+                            <ClosedSwitch />
                         </Grid>
                     </Grid>
                 </Toolbar>

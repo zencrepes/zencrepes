@@ -527,7 +527,7 @@ class MilestonesTable extends Component {
 
         return (
             <React.Fragment>
-                <AddRepos updateView={updateView}/>
+                <AddRepos updateView={updateView} />
                 <Grid
                     rows={this.formatData()}
                     columns={columns}

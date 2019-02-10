@@ -89,7 +89,7 @@ AddRepos.propTypes = {
     setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
-    updateView: PropTypes.func.isRequired,
+    updateView: PropTypes.func,
 };
 
 const mapState = state => ({

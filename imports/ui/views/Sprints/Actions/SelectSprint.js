@@ -11,6 +11,7 @@ import {withRouter} from "react-router-dom";
 const styles = {
     selectedField: {
         color: '#fff',
+        width: '300px',
     }
 };
 
