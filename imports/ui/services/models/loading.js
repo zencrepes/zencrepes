@@ -8,7 +8,7 @@ export default {
         loadingIterateCurrent: 0,   // For progressbar, current count
         loadingIterateTotal: 0,     // For progressbar, maximum count
         loadingSuccess: false,      // Flag indicating if loading was successful
-        loadingSuccessMsg: null,       // Message to be displayed at the end of loading (successful or not)
+        loadingSuccessMsg: null,    // Message to be displayed at the end of loading (successful or not)
 
         onSuccess: () => {},        // Function to be executed on load Success
         onCancel: () => {},         // Function to be executed on load Cancel

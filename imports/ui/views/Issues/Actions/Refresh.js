@@ -33,32 +33,32 @@ class Refresh extends Component {
     }
 
     refreshAllRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, reposSetOnSuccess, issuesUpdateView  } = this.props;
-        reposSetOnSuccess(issuesUpdateView);
+        const { reposSetLoadFlag, reposSetLoadRepos, setOnSuccess, issuesUpdateView  } = this.props;
+        setOnSuccess(issuesUpdateView);
         reposSetLoadRepos([]);
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
     refreshSelectedRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, issues, reposSetOnSuccess, issuesUpdateView } = this.props;
+        const { reposSetLoadFlag, reposSetLoadRepos, issues, setOnSuccess, issuesUpdateView } = this.props;
 
         const allRepos = _.uniqBy(issues.map(issue => issue.repo), 'id');
         //Get list of repositories for current query
-        reposSetOnSuccess(issuesUpdateView);
+        setOnSuccess(issuesUpdateView);
         reposSetLoadRepos(allRepos);
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
     refreshIssues = () => {
-        const { issuesSetStageFlag, issuesSetVerifFlag, issuesSetIssues, issuesSetAction, issues, issuesSetOnSuccess, issuesUpdateView, issuesSetVerifying } = this.props;
+        const { issuesSetStageFlag, issuesSetVerifFlag, issuesSetIssues, issuesSetAction, issues, setOnSuccess, issuesUpdateView, issuesSetVerifying } = this.props;
         issuesSetIssues(issues);
         issuesSetAction('refresh');
         issuesSetVerifying(true);
         issuesSetStageFlag(true);
         issuesSetVerifFlag(true);
-        issuesSetOnSuccess(issuesUpdateView);
+        setOnSuccess(issuesUpdateView);
         this.setState({ anchorEl: null });
     };
 
@@ -104,7 +104,7 @@ Refresh.propTypes = {
     classes: PropTypes.object.isRequired,
     reposSetLoadFlag: PropTypes.func.isRequired,
     reposSetLoadRepos: PropTypes.func.isRequired,
-    reposSetOnSuccess: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
 
     issues: PropTypes.array.isRequired,
     issuesSetStageFlag: PropTypes.func.isRequired,
@@ -112,7 +112,6 @@ Refresh.propTypes = {
     issuesSetVerifying: PropTypes.func.isRequired,
     issuesSetIssues: PropTypes.func.isRequired,
     issuesSetAction: PropTypes.func.isRequired,
-    issuesSetOnSuccess: PropTypes.func.isRequired,
     issuesUpdateView: PropTypes.func.isRequired,
 };
 
@@ -123,15 +122,16 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     reposSetLoadFlag: dispatch.issuesFetch.setLoadFlag,
     reposSetLoadRepos: dispatch.issuesFetch.setLoadRepos,
-    reposSetOnSuccess: dispatch.issuesFetch.setOnSuccess,
 
     issuesSetStageFlag: dispatch.issuesEdit.setStageFlag,
     issuesSetVerifFlag: dispatch.issuesEdit.setVerifFlag,
     issuesSetVerifying: dispatch.issuesEdit.setVerifying,
     issuesSetIssues: dispatch.issuesEdit.setIssues,
     issuesSetAction: dispatch.issuesEdit.setAction,
-    issuesSetOnSuccess: dispatch.issuesEdit.setOnSuccess,
     issuesUpdateView: dispatch.issuesView.updateView,
+
+    loading: dispatch.loading.setOnSuccess,
+    setOnSuccess: dispatch.loading.setOnSuccess,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));

@@ -13,12 +13,12 @@ import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
 import getIssuesStats from '../../utils/getIssuesStats.js';
 import { cfgLabels } from "../../Minimongo";
 
-
 class Data extends Component {
     constructor (props) {
         super(props);
         this.state = {};
         this.errorRetry = 0;
+        this.issuesCount = 0;
     }
 
     componentDidUpdate = (prevProps) => {
@@ -33,9 +33,12 @@ class Data extends Component {
     load = async () => {
         const {
             setLoading,
-            setLoadSuccess,
-            setIterateTotal,
-            incIterateCurrent,
+            setLoadingMsgAlt,
+            setLoadingIterateTotal,
+            incLoadingIterateCurrent,
+            setLoadingIterateCurrent,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
             loadRepos,
             log,
             onSuccess,
@@ -48,7 +51,10 @@ class Data extends Component {
         }
 
         let scanRepos = cfgSources.find(reposQuery).fetch();
-        setIterateTotal(scanRepos.filter(repo => repo.active === true).length);
+
+        setLoading(true);
+        setLoadingIterateTotal(scanRepos.filter(repo => repo.active === true).length);
+        setLoadingIterateCurrent(0);
 
         for (let repo of cfgSources.find(reposQuery).fetch()) {
             if (repo.active === false) {
@@ -57,6 +63,7 @@ class Data extends Component {
                 await cfgIssues.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
                 log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.issues.totalCount + ' issues and ' + repo.labels.totalCount + ' labels');
+                setLoadingMsgAlt('Fetching issues from ' + repo.org.login + '/' + repo.name);
 
                 // We always start by loading 5 issues in the repository
                 // This is also used to refresh the total number of issues & labels in the repo, which might have
@@ -65,20 +72,23 @@ class Data extends Component {
                 // and find how to prevent an infinite loop. Might be sufficient to based on the following query after last cursor
                 // TODO - Need to refresh issues content as well, so need to bring last updated date in the logic
                 await this.getIssuesPagination(null, 5, repo);
-                incIterateCurrent(1);
+                incLoadingIterateCurrent(1);
+                setLoadingSuccessMsg('Fetched ' + this.issuesCount + ' milestones');
+
             }
         }
 
         log.info('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues in memory');
+        setLoadingSuccess(true);
         setLoading(false);  // Set to true to indicate issues are done loading.
-        setLoadSuccess(true);
+        this.issuesCount = 0;
         onSuccess();
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 issues, but local only has 99
     // Query increment should not be just 1 since if the missing issue is far down, this will generate a large number of calls
     getIssuesPagination = async (cursor, increment, repoObj) => {
-        const { client, setLoadSuccess, setLoading, log } = this.props;
+        const { client, setLoading, log } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
@@ -120,14 +130,13 @@ class Data extends Component {
                 }
             } else {
                 log.info('Got too many load errors, stopping');
-                setLoadSuccess(false);
                 setLoading(false);
             }
         }
     };
 
     ingestIssues = async (data, repoObj) => {
-        const { incLoadedCount, log } = this.props;
+        const { setLoadingMsg, log } = this.props;
 
         let lastCursor = null;
         let stopLoad = false;
@@ -192,6 +201,8 @@ class Data extends Component {
                     $set: issueObj
                 });
 
+                this.issuesCount = this.issuesCount + 1;
+                setLoadingMsg(this.issuesCount + ' issues loaded');
                 /*
                 if (issueObj.milestone !== null) {
                     let milestoneObj = issueObj.milestone;
@@ -204,8 +215,6 @@ class Data extends Component {
                     });
                 }
                 */
-
-                incLoadedCount(1);
             }
             lastCursor = currentIssue.cursor;
         }
@@ -225,45 +234,51 @@ class Data extends Component {
 }
 
 Data.propTypes = {
-    loadFlag: PropTypes.bool,
-    loading: PropTypes.bool,
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     loadRepos: PropTypes.array,
+
+    setLoadFlag: PropTypes.func.isRequired,
+
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
 
-    setLoadFlag: PropTypes.func,
-    setLoading: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
-    setLoadedCount: PropTypes.func,
-    incLoadedCount: PropTypes.func,
-    setIterateTotal: PropTypes.func,
-    setIterateCurrent: PropTypes.func,
-    incIterateCurrent: PropTypes.func,
-    updateChip: PropTypes.func,
+    setLoading: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingModal: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    incLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
 
-    onSuccess: PropTypes.func,
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.issuesFetch.loadFlag,
-    loading: state.issuesFetch.loading,
-    onSuccess: state.issuesFetch.onSuccess,
+    loadRepos: state.issuesFetch.loadRepos,
 
     log: state.global.log,
 
-    loadRepos: state.issuesFetch.loadRepos,
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.issuesFetch.setLoadFlag,
-    setLoading: dispatch.issuesFetch.setLoading,
-    setLoadSuccess: dispatch.issuesFetch.setLoadSuccess,
-    setLoadedCount: dispatch.issuesFetch.setLoadedCount,
 
-    incLoadedCount: dispatch.issuesFetch.incLoadedCount,
-    setIterateTotal: dispatch.issuesFetch.setIterateTotal,
-    setIterateCurrent: dispatch.issuesFetch.setIterateCurrent,
-    incIterateCurrent: dispatch.issuesFetch.incIterateCurrent,
+    setLoading: dispatch.loading.setLoading,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingModal: dispatch.loading.setLoadingModal,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    incLoadingIterateCurrent: dispatch.loading.incLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
 
     updateChip: dispatch.chip.updateChip,
 });

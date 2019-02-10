@@ -112,7 +112,6 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.issuesFetch.setLoadFlag,
     setLoadRepos: dispatch.issuesFetch.setLoadRepos,
-    setOnSuccess: dispatch.issuesFetch.setOnSuccess,
 
     updateView: dispatch.sprintsView.updateView,
 
@@ -120,6 +119,8 @@ const mapDispatch = dispatch => ({
     setAutoRefreshTimer: dispatch.sprintsView.setAutoRefreshTimer,
     setAutoRefreshCount: dispatch.sprintsView.setAutoRefreshCount,
     setAutoRefreshMaxCount: dispatch.sprintsView.setAutoRefreshMaxCount,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
 });
 
 export default connect(mapState, mapDispatch)(AutoRefresh);
