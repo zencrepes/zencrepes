@@ -14,6 +14,7 @@ Agile analytics and management across GitHub organizations & repositories made e
 
 - [Introduction](#introduction)
 - [How it Works](#how-it-works)
+- [Try-it](#try-it)
 
 ## Introduction
 
@@ -26,7 +27,7 @@ It focuses on three primary objects
 
 ## How it works
 
-ZenCrepes is entirely client-side, by choice. This means ZenCrepes barely needs a server to run (the server component is only needed to support GitHub OAuth flow), but also and most importantly, that whoever running ZenCrepes cannot see any user data. Once authenticated, all data exchanges are directly made between the user's browser and GitHub.
+ZenCrepes is entirely client-side by choice. This means ZenCrepes barely needs very few resources to run (the server component is only needed to support GitHub OAuth flow), but also and most importantly, that whoever running ZenCrepes cannot see any user data. Once authenticated, all data exchanges are directly made between the user's browser and GitHub.
 
 But this this approach has two major drawbacks:
 * ZenCrepes cannot register to GitHub hooks, therefore cannot be `informed` about updates. Instead, it needs to regularly pull for changes.
@@ -35,6 +36,50 @@ But this this approach has two major drawbacks:
 ## Try-it !
 
 Just go to https://zencrepes.io and log-in. It's all client size, so not a chance we'll see your data.
+
+
+## Quick Guide
+
+### Wizard 
+
+After logging-in for the first time, you will be presented with a short configuration wizard, providing some explanations about ZenCrepes and allowing you to select repositories you'd like to be using. 
+
+<p align="center">
+  <img alt="Issues View" title="Issues view" src="./docs/zencrepes-wizard.png" width="640" />
+</p>
+
+ZenCrepes can automatically fetch the repositories you're directly affiliated with, but if you're curious, you can also add your favorite organizations or favorite open-source projects.
+
+The next screen will offer to load the corresponding issues, and that's it, you should be good to go.
+
+## Velocity
+
+To Be completed
+
+### Issues
+
+The objective of the Issues view is to allow filtering down issues using faceted search. The corresponding query mechanism is currently very limited but will likely be expanded in the future.
+
+<p align="center">
+  <img alt="Issues View" title="Issues view" src="./docs/zencrepes-issues.png" width="640" />
+</p>
+
+Notice the switch `Issues Count` vs `Story Points` at the top of the screen. Story Points is the default, but the system will automatically fall back to Issues Count if no points were found.
+
+The system also allows the saving of queries, which can then be easily re-opened at a later time.
+
+
+### Sprints
+
+### Labels
+
+### Milestones
+
+### Settings
+
+
+
+
 
 ## Run it yourself
 
