@@ -1,7 +1,7 @@
 {
   "issues": true,
-  "sprints": false,
-  "milestones": false,
+  "sprints": true,
+  "milestones": true,
   "labels": true,
-  "settings": false
+  "settings": true
 }
