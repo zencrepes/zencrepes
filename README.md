@@ -1,6 +1,21 @@
 [![CircleCI](https://circleci.com/gh/Fgerthoffert/zencrepes/tree/master.svg?style=svg)](https://circleci.com/gh/Fgerthoffert/zencrepes/tree/master)
 
-# ZenCrepes
+<h1 align="center"> Zencrepes </h1><br>
+
+<p align="center">
+Agile analytics and management across GitHub organizations & repositories made easy!
+</p>
+
+<p align="center">
+  <a href="https://zencrepes.io" target="_blank"><img alt="Issues View" title="Issues view" src="./docs/zencrepes-issues.png" width="640" /></a>
+</p>
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [How it Works](#how-it-works)
+
+## Introduction
 
 ZenCrepes has been created by a PM (excuse the poor programming) to facilitate project management for teams operating solely over GitHub issues across multiple repositories and organizations. 
 
