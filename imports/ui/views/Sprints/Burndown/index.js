@@ -18,17 +18,28 @@ class CurrentCompletion extends Component {
         }
     }
 
+    getDefaultRemainingTxtShrt() {
+        const { defaultPoints } = this.props;
+        if (defaultPoints) {
+            return '';
+        } else {
+            return ' (Tkts)';
+        }
+    }
+
     render() {
+        const { defaultPoints } = this.props;
         const dataset = this.buildDataset();
         return (
             <CustomCard
-                headerTitle="Burndown Chart"
+                headerTitle={"Burndown Chart" + this.getDefaultRemainingTxtShrt()}
                 headerFactTitle=""
                 headerFactValue={""}
             >
                 <React.Fragment>
                     <CombinationChart
                         dataset={dataset}
+                        defaultPoints={defaultPoints}
                     />
                 </React.Fragment>
             </CustomCard>
@@ -38,6 +49,7 @@ class CurrentCompletion extends Component {
 
 CurrentCompletion.propTypes = {
     burndown: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
 };
 
 export default CurrentCompletion;

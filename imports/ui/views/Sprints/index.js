@@ -69,7 +69,7 @@ class Sprints extends Component {
     }
 
     render() {
-        const { issues, velocity, burndown, assignees, sprints } = this.props;
+        const { issues, velocity, burndown, assignees, sprints, defaultPoints } = this.props;
         return (
             <General>
                 <IssuesFetch />
@@ -125,12 +125,13 @@ class Sprints extends Component {
                             <Grid item xs={12} sm={6} md={6}>
                                 <Burndown
                                     burndown={burndown}
+                                    defaultPoints={defaultPoints}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
                                 <VelocityWeeks
                                     velocity={velocity}
-                                    defaultPoints={true}
+                                    defaultPoints={defaultPoints}
                                 />
                             </Grid>
                         </Grid>
@@ -175,6 +176,7 @@ Sprints.propTypes = {
     sprints: PropTypes.array.isRequired,
     velocity: PropTypes.object.isRequired,
     burndown: PropTypes.object.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
 
     initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
@@ -187,6 +189,7 @@ const mapState = state => ({
     velocity: state.sprintsView.velocity,
     burndown: state.sprintsView.burndown,
     sprints: state.sprintsView.sprints,
+    defaultPoints: state.sprintsView.defaultPoints,
 });
 
 const mapDispatch = dispatch => ({

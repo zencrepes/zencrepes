@@ -15,7 +15,7 @@ class CombinationChart extends Component {
     };
 
     render() {
-        const { dataset } = this.props;
+        const { dataset, defaultPoints } = this.props;
         let updatedOptions = {
             chart: {
                 height: 300,
@@ -53,11 +53,23 @@ class CombinationChart extends Component {
             series: [{
                 type: 'column',
                 name: 'Daily completion',
-                data: dataset.map(day => day.points.closed)
+                data: dataset.map((day) => {
+                    if (defaultPoints) {
+                        return day.points.closed;
+                    } else {
+                        return day.count.closed;
+                    }
+                })
             }, {
                 type: 'spline',
                 name: 'Burndown',
-                data: dataset.map(day => day.points.remaining),
+                data: dataset.map((day) => {
+                    if (defaultPoints) {
+                        return day.points.remaining;
+                    } else {
+                        return day.count.remaining;
+                    }
+                }),
                 marker: {
                     lineWidth: 2,
                     lineColor: Highcharts.getOptions().colors[4],
@@ -83,6 +95,7 @@ CombinationChart.propTypes = {
     completed: PropTypes.number,
     max: PropTypes.number,
     dataset: PropTypes.array,
+    defaultPoints: PropTypes.bool.isRequired,
 };
 
 export default CombinationChart;

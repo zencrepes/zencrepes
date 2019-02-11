@@ -34,6 +34,8 @@ export default {
         selectedSprintDescription: null,
         selectedSprintDueDate: null,
 
+        defaultPoints: true,                // Default display to points, otherwise issues count
+
         assignees: [],
         availableAssignees: [],
         filteredAvailableAssignees: [],
@@ -74,6 +76,8 @@ export default {
         setSelectedSprintDescription(state, payload) {return { ...state, selectedSprintDescription: payload };},
         setSelectedSprintDueDate(state, payload) {return { ...state, selectedSprintDueDate: payload };},
 
+        setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
+
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
         setAvailableAssignees(state, payload) {return { ...state, availableAssignees: JSON.parse(JSON.stringify(payload))};},
@@ -108,6 +112,11 @@ export default {
     effects: {
         async updateQuery(query, rootState) {
             this.setQuery(query);
+
+            // Check if the query doesn't return any issues with points, set default back to issues count.
+            const pointsQuery = {...query, points: {$gt: 0}};
+            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);} else {this.setDefaultPoints(true);}
+
             // Generate available sprints based on query, removing milestone title
             let sprintsQuery = JSON.parse(JSON.stringify(query)); //TODO - Replace this with something better to copy object ?
             if (sprintsQuery['title'] !== undefined) {
