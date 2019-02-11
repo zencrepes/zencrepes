@@ -64,12 +64,13 @@ Refresh.propTypes = {
 };
 
 const mapState = state => ({
-    loading: state.issuesFetch.loading,
+    loading: state.loading.loading,
 });
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.issuesFetch.setLoadFlag,
-    setLoading: dispatch.issuesFetch.setLoading,
+
+    setLoading: dispatch.loading.setLoading,
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));

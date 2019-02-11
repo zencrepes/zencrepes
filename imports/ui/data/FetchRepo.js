@@ -14,7 +14,6 @@ Load data about GitHub Orgs
 class FetchRepo extends Component {
     constructor (props) {
         super(props);
-        this.repositories = [];
     }
 
     componentDidUpdate() {
@@ -26,12 +25,24 @@ class FetchRepo extends Component {
     }
 
     load = async () => {
-        const { client, updateChip, setLoading, setLoadError, setLoadSuccess, orgName, repoName, setRepoData, log } = this.props;
+        const {
+            client,
+            updateChip,
+            setLoading,
+            setLoadingTitle,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
+            setLoadingMsg,
+            orgName,
+            repoName,
+            log,
+            onSuccess,
+        } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
-        setLoadError(false);
-        setLoadSuccess(false);
         log.info('Getting data about Organization: ' + orgName + ' - Repository: ' + repoName);
+        setLoadingTitle('Fetching data... ');
+        setLoadingMsg('Pulling data about repository: ' + repoName + ' from organization: ' + orgName);
 
         let data = await client.query({
             query: GET_GITHUB_SINGLEREPO,
@@ -44,7 +55,8 @@ class FetchRepo extends Component {
 
         updateChip(data.data.rateLimit);
         if (data.data.repository === null) {
-            setLoadError(true);
+            setLoadingSuccessMsg('Organization or repository not found');
+            setLoadingSuccess(false);
         } else {
             let repoObj = JSON.parse(JSON.stringify(data.data.repository)); //TODO - Replace this with something better to copy object ?
             repoObj['org'] = {
@@ -54,18 +66,18 @@ class FetchRepo extends Component {
                 url: data.data.repository.owner.url,
             };
             repoObj['active'] = true;
-            setRepoData(repoObj);
             await cfgSources.upsert({
                 id: repoObj.id
             }, {
                 $set: repoObj
             });
-            setLoadSuccess(true);
+            setLoadingSuccess(true);
+            setLoadingSuccessMsg('Repository loaded');
         }
         setLoading(false);
-
         // Remove archived repositories, we don't want to take care of those since no actions are allowed
         cfgSources.remove({'isArchived':true});
+        onSuccess();
     };
 
     render() {
@@ -74,24 +86,34 @@ class FetchRepo extends Component {
 }
 
 FetchRepo.propTypes = {
-    loading: PropTypes.bool,
-    loadFlag: PropTypes.bool,
+    loadFlag: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+
     orgName: PropTypes.string,
     repoName: PropTypes.string,
+
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
 
-    setLoadFlag: PropTypes.func,
-    setLoading: PropTypes.func,
-    setLoadError: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
-    updateChip: PropTypes.func,
-    setRepoData: PropTypes.func,
+    setLoadFlag: PropTypes.func.isRequired,
+
+    setLoading: PropTypes.func.isRequired,
+    setLoadingTitle: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.githubFetchRepo.loadFlag,
-    loading: state.githubFetchRepo.loading,
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 
     orgName: state.githubFetchRepo.orgName,
     repoName: state.githubFetchRepo.repoName,
@@ -101,11 +123,15 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchRepo.setLoadFlag,
-    setLoading: dispatch.githubFetchRepo.setLoading,
-    setLoadError: dispatch.githubFetchRepo.setLoadError,
-    setLoadSuccess: dispatch.githubFetchRepo.setLoadSuccess,
 
-    setRepoData: dispatch.githubFetchRepo.setRepoData,
+    setLoading: dispatch.loading.setLoading,
+    setLoadingTitle: dispatch.loading.setLoadingTitle,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
 
     updateChip: dispatch.chip.updateChip,
 });

@@ -3,7 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
 
-import { Settings, GithubCircle, Logout } from 'mdi-material-ui'
+import { GithubCircle, Logout } from 'mdi-material-ui'
 
 const style = theme => ({
     root: {
@@ -108,23 +107,6 @@ class UserMenu extends Component {
                             </ListItemIcon>
                             <ListItemText primary={connectedUser.name} />
                         </ListItem>
-                        <NavLink
-                            to="/settings"
-                            className={classes.item}
-                            activeClassName="active"
-                            key={"settings"}
-                        >
-                            <ListItem button className={classes.itemLink}>
-                                <ListItemIcon className={classes.itemIcon}>
-                                    <Settings />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={"Settings"}
-                                    className={classes.itemText}
-                                    disableTypography={true}
-                                />
-                            </ListItem>
-                        </NavLink>
                         <ListItem onClick={this.logout} button>
                             <ListItemIcon>
                                 <Logout />

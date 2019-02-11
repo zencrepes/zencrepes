@@ -6,10 +6,12 @@ import { connect } from "react-redux";
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import {withRouter} from "react-router-dom";
 
 const styles = {
     selectedField: {
         color: '#fff',
+        width: '300px',
     }
 };
 
@@ -18,14 +20,32 @@ class SelectSprint extends Component {
         super(props);
     }
 
+    componentDidUpdate(prevProps) {
+        const { selectedSprintTitle, query } = this.props;
+        if (prevProps.selectedSprintTitle === null && selectedSprintTitle !== null & query !== {}) {
+            //View was initialized, we simply re-push the sprint title to trigger page load
+            this.updateSprintTitle(selectedSprintTitle);
+        }
+    }
+
+    updateSprintTitle = (sprintTitle) => {
+        const { query } = this.props;
+        // Update Query to new sprint title
+        const updatedQuery = {...query, title: {'$in':[sprintTitle]}};
+        this.props.history.push({
+            pathname: '/sprints',
+            search: '?q=' + JSON.stringify(updatedQuery),
+            state: { detail: updatedQuery }
+        });
+    };
+
     handleChange = (event) => {
-        const { updateSelectedSprint } = this.props;
-        updateSelectedSprint(event.target.value);
+        this.updateSprintTitle(event.target.value);
     };
 
     render() {
         const { classes, selectedSprintTitle, sprints } = this.props;
-        if (selectedSprintTitle === '' || selectedSprintTitle === null || selectedSprintTitle === undefined) {
+        if (selectedSprintTitle === null) {
             return null
         } else {
             return (
@@ -53,22 +73,15 @@ SelectSprint.propTypes = {
     classes: PropTypes.object.isRequired,
     selectedSprintTitle: PropTypes.string,
     sprints: PropTypes.array.isRequired,
-    loadSuccess: PropTypes.bool.isRequired,
-    updateSelectedSprint: PropTypes.func.isRequired,
-    updateAvailableSprints: PropTypes.func.isRequired,
-    updateView: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
+    query: PropTypes.object,
 };
 
 const mapState = state => ({
     selectedSprintTitle: state.sprintsView.selectedSprintTitle,
     sprints: state.sprintsView.sprints,
-    loadSuccess: state.issuesFetch.loadSuccess,
+    query: state.sprintsView.query,
 });
 
-const mapDispatch = dispatch => ({
-    updateSelectedSprint: dispatch.sprintsView.updateSelectedSprint,
-    updateAvailableSprints: dispatch.sprintsView.updateAvailableSprints,
-    updateView: dispatch.sprintsView.updateView,
-});
+export default withRouter(connect(mapState, null)(withStyles(styles)(SelectSprint)));
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(SelectSprint));

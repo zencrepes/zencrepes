@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
-import Verification from './Verification.js';
-import LoadSnackbar from './LoadSnackbar/index.js';
-import Notifications from './Notifications.js';
+import Staging from './Stage/Staging.js';
 
 class IssuesEdit extends Component {
     constructor(props) {
@@ -11,17 +9,9 @@ class IssuesEdit extends Component {
 
     render() {
         return (
-            <div>
-                <Verification />
-                <LoadSnackbar />
-                <Notifications />
-            </div>
+            <Staging />
         );
     }
 }
-
-IssuesEdit.propTypes = {
-
-};
 
 export default IssuesEdit;

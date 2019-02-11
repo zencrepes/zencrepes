@@ -21,15 +21,19 @@ class LoadModal extends Component {
     };
 
     render() {
-        const { loadingMsg } = this.props;
+        const { loadingTitle } = this.props;
 
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={true} fullWidth={true} maxWidth="sm">
-                <DialogTitle id="simple-dialog-title">Updating ...</DialogTitle>
+                <DialogTitle id="simple-dialog-title">
+                    {loadingTitle === null ? (
+                        <React.Fragment>Loading ...</React.Fragment>
+                    ) : (
+                        <React.Fragment>{loadingTitle}</React.Fragment>
+                    )}
+                </DialogTitle>
                 <DialogContent>
-                    <LoadMessage
-                        loadingMsg={loadingMsg}
-                    />
+                    <LoadMessage />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.cancel} color="primary" autoFocus>
@@ -42,7 +46,7 @@ class LoadModal extends Component {
 }
 
 LoadModal.propTypes = {
-    loadingMsg: PropTypes.string,
+    loadingTitle: PropTypes.string,
     cancelLoading: PropTypes.func.isRequired,
 };
 

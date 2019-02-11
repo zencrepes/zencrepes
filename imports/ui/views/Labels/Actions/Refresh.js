@@ -33,30 +33,48 @@ class Refresh extends Component {
     }
 
     refreshAllRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, reposSetOnSuccess, labelsUpdateView  } = this.props;
-        reposSetOnSuccess(labelsUpdateView);
+        const {
+            reposSetLoadFlag,
+            reposSetLoadRepos,
+            setOnSuccess,
+            labelsUpdateView
+        } = this.props;
+        setOnSuccess(labelsUpdateView);
         reposSetLoadRepos([]);
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
     refreshSelectedRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, labels, reposSetOnSuccess, labelsUpdateView } = this.props;
+        const {
+            reposSetLoadFlag,
+            reposSetLoadRepos,
+            labels,
+            setOnSuccess,
+            labelsUpdateView
+        } = this.props;
 
         const allRepos = _.uniqBy(labels.map(label => label.repo), 'id');
         //Get list of repositories for current query
-        reposSetOnSuccess(labelsUpdateView);
+        setOnSuccess(labelsUpdateView);
         reposSetLoadRepos(allRepos.map(r => r.id));
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
 
     refreshLabels = () => {
-        const { labelsSetStageFlag, labelsSetVerifFlag, labelsSetLabels, labelsSetAction, labels, labelsSetOnSuccess, labelsUpdateView, labelsSetVerifying } = this.props;
-        labelsSetOnSuccess(labelsUpdateView);
+        const {
+            labelsSetStageFlag,
+            labelsSetVerifFlag,
+            labelsSetLabels,
+            labelsSetAction,
+            labels,
+            setOnSuccess,
+            labelsUpdateView
+        } = this.props;
+        setOnSuccess(labelsUpdateView);
         labelsSetLabels(labels);
         labelsSetAction('refresh');
-        labelsSetVerifying(true);
         labelsSetStageFlag(false);
         labelsSetVerifFlag(true);
         this.setState({ anchorEl: null });
@@ -114,15 +132,14 @@ Refresh.propTypes = {
     classes: PropTypes.object.isRequired,
     reposSetLoadFlag: PropTypes.func.isRequired,
     reposSetLoadRepos: PropTypes.func.isRequired,
-    reposSetOnSuccess: PropTypes.func.isRequired,
+
+    setOnSuccess: PropTypes.func.isRequired,
 
     labels: PropTypes.array.isRequired,
     labelsSetStageFlag: PropTypes.func.isRequired,
     labelsSetVerifFlag: PropTypes.func.isRequired,
-    labelsSetVerifying: PropTypes.func.isRequired,
     labelsSetLabels: PropTypes.func.isRequired,
     labelsSetAction: PropTypes.func.isRequired,
-    labelsSetOnSuccess: PropTypes.func.isRequired,
     labelsUpdateView: PropTypes.func.isRequired,
 };
 
@@ -133,15 +150,15 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     reposSetLoadFlag: dispatch.labelsFetch.setLoadFlag,
     reposSetLoadRepos: dispatch.labelsFetch.setLoadRepos,
-    reposSetOnSuccess: dispatch.labelsFetch.setOnSuccess,
 
     labelsSetStageFlag: dispatch.labelsEdit.setStageFlag,
     labelsSetVerifFlag: dispatch.labelsEdit.setVerifFlag,
-    labelsSetVerifying: dispatch.labelsEdit.setVerifying,
     labelsSetLabels: dispatch.labelsEdit.setLabels,
     labelsSetAction: dispatch.labelsEdit.setAction,
-    labelsSetOnSuccess: dispatch.labelsEdit.setOnSuccess,
     labelsUpdateView: dispatch.labelsView.updateView,
+
+    setOnSuccess: dispatch.loading.setOnSuccess,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));

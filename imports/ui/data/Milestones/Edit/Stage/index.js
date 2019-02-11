@@ -13,6 +13,7 @@ import StageTable from './StageTable/index.js';
 
 import ApplyButton from './ApplyButton.js';
 import CancelButton from './CancelButton.js';
+import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = {
     root: {
@@ -25,27 +26,46 @@ class Stage extends Component {
     }
 
     render() {
-        const { classes, stageFlag, milestones, action } = this.props;
-
-        return (
-            <div className={classes.root}>
-                <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
-                    <DialogTitle id="simple-dialog-title">Review changes before pushing</DialogTitle>
-                    <DialogContent>
-                        <span>The following nodes will be modified in GitHub. Removing from this table will not push the change to GitHub for the removed node.</span><br />
-                        <span>The system will verify each nodes in GitHub, applying changes will only be possible if local data is identical than GitHub&apos;s (based on last update date)</span>
-                        <StageTable
-                            milestones={milestones}
-                            action={action}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <CancelButton />
-                        <ApplyButton />
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
+        const {
+            classes,
+            stageFlag,
+            milestones,
+            action,
+            newTitle,
+            newState,
+            newDueOn,
+            newDescription,
+        } = this.props;
+        if (stageFlag === true) {
+            return (
+                <div className={classes.root}>
+                    <Dialog fullScreen aria-labelledby="simple-dialog-title" open={stageFlag}>
+                        <DialogTitle id="simple-dialog-title">Review changes</DialogTitle>
+                        <DialogContent>
+                            <Typography variant="body1" gutterBottom>
+                                The following changes have been staged for modification. Changes are only submitting to GitHub once you click on Apply, you cannot go back after clicking.
+                            </Typography>
+                            <StageTable
+                                milestones={milestones}
+                                action={action}
+                                newTitle={newTitle}
+                                newState={newState}
+                                newDueOn={newDueOn}
+                                newDescription={newDescription}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <CancelButton />
+                            {milestones.length > 0 &&
+                                <ApplyButton />
+                            }
+                        </DialogActions>
+                    </Dialog>
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 }
 
@@ -57,12 +77,22 @@ Stage.propTypes = {
 
     setStageFlag: PropTypes.func.isRequired,
     setMilestones: PropTypes.func.isRequired,
+
+    newTitle: PropTypes.string.isRequired,
+    newState: PropTypes.string.isRequired,
+    newDueOn: PropTypes.string,
+    newDescription: PropTypes.string,
 };
 
 const mapState = state => ({
     stageFlag: state.milestonesEdit.stageFlag,
     milestones: state.milestonesEdit.milestones,
     action: state.milestonesEdit.action,
+
+    newTitle: state.milestonesEdit.newTitle,
+    newState: state.milestonesEdit.newState,
+    newDueOn: state.milestonesEdit.newDueOn,
+    newDescription: state.milestonesEdit.newDescription,
 });
 
 const mapDispatch = dispatch => ({

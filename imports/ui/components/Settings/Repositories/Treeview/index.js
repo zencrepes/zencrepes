@@ -1,23 +1,19 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
-import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-
-import { cfgSources } from "../../../../data/Minimongo.js";
-
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from '@material-ui/core/Typography';
 
-import Stats from './Stats.js';
-import Tree from './Tree.js';
+import CheckboxTree from 'react-checkbox-tree';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
 const styles = {
     root: {
         margin: '10px',
+        width: '100%',
     },
     card: {
         height: '380px',
@@ -25,6 +21,9 @@ const styles = {
     },
     title: {
         fontSize: 14,
+    },
+    details: {
+        fontSize: 12,
     },
     cardContent: {
         paddingBottom: '0px',
@@ -36,61 +35,19 @@ class Treeview extends Component {
         super(props);
 
         this.state = {
-            checked: [],
             expanded: [],
-            nodes: [],
         };
+
     }
 
-    componentDidMount() {
-        const { selected } = this.props;
-        this.setState({
-            nodes: this.getData(),
-            checked: cfgSources.find(selected).fetch().map(repo => repo.id),
-        });
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const { selected } = this.props;
-        const updatedNodes = this.getData();
-        if (!_.isEqual(updatedNodes, prevState.nodes)) {
-            this.setState({
-                nodes: this.getData(),
-                checked: cfgSources.find(selected).fetch().map(repo => repo.id),
-            });
-        }
-    }
-
-    checkNode = async (checked) => {
-        const { all, enable, disable } = this.props;
-        await cfgSources.update(all, { $set: disable }, {multi: true});
-        checked.forEach(async (checkedId) => {
-            await cfgSources.update({id: checkedId}, { $set: enable }, {multi: false});
-        });
-        this.setState({ checked });
+    checkNode = (checked) => {
+        const { updateCheckedRepos } = this.props;
+        updateCheckedRepos(checked);
     };
 
-    getData(){
-        const { all } = this.props;
-        let allRepos = cfgSources.find(all).fetch();
-        let uniqueOrgs = _.toArray(_.groupBy(allRepos, 'org.login'));
-        let data = uniqueOrgs.map((org) => {
-            return {
-                label: org[0].org.name,
-                value:org[0].org.login,
-                children: org.map((repo) => {
-                    return {
-                        label: repo.name,
-                        value: repo.id
-                    };
-                })
-            };
-        });
-        return data;
-    }
-
     render() {
-        const { classes, all, selected, enable, disable } = this.props;
+        const { classes, treeNodes, selectedRepos} = this.props;
+
         return (
             <div className={classes.root}>
                 <Card className={classes.card}>
@@ -98,8 +55,18 @@ class Treeview extends Component {
                         <Typography className={classes.title} color="textSecondary">
                             Available Organizations and Repositories
                         </Typography>
-                        <Tree all={all} selected={selected} enable={enable} disable={disable} />
-                        <Stats/>
+                        {treeNodes.length === 0 &&
+                            <Typography className={classes.title} color="textPrimary">
+                                Please load data first
+                            </Typography>
+                        }
+                        <CheckboxTree
+                            nodes={treeNodes}
+                            checked={selectedRepos.map(repo => repo.id)}
+                            expanded={this.state.expanded}
+                            onCheck={this.checkNode}
+                            onExpand={expanded => this.setState({ expanded })}
+                        />
                     </CardContent>
                 </Card>
             </div>
@@ -109,16 +76,22 @@ class Treeview extends Component {
 
 Treeview.propTypes = {
     classes: PropTypes.object,
-    all: PropTypes.object,
-    enable: PropTypes.object,
-    disable: PropTypes.object,
-    selected: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    selectedRepos: PropTypes.array.isRequired,
+    availableRepos: PropTypes.array.isRequired,
+    treeNodes: PropTypes.array.isRequired,
+    updateCheckedRepos: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-    loadingOrgs: state.githubFetchOrgs.loading,
-    loadingOrgRepos: state.githubFetchOrgRepos.loading,
-    loadingRepo: state.githubFetchRepo.loading,
+    loading: state.loading.loading,
+    selectedRepos: state.settingsView.selectedRepos,
+    availableRepos: state.settingsView.availableRepos,
+    treeNodes: state.settingsView.treeNodes,
 });
 
-export default connect(mapState, null)(withStyles(styles)(Treeview));
+const mapDispatch = dispatch => ({
+    updateCheckedRepos: dispatch.settingsView.updateCheckedRepos,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(Treeview));

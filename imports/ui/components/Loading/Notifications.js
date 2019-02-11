@@ -57,7 +57,7 @@ Notifications.propTypes = {
     classes: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     loadingSuccess: PropTypes.bool.isRequired,
-    loadingSuccessMsg: PropTypes.string.isRequired,
+    loadingSuccessMsg: PropTypes.string,
 };
 
 const mapState = state => ({

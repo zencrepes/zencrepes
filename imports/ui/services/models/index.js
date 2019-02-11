@@ -46,5 +46,8 @@ export { default as burndownView } from './burndown/View.js';
 export { default as usersFetch } from './users/Fetch.js';
 export { default as usersView } from './users/View.js';
 
-//Wizard
+// Wizard
 export { default as wizardView } from './wizard/View.js';
+
+// Settings
+export { default as settingsView } from './settings/View.js';

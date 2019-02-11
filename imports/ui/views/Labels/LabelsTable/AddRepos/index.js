@@ -29,15 +29,12 @@ class AddRepos extends Component {
             setVerifFlag,
             setAction,
             setOnSuccess,
-            setVerifying,
             setStageFlag,
             updateView
         } = this.props;
-
         setOpenAddRepos(false);
         setAction('create');
         setOnSuccess(updateView);
-        setVerifying(true);
         setStageFlag(true);
         setVerifFlag(true);
     };
@@ -92,7 +89,6 @@ AddRepos.propTypes = {
     setVerifFlag: PropTypes.func.isRequired,
     setAction: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
-    setVerifying: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
 };
@@ -111,7 +107,6 @@ const mapDispatch = dispatch => ({
 
     setVerifFlag: dispatch.labelsEdit.setVerifFlag,
     setAction: dispatch.labelsEdit.setAction,
-    setVerifying: dispatch.labelsEdit.setVerifying,
     setStageFlag: dispatch.labelsEdit.setStageFlag,
     updateView: dispatch.labelsView.updateView,
 

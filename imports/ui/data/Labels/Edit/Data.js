@@ -46,27 +46,22 @@ class Data extends Component {
             setChipRemaining,
             labels,
             setLoading,
-            setLoadError,
             setLoadingSuccess,
             setLoadingSuccessMsg,
             setLoadingModal,
             setLoadingMsg,
             setLoadingMsgAlt,
-            setLoadedCount,
             action,
             newName,
             newDescription,
             newColor,
             log,
             onSuccess,
-            incLoadedCount,
         } = this.props;
         setLoadingModal(true);
         setLoadingMsgAlt('');
         setLoading(true);       // Set loading to true to indicate content is actually loading.
-        setLoadError(false);
         setLoadingSuccess(false);
-        setLoadedCount(0);
 
         log.info(labels);
         for (let label of labels) {
@@ -144,7 +139,6 @@ class Data extends Component {
                     current_name: label.name,
                     name: newName,
                     color: newColor,
-                    description: newDescription,
                 };
                 log.info(updatePayload);
                 if (label.name === newName && label.color === newColor && label.description === newDescription) {
@@ -154,6 +148,7 @@ class Data extends Component {
                         if (newDescription !== null && newDescription.length > 0) {
                             updatePayload = {
                                 ...updatePayload,
+                                description: newDescription,
                                 headers: {
                                     accept: 'application/vnd.github.symmetra-preview+json'
                                 }
@@ -220,7 +215,6 @@ class Data extends Component {
                     cfgLabels.remove({id: label.id});
                 }
             }
-            incLoadedCount(1);
         }
         setLoadingSuccessMsg('Update Completed');
         setLoadingSuccess(true);
@@ -240,10 +234,6 @@ Data.propTypes = {
     log: PropTypes.object.isRequired,
     labels: PropTypes.array.isRequired,
 
-    selectedRepos: PropTypes.array.isRequired,
-    selectedLabels: PropTypes.array.isRequired,
-    selectedName: PropTypes.string,
-
     newName: PropTypes.string,
     newDescription: PropTypes.string,
     newColor: PropTypes.string,
@@ -253,26 +243,18 @@ Data.propTypes = {
     setLoadingMsg: PropTypes.func.isRequired,
     setLoadingMsgAlt: PropTypes.func.isRequired,
     setLoadingModal: PropTypes.func.isRequired,
-
-    setLoadError: PropTypes.func.isRequired,
     setLoadingSuccess: PropTypes.func.isRequired,
     setLoadingSuccessMsg: PropTypes.func.isRequired,
-    setLoadedCount: PropTypes.func.isRequired,
-    incLoadedCount: PropTypes.func.isRequired,
+
     updateChip: PropTypes.func.isRequired,
     setChipRemaining: PropTypes.func.isRequired,
     onSuccess: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,
-
 };
 
 const mapState = state => ({
     loadFlag: state.labelsEdit.loadFlag,
     action: state.labelsEdit.action,
-
-    selectedRepos: state.labelsEdit.selectedRepos,
-    selectedLabels: state.labelsEdit.selectedLabels,
-    selectedName: state.labelsEdit.selectedName,
 
     newName: state.labelsEdit.newName,
     newDescription: state.labelsEdit.newDescription,
@@ -287,10 +269,6 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.labelsEdit.setLoadFlag,
-    setLoadError: dispatch.labelsEdit.setLoadError,
-
-    setLoadedCount: dispatch.labelsEdit.setLoadedCount,
-    incLoadedCount: dispatch.labelsEdit.incLoadedCount,
 
     setLoading: dispatch.loading.setLoading,
     setLoadingSuccess: dispatch.loading.setLoadingSuccess,

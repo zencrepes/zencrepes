@@ -1,151 +1,153 @@
-import {cfgMilestones} from "../../../data/Minimongo";
+import _ from 'lodash';
+import {cfgMilestones, cfgSources} from "../../../data/Minimongo";
+import uuidv1 from "uuid/v1";
 
 export default {
     state: {
-        loading: false,         // Boolean to indicate issues are currently loading
         loadFlag: false,        // Boolean to trigger issue load
-        loadError: false,       // Is there an error during load
-        loadSuccess: false,     // Was data successfully loaded
         stageFlag: false,       // Boolean to trigger the staging of the action. Gives an opportunity for review before actually loading
 
+        milestones: [],             // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
+        verifiedMilestones: [],     // Array of milestones that were updated in GitHub
         verifFlag: false,       // Flag to trigger verification against GitHub
-        verifying: false,       // Boolean to indicate verification is currently taking place
-        verifyingMsg: null,     // Message to be displayed while issues are being verified
 
-        action: null,           // Action to be performed, create or delete
+        action: null,               // Action to be performed
 
-        milestones: [],         // Array of issues used for milestones creation/closing. - Format for due date: Format: YYYY-MM-DDTHH:MM:SSZ
-        verifiedMilestones: [], // Array of milestones that were updated in GitHub
-        allMilestones: [],      // Array of all milestones with the same title
-        query: {},              // Query used to filter down the milestone
+        openAddRepos: false,        // Boolean to indicate if the add repo window should be displayed
+        addReposAvailable: [],      // Array of available repositories
+        addReposSelected: [],       // Array of selected repositories
 
-        onSuccess: () => {},        // Function to be executed at successful completion
-        onCancel: () => {},         // Function to be executed if user cancel stage
-        onStagingSuccess: () => {}, // Function to be executed if successful stage
-        onStagingCancel: () => {},  // Function to be executed if staging is cancelled
+        selectedTitle: '',           // Milestone title currently selected
 
-        loadedCount: 0,
+        allRepos: [],
 
-        editMilestoneTitle: null,
-        editMilestoneDescription: null,
-        editMilestoneDueDate: null,
-
-        selectedMilestoneTitle: null,
-        selectedMilestoneDescription: null,
-        selectedMilestoneDueDate: null,
-
+        newTitle: '',               // Title to update to
+        newState: 'OPEN',           // State to update to
+        newDueOn: '',               // DueOn to update to
+        newDescription: '',         // Description to update to
+        openEditDialog: false,      // Open or close edit dialog
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
-        setLoading(state, payload) {return { ...state, loading: payload };},
-        setLoadError(state, payload) {return { ...state, loadError: payload };},
-        setLoadSuccess(state, payload) {return { ...state, loadSuccess: payload };},
-
         setStageFlag(state, payload) {return { ...state, stageFlag: payload };},
 
-        setVerifFlag(state, payload) {return { ...state, verifFlag: payload };},
-        setVerifying(state, payload) {return { ...state, verifying: payload };},
-        setVerifyingMsg(state, payload) {return { ...state, verifyingMsg: payload };},
+        setMilestones(state, payload) {return { ...state, milestones: payload };},
         setVerifiedMilestones(state, payload) {return { ...state, verifiedMilestones: payload };},
-
         insVerifiedMilestones(state, payload) {
             let newArray = state.verifiedMilestones.slice();
             newArray.splice(newArray.length, 0, payload);
             return { ...state, verifiedMilestones: newArray};
         },
+        setVerifFlag(state, payload) {return { ...state, verifFlag: payload };},
 
         setAction(state, payload) {return { ...state, action: payload };},
 
-        setMilestones(state, payload) {return { ...state, milestones: payload };},
-        setAllMilestones(state, payload) {return { ...state, allMilestones: payload };},
-        setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
+        setOpenAddRepos(state, payload) {return { ...state, openAddRepos: payload };},
+        setAddReposAvailable(state, payload) {return { ...state, addReposAvailable: payload };},
+        setAddReposSelected(state, payload) {return { ...state, addReposSelected: payload };},
 
-        setOnSuccess(state, payload) {return { ...state, onSuccess: payload };},
-        setOnCancel(state, payload) {return { ...state, onCancel: payload };},
-        setOnStagingSuccess(state, payload) {return { ...state, onStagingSuccess: payload };},
-        setOnStagingCancel(state, payload) {return { ...state, onStagingCancel: payload };},
+        setSelectedTitle(state, payload) {return { ...state, selectedTitle: payload };},
 
-        setLoadedCount(state, payload) {return { ...state, loadedCount: payload };},
-        incrementLoadedCount(state, payload) {return { ...state, loadedCount: state.loadedCount + payload };},
+        setAllRepos(state, payload) {return { ...state, allRepos: payload };},
 
-        setEditMilestoneTitle(state, payload) {return { ...state, editMilestoneTitle: payload };},
-        setEditMilestoneDescription(state, payload) {return { ...state, editMilestoneDescription: payload };},
-        setEditMilestoneDueDate(state, payload) {return { ...state, editMilestoneDueDate: payload };},
-
-        setSelectedMilestoneTitle(state, payload) {return { ...state, selectedMilestoneTitle: payload };},
-        setSelectedMilestoneDescription(state, payload) {return { ...state, selectedMilestoneDescription: payload };},
-        setSelectedMilestoneDueDate(state, payload) {return { ...state, selectedMilestoneDueDate: payload };},
+        setNewTitle(state, payload) {return { ...state, newTitle: payload };},
+        setNewState(state, payload) {return { ...state, newState: payload };},
+        setNewDueOn(state, payload) {return { ...state, newDueOn: payload };},
+        setNewDescription(state, payload) {return { ...state, newDescription: payload };},
+        setOpenEditDialog(state, payload) {return { ...state, openEditDialog: payload };},
     },
+
     effects: {
-        async updateQuery(query) {
-            this.setQuery(query);
+        async initConfiguration(milestoneTitle) {
+            this.setSelectedTitle(milestoneTitle);
 
-            const milestoneTitle = query.title;
-            this.setSelectedMilestoneTitle(milestoneTitle);
-            this.setEditMilestoneTitle(milestoneTitle);
+            let allRepos = cfgSources.find({}).map((repo) => {
+                return {
+                    value: repo.id,
+                    milestone: repo.org.login + "/" + repo.name
+                }
+            });
+            allRepos = _.sortBy(allRepos, 'milestone');
+            this.setAllRepos(allRepos);
 
-            //const milestones = cfgMilestones.find({'title':{'$in':[milestoneTitle]}}).fetch();
-            const milestones = cfgMilestones.find(query).fetch();
+            const selectedRepos = cfgMilestones.find({title: milestoneTitle}).map(milestone => milestone.repo).map(repo => repo.id);
+            this.updateSelectedRepos(selectedRepos);
+
+        },
+        async updateSelectedRepos(selectedRepos, rootState) {
+            this.setSelectedRepos(selectedRepos);
+            let selectedMilestones = cfgMilestones.find({title: rootState.milestonesEdit.selectedTitle, "repo.id":{"$in":selectedRepos}}).fetch();
+            this.setSelectedMilestones(selectedMilestones);
+            //{"org.name":{"$in":["Overture","Human Cancer Models Initiative - Catalog"]}}
+        },
+
+        async startEditingMilestone(milestone, rootState) {
+            const milestones = rootState.milestonesEdit.milestones;
+
+            const editMilestoneTitle = milestones[0].title;
+            this.setNewTitle(editMilestoneTitle);
+
+            const editMilestoneState = milestones[0].state;
+            this.setNewState(editMilestoneState);
+
+            let editMilestoneDueOn = null;
+            // Get the first milestone without dueOn
+            const milestones_due = milestones.filter(mls => (mls.dueOn !== '' && mls.dueOn !== null));
+            if (milestones_due.length > 0) {
+                editMilestoneDueOn = milestones_due[0].dueOn;
+            }
+            this.setNewDueOn(editMilestoneDueOn);
+
+            let editMilestoneDescription = null;
+            const milestones_description = milestones.filter(mls => (mls.description !== '' && mls.description !== null));
+            if (milestones_description.length > 0) {
+                editMilestoneDescription = milestones_description[0].description;
+            }
+            this.setNewDescription(editMilestoneDescription);
+
+            this.setAction('update');
+            this.setOpenEditDialog(true);
+        },
+
+        async resetValues() {
+            this.setNewTitle('');
+            this.setNewDueOn(null);
+            this.setNewState('OPEN');
+        },
+
+        async addRepoUpdateSelected(selectedRepos, rootState) {
+            this.setAddReposSelected(selectedRepos);
+            // Prepare milestones
+            const milestones = selectedRepos.map(mls => {
+                const repo = cfgSources.findOne({'active': true, 'id': mls});
+                return {
+                    id: uuidv1(),
+                    repo: repo,
+                    org: repo.org,
+                    number: 0,
+                    title: rootState.milestonesEdit.newTitle,
+                    dueOn: rootState.milestonesEdit.newDueOn,
+                    state: rootState.milestonesEdit.newState,
+                    description: rootState.milestonesEdit.newDescription,
+                    issues: {totalCount: 0},
+                    pullRequests: {totalCount: 0},
+                    updatedAt: null,
+                }
+            });
             this.setMilestones(milestones);
-            this.setAllMilestones(cfgMilestones.find({'title':{'$in':[milestoneTitle]}}).fetch());
-
-            // Shortcut, consider first milstone in the array as reference for description and due date
-            if (milestones[0] !== undefined) {
-                this.setSelectedMilestoneDescription(milestones[0].description);
-                this.setEditMilestoneDescription(milestones[0].description);
-            }
-            else {
-                this.setSelectedMilestoneDescription(null);
-                this.setEditMilestoneDescription(null);
-            }
-
-            if (milestones[0] !== undefined) {
-                this.setSelectedMilestoneDueDate(milestones[0].dueOn);
-                this.setEditMilestoneDueDate(milestones[0].dueOn);
-            }
-            else {
-                this.setSelectedMilestoneDueDate(null);
-                this.setEditMilestoneDueDate(null);
-            }
-
-            this.updateView();
-
         },
 
-        async initView() {
-            /*
-
-            this.setSelectedMilestoneTitle(milestoneTitle);
-            this.setEditMilestoneTitle(milestoneTitle);
-
-            const milestones = cfgMilestones.find({'title':{'$in':[milestoneTitle]}}).fetch();
-            this.setMilestones(milestones);
-
-            // Shortcut, consider first milstone in the array as reference for description and due date
-            if (milestones[0] !== undefined) {
-                this.setSelectedMilestoneDescription(milestones[0].description);
-                this.setEditMilestoneDescription(milestones[0].description);
-            }
-            else {
-                this.setSelectedMilestoneDescription(null);
-                this.setEditMilestoneDescription(null);
-            }
-
-            if (milestones[0] !== undefined) {
-                this.setSelectedMilestoneDueDate(milestones[0].dueOn);
-                this.setEditMilestoneDueDate(milestones[0].dueOn);
-            }
-            else {
-                this.setSelectedMilestoneDueDate(null);
-                this.setEditMilestoneDueDate(null);
-            }
-*/
-            this.updateView();
-        },
-        async updateView() {
-            //const selectedMilestoneTitle = rootState.milestonesEdit.selectedSprintTitle;
+        async updateAvailableRepos(milestones) {
+            const selectedMilestonesRepos = milestones.map(mls => mls.repo.id);
+            const availableRepos = cfgSources.find({'active': true, 'id':{'$nin':selectedMilestonesRepos}}).fetch();
+            this.setAddReposAvailable(availableRepos.map((repo) => {
+                return {
+                    value: repo.id,
+                    label: repo.org.login + "/" + repo.name
+                }
+            }));
 
         },
-
     }
 };
+

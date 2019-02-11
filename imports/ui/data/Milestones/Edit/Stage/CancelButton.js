@@ -10,9 +10,10 @@ class CancelButton extends Component {
     }
 
     cancel = () => {
-        const { setStageFlag, setMilestones, onCancel } = this.props;
+        const { setStageFlag, setMilestones, setLoading, onCancel } = this.props;
         setMilestones([]);
         setStageFlag(false);
+        setLoading(false);
         onCancel();
     };
 
@@ -34,15 +35,17 @@ CancelButton.propTypes = {
     onCancel: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
     setMilestones: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-    onCancel: state.milestonesEdit.onCancel,
+    onCancel: state.loading.onCancel,
 });
 
 const mapDispatch = dispatch => ({
     setStageFlag: dispatch.milestonesEdit.setStageFlag,
     setMilestones: dispatch.milestonesEdit.setMilestones,
+    setLoading: dispatch.loading.setLoading,
 });
 
 export default connect(mapState, mapDispatch)(CancelButton);

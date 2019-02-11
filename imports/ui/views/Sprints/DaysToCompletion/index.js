@@ -83,7 +83,7 @@ class DaysToCompletion extends Component {
         return (
             <CustomCard
                 headerTitle="Forecast"
-                headerFactTitle="Days to Completion"
+                headerFactTitle="Estimated completion in"
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
             >
                 <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />

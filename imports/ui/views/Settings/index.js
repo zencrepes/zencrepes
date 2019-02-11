@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-
-
 import General from '../../layouts/General/index.js';
 
 import Repositories from './Repositories/index.js';
-import StoryPoints from './StoryPoints/index.js';
-import ImportPoints from './ImportPoints/index.js';
 import PropTypes from "prop-types";
+import {connect} from "react-redux";
+
+import Actions from './Actions/index.js';
 
 /*
 function TabContainer(props) {
@@ -36,9 +33,16 @@ TabContainer.propTypes = {
 class Settings extends Component {
     constructor(props) {
         super(props);
+        /*
         this.state = {
             value: 0
         };
+        */
+    }
+
+    componentDidMount() {
+        const { initView } = this.props;
+        initView();
     }
 
     handleChange = (event, value) => {
@@ -46,9 +50,23 @@ class Settings extends Component {
     };
 
     render() {
-        const { value } = this.state;
+//        const { value } = this.state;
         return (
             <General>
+                <Actions />
+
+                <Repositories/>
+            </General>
+        );
+    }
+}
+
+Settings.propTypes = {
+    initView: PropTypes.func.isRequired,
+};
+
+/*
+Previous Tabs logic
                 <Tabs
                     value={this.state.value}
                     onChange={this.handleChange}
@@ -63,9 +81,10 @@ class Settings extends Component {
                 {value === 0 && <TabContainer><Repositories/></TabContainer>}
                 {value === 1 && <TabContainer><StoryPoints /></TabContainer>}
                 {value === 2 && <TabContainer><ImportPoints /></TabContainer>}
-            </General>
-        );
-    }
-}
+ */
 
-export default Settings;
+const mapDispatch = dispatch => ({
+    initView: dispatch.settingsView.initView,
+});
+
+export default connect(null, mapDispatch)(Settings);

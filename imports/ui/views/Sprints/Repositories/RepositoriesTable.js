@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import RepoLink from '../../../components/Common/RepoLink/index.js';
+import OrgLink from '../../../components/Common/OrgLink/index.js';
+
 import PropTypes from 'prop-types';
 import {
     DataTypeProvider,
@@ -27,7 +30,7 @@ const DeleteTypeProvider = props => (
 );
 
 const RepoLinkFormatter = ({ value }) => {
-    return <span>{value.name}</span>;
+    return <RepoLink repo={value} />;
 };
 RepoLinkFormatter.propTypes = {
     value: PropTypes.object.isRequired,
@@ -41,7 +44,7 @@ const RepoLinkTypeProvider = props => (
 );
 
 const OrgLinkFormatter = ({ value }) => {
-    return <span>{value.login}</span>;
+    return <OrgLink org={value} />;
 };
 OrgLinkFormatter.propTypes = {
     value: PropTypes.object.isRequired,

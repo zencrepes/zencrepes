@@ -26,56 +26,90 @@ class FetchOrgRepos extends Component {
         }
     }
 
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
     load = async () => {
-        const { setLoading, name, setLoadSuccess, setLoadError, setAvailableRepos, setLoadedRepos, log} = this.props;
+        const {
+            setLoading,
+            setLoadingTitle,
+            name,
+            log,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
+            onSuccess,
+        } = this.props;
 
         setLoading(true);  // Set loading to true to indicate content is actually loading.
-        setAvailableRepos(0);
-        setLoadedRepos(0);
-        setLoadSuccess(false);
-        setLoadError(false);
+        setLoadingTitle('Fetching repositories from ' + name);
+        await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
+
         this.reposCount = 0;
         log.info('Getting repositories from Organization: ' + name);
         await this.getReposPagination(null, 10);
+
+        if (this.reposCount > 0) {
+            setLoadingSuccessMsg('Found ' + this.reposCount + ' repositories');
+            setLoadingSuccess(true);
+        }
+
         setLoading(false);
+        log.info('Finished loading from Organization: ' + name);
 
         // Remove archived repositories, we don't want to take care of those since no actions are allowed
         cfgSources.remove({'isArchived':true});
-
-        if (this.reposCount === 0) {
-            setLoadError(true);
-        } else {
-            setLoadSuccess(true);
-        }
+        onSuccess();
     };
 
     getReposPagination = async (cursor, increment) => {
-        const { client, updateChip, name, setAvailableRepos, log } = this.props;
+        const {
+            client,
+            updateChip,
+            name,
+            setAvailableRepos,
+            log,
+            setLoadingIterateCurrent,
+            setLoadingIterateTotal,
+            setLoadingSuccessMsg,
+            setLoadingSuccess,
 
-        let data = await client.query({
-            query: GET_GITHUB_REPOS,
-            variables: {repo_cursor: cursor, increment: increment, org_name: name},
-            fetchPolicy: 'no-cache',
-            errorPolicy: 'ignore',
-        });
-        log.info(data);
-        updateChip(data.data.rateLimit);
-        if (data.data.organization !== null) {
-            setAvailableRepos(data.data.organization.repositories.totalCount);
-            let lastCursor = await this.loadRepositories(data);
-            let queryIncrement = calculateQueryIncrement(this.reposCount, data.data.organization.repositories.totalCount);
-            log.info(cfgSources.find({'org.id': data.data.organization.id}));
-            log.info('Current count: ' + this.reposCount);
-            log.info('Total count: ' + data.data.organization.repositories.totalCount);
-            log.info('Query increment: ' + queryIncrement);
-            if (queryIncrement > 0) {
-                await this.getReposPagination(lastCursor, queryIncrement);
+        } = this.props;
+        if (this.props.loading) {
+            let data = await client.query({
+                query: GET_GITHUB_REPOS,
+                variables: {repo_cursor: cursor, increment: increment, org_name: name},
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
+            });
+            log.info(data);
+            updateChip(data.data.rateLimit);
+            if (data.data.organization !== null) {
+                setAvailableRepos(data.data.organization.repositories.totalCount);
+                let lastCursor = await this.loadRepositories(data);
+                let queryIncrement = calculateQueryIncrement(this.reposCount, data.data.organization.repositories.totalCount);
+                log.info(cfgSources.find({'org.id': data.data.organization.id}));
+                log.info('Current count: ' + this.reposCount);
+                log.info('Total count: ' + data.data.organization.repositories.totalCount);
+                log.info('Query increment: ' + queryIncrement);
+                setLoadingIterateCurrent(this.reposCount);
+                setLoadingIterateTotal(data.data.organization.repositories.totalCount);
+                if (queryIncrement > 0) {
+                    await this.getReposPagination(lastCursor, queryIncrement);
+                }
+            } else {
+                setLoadingSuccessMsg('Organization not found');
+                setLoadingSuccess(false);
             }
         }
     };
 
     loadRepositories = async (data) => {
-        const { incrementLoadedRepos, log } = this.props;
+        const {
+            incrementLoadedRepos,
+            log,
+            setLoadingMsg,
+        } = this.props;
         let lastCursor = null;
         for (var currentRepo of data.data.organization.repositories.edges) {
             log.info('Inserting: ' + currentRepo.node.name);
@@ -101,6 +135,7 @@ class FetchOrgRepos extends Component {
         }
         this.reposCount = this.reposCount + Object.entries(data.data.organization.repositories.edges).length;
         incrementLoadedRepos(Object.entries(data.data.organization.repositories.edges).length);
+        setLoadingMsg('Loaded ' + this.reposCount + ' repositories');
         return lastCursor;
     };
 
@@ -112,24 +147,32 @@ class FetchOrgRepos extends Component {
 FetchOrgRepos.propTypes = {
     loadFlag: PropTypes.bool,
     loading: PropTypes.bool,
+    onSuccess: PropTypes.func.isRequired,
     name: PropTypes.string,
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
 
-    setLoadFlag: PropTypes.func,
-    setLoading: PropTypes.func,
-    setLoadError: PropTypes.func,
-    setLoadSuccess: PropTypes.func,
-    updateChip: PropTypes.func,
+    setLoadFlag: PropTypes.func.isRequired,
+    setAvailableRepos: PropTypes.func.isRequired,
+    setLoadedRepos: PropTypes.func.isRequired,
+    incrementLoadedRepos: PropTypes.func.isRequired,
 
-    setAvailableRepos: PropTypes.func,
-    setLoadedRepos: PropTypes.func,
-    incrementLoadedRepos: PropTypes.func,
+    setLoading: PropTypes.func.isRequired,
+    setLoadingTitle: PropTypes.func.isRequired,
+    setLoadingMsg: PropTypes.func.isRequired,
+    setLoadingMsgAlt: PropTypes.func.isRequired,
+    setLoadingIterateCurrent: PropTypes.func.isRequired,
+    setLoadingIterateTotal: PropTypes.func.isRequired,
+    setLoadingSuccessMsg: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
+
+    updateChip: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     loadFlag: state.githubFetchOrgRepos.loadFlag,
-    loading: state.githubFetchOrgRepos.loading,
+    loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 
     name: state.githubFetchOrgRepos.name,
     log: state.global.log,
@@ -137,13 +180,19 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.githubFetchOrgRepos.setLoadFlag,
-    setLoading: dispatch.githubFetchOrgRepos.setLoading,
-    setLoadError: dispatch.githubFetchOrgRepos.setLoadError,
-    setLoadSuccess: dispatch.githubFetchOrgRepos.setLoadSuccess,
 
     setAvailableRepos: dispatch.githubFetchOrgRepos.setAvailableRepos,
     setLoadedRepos: dispatch.githubFetchOrgRepos.setLoadedRepos,
     incrementLoadedRepos: dispatch.githubFetchOrgRepos.incrementLoadedRepos,
+
+    setLoading: dispatch.loading.setLoading,
+    setLoadingTitle: dispatch.loading.setLoadingTitle,
+    setLoadingMsg: dispatch.loading.setLoadingMsg,
+    setLoadingMsgAlt: dispatch.loading.setLoadingMsgAlt,
+    setLoadingIterateCurrent: dispatch.loading.setLoadingIterateCurrent,
+    setLoadingIterateTotal: dispatch.loading.setLoadingIterateTotal,
+    setLoadingSuccessMsg: dispatch.loading.setLoadingSuccessMsg,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
 
     updateChip: dispatch.chip.updateChip,
 });

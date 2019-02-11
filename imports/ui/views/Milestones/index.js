@@ -12,11 +12,13 @@ import General from '../../layouts/General/index.js';
 import MilestonesFetch from '../../data/Milestones/Fetch/index.js';
 import MilestonesEdit from '../../data/Milestones/Edit/index.js';
 
-import MilestonesList from './MilestonesList/index.js';
+import MilestonesEditDialog from '../../components/Milestones/Edit/index.js';
 
 import MilestonesFacets from './Facets/index.js';
 import MilestonesQuery from './Query/index.js';
 import Actions from './Actions/index.js';
+import NoData from "./NoData/index.js";
+import MilestonesTable from "./MilestonesTable/index.js";
 
 const style = {
     root: {
@@ -58,39 +60,46 @@ class Milestones extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, milestones } = this.props;
 
         return (
             <General>
                 <Actions />
                 <MilestonesEdit loadModal={true} />
                 <MilestonesFetch loadModal={false} />
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item >
-                        <MilestonesFacets />
-                    </Grid>
-                    <Grid item xs={12} sm container>
-                        <Grid
-                            container
-                            direction="column"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                        >
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <MilestonesQuery />
-                            </Grid>
-                            <Grid item xs={12} sm className={classes.fullWidth}>
-                                <MilestonesList />
+                <MilestonesEditDialog />
+                {milestones.length === 0 ? (
+                    <NoData />
+                ) : (
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item >
+                            <MilestonesFacets />
+                        </Grid>
+                        <Grid item xs={12} sm container>
+                            <Grid
+                                container
+                                direction="column"
+                                justify="flex-start"
+                                alignItems="flex-start"
+                            >
+                                <Grid item xs={12} sm className={classes.fullWidth}>
+                                    <MilestonesQuery />
+                                </Grid>
+                                <Grid item xs={12} sm className={classes.fullWidth}>
+                                    <MilestonesTable
+                                        milestones={milestones}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
+                )}
             </General>
         );
     }
@@ -98,12 +107,18 @@ class Milestones extends Component {
 
 Milestones.propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
+    milestones: PropTypes.array.isRequired,
     updateQuery: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
 };
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.milestonesView.updateQuery,
 });
 
-export default connect(null, mapDispatch)(withRouter(withStyles(style)(Milestones)));
+const mapState = state => ({
+    milestones: state.milestonesView.milestones,
+});
+
+
+export default connect(mapState, mapDispatch)(withRouter(withStyles(style)(Milestones)));

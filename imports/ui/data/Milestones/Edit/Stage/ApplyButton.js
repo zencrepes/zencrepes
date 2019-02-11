@@ -18,6 +18,8 @@ class ApplyButton extends Component {
     render() {
         const { verifiedMilestones, milestones } = this.props;
 
+        const errors = verifiedMilestones.filter(milestone => milestone.error === true);
+
         //The apply button is disabled until all milestones have been verified in GitHub and no errors have been found
         return (
             <Button
@@ -27,6 +29,11 @@ class ApplyButton extends Component {
                 onClick={this.apply}
             >
                 Apply
+                {errors.length > 0 &&
+                <span>
+                        ({errors.length} errors)
+                    </span>
+                }
             </Button>
         );
     }

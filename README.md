@@ -5,21 +5,21 @@
 ZenCrepes has been created by a PM (excuse the poor programming) to facilitate project management for teams operating solely over GitHub issues across multiple repositories and organizations. 
 
 It focuses on three primary objects
-* __Report and search__: Quickly find a relevant issues based on selected criteria (faceted search). For example `List open defects assigned to John or Max in rock and paper repos` or `Display the team's velocity on paper and scissor repos`.
+* __Report and search__: Quickly find a relevant issues based on selected criteria (faceted search). For example `List open defects assigned to John or Max in rock or paper repos` or `Display the team's velocity on paper and scissor repos`.
 * __Scrum opeation__: Identify the amount of work left in a sprint, estimate completion based on past velocity, review repartition of open issues (by repo, by label, by assignees).
 * __Consistency__: Ensure labels and milestones are consistent across multiple organizations and repositories, clean-up when necessary.
 
 ## How it works
 
-ZenCrepes is entirely client-side, by choice. This means ZenCrepes barely needs a server to run (the server component is only needed to support GitHub OAuth flow), but also and most importantly that whoever is running ZenCrepes cannot see any user data. Once authenticaed, all data exchanges are directly made between the user's browser and GitHub.
+ZenCrepes is entirely client-side, by choice. This means ZenCrepes barely needs a server to run (the server component is only needed to support GitHub OAuth flow), but also and most importantly, that whoever running ZenCrepes cannot see any user data. Once authenticated, all data exchanges are directly made between the user's browser and GitHub.
 
 But this this approach has two major drawbacks:
-* ZenCrepes cannot register to GitHub hooks, therefore cannot be `informed` about updates. Insteads it needs to regularly pull for changes
-* The more data there, the slower ZenCrepes is going to be, since the database is entirely client-size (Minimongo)
+* ZenCrepes cannot register to GitHub hooks, therefore cannot be `informed` about updates. Instead, it needs to regularly pull for changes.
+* Since the database (Minimongo) is entirely client-side and bound to the browser's capabilities, the more data there is, the slower ZenCrepes is going to be. A couple thousands issues should be perfectly fine though.
 
 ## Try-it !
 
-Just go to https://zencrepes.io and log-in. Again, it's all client size, so not a chance we'll see your data.
+Just go to https://zencrepes.io and log-in. It's all client size, so not a chance we'll see your data.
 
 ## Run it yourself
 

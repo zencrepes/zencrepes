@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import IssuesTable from "../../../components/IssuesTable/index.js";
 import CustomCard from "../../../components/CustomCard/index.js";
 
+import RefreshButton from './RefreshButton.js';
+
 class Issues extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +18,7 @@ class Issues extends Component {
         return (
             <CustomCard
                 headerTitle="Issues"
+                headerIcon={<RefreshButton />}
                 headerFactTitle="Issues in Sprint"
                 headerFactValue={issues.length}
             >

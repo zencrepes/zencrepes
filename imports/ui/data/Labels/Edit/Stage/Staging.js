@@ -60,6 +60,7 @@ class Staging extends Component {
             newName,
             newDescription,
             newColor,
+            onSuccess,
         } = this.props;
 
         //First, clear out all labels that are not changing
@@ -126,12 +127,11 @@ class Staging extends Component {
                             insVerifiedLabels({
                                 id: label.id,
                                 error: true,
-                                errorMsg: 'Your permissions the necessary permissions on this repository. Your permission: ' + data.data.repository.viewerPermission,
+                                errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
                             });
                             this.verifErrors++;
                         }
                         else if (data.data.repository.label === null && action !== 'create') {
-                            // The label doesn't exist anymore on GitHub.
                             insVerifiedLabels({
                                 id: label.id,
                                 error: true,
@@ -182,9 +182,14 @@ class Staging extends Component {
                     }
                 }
             }
-            setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' errors');
+            if (action === 'refresh') {
+                setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' update(s)');
+            } else {
+                setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' error(s)');
+            }
             setLoadingSuccess(true);
             setLoading(false);
+            onSuccess();
         } else {
             setStageFlag(false);
         }
@@ -213,13 +218,14 @@ Staging.propTypes = {
 
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
+
+    onSuccess: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
     setLoadingMsg: PropTypes.func.isRequired,
     setLoadingMsgAlt: PropTypes.func.isRequired,
     setLoadingModal: PropTypes.func.isRequired,
     setLoadingSuccessMsg: PropTypes.func.isRequired,
     setLoadingSuccess: PropTypes.func.isRequired,
-
 };
 
 const mapState = state => ({
@@ -233,6 +239,7 @@ const mapState = state => ({
 
     log: state.global.log,
     loading: state.loading.loading,
+    onSuccess: state.loading.onSuccess,
 });
 
 const mapDispatch = dispatch => ({

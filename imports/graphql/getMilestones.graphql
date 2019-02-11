@@ -24,6 +24,9 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
           issues (first: 1) {
             totalCount
           }
+          pullRequests(first: 1) {
+            totalCount
+          }
           number
           state
           title
