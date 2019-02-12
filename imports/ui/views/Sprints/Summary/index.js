@@ -19,9 +19,12 @@ class Summary extends Component {
             milestones
         } = this.props;
 
-        var moment = require('moment');
-        const dueDate = moment(selectedSprintDueDate).utc().format('ddd MMM D, YYYY');
-
+        let dueDate = 'Not Set';
+        if (selectedSprintDueDate !== null) {
+            var moment = require('moment');
+            dueDate = moment(selectedSprintDueDate).utc().format('ddd MMM D, YYYY');
+        }
+        
         // More on moment/time:
         // https://maggiepint.com/2016/05/14/moment-js-shows-the-wrong-date/
         // https://momentjs.com/docs/#/parsing/string-format/

@@ -70,7 +70,7 @@ export const getLastDay = (mongoFilter, cfgIssues, milestone) => {
             transform: null
         }).closedAt);
     }
-    lastDay.setDate(lastDay.getDate() + 1);
+//    lastDay.setDate(lastDay.getDate() + 1);
     return lastDay;
 
 };

@@ -182,12 +182,18 @@ export default {
             this.setAvailableRepositoriesFilter('');
 
             if (selectedSprintTitle !== null) {
-                this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+                const issues = cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch();
+                this.setIssues(issues);
+
+                // Only update burndown if there are actually issues
+                if (issues.length > 0) {
+                    this.updateBurndown(currentSprintFilter, milestones[0]);
+                } else {
+                    this.setBurndown({});
+                }
             }
 
             this.updateVelocity(assignees);
-
-            this.updateBurndown(currentSprintFilter, milestones[0]);
 
             this.updateDescriptionDate();
 
@@ -227,7 +233,7 @@ export default {
 
         async updateBurndown(currentSprintFilter, rootState, milestone) {
             const burndown = refreshBurndown(currentSprintFilter, cfgIssues, milestone, rootState.sprintsView.velocity);
-            this.setBurndown(burndown)
+            this.setBurndown(burndown);
         },
 
 
