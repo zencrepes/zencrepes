@@ -36,6 +36,7 @@ const aggregationsModel = {
         key: 'milestone.title',
         name: 'Milestones',
         nullValue: 'NO MILESTONE',
+        nullKey: 'milestone',
         nullFilter: {'milestone': { $eq : null }},
         nested: false,
         aggregations: {}
@@ -50,6 +51,7 @@ const aggregationsModel = {
         key: 'assignees',
         name: 'Assignees',
         nullValue: 'UNASSIGNED',
+        nullKey: 'assignees.totalCount',
         nullFilter: {'assignees.totalCount': { $eq : 0 }},
         nested: true,
         nestedKey: 'login',
@@ -59,6 +61,7 @@ const aggregationsModel = {
         key: 'labels',
         name: 'Labels',
         nullValue: 'NO LABEL',
+        nullKey: 'labels.totalCount',
         nullFilter: {'labels.totalCount': { $eq : 0 }},
         nested: true,
         nestedKey: 'name',
@@ -110,10 +113,30 @@ const buildFacetValues = (query, cfgIssues, facet) => {
     if (facet.nested === true) {
         queryElement = facet.key + '.edges';
     }
+    // This portion remove the actual filter to ensure that if one value from a facet is selected, all the other values also show up (to support OR like mechanism)
+    // Three use cases:
+    // 1- The value is selected
+    // 2- A null value is selected
+    // 3- Both a null value of a regular value are selected (.i.e there is an "OR" statement).
+    // {
+    //   $or:[
+    //    {
+    //      "assignees.edges":{
+    //          "$elemMatch":{
+    //              "node.login":{
+    //                  "$in":["denis-yuen","agduncan94"]
+    //              }
+    //          }
+    //      }
+    //    },
+    //    {
+    //      'assignees.totalCount': { $eq : 0 }}]}
+    // Note: There might be multiple OR statements in one query, have to find which one
+
     if (facetQuery[queryElement] !== undefined) {
         delete facetQuery[queryElement];
-    }
-
+    } else if (facetQuery[facet.nullKey] !== undefined) {
+        delete facetQuery[facet.nullKey];
     /*
     {
     "assignees.edges":{"$elemMatch":{"node.login":{"$in":["lepsalex","hlminh2000"]}}}

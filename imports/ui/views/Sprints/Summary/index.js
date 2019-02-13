@@ -24,7 +24,7 @@ class Summary extends Component {
             var moment = require('moment');
             dueDate = moment(selectedSprintDueDate).utc().format('ddd MMM D, YYYY');
         }
-        
+
         // More on moment/time:
         // https://maggiepint.com/2016/05/14/moment-js-shows-the-wrong-date/
         // https://momentjs.com/docs/#/parsing/string-format/
