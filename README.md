@@ -25,6 +25,8 @@ It focuses on three primary objects
 * __Scrum opeation__: Identify the amount of work left in a sprint, estimate completion based on past velocity, review repartition of open issues (by repo, by label, by assignees).
 * __Consistency__: Ensure labels and milestones are consistent across multiple organizations and repositories, clean-up when necessary.
 
+Currently ZenCrepes should be seen as a proof-of-principle, it functional enougth to actually be a useful for project management, but it does lack refinement, styling and other more advanced features. But ZenCrepes is also OpenSource and definitely welcome external contributions. 
+
 ## How it works
 
 ZenCrepes is entirely client-side by choice. This means ZenCrepes barely needs very few resources to run (the server component is only needed to support GitHub OAuth flow), but also and most importantly, that whoever running ZenCrepes cannot see any user data. Once authenticated, all data exchanges are directly made between the user's browser and GitHub.
@@ -42,19 +44,32 @@ Just go to https://zencrepes.io and log-in. It's all client size, so not a chanc
 
 ### Wizard 
 
-After logging-in for the first time, you will be presented with a short configuration wizard, providing some explanations about ZenCrepes and allowing you to select repositories you'd like to be using. 
+When opening-up ZenCrepes for the first time, a quick configuration wizard is presented, it provides general ZenCrepes explanations and users select repositories to load data from. 
 
 <p align="center">
   <img alt="Issues View" title="Issues view" src="./docs/zencrepes-wizard.png" width="640" />
 </p>
 
-ZenCrepes can automatically fetch the repositories you're directly affiliated with, but if you're curious, you can also add your favorite organizations or favorite open-source projects.
-
-The next screen will offer to load the corresponding issues, and that's it, you should be good to go.
+ZenCrepes can automatically fetch the repositories directly affiliated with the user, but it cal also fetch data from public organizations and repositories, as long as they are configured to allow such action. Some that do are: jetbrains, microsoft (individual repositories, for example: cntk).
 
 ## Velocity
 
-To Be completed
+Velocity is an interesting metrics, it gives a sense of a team's pace and potential to meet certain deadlines. But velocity metrics are not necessarily an accurate means of estimating, it is simply one of the many elements to be used when estimating and forecasting.
+
+Most of the time ZenCrepes will be using weekly velocity, which is calculated on a 4 weeks rolling average from the last datapoint. Fro example, the velocity of week 4 is the (W1+W2+W3+W4)/4.
+
+ZenCrepes will also try to forecast how much time is needed to complete a set of open issues. Forecast will usually display 4 values:
+
+* using average velocity over the entire project
+* using average velocity over the past 12 weeks
+* using average velocity over the past 8 weeks
+* using average velocity over the past 4 weeks (default)
+
+Variation in the displayed average also gives interesting indications whether the team has a steady pace, is accelerating or slowing down... 
+
+But again, understand what you are asking the metrics to provide.
+
+Finally, when planning a new sprint, velocity is calculated as a sum of all of the individual past velocities with no consideration for past teams (if different), repositories, ... As explained above, understand the implications of such a statement.
 
 ### Issues
 
