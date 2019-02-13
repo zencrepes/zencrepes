@@ -113,10 +113,6 @@ export default {
         async updateQuery(query, rootState) {
             this.setQuery(query);
 
-            // Check if the query doesn't return any issues with points, set default back to issues count.
-            const pointsQuery = {...query, points: {$gt: 0}};
-            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);} else {this.setDefaultPoints(true);}
-
             // Generate available sprints based on query, removing milestone title
             let sprintsQuery = JSON.parse(JSON.stringify(query)); //TODO - Replace this with something better to copy object ?
             if (sprintsQuery['title'] !== undefined) {
@@ -157,6 +153,10 @@ export default {
         async updateView(payload, rootState) {
             let selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
             let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintTitle]}};
+
+            // Check if the query doesn't return any issues with points, set default back to issues count.
+            const pointsQuery = {...currentSprintFilter, points: {$gt: 0}};
+            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);} else {this.setDefaultPoints(true);}
 
             // Create an array of assignees involved in a particular sprint
             let assignees = getAssigneesRepartition(cfgIssues.find(currentSprintFilter).fetch());
