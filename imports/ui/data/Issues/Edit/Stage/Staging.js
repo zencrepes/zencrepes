@@ -7,6 +7,7 @@ import { withApollo } from 'react-apollo';
 import GET_GITHUB_SINGLE_ISSUE from '../../../../../graphql/getSingleIssue.graphql';
 
 import { cfgIssues, cfgSources } from '../../../Minimongo.js';
+import getIssuesStats from "../../../utils/getIssuesStats";
 
 class Staging extends Component {
     constructor (props) {
@@ -53,7 +54,7 @@ class Staging extends Component {
         setLoadingMsgAlt('');
         await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
         for (const [idx, issue] of issues.entries()) {
-            log.info(issues);
+            log.info(issue);
             if (this.props.loading === true) {
                 // First, verify if a issue with this title already exists in the repo
                 // TODO - To be replaced by checking of issue title in case we want to edit
@@ -156,11 +157,44 @@ class Staging extends Component {
                                     errorMsg: 'This issue has been modified in GitHub since it was last loaded locally. issues Counts are are different',
                                 })
                             }
+
+                            //Temporary, need to move this somewhere else
+                            let updatedIssue = {
+                                ...data.data.repository.issue,
+                                repo: issue.repo,
+                                org: issue.org,
+                                stats: getIssuesStats(data.data.repository.issue.createdAt, data.data.repository.issue.updatedAt, data.data.repository.issue.closedAt),
+                                points: 0,
+                                active: issue.active,
+                            };
+
+                            if (updatedIssue.labels !== undefined) {
+                                //Get points from labels
+                                // Regex to test: SP:[.\d]
+                                let pointsExp = RegExp('SP:[.\\d]');
+                                for (var currentLabel of updatedIssue.labels.edges) {
+                                    if (pointsExp.test(currentLabel.node.name)) {
+                                        let points = parseInt(currentLabel.node.name.replace('SP:', ''));
+                                        log.info('This issue has ' + points + ' story points');
+                                        updatedIssue['points'] = points;
+                                    }
+                                }
+                            }
+                            await cfgIssues.remove({'id': issue.id});
+                            await cfgIssues.upsert({
+                                id: updatedIssue.id
+                            }, {
+                                $set: updatedIssue
+                            });
+                            /*
                             await cfgIssues.upsert({
                                 id: data.data.repository.issue.id
                             }, {
                                 $set: data.data.repository.issue
                             });
+                            */
+
+
                         }
                     }
                 } else {
