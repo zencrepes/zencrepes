@@ -24,6 +24,7 @@ import {
 
 import UserMenu from './UserMenu.js';
 import {connect} from "react-redux";
+import red from "@material-ui/core/colors/red";
 
 const style = theme => ({
     root: {
@@ -34,8 +35,11 @@ const style = theme => ({
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
-    button: {
+    buttonBase: {
         margin: theme.spacing.unit,
+    },
+    currentPath: {
+        borderBottom: '2px solid ' + red[900],
     },
     menuLink: {
         textDecoration: "none",
@@ -92,18 +96,26 @@ class Header extends Component {
                                                     return false;
                                                 }
                                             }).map((route) => {
-                                                let buttonColor = 'default';
-                                                if (route.key === 'TODO') { // Implement color selection based on path
-                                                    buttonColor = 'primary';
+                                                if (this.props.location.pathname === route.path) { // Implement color selection based on path
+                                                    return (
+                                                        <Grid item key={route.key} className={classes.currentPath}>
+                                                            <Button color="secondary" className={classes.buttonBase} component={Link} to={route.path} >
+                                                                {route.icon}
+                                                                {route.text}
+                                                            </Button>
+                                                        </Grid>
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <Grid item key={route.key}>
+                                                            <Button color="default" className={classes.buttonBase} component={Link} to={route.path} >
+                                                                {route.icon}
+                                                                {route.text}
+                                                            </Button>
+                                                        </Grid>
+                                                    );
                                                 }
-                                                return (
-                                                    <Grid item key={route.key}>
-                                                        <Button color={buttonColor} className={classes.button} component={Link} to={route.path} >
-                                                            {route.icon}
-                                                            {route.text}
-                                                        </Button>
-                                                    </Grid>
-                                                );
+
                                             })}
                                         </Grid>
                                     </Grid>
