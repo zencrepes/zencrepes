@@ -55,7 +55,7 @@ class StatsBinBar extends Component {
                 }
             },
             series: [{
-                name: 'Serie',
+                name: 'Issues',
                 showInLegend: false,
                 data: dataset.map((cat) => {
                     return {
