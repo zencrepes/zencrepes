@@ -31,6 +31,9 @@ export default {
         remainingWorkCount: 0,
         shouldSummaryDataReload: false,
 
+        statsOpenedDuring: [],
+        statsCreatedSince: [],
+
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
@@ -54,6 +57,9 @@ export default {
         setRemainingWorkRepos(state, payload) {return { ...state, remainingWorkRepos: payload };},
         setRemainingWorkPoints(state, payload) {return { ...state, remainingWorkPoints: payload };},
         setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
+
+        setStatsOpenedDuring(state, payload) {return { ...state, statsOpenedDuring: payload };},
+        setStatsCreatedSince(state, payload) {return { ...state, statsCreatedSince: payload };},
     },
     effects: {
         async updateQuery(query) {
@@ -78,6 +84,7 @@ export default {
             this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
+            this.refreshBins();
 
             this.setShouldBurndownDataReload(true);
             this.refreshSummary();
@@ -186,5 +193,69 @@ export default {
             var t1 = performance.now();
             log.info("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
         },
+
+        async refreshBins(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.issuesView.query;
+
+            const openedDuring = [{
+                label: '0 - 1 day',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gte :  0, $lte : 1}}}).fetch()
+            }, {
+                label: '1 - 7 days',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  1, $lte : 7}}}).fetch()
+            }, {
+                label: '1 - 2 weeks',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  7, $lte : 14}}}).fetch()
+            }, {
+                label: '2 - 4 weeks',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  14, $lte : 30}}}).fetch()
+            }, {
+                label: '1 - 3 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  30, $lte : 90}}}).fetch()
+            }, {
+                label: '3 - 6 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  90, $lte : 120}}}).fetch()
+            }, {
+                label: '6 - 12 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gte :  120, $lte : 365}}}).fetch()
+            }, {
+                label: '1 year or more',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  365}}}).fetch()
+            }];
+            this.setStatsOpenedDuring(openedDuring);
+
+            const createdSince = [{
+                label: '0 - 1 day',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gte :  0, $lte : 1}}}).fetch()
+            }, {
+                label: '1 - 7 days',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  1, $lte : 7}}}).fetch()
+            }, {
+                label: '1 - 2 weeks',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  7, $lte : 14}}}).fetch()
+            }, {
+                label: '2 - 4 weeks',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  14, $lte : 30}}}).fetch()
+            }, {
+                label: '1 - 3 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  30, $lte : 90}}}).fetch()
+            }, {
+                label: '3 - 6 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  90, $lte : 120}}}).fetch()
+            }, {
+                label: '6 - 12 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gte :  120, $lte : 365}}}).fetch()
+            }, {
+                label: '1 year or more',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  365}}}).fetch()
+            }];
+            this.setStatsCreatedSince(createdSince);
+
+            var t1 = performance.now();
+            log.info("refreshBins - took " + (t1 - t0) + " milliseconds.");
+        },
+
     }
 };
