@@ -136,6 +136,7 @@ class Header extends Component {
 Header.propTypes = {
     classes: PropTypes.object.isRequired,
     authenticated: PropTypes.bool,
+    location: PropTypes.object.isRequired,
     menus: PropTypes.object,
 };
 

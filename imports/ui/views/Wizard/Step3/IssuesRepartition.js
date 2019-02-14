@@ -25,7 +25,7 @@ class IssuesRepartition extends Component {
 
     buildDataset = () => {
         const { issues } = this.props;
-        let reposGroup = _.groupBy(issues.filter(issue => issue.state === 'OPEN'), 'repo.name');
+        let reposGroup = _.groupBy(issues, 'repo.name');
         return {
             name: 'repositories'
             , color: 'hsl(67, 70%, 50%)'
@@ -42,7 +42,7 @@ class IssuesRepartition extends Component {
                 <Card>
                     <CardContent className={classes.cardContent} >
                         <Typography className={classes.title} color="textSecondary">
-                            Open issues per repository
+                            Issues per repository
                         </Typography>
                         <div className={classes.treemap}>
                             <ResponsiveTreeMap

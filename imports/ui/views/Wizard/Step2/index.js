@@ -10,6 +10,7 @@ import Treeview from '../../../components/Settings/Repositories/Treeview/index.j
 
 import Scan from '../../../components/Settings/Repositories/Scan/index.js';
 
+import Selected from './Selected.js';
 
 class Step2 extends Component {
     constructor(props) {
@@ -33,7 +34,8 @@ class Step2 extends Component {
                         <Scan />
                     </Grid>
                     <Grid item xs={6} sm container>
-                        <Treeview all={{}} selected={{active: true}} enable={{active: true}} disable={{active: false}} />
+                        <Treeview />
+                        <Selected />
                     </Grid>
                 </Grid>
             </React.Fragment>
