@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
-import Button from "@material-ui/core/Button";
-
-const styles = {
-    root: {
-        flexGrow: 1,
-        margin: '10px',
-    },
-    actionButtons: {
-        textAlign: 'right',
-    },
-    loading: {
-        flexGrow: 1,
-    },
-};
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import RefreshIcon from 'mdi-react/RefreshIcon';
 
 class Refresh extends Component {
     constructor(props) {
@@ -34,24 +22,12 @@ class Refresh extends Component {
     };
 
     render() {
-        const { classes, loading } = this.props;
         return (
-            <div className={classes.root}>
-                {loading &&
-                    <div className={classes.loading}>
-                        <Button onClick={this.cancelLoad} color="primary" autoFocus>
-                            Cancel Load
-                        </Button>
-                    </div>
-                }
-                {!loading &&
-                    <div className={classes.actionButtons} >
-                        <Button color="primary" variant="contained" className={classes.button} onClick={this.loadIssues}>
-                            Refresh Issues
-                        </Button>
-                    </div>
-                }
-            </div>
+            <Tooltip title="Refresh issues">
+                <IconButton aria-label="Refresh" onClick={this.loadIssues}>
+                    <RefreshIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
         );
     }
 }
@@ -73,4 +49,4 @@ const mapDispatch = dispatch => ({
     setLoading: dispatch.loading.setLoading,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(Refresh));
+export default connect(mapState, mapDispatch)(Refresh);

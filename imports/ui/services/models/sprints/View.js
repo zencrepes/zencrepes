@@ -113,10 +113,6 @@ export default {
         async updateQuery(query, rootState) {
             this.setQuery(query);
 
-            // Check if the query doesn't return any issues with points, set default back to issues count.
-            const pointsQuery = {...query, points: {$gt: 0}};
-            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);} else {this.setDefaultPoints(true);}
-
             // Generate available sprints based on query, removing milestone title
             let sprintsQuery = JSON.parse(JSON.stringify(query)); //TODO - Replace this with something better to copy object ?
             if (sprintsQuery['title'] !== undefined) {
@@ -158,6 +154,10 @@ export default {
             let selectedSprintTitle = rootState.sprintsView.selectedSprintTitle;
             let currentSprintFilter = {'milestone.title':{'$in':[selectedSprintTitle]}};
 
+            // Check if the query doesn't return any issues with points, set default back to issues count.
+            const pointsQuery = {...currentSprintFilter, points: {$gt: 0}};
+            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);} else {this.setDefaultPoints(true);}
+
             // Create an array of assignees involved in a particular sprint
             let assignees = getAssigneesRepartition(cfgIssues.find(currentSprintFilter).fetch());
             this.setAssignees(assignees);
@@ -182,12 +182,18 @@ export default {
             this.setAvailableRepositoriesFilter('');
 
             if (selectedSprintTitle !== null) {
-                this.setIssues(cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch());
+                const issues = cfgIssues.find({'milestone.title':{'$in':[selectedSprintTitle]}}).fetch();
+                this.setIssues(issues);
+
+                // Only update burndown if there are actually issues
+                if (issues.length > 0) {
+                    this.updateBurndown(currentSprintFilter, milestones[0]);
+                } else {
+                    this.setBurndown({});
+                }
             }
 
             this.updateVelocity(assignees);
-
-            this.updateBurndown(currentSprintFilter, milestones[0]);
 
             this.updateDescriptionDate();
 
@@ -227,7 +233,7 @@ export default {
 
         async updateBurndown(currentSprintFilter, rootState, milestone) {
             const burndown = refreshBurndown(currentSprintFilter, cfgIssues, milestone, rootState.sprintsView.velocity);
-            this.setBurndown(burndown)
+            this.setBurndown(burndown);
         },
 
 

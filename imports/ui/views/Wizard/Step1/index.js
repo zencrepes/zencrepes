@@ -33,17 +33,17 @@ class Step1 extends Component {
             <React.Fragment>
                 <p className={classes.subtitle}>Select your repositories</p>
                 <p className={classes.paragraph}>
-                    ZenCrepes will first list your organizations and repositories and let you individually select repositories to load data from.
+                    First, select organizations and repositories to load data from. ZenCrepes will then batch-load from GitHub to your local browser. In various parts of the
+                    application you will have the ability to either refresh local data or push changes to GitHub.
                 </p>
                 <p className={classes.subtitle}>Add external orgs and repos</p>
                 <p className={classes.paragraph}>
-                    ZenCrepes will also allow you to add public repositories and organizations and load their public data.
-                    For example if you add &quot;Jetbrains&quot; as an organization, you&apos;d be able to add some of the repositories to ZenCrepes (of course this will be read-only).<br />
-                    If an org is configured not to allow listing of repositories, you can also add individual repositories. For example try adding the &quot;elastic&quot; organization with the &quot;beats&quot; repository.
+                    You can also load data from public organizations and repositories. You can track dependencies with external projects, or simply explore another team&apos;s content, All of this in read-only mode.
+                     For example try adding the &quot;microsoft&quot; organization with the &quot;cntk&quot; repository.
                 </p>
                 <p className={classes.subtitle}>Watch-out for GitHub API resources limits</p>
-                <p className={classes.paragraph}>GitHub has <a href="https://developer.github.com/v4/guides/resource-limitations/">API resources limits</a>, based on the complexity of the query and assigns 5000 points per 1 hour window.
-                    You&apos;ll see current points status at the bottom of the screen.
+                <p className={classes.paragraph}>GitHub has <a href="https://developer.github.com/v4/guides/resource-limitations/">API resources limits</a>, based on the complexity of the query.
+                    You get 5000 points per 1 hour window, ZenCrepes display your current points consumption at the bottom of every screens.
                 </p>
             </React.Fragment>
         );

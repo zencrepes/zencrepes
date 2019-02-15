@@ -80,7 +80,7 @@ class VelocityDays extends Component {
         let dataset = this.buildDataset();
         return (
             <CustomCard
-                headerTitle="Velocity over 30 days"
+                headerTitle="Daily velocity over 30 days"
                 headerFactTitle="Completed today"
                 headerFactValue={this.getTodayCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
             >

@@ -115,7 +115,10 @@ export const getFirstDay = (mongoFilter, cfgIssues) => {
         firstDay.setDate(firstDay.getDate() - 1);
         return firstDay
     } else {
-        return new Date() - 1;
+        let date = new Date();
+        date.setDate(date.getDate() + 1);
+        //return new Date();
+        return date;
     }
 };
 

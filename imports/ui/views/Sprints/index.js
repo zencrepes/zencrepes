@@ -77,7 +77,7 @@ class Sprints extends Component {
                 <MilestonesFetch />
                 <MilestonesEdit />
                 <MilestonesEditDialog />
-                {sprints.length === 0 ? (
+                {(sprints.length === 0) ? (
                     <NoData />
                 ) : (
                     <React.Fragment>

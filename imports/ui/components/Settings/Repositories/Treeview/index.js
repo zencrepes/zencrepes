@@ -37,7 +37,16 @@ class Treeview extends Component {
         this.state = {
             expanded: [],
         };
+    }
 
+    // If open treeview with no data, try loading data affiliated with the user
+    componentDidMount() {
+        const { availableRepos, setLoadFlag, connectedUser, setLogin, initView, setOnSuccess } = this.props;
+        if (availableRepos.length === 0) {
+            setLogin(connectedUser.login);
+            setOnSuccess(initView);
+            setLoadFlag(true);
+        }
     }
 
     checkNode = (checked) => {
@@ -80,7 +89,13 @@ Treeview.propTypes = {
     selectedRepos: PropTypes.array.isRequired,
     availableRepos: PropTypes.array.isRequired,
     treeNodes: PropTypes.array.isRequired,
+    connectedUser: PropTypes.object,
+
     updateCheckedRepos: PropTypes.func.isRequired,
+    setLogin: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    initView: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -88,10 +103,19 @@ const mapState = state => ({
     selectedRepos: state.settingsView.selectedRepos,
     availableRepos: state.settingsView.availableRepos,
     treeNodes: state.settingsView.treeNodes,
+    connectedUser: state.usersView.connectedUser,
+
 });
 
 const mapDispatch = dispatch => ({
     updateCheckedRepos: dispatch.settingsView.updateCheckedRepos,
+
+    setLogin: dispatch.githubFetchOrgs.setLogin,
+    setLoadFlag: dispatch.githubFetchOrgs.setLoadFlag,
+
+    initView: dispatch.settingsView.initView,
+    setOnSuccess: dispatch.loading.setOnSuccess,
+
 });
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Treeview));

@@ -192,7 +192,6 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     changeActiveStep: dispatch.wizardView.changeActiveStep,
     initView: dispatch.settingsView.initView,
-
 });
 
 export default connect(mapState, mapDispatch)(withRouter(withStyles(styles)(Wizard)));
