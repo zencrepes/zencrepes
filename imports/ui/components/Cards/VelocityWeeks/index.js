@@ -81,7 +81,7 @@ class VelocityWeeks extends Component {
         let dataset = this.buildDataset();
         return (
             <CustomCard
-                headerTitle="Velocity over 16 weeks"
+                headerTitle="Week velocity over 16 weeks"
                 headerFactTitle="Completed this week"
                 headerFactValue={this.getThisWeekCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
             >
