@@ -246,7 +246,7 @@ With your favorite editor, open the file `settings.json` at the root of the repo
 
 Replace METEOR_GITHUB_CLIENTID and METEOR_GITHUB_CLIENTSECRET with the secrets you just obtained.
 
-And that's it, no need to modify GOOGLE_ANALYTICS, which is just used to provide usage metrics for zencrepes.io and dev.zencrepes.io.
+No need to modify GOOGLE_ANALYTICS, which is just used to provide usage metrics for zencrepes.io and dev.zencrepes.io.
 
 #### Launch ZenCrepes
 
