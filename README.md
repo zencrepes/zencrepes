@@ -174,7 +174,7 @@ But first, you need to be able to run ZenCrepes in your local dev environment. T
 In GitHub, create a fork of ZenCrepes' repository into your own profile.
 
 <p align="center">
-  <img alt="Issues View" title="Fork ZenCrepes repository" src="./docs/zencrepes-dev-fork.png" width="640" />
+  <img alt="Fork ZenCrepes repository" title="Fork ZenCrepes repository" src="./docs/zencrepes-dev-fork.png" />
 </p>
 
 Once done, clone the forked repository locally (replace the URL below with your fork).
@@ -203,18 +203,18 @@ Next you need to register you app in GitHub to be able to log-in during your tes
 Open-up GitHub, and navigate to your `settings`.
 
 <p align="center">
-  <img alt="Issues View" title="GitHub Settings" src="./docs/zencrepes-dev-github-settings.png" width="640" />
+  <img alt="Issues View" title="GitHub Settings" src="./docs/zencrepes-dev-github-settings.png" />
 </p>
 
 Go to `Developer Settings` and click on `New OAuth App`.
 <p align="center">
-  <img alt="Issues View" title="GitHub Developer Settings" src="./docs/zencrepes-dev-github-developersettings.png" width="640" />
+  <img alt="GitHub Developer Settings" title="GitHub Developer Settings" src="./docs/zencrepes-dev-github-developersettings.png" width="640" />
 </p>
 
 Pick a name to your app and register it with the following URLs:
 
 <p align="center">
-  <img alt="Issues View" title="GitHub Developer Settings" src="./docs/zencrepes-dev-github-oauth.png" width="640" />
+  <img alt="Register OAuth app" title="Register OAuth app" src="./docs/zencrepes-dev-github-oauth.png" />
 </p>
 
 You will then be redirected to a screen containing your Client ID and Client Secret.
