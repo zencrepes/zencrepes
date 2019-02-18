@@ -12,9 +12,11 @@ import Paper from '@material-ui/core/Paper';
 import GitHubLogin from '../../components/Github/GitHubLogin.js';
 
 import General from '../../layouts/General/index.js';
-import lightBlue from "@material-ui/core/colors/lightBlue";
+import pink from "@material-ui/core/colors/pink";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
+
+import Actions from '../../components/EmptyActions/index.js';
 
 const styles = theme => ({
     '@global': {
@@ -77,7 +79,10 @@ const styles = theme => ({
     notice: {
         margin: '10px 0 10px 10px',
         padding: '10px',
-        backgroundColor: lightBlue[400],
+        backgroundColor: pink['A400'],
+    },
+    noticeText: {
+        color: '#ffffff',
     }
 });
 
@@ -93,6 +98,7 @@ class Login extends Component {
                 {authenticated &&
                     <Redirect to="/issues" />
                 }
+                <Actions />
                 <main className={classes.layout}>
                     <Grid
                     container
@@ -107,13 +113,13 @@ class Login extends Component {
                                 <hr className={classes.underline} />
                             </div>
                             <p className={classes.subtitle}>Agile analytics and management across GitHub organizations & repositories made easy!</p>
-                            <p className={classes.paragraph}>ZenCrepes facilitates batch modifications. Welcome consistency!</p>
-                            <p className={classes.paragraph}>When batch updating content, ZenCrepes will first stage the changes and <b><u>will ask you to confirm</u></b> before pushing to GitHub.</p>
+                            <p className={classes.paragraph}>ZenCrepes facilitates batch modifications, welcome consistency!</p>
+                            <p className={classes.paragraph}>When batch-updating content, ZenCrepes will first stage the changes and <b><u>will ask you to confirm</u></b> before pushing to GitHub.</p>
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <h4 className={classes.secondTitle}>Get Started</h4>
-                            <Paper className={classes.notice} elevation={1}>
-                                <Typography component="p">
+                            <Paper className={classes.notice} elevation={1} color="secondary">
+                                <Typography component="p" className={classes.noticeText}>
                                     Data is yours! ZenCrepes is <b><u>entirely client-side</u></b>, we don&apos;t see any of your data, none!
                                 </Typography>
                             </Paper>
