@@ -82,7 +82,6 @@ class FetchOrgs extends Component {
 
         setLoadingSuccessMsg('Loaded ' + this.totalReposCount + ' repos');
         setLoadingSuccess(true);
-
         setLoading(false);
         onSuccess();
     };
@@ -124,38 +123,42 @@ class FetchOrgs extends Component {
             setLoadingIterateCurrent,
             setLoadingIterateTotal,
         } = this.props;
-        if (OrgObj !== null) {
-            let data = {};
-            let repositories = {};
-            if (type === 'org') {
-                data = await client.query({
-                    query: GET_GITHUB_REPOS,
-                    variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
-                    fetchPolicy: 'no-cache',
-                });
-                repositories = data.data.viewer.organization.repositories;
-            } else {
-                data = await client.query({
-                    query: GET_GITHUB_USER_REPOS,
-                    variables: {repo_cursor: cursor, increment: increment, login: OrgObj.login},
-                    fetchPolicy: 'no-cache',
-                });
-                OrgObj = data.data.user;
-                repositories = data.data.viewer.repositories;
-            }
-            if (this.orgReposCount[OrgObj.id] === undefined) {this.orgReposCount[OrgObj.id] = 0;}
-            updateChip(data.data.rateLimit);
-            let lastCursor = await this.loadRepositories(repositories, OrgObj);
-            log.info('ORG OBJ: ' + OrgObj.id);
-            let queryIncrement = calculateQueryIncrement(this.orgReposCount[OrgObj.id], repositories.totalCount);
-            log.info(cfgSources.find({'org.id': OrgObj.id}).fetch());
-            log.info('Current count: ' + this.orgReposCount[OrgObj.id]);
-            log.info('Total count: ' + repositories.totalCount);
-            log.info('Query increment: ' + queryIncrement);
-            setLoadingIterateCurrent(this.orgReposCount[OrgObj.id]);
-            setLoadingIterateTotal(repositories.totalCount);
-            if (queryIncrement > 0) {
-                await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
+        if (this.props.loading) {
+            if (OrgObj !== null) {
+                let data = {};
+                let repositories = {};
+                if (type === 'org') {
+                    data = await client.query({
+                        query: GET_GITHUB_REPOS,
+                        variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
+                        fetchPolicy: 'no-cache',
+                    });
+                    repositories = data.data.viewer.organization.repositories;
+                } else {
+                    data = await client.query({
+                        query: GET_GITHUB_USER_REPOS,
+                        variables: {repo_cursor: cursor, increment: increment, login: OrgObj.login},
+                        fetchPolicy: 'no-cache',
+                    });
+                    OrgObj = data.data.user;
+                    repositories = data.data.viewer.repositories;
+                }
+                if (this.orgReposCount[OrgObj.id] === undefined) {
+                    this.orgReposCount[OrgObj.id] = 0;
+                }
+                updateChip(data.data.rateLimit);
+                let lastCursor = await this.loadRepositories(repositories, OrgObj);
+                log.info('ORG OBJ: ' + OrgObj.id);
+                let queryIncrement = calculateQueryIncrement(this.orgReposCount[OrgObj.id], repositories.totalCount);
+                log.info(cfgSources.find({'org.id': OrgObj.id}).fetch());
+                log.info('Current count: ' + this.orgReposCount[OrgObj.id]);
+                log.info('Total count: ' + repositories.totalCount);
+                log.info('Query increment: ' + queryIncrement);
+                setLoadingIterateCurrent(this.orgReposCount[OrgObj.id]);
+                setLoadingIterateTotal(repositories.totalCount);
+                if (queryIncrement > 0) {
+                    await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
+                }
             }
         }
     };

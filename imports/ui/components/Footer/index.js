@@ -38,6 +38,10 @@ const styles = {
         fontFamily: 'Roboto',
         fontWeight: 400,
     },
+    link: {
+        textDecoration: 'none',
+        color: '#000000',
+    },
 };
 
 class Footer extends Component {
@@ -78,7 +82,14 @@ class Footer extends Component {
                                         <Link to={"/terms"}>Terms & Conditions</Link>
                                     </Grid>
                                     <Grid item >
-                                        <GithubCircle />
+                                        <a
+                                            href="https://github.com/Fgerthoffert/zencrepes/"
+                                            rel="noopener noreferrer" target="_blank"
+                                            className={classes.link}
+                                        >
+                                            <GithubCircle />
+                                        </a>
+
                                     </Grid>
                                 </Grid>
                             </Grid>

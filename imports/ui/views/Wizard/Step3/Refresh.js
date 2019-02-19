@@ -33,15 +33,9 @@ class Refresh extends Component {
 }
 
 Refresh.propTypes = {
-    classes: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
 };
-
-const mapState = state => ({
-    loading: state.loading.loading,
-});
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.issuesFetch.setLoadFlag,
@@ -49,4 +43,4 @@ const mapDispatch = dispatch => ({
     setLoading: dispatch.loading.setLoading,
 });
 
-export default connect(mapState, mapDispatch)(Refresh);
+export default connect(null, mapDispatch)(Refresh);
