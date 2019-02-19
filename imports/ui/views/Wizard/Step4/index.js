@@ -43,7 +43,7 @@ class Step4 extends Component {
                 <p className={classes.subtitle}>ZenCrepes is opinionated</p>
                 <p className={classes.paragraph}>
                     Finally, understand that ZenCrepes is opinionated in its implementation.
-                    Some of the data it&apos;s going to show might not work in your context or not reflect team&apos;s workflow.
+                    Some of its data might not work in your context or not reflect team&apos;s workflow.
                 </p>
                 <p className={classes.subtitle}>ZenCrepes is OpenSource</p>
                 <p className={classes.paragraph}>
