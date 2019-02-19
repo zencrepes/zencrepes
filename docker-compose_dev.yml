@@ -7,6 +7,7 @@
     environment:
       - ROOT_URL=https://dev.zencrepes.io
       - STARTUP_DELAY=20
+      - DISABLE_WEBSOCKETS=1
       - METEOR_SETTINGS=$DEV_METEOR_SETTINGS
       - MONGO_URL=mongodb://mongo_dev:27017/meteor
 
