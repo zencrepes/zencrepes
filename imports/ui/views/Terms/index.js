@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import General from "../../layouts/General/index.js";
 import PropTypes from "prop-types";
 
+import EmptyActions from '../../components/EmptyActions/index.js';
+
+
 const styles = theme => ({
     '@global': {
         body: {
@@ -79,14 +82,15 @@ class Terms extends Component {
         const { classes } = this.props;
         return (
             <General>
+                <EmptyActions />
                 <main className={classes.layout}>
                     <h1 className={classes.title}>Terms and Conditions</h1>
                     <div>
                         <hr className={classes.underline} />
                     </div>
                     <p className={classes.paragraph}>You are using ZenCrepes at <u><b>your own risks</b></u>, ZenCrepes is provided with absolutely no warranty, NONE !</p>
-                    <p className={classes.paragraph}>ZenCrepes allow users to batch modify content in GitHub through provided APIs, again, you are doing so at your own risks.</p>
-                    <p className={classes.paragraph}>ZenCrepes is Opensource and distributed under the AGPL 3.0: </p>
+                    <p className={classes.paragraph}>ZenCrepes allow its users to batch modify content in GitHub through provided APIs, again, you are doing so at your own risks.</p>
+                    <p className={classes.paragraph}>ZenCrepes is Open-Source and distributed under the AGPL 3.0: </p>
                     <pre className={classes.preText} >This program is free software: you can redistribute it and/or modify
                         it under the terms of the GNU Affero General Public License as
                         published by the Free Software Foundation, either version 3 of the

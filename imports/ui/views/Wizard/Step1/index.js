@@ -33,8 +33,7 @@ class Step1 extends Component {
             <React.Fragment>
                 <p className={classes.subtitle}>Select your repositories</p>
                 <p className={classes.paragraph}>
-                    First, select organizations and repositories to load data from. ZenCrepes will then batch-load from GitHub to your local browser. In various parts of the
-                    application you will have the ability to either refresh local data or push changes to GitHub.
+                    The next screen will offer you to select repositories to load data from. ZenCrepes will then load date from GitHub to your local browser.
                 </p>
                 <p className={classes.subtitle}>Add external orgs and repos</p>
                 <p className={classes.paragraph}>
@@ -43,7 +42,7 @@ class Step1 extends Component {
                 </p>
                 <p className={classes.subtitle}>Watch-out for GitHub API resources limits</p>
                 <p className={classes.paragraph}>GitHub has <a href="https://developer.github.com/v4/guides/resource-limitations/">API resources limits</a>, based on the complexity of the query.
-                    You get 5000 points per 1 hour window, ZenCrepes display your current points consumption at the bottom of every screens.
+                    You get 5000 points per 1 hour window, ZenCrepes displays your current points quota at the bottom of the page.
                 </p>
             </React.Fragment>
         );
