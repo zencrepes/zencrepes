@@ -16,7 +16,7 @@ import pink from "@material-ui/core/colors/pink";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 
-import Actions from '../../components/EmptyActions/index.js';
+import EmptyActions from '../../components/EmptyActions/index.js';
 
 const styles = theme => ({
     '@global': {
@@ -98,7 +98,7 @@ class Login extends Component {
                 {authenticated &&
                     <Redirect to="/issues" />
                 }
-                <Actions />
+                <EmptyActions />
                 <main className={classes.layout}>
                     <Grid
                     container
@@ -113,8 +113,7 @@ class Login extends Component {
                                 <hr className={classes.underline} />
                             </div>
                             <p className={classes.subtitle}>Agile analytics and management across GitHub organizations & repositories made easy!</p>
-                            <p className={classes.paragraph}>ZenCrepes facilitates batch modifications, welcome consistency!</p>
-                            <p className={classes.paragraph}>When batch-updating content, ZenCrepes will first stage the changes and <b><u>will ask you to confirm</u></b> before pushing to GitHub.</p>
+                            <p className={classes.paragraph}>Connect ZenCrepes to your favorite GitHub repositories and dive into your Agile metrics, search through your tickets, plan your sprints and get consistent labels and milestones across multiple repositories in just a few clicks.</p>
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <h4 className={classes.secondTitle}>Get Started</h4>

@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import General from "../../layouts/General/index.js";
 import PropTypes from "prop-types";
 
+import EmptyActions from '../../components/EmptyActions/index.js';
+
 const styles = theme => ({
     '@global': {
         body: {
@@ -80,13 +82,14 @@ class About extends Component {
 
         return (
             <General>
+                <EmptyActions />
                 <main className={classes.layout}>
                     <h1 className={classes.title}>About</h1>
                     <div>
                         <hr className={classes.underline} />
                     </div>
                     <p className={classes.subtitle}>Why ZenCrepes?</p>
-                    <p className={classes.paragraph}>GitHub is a great platform, but managing projects across multiple organizations and repositories is complex.
+                    <p className={classes.paragraph}>GitHub is a great platform, but managing projects across multiple organizations and repositories can be tedious.
                     From velocity metrics, to issues searching, it lacks project management features when taken outside of the context of a single repository.
                     </p>
                     <p className={classes.paragraph}>There are third-party tools to provide a project management layer across organizations and repositories, but those also have their own drawbacks
@@ -98,7 +101,7 @@ class About extends Component {
                         Your team can operate with GitHub issues as normal, while a centralized view is available in ZenCrepes.
                     </p>
                     <p className={classes.subtitle}>Client-side only</p>
-                    <p className={classes.paragraph}>The most challenging aspect, directly impacting the way ZenCrepes is designed and operates, is that ZenCrepes is built as a client-side application.
+                    <p className={classes.paragraph}>ZenCrepes is built as a client-side application.
                     We don&apos;t have a duplicate index of GitHub data in our own servers, all happen directly between you and GitHub.</p>
                     <p className={classes.paragraph}>
                         It means that initial load time will be slower (while all issues are loaded in memory),

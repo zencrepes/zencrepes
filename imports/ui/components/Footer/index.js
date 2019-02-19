@@ -68,7 +68,7 @@ class Footer extends Component {
                                 >
                                     <Grid item xs={12} sm container>
                                         <Typography variant="subtitle1" color="inherit" noWrap className={classes.toolbarTitle}>
-                                            Agile project management across GitHub repositories and organizations
+                                            Agile project management across GitHub organizations & repositories
                                         </Typography>
                                     </Grid>
                                     <Grid item >
