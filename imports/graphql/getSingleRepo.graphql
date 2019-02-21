@@ -28,6 +28,9 @@ query ($org_name: String!, $repo_name: String!){
         }
       }
     }
+    projects(first: 1, states: OPEN) {
+      totalCount
+    }
     labels(first: 1) {
       totalCount
     }

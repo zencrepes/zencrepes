@@ -22,6 +22,9 @@ export default {
         labelsCountTotal: 0,
         labelsCountSelected: 0,
         labelsCountLoaded: 0,
+        projectsCountTotal: 0,
+        projectsCountSelected: 0,
+        projectsCountLoaded: 0,
         milestonesCountTotal: 0,
         milestonesCountSelected: 0,
         milestonesCountLoaded: 0,
@@ -39,6 +42,9 @@ export default {
         setLabelsCountTotal(state, payload) {return { ...state, labelsCountTotal: payload };},
         setLabelsCountSelected(state, payload) {return { ...state, labelsCountSelected: payload };},
         setLabelsCountLoaded(state, payload) {return { ...state, labelsCountLoaded: payload };},
+        setProjectsCountTotal(state, payload) {return { ...state, projectsCountTotal: payload };},
+        setProjectsCountSelected(state, payload) {return { ...state, projectsCountSelected: payload };},
+        setProjectsCountLoaded(state, payload) {return { ...state, projectsCountLoaded: payload };},
         setMilestonesCountTotal(state, payload) {return { ...state, milestonesCountTotal: payload };},
         setMilestonesCountSelected(state, payload) {return { ...state, milestonesCountSelected: payload };},
         setMilestonesCountLoaded(state, payload) {return { ...state, milestonesCountLoaded: payload };},
@@ -119,6 +125,9 @@ export default {
             this.setLabelsCountTotal(availableRepos.map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
             this.setLabelsCountSelected(selectedRepos.map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
             this.setLabelsCountLoaded(cfgLabels.find().count());
+            this.setProjectsCountTotal(availableRepos.map(repo => repo.projects.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setProjectsCountSelected(selectedRepos.map(repo => repo.projects.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setProjectsCountLoaded(0);
             this.setMilestonesCountTotal(availableRepos.map(repo => repo.milestones.totalCount).reduce((acc, count) => acc + count, 0));
             this.setMilestonesCountSelected(selectedRepos.map(repo => repo.milestones.totalCount).reduce((acc, count) => acc + count, 0));
             this.setMilestonesCountLoaded(cfgMilestones.find().count());
