@@ -24,7 +24,7 @@ class Issue extends Component {
 
 Issue.propTypes = {
     provided: PropTypes.object.isRequired,
-    innerRef: PropTypes.object.isRequired,
+    innerRef: PropTypes.func.isRequired,
     issue: PropTypes.object.isRequired,
 };
 
