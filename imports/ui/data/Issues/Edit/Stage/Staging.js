@@ -7,7 +7,7 @@ import { withApollo } from 'react-apollo';
 import GET_GITHUB_SINGLE_ISSUE from '../../../../../graphql/getSingleIssue.graphql';
 
 import { cfgIssues, cfgSources } from '../../../Minimongo.js';
-import getIssuesStats from "../../../utils/getIssuesStats";
+import ingestIssue from "../../../utils/ingestIssue.js";
 
 class Staging extends Component {
     constructor (props) {
@@ -110,15 +110,6 @@ class Staging extends Component {
                             await cfgSources.update({id: issue.repo.id}, {active: false}, {multi: false});
                             this.verifErrors++;
                         }
-                        else if (data.data.repository.viewerPermission !== 'ADMIN' && data.data.repository.viewerPermission !== 'WRITE') {
-                            // The repository doesn't exist anymore on GitHub.
-                            insVerifiedIssues({
-                                id: issue.id,
-                                error: true,
-                                errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
-                            });
-                            this.verifErrors++;
-                        }
                         else if (data.data.repository.issue === null && action !== 'create') {
                             insVerifiedIssues({
                                 id: issue.id,
@@ -137,7 +128,16 @@ class Staging extends Component {
                             this.verifErrors++;
                         }
                         else {
-                            if (data.data.repository.issue.updatedAt === issue.updatedAt && data.data.repository.issue.issues.totalCount === issue.issues.totalCount) {
+                            if (data.data.repository.viewerPermission !== 'ADMIN' && data.data.repository.viewerPermission !== 'WRITE') {
+                                // User doesn't have the permissions to perform a change
+                                insVerifiedIssues({
+                                    id: issue.id,
+                                    error: true,
+                                    errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
+                                });
+                                this.verifErrors++;
+                            }
+                            else if (data.data.repository.issue.updatedAt === issue.updatedAt && data.data.repository.issue.issues.totalCount === issue.issues.totalCount) {
                                 insVerifiedIssues({
                                     ...data.data.repository.issue,
                                     error: false,
@@ -157,7 +157,14 @@ class Staging extends Component {
                                     errorMsg: 'This issue has been modified in GitHub since it was last loaded locally. issues Counts are are different',
                                 })
                             }
-
+                            const updatedIssue = await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
+                            if (updatedIssue.points !== null) {
+                                log.info('This issue has ' + updatedIssue.points + ' story points');
+                            }
+                            if (updatedIssue.boardState !== null) {
+                                log.info('This issue is in Agile State ' + updatedIssue.boardState.name);
+                            }
+                            /*
                             //Temporary, need to move this somewhere else
                             let updatedIssue = {
                                 ...data.data.repository.issue,
@@ -186,6 +193,7 @@ class Staging extends Component {
                             }, {
                                 $set: updatedIssue
                             });
+                            */
                             /*
                             await cfgIssues.upsert({
                                 id: data.data.repository.issue.id

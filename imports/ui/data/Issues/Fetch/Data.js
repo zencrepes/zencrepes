@@ -10,7 +10,7 @@ import { cfgSources } from '../../Minimongo.js';
 import { cfgIssues } from '../../Minimongo.js';
 
 import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
-import getIssuesStats from '../../utils/getIssuesStats.js';
+import ingestIssue from '../../utils/ingestIssue.js';
 import { cfgLabels } from "../../Minimongo";
 
 class Data extends Component {
@@ -172,31 +172,36 @@ class Data extends Component {
                 }
             } else {
                 log.info('New or updated issue');
-                let nodePinned = false;
-                let nodePoints = null;
-                if (existNode !== undefined) {
-                    nodePinned = existNode.pinned;
-                    nodePoints = existNode.points;
+
+                const updatedIssue = await ingestIssue(cfgIssues, currentIssue.node, repoObj, repoObj.org);
+                if (updatedIssue.points !== null) {
+                    log.info('This issue has ' + updatedIssue.points + ' story points');
                 }
+                if (updatedIssue.boardState !== null) {
+                    log.info('This issue is in Agile State ' + updatedIssue.boardState.name);
+                }
+                /*
                 let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
                 issueObj['repo'] = repoObj;
                 issueObj['org'] = repoObj.org;
                 issueObj['stats'] = getIssuesStats(currentIssue.node.createdAt, currentIssue.node.updatedAt, currentIssue.node.closedAt);
                 issueObj['refreshed'] = true;
-                issueObj['pinned'] = nodePinned;
-                issueObj['points'] = nodePoints;
+                issueObj['points'] = null;
                 issueObj['active'] = true;
 
                 if (issueObj.labels !== undefined) {
                     //Get points from labels
                     // Regex to test: SP:[.\d]
                     let pointsExp = RegExp('SP:[.\\d]');
+                    let boardExp = RegExp('(AB):([.\\d]):(.+)');
                     for (var currentLabel of issueObj.labels.edges) {
                         if (pointsExp.test(currentLabel.node.name)) {
                             let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                             log.info('This issue has ' + points + ' story points');
                             issueObj['points'] = points;
                         }
+                        console.log(currentLabel.node.description);
+                        console.log(boardExp.test(currentLabel.node.description));
                     }
                 }
                 await cfgIssues.remove({'id': issueObj.id});
@@ -205,7 +210,7 @@ class Data extends Component {
                 }, {
                     $set: issueObj
                 });
-
+                */
                 this.issuesCount = this.issuesCount + 1;
                 setLoadingMsg(this.issuesCount + ' issues loaded');
                 /*
