@@ -12,6 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import CheckIcon from '@material-ui/icons/Check';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 
@@ -67,6 +68,10 @@ const styles = theme => ({
         padding: 5,
         border: "1px solid #eeeeee",
     },
+    chipAgile: {
+        margin: '4px',
+        height: '15px',
+    },
 });
 
 
@@ -78,6 +83,7 @@ class Issue extends Component {
     render() {
         const { classes, issue } = this.props;
         const pointsExp = RegExp('SP:[.\\d]');
+        const boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
         return (
             <TableRow key={issue.id}>
                 <TableCell component="th" scope="row">
@@ -119,6 +125,38 @@ class Issue extends Component {
                                 alignItems="flex-start"
                                 spacing={8}
                             >
+                                <Grid item xs={12} sm container className={classes.sprintName}>
+                                    {issue.milestone !== null &&
+                                    <Tooltip title="Issue attached to sprint">
+                                        <Chip
+                                            icon={<DirectionsRunIcon className={classes.iconSprint} />}
+                                            label={issue.milestone.title}
+                                            className={classes.chipAgile}
+                                            color="primary"
+                                            variant="outlined"
+                                        />
+                                    </Tooltip>
+                                    }
+                                    {issue.boardState !== undefined && issue.boardState !== null &&
+                                        <Tooltip title="Current Agile State of the issue">
+                                            <Chip
+                                                icon={<ViewColumnIcon className={classes.iconSprint} />}
+                                                label={issue.boardState.name}
+                                                className={classes.chipAgile}
+                                                color="primary"
+                                                variant="outlined"
+                                            />
+                                        </Tooltip>
+                                    }
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                spacing={8}
+                            >
                                 <Grid item className={classes.issueSubTitle}>
                                     <span><a href={issue.url} className={classes.issueSubTitle} target="_blank" rel="noopener noreferrer">#{issue.number}</a> </span>
                                     <span>opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment></span>
@@ -130,13 +168,6 @@ class Issue extends Component {
                                     ) : (
                                         <span>, last updated on <Moment format="ddd MMM D, YYYY">{issue.updatedAt}</Moment></span>
                                     )}
-                                </Grid>
-                                <Grid item xs={12} sm container className={classes.sprintName}>
-                                    {issue.milestone !== null &&
-                                        <Tooltip title="Issue attached to sprint">
-                                            <span><DirectionsRunIcon className={classes.iconSprint} />{issue.milestone.title}</span>
-                                        </Tooltip>
-                                    }
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -151,7 +182,7 @@ class Issue extends Component {
                                 >
                                 {
                                     //Filters out labels which are point since points are listed in the last column anyway
-                                    issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true).map((label) => {
+                                    issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
                                         return <Grid item key={label.node.name} ><Chip className={classes.chip} style={{background: "#" + label.node.color}} label={label.node.name}/></Grid>
                                     })
                                 }
@@ -191,3 +222,5 @@ Issue.propTypes = {
 };
 
 export default withStyles(styles)(Issue);
+// <span><DirectionsRunIcon className={classes.iconSprint} />{issue.milestone.title}</span>
+// <span><ViewColumnIcon className={classes.iconSprint} />{issue.boardState.name}</span>
