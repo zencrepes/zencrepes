@@ -19,7 +19,10 @@ class List extends Component {
 List.propTypes = {
     provided: PropTypes.object.isRequired,
     innerRef: PropTypes.func.isRequired,
-    children: PropTypes.object.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+    ]),
 };
 
 export default List;

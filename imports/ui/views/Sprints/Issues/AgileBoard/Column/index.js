@@ -20,7 +20,10 @@ class Column extends Component {
 
 Column.propTypes = {
     column: PropTypes.object.isRequired,
-    children: PropTypes.object.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+    ]),
 };
 
 export default Column;

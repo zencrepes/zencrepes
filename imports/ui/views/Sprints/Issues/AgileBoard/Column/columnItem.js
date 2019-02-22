@@ -33,7 +33,10 @@ class ColumnItem extends Component {
 ColumnItem.propTypes = {
     classes: PropTypes.object.isRequired,
     column: PropTypes.object.isRequired,
-    children: PropTypes.object.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+    ]),
 };
 
 export default withStyles(styles)(ColumnItem);
