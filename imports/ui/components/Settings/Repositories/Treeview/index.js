@@ -39,6 +39,7 @@ class Treeview extends Component {
         };
     }
 
+    /*
     // If open treeview with no data, try loading data affiliated with the user
     componentDidMount() {
         const { availableRepos, setLoadFlag, connectedUser, setLogin, initView, setOnSuccess } = this.props;
@@ -48,7 +49,7 @@ class Treeview extends Component {
             setLoadFlag(true);
         }
     }
-
+    */
     checkNode = (checked) => {
         const { updateCheckedRepos } = this.props;
         updateCheckedRepos(checked);
@@ -104,7 +105,6 @@ const mapState = state => ({
     availableRepos: state.settingsView.availableRepos,
     treeNodes: state.settingsView.treeNodes,
     connectedUser: state.usersView.connectedUser,
-
 });
 
 const mapDispatch = dispatch => ({
