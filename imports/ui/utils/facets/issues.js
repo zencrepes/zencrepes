@@ -32,6 +32,12 @@ const aggregationsModel = {
         nested: false,
         aggregations: {}
     },
+    boardState: {
+        key: 'boardState.name',
+        name: 'Agile States',
+        nested: false,
+        aggregations: {}
+    },
     milestones: {
         key: 'milestone.title',
         name: 'Milestones',
