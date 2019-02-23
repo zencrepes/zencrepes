@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { cfgMilestones, cfgIssues, cfgSources } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues, cfgSources, cfgLabels } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
@@ -65,6 +65,8 @@ export default {
         autoRefreshCount: 0,            // Auto-refresh count
         autoRefreshMaxCount: 20,        // Maximum number of times to auto-refresh
         autoRefreshDefaultTimer: 120,   // Default timer
+
+        agileBoardData: {},
     },
 
     reducers: {
@@ -108,6 +110,9 @@ export default {
         setAutoRefreshTimer(state, payload) {return { ...state, autoRefreshTimer: payload };},
         setAutoRefreshCount(state, payload) {return { ...state, autoRefreshCount: payload };},
         setAutoRefreshMaxCount(state, payload) {return { ...state, autoRefreshMaxCount: payload };},
+
+        setAgileBoardData(state, payload) {return { ...state, agileBoardData: JSON.parse(JSON.stringify(payload)) };},
+
     },
     effects: {
         async updateQuery(query, rootState) {
@@ -201,9 +206,76 @@ export default {
 
             this.updateAvailableSprints();
 
+            this.updateSprintBoard();
+
+
         },
 
+        async updateSprintBoard(payload, rootState) {
+            //1- Identify the available columns by looking into the milestones
+            // As a requirement and to make it easier to code, all repos must be consistent with their columns (all repos should have the same columns)
+            const milestones = rootState.sprintsView.milestones;
+            console.log(milestones);
+            // Build an array of repoIds
+            const reposIds = milestones.map(mls => mls.repo.id);
+            console.log(reposIds);
+            const reposLabels = cfgLabels.find({"repo.id":{"$in":reposIds}}).fetch();
+            console.log(reposLabels);
+            //Filter labels to only keep those with agile board settings
+            const boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
+            const labelsBoard = reposLabels.filter(lbl => boardExp.test(lbl.description) === true);
+            console.log(labelsBoard);
+            const grouppedLabels = _.groupBy(labelsBoard, 'name');
+            console.log(grouppedLabels);
 
+            const issues = rootState.sprintsView.issues;
+
+            let boardColumns = {};
+            boardColumns['unassigned'] = {
+                id: 'unassigned',
+                title: 'Open',
+                issueIds: issues.filter(issue => issue.state === 'OPEN' && issue.boardState === null).map(issue => issue.id),
+            };
+            let boardColumnsArray = [];
+            for (let [columnLabelName, labels] of Object.entries(grouppedLabels)){
+                const boardLabel = boardExp.exec(labels[0].description);
+                boardColumnsArray.push({
+                    id: columnLabelName,
+                    priority: boardLabel.groups.priority,
+                });
+                boardColumns[columnLabelName] = {
+                    id: columnLabelName,
+                    title: boardLabel.groups.name,
+                    priority: boardLabel.groups.priority,
+                    labels: labels,
+                    issueIds: issues.filter(issue => issue.boardState !== undefined && issue.boardState !== null).filter(issue => issue.boardState.label.name === columnLabelName).map(issue => issue.id),
+                }
+            };
+            boardColumns['closed'] = {
+                id: 'closed',
+                title: 'Closed',
+                issueIds: issues.filter(issue => issue.state === 'CLOSED').map(issue => issue.id),
+            };
+            console.log(boardColumns);
+
+            let columnOrder = _.sortBy(boardColumnsArray, ['priority']).map(col => col.id);
+            columnOrder.unshift('unassigned');
+            columnOrder.push('closed');
+            console.log(columnOrder);
+
+            const allIssues = issues.reduce((obj, item) => {
+                obj[item['id']] = item;
+                return obj
+            }, {});
+
+            const boardData = {
+                issues: allIssues,
+                columns: boardColumns,
+                columnOrder: columnOrder,
+            };
+            console.log(boardData);
+            this.setAgileBoardData(boardData);
+        },
 
         async initView() {
             this.refreshSprints();
@@ -254,8 +326,6 @@ export default {
                 }
             }));
         },
-
-
 
         async updateVelocity(assignees, rootState) {
             //Build velocity based on past assignees performance

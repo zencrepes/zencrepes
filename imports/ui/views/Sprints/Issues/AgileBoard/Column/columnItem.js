@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import TableCell from '@material-ui/core/TableCell';
+
 import Paper from '@material-ui/core/Paper';
 import {withStyles} from "@material-ui/core/styles";
 
@@ -21,11 +23,11 @@ class ColumnItem extends Component {
     render() {
         const { classes, column, children } = this.props;
         return (
-            <Paper elevation={1} className={classes.root}>
-                <List subheader={<ListSubheader>{column.title}</ListSubheader>} >
+            <TableCell component="th" scope="row" key={column.id}>
+                <List>
                     {children}
                 </List>
-            </Paper>
+            </TableCell>
         );
     }
 }

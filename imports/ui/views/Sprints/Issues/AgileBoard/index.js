@@ -10,6 +10,11 @@ import Issue from './Issue/index.js';
 import List from './List/index.js';
 import Column from './Column/index.js';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 /*
 const initialData = {
     tasks: {
@@ -40,9 +45,10 @@ class AgileBoard extends Component {
 
     setInitialData = (issues) => {
         const allIssues = issues.reduce((obj, item) => {
-                obj[item['id']] = item
+                obj[item['id']] = item;
                 return obj
             }, {});
+        console.log(allIssues);
         return {
             issues: allIssues,
             columns: {
@@ -62,8 +68,76 @@ class AgileBoard extends Component {
     };
 
     render() {
-        const { issues } = this.props;
-        const initialData = this.setInitialData(issues);
+        const { issues, agileBoardData } = this.props;
+//        const initialData = this.setInitialData(issues);
+        const initialData = agileBoardData;
+        return (
+            <DragDropContext onDragEnd={this.onDragEnd}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            {initialData.columnOrder.map((columnId) => {
+                                const column = initialData.columns[columnId];
+                                return (
+                                    <TableCell component="th" scope="row" key={column.id}>
+                                        {column.title}
+                                    </TableCell>
+                                )
+                            })}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            {initialData.columnOrder.map((columnId) => {
+                                const column = initialData.columns[columnId];
+                                const issues = column.issueIds.map(issueId => initialData.issues[issueId]);
+                                return (
+                                    <Column column={column} key={column.id}>
+                                        <Droppable droppableId={column.id}>
+                                            {provided => (
+                                                <List provided={provided} innerRef={provided.innerRef}>
+                                                    {issues.map(issue => (
+                                                        <React.Fragment key={issue.id}>
+                                                            <Draggable draggableId={issue.id} index={0}>
+                                                                {provided => (
+                                                                    <Issue issue={issue} provided={provided} innerRef={provided.innerRef} />
+                                                                )}
+                                                            </Draggable>
+                                                        </React.Fragment>
+                                                    ))}
+                                                    {provided.placeholder}
+                                                </List>
+                                            )}
+                                        </Droppable>
+                                    </Column>
+                                );
+                            })}
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </DragDropContext>
+        );
+    }
+}
+
+AgileBoard.propTypes = {
+    issues: PropTypes.array.isRequired,
+    agileBoardData: PropTypes.object.isRequired,
+};
+
+const mapState = state => ({
+    issues: state.sprintsView.issues,
+    agileBoardData: state.sprintsView.agileBoardData,
+});
+
+export default connect(mapState, null)(AgileBoard);
+
+/*
+
+    render() {
+        const { issues, agileBoardData } = this.props;
+//        const initialData = this.setInitialData(issues);
+        const initialData = agileBoardData;
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <Grid
@@ -103,53 +177,5 @@ class AgileBoard extends Component {
             </DragDropContext>
         );
     }
-}
 
-AgileBoard.propTypes = {
-    issues: PropTypes.array.isRequired,
-};
-
-const mapState = state => ({
-    issues: state.sprintsView.issues,
-});
-
-export default connect(mapState, null)(AgileBoard);
-
-/*
-
-    render() {
-        const { issues } = this.props;
-        console.log(issues);
-        const initialData = this.setInitialData(issues);
-        console.log(initialData);
-        return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                {initialData.columnOrder.map((columnId) => {
-                    const column = initialData.columns[columnId];
-                    const issues = column.issueIds.map(issueId => initialData.issues[issueId]);
-                    return (
-                        <React.Fragment key={column.id}>
-                            <h3>{column.title}</h3>
-                            <Droppable droppableId={column.id}>
-                                {provided => (
-                                    <List provided={provided} innerRef={provided.innerRef}>
-                                        {issues.map(issue => (
-                                            <React.Fragment key={issue.id}>
-                                                <Draggable draggableId={issue.id} index={0}>
-                                                    {provided => (
-                                                        <Issue issue={issue} provided={provided} innerRef={provided.innerRef} />
-                                                    )}
-                                                </Draggable>
-                                            </React.Fragment>
-                                        ))}
-                                        {provided.placeholder}
-                                    </List>
-                                )}
-                            </Droppable>
-                        </React.Fragment>
-                    );
-                })}
-            </DragDropContext>
-        );
-    }
  */
