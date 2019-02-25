@@ -275,6 +275,7 @@ export default {
             };
             console.log(boardData);
             this.setAgileBoardData(boardData);
+//            console.log(JSON.stringify(boardData));
         },
 
         async initView() {

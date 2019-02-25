@@ -13,6 +13,15 @@ const styles = {
         margin: '5px',
         padding: '10px',
     },
+    list: {
+        height: '100%',
+        margin: '5px',
+        width: '100%',
+        backgroundColor: '#ebebeb',
+//        flexGrow: 1,
+    },
+    tableCell: {
+    },
 };
 
 class ColumnItem extends Component {
@@ -23,8 +32,8 @@ class ColumnItem extends Component {
     render() {
         const { classes, column, children } = this.props;
         return (
-            <TableCell component="th" scope="row" key={column.id}>
-                <List>
+            <TableCell component="td" scope="row" key={column.id} className={classes.tableCell}>
+                <List className={classes.list}>
                     {children}
                 </List>
             </TableCell>

@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+
+import IssueCompact from '../../../../../components/Issue/IssueCompact.js';
 
 import {withStyles} from "@material-ui/core/styles";
 
 const styles = theme => ({
     root: {
-        border: `1px solid ${theme.palette.divider}`,
+//        border: `1px solid ${theme.palette.divider}`,
         margin: '5px',
+//        minWidth: '220px',
     },
 });
 
@@ -22,9 +24,7 @@ class IssueItem extends Component {
         const { classes, issue } = this.props;
         return (
             <ListItem alignItems="flex-start" key={issue.id} className={classes.root}>
-                <ListItemText
-                    primary={issue.title}
-                />
+                <IssueCompact issue={issue} />
             </ListItem>
         );
     }
