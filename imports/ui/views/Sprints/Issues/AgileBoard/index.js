@@ -40,6 +40,7 @@ class AgileBoard extends Component {
 
     onDragEnd = result => {
         // ToDo - Reorder our column
+        console.log(result);
         return result;
     };
 
@@ -88,6 +89,7 @@ class AgileBoard extends Component {
                                 <Column column={column}>
                                     <Droppable droppableId={column.id}>
                                         {provided => (
+                                            <React.Fragment>
                                             <List provided={provided} innerRef={provided.innerRef}>
                                                 {issues.map(issue => (
                                                     <React.Fragment key={issue.id}>
@@ -98,8 +100,9 @@ class AgileBoard extends Component {
                                                         </Draggable>
                                                     </React.Fragment>
                                                 ))}
-                                                {provided.placeholder}
                                             </List>
+                                            {provided.placeholder}
+                                            </React.Fragment>
                                         )}
                                     </Droppable>
                                 </Column>
