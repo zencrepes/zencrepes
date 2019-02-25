@@ -39,11 +39,49 @@ class AgileBoard extends Component {
     }
 
     onDragEnd = result => {
+        const { issues } = this.props;
+
         // ToDo - Reorder our column
         console.log(result);
+
+        // If drag and drop in the same column, no action taken
+        if (result.destination !== null && result.destination.droppableId !== result.source.droppableId) {
+            const sourceId = result.draggableId;
+            const destinationLabel = result.destination.droppableId;
+            const sourceLabel = result.destination.droppableId;
+
+            const issue = issues.find(iss => iss.id === sourceId);
+            console.log(issue);
+
+            // Only process if issue is found
+            if (issue !== undefined) {
+                console.log(issues);
+                console.log(sourceId);
+                let action = 'updateStateLabel';
+                if (sourceLabel === 'closed') {
+                    // Action is to re-open the issue, with destination Label
+                    action = 'openWithStateLabel';
+
+                } else if (destinationLabel === 'closed') {
+                    // Action is to close the issue, removing any label
+                    action = 'closeIssue';
+                }
+            }
+
+
+        }
+        /*
+combine: null
+destination: {droppableId: "backlog", index: 0}
+draggableId: "MDU6SXNzdWU0MTI1MTkwODk="
+mode: "FLUID"
+reason: "DROP"
+source: {index: 0, droppableId: "next"}
+type: "DEFAULT"
+         */
         return result;
     };
-
+/*
     setInitialData = (issues) => {
         const allIssues = issues.reduce((obj, item) => {
                 obj[item['id']] = item;
@@ -67,7 +105,7 @@ class AgileBoard extends Component {
             columnOrder: ['unassigned', 'closed'],
         }
     };
-
+*/
     render() {
         const { issues, agileBoardData } = this.props;
 //        const initialData = this.setInitialData(issues);
