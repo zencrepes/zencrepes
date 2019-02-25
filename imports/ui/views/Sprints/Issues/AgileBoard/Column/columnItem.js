@@ -2,27 +2,27 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import TableCell from '@material-ui/core/TableCell';
 
-import Paper from '@material-ui/core/Paper';
 import {withStyles} from "@material-ui/core/styles";
 
-const styles = {
+import Typography from '@material-ui/core/Typography';
+
+const styles = theme => ({
     root: {
-        margin: '5px',
-        padding: '10px',
+        border: `1px solid ${theme.palette.divider}`,
+        height: '100%',
+    },
+    title: {
+        padding: '5px',
+        textAlign: 'center',
     },
     list: {
+//        backgroundColor: '#ebebeb',
         height: '100%',
-        margin: '5px',
-        width: '100%',
-        backgroundColor: '#ebebeb',
-//        flexGrow: 1,
     },
     tableCell: {
     },
-};
+});
 
 class ColumnItem extends Component {
     constructor(props) {
@@ -32,11 +32,14 @@ class ColumnItem extends Component {
     render() {
         const { classes, column, children } = this.props;
         return (
-            <TableCell component="td" scope="row" key={column.id} className={classes.tableCell}>
-                <List className={classes.list}>
+            <div className={classes.root}>
+                <Typography variant="h6" gutterBottom className={classes.title}>
+                    {column.title}
+                </Typography>
+                <List className={classes.list} key={column.id} >
                     {children}
                 </List>
-            </TableCell>
+            </div>
         );
     }
 }

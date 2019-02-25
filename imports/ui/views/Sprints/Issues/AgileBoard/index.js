@@ -73,6 +73,46 @@ class AgileBoard extends Component {
         const initialData = agileBoardData;
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-evenly"
+                    alignItems="stretch"
+                    wrap="nowrap"
+                >
+                    {initialData.columnOrder.map((columnId) => {
+                        const column = initialData.columns[columnId];
+                        const issues = column.issueIds.map(issueId => initialData.issues[issueId]);
+                        return (
+                            <Grid item xs key={column.id}>
+                                <Column column={column}>
+                                    <Droppable droppableId={column.id}>
+                                        {provided => (
+                                            <List provided={provided} innerRef={provided.innerRef}>
+                                                {issues.map(issue => (
+                                                    <React.Fragment key={issue.id}>
+                                                        <Draggable draggableId={issue.id} index={0}>
+                                                            {provided => (
+                                                                <Issue issue={issue} provided={provided} innerRef={provided.innerRef} />
+                                                            )}
+                                                        </Draggable>
+                                                    </React.Fragment>
+                                                ))}
+                                                {provided.placeholder}
+                                            </List>
+                                        )}
+                                    </Droppable>
+                                </Column>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            </DragDropContext>
+        );
+
+        /*
+        return (
+            <DragDropContext onDragEnd={this.onDragEnd}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -117,6 +157,7 @@ class AgileBoard extends Component {
                 </Table>
             </DragDropContext>
         );
+        */
     }
 }
 

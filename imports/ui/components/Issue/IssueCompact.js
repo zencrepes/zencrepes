@@ -6,13 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import Grid from "@material-ui/core/Grid/Grid";
-import Chip from '@material-ui/core/Chip';
-//import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import CheckIcon from '@material-ui/icons/Check';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
-import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 
@@ -32,12 +26,12 @@ const styles = theme => ({
     },
     repoName: {
         color: '#586069!important',
-        fontSize: '16px',
+        fontSize: '14px',
         marginRight: '5px',
         textDecoration: "none",
     },
     issueTitle: {
-        fontSize: '16px',
+        fontSize: '14px',
         color: '#000000!important',
         textDecoration: "none",
     },
