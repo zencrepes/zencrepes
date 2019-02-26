@@ -8,6 +8,9 @@ export default {
         verifFlag: false,       // Flag to trigger verification against GitHub
 
         action: null,               // Action to be performed
+
+        agileLabels: [],            // Agile labels available to the issue
+        agileNewState: '',
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -23,7 +26,8 @@ export default {
         setVerifFlag(state, payload) {return { ...state, verifFlag: payload };},
 
         setAction(state, payload) {return { ...state, action: payload };},
-
+        setAgileLabels(state, payload) {return { ...state, agileLabels: payload };},
+        setAgileNewState(state, payload) {return { ...state, agileNewState: payload };},
     },
     effects: {
     }
