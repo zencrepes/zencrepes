@@ -162,7 +162,7 @@ AgileBoard.propTypes = {
     setAgileNewState: PropTypes.func.isRequired,
     updateView: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
-    
+
     log: PropTypes.object.isRequired,
 };
 

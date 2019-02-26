@@ -25,6 +25,11 @@ import {
     refreshBurndown,
 } from "../../../utils/sprintburn/index.js";
 
+import {
+    sortIssues,
+} from "../../../utils/agileboard/index.js";
+
+
 export default {
     state: {
         query: {},
@@ -208,11 +213,12 @@ export default {
             this.updateAvailableSprints();
 
             this.updateSprintBoard();
-
-
         },
 
         async updateSprintBoard(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+
             //1- Identify the available columns by looking into the milestones
             // As a requirement and to make it easier to code, all repos must be consistent with their columns (all repos should have the same columns)
             const milestones = rootState.sprintsView.milestones;
@@ -231,7 +237,7 @@ export default {
             const grouppedLabels = _.groupBy(labelsBoard, 'name');
 //            console.log(grouppedLabels);
 
-            const issues = rootState.sprintsView.issues;
+            const issues = sortIssues(rootState.sprintsView.issues);
 
             let boardColumns = {};
             boardColumns['unassigned'] = {
@@ -279,6 +285,9 @@ export default {
 //            console.log(boardData);
             this.setAgileBoardData(boardData);
 //            console.log(JSON.stringify(boardData));
+
+            var t1 = performance.now();
+            log.info("updateSprintBoard - took " + (t1 - t0) + " milliseconds.");
         },
 
         async initView() {
