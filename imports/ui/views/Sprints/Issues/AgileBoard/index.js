@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -57,44 +58,52 @@ class AgileBoard extends Component {
         const { agileBoardData } = this.props;
         const initialData = agileBoardData;
         return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <Grid
-                    container
-                    direction="row"
-                    justify="space-evenly"
-                    alignItems="stretch"
-                    wrap="nowrap"
-                >
-                    {initialData.columnOrder.map((columnId) => {
-                        const column = initialData.columns[columnId];
-                        const issues = column.issueIds.map(issueId => initialData.issues[issueId]);
-                        return (
-                            <Grid item xs key={column.id}>
-                                <Column column={column}>
-                                    <Droppable droppableId={column.id}>
-                                        {provided => (
-                                            <React.Fragment>
-                                            <List provided={provided} innerRef={provided.innerRef}>
-                                                {issues.map(issue => (
-                                                    <React.Fragment key={issue.id}>
-                                                        <Draggable draggableId={issue.id} index={0}>
-                                                            {provided => (
-                                                                <Issue issue={issue} provided={provided} innerRef={provided.innerRef} />
-                                                            )}
-                                                        </Draggable>
-                                                    </React.Fragment>
-                                                ))}
-                                            </List>
-                                            {provided.placeholder}
-                                            </React.Fragment>
-                                        )}
-                                    </Droppable>
-                                </Column>
-                            </Grid>
-                        );
-                    })}
-                </Grid>
-            </DragDropContext>
+            <React.Fragment>
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-evenly"
+                        alignItems="stretch"
+                        wrap="nowrap"
+                    >
+                        {initialData.columnOrder.map((columnId) => {
+                            const column = initialData.columns[columnId];
+                            const issues = column.issueIds.map(issueId => initialData.issues[issueId]);
+                            return (
+                                <Grid item xs key={column.id}>
+                                    <Column column={column}>
+                                        <Droppable droppableId={column.id}>
+                                            {provided => (
+                                                <React.Fragment>
+                                                <List provided={provided} innerRef={provided.innerRef}>
+                                                    {issues.map(issue => (
+                                                        <React.Fragment key={issue.id}>
+                                                            <Draggable draggableId={issue.id} index={0}>
+                                                                {provided => (
+                                                                    <Issue issue={issue} provided={provided} innerRef={provided.innerRef} />
+                                                                )}
+                                                            </Draggable>
+                                                        </React.Fragment>
+                                                    ))}
+                                                </List>
+                                                {provided.placeholder}
+                                                </React.Fragment>
+                                            )}
+                                        </Droppable>
+                                    </Column>
+                                </Grid>
+                            );
+                        })}
+                    </Grid>
+                </DragDropContext>
+                <Typography variant="subtitle1" gutterBottom>
+                    A few words about this Agile Board
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                    While some work will take place to make full use of GitHub Projects, this feature currently uses labels to define the various columns (similarly to Waffle.io). The &apos;Open&apos; and &apos;Closed&apos; columns are displayed by default, more columns can be added in the middle by creating and assigning specifically formatted label description. To create a new Column, simply create a label in each repository with a description following this format: &apos;AB:1:Column Name&apos;. Where 1 is the order of the column from left to right. Within the column, issues are also sorted the following labels: &apos;Priority: High&apos;, &apos;Priority: Medium&apos; and &apos;Priority: Low&apos;. All of this is temporary until ZenCrepes uses GitHub Projects elements.
+                </Typography>
+            </React.Fragment>
         );
 
         /*
