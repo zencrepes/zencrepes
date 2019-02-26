@@ -6,6 +6,7 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
     resetAt
   }
   repository(owner:$org_name, name:$repo_name) {
+    viewerPermission
     issue(number: $issue_number) {
       id
       createdAt

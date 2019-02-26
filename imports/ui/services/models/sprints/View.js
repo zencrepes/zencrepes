@@ -67,6 +67,7 @@ export default {
         autoRefreshDefaultTimer: 120,   // Default timer
 
         agileBoardData: {},
+        agileBoardLabels: [],
     },
 
     reducers: {
@@ -112,7 +113,7 @@ export default {
         setAutoRefreshMaxCount(state, payload) {return { ...state, autoRefreshMaxCount: payload };},
 
         setAgileBoardData(state, payload) {return { ...state, agileBoardData: JSON.parse(JSON.stringify(payload)) };},
-
+        setAgileBoardLabels(state, payload) {return { ...state, agileBoardLabels: payload };},
     },
     effects: {
         async updateQuery(query, rootState) {
@@ -215,18 +216,20 @@ export default {
             //1- Identify the available columns by looking into the milestones
             // As a requirement and to make it easier to code, all repos must be consistent with their columns (all repos should have the same columns)
             const milestones = rootState.sprintsView.milestones;
-            console.log(milestones);
+//            console.log(milestones);
             // Build an array of repoIds
             const reposIds = milestones.map(mls => mls.repo.id);
-            console.log(reposIds);
+//            console.log(reposIds);
             const reposLabels = cfgLabels.find({"repo.id":{"$in":reposIds}}).fetch();
-            console.log(reposLabels);
+//            console.log(reposLabels);
             //Filter labels to only keep those with agile board settings
             const boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
             const labelsBoard = reposLabels.filter(lbl => boardExp.test(lbl.description) === true);
-            console.log(labelsBoard);
+//            console.log(labelsBoard);
+            this.setAgileBoardLabels(labelsBoard);
+
             const grouppedLabels = _.groupBy(labelsBoard, 'name');
-            console.log(grouppedLabels);
+//            console.log(grouppedLabels);
 
             const issues = rootState.sprintsView.issues;
 
@@ -248,20 +251,20 @@ export default {
                     title: boardLabel.groups.name,
                     priority: boardLabel.groups.priority,
                     labels: labels,
-                    issueIds: issues.filter(issue => issue.boardState !== undefined && issue.boardState !== null).filter(issue => issue.boardState.label.name === columnLabelName).map(issue => issue.id),
+                    issueIds: issues.filter(issue => issue.boardState !== undefined && issue.boardState !== null && issue.state !== 'CLOSED').filter(issue => issue.boardState.label.name === columnLabelName).map(issue => issue.id),
                 }
-            };
+            }
             boardColumns['closed'] = {
                 id: 'closed',
                 title: 'Closed',
                 issueIds: issues.filter(issue => issue.state === 'CLOSED').map(issue => issue.id),
             };
-            console.log(boardColumns);
+//            console.log(boardColumns);
 
             let columnOrder = _.sortBy(boardColumnsArray, ['priority']).map(col => col.id);
             columnOrder.unshift('unassigned');
             columnOrder.push('closed');
-            console.log(columnOrder);
+//            console.log(columnOrder);
 
             const allIssues = issues.reduce((obj, item) => {
                 obj[item['id']] = item;
@@ -273,7 +276,7 @@ export default {
                 columns: boardColumns,
                 columnOrder: columnOrder,
             };
-            console.log(boardData);
+//            console.log(boardData);
             this.setAgileBoardData(boardData);
 //            console.log(JSON.stringify(boardData));
         },

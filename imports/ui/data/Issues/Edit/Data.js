@@ -10,6 +10,7 @@ import GET_GITHUB_SINGLE_ISSUE from '../../../../graphql/getSingleIssue.graphql'
 
 import GitHubApi from '@octokit/rest';
 import PropTypes from "prop-types";
+import ingestIssue from "../../utils/ingestIssue";
 
 class Data extends Component {
     constructor (props) {
@@ -42,8 +43,6 @@ class Data extends Component {
 
     load = async () => {
         const {
-            client,
-            setChipRemaining,
             issues,
             setLoading,
             setLoadingSuccess,
@@ -54,6 +53,8 @@ class Data extends Component {
             action,
             log,
             onSuccess,
+            agileLabels,
+            agileNewState,
         } = this.props;
         setLoadingModal(true);
         setLoadingMsgAlt('');
@@ -61,92 +62,144 @@ class Data extends Component {
         setLoadingSuccess(false);
 
         log.info(issues);
+        log.info(action);
         for (let issue of issues) {
             log.info(issue);
-            let result = false;
-            if (action === 'close') {
-                setLoadingMsg('Closing issue ' + issue.name + ' in ' + issue.org.login + '/' + issue.repo.name);
-                // Closing an issue is done in 2 steps
-                // 1- Remove any labels that might be associated with an agile state
-                // 2- Close the actual issue
+            const updatedIssue = cfgIssues.findOne({id:issue.id});
+            log.info(updatedIssue);
+            if (action === 'updateStateLabel') {
+                // Actions:
+                //  - Determine if labels need update
+                //  - Determine if state need update
+                //  - Refresh issue
 
-                //Find labels
-
-                let createPayload = {
-                    owner: issue.org.login,
-                    repo: issue.repo.name,
-                    number: issue.number.name,
-                };
-/*
-                //By default, if no-color is set, assigning white
-                if (newColor === '' || newColor === null) {
-                    createPayload = {
-                        ...createPayload,
-                        color: 'ffffff'
-                    };
+                setLoadingMsg('Updating issue ' + updatedIssue.title + ' in ' + updatedIssue.org.login + '/' + updatedIssue.repo.name);
+                if (updatedIssue.state !== 'CLOSED' && agileNewState === 'closed') {
+                    await this.updateIssueLabel(updatedIssue, agileLabels, null);
+                    await this.updateIssueState(updatedIssue, 'closed');
+                } else if (agileNewState === 'undefined') {
+                    await this.updateIssueLabel(updatedIssue, agileLabels, null);
+                } else {
+                    await this.updateIssueLabel(updatedIssue, agileLabels, agileNewState);
                 }
-                log.info(createPayload);
-                try {
-                    if (newDescription !== null && newDescription.length > 0) {
-                        createPayload = {
-                            ...createPayload,
-                            description: newDescription,
-                            headers: {
-                                accept: 'application/vnd.github.symmetra-preview+json'
-                            }
-                        };
-                    }
-                    result = await this.octokit.issues.createIssue(createPayload);
+                if (updatedIssue.state === 'CLOSED' && agileNewState !== 'closed') {
+                    await this.updateIssueState(updatedIssue, 'open');
                 }
-                catch (error) {
-                    log.info(error);
-                }
-                if (result !== false) {
-                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
-                    let data = {};
-                    try {
-                        data = await client.query({
-                            query: GET_GITHUB_SINGLE_LABEL,
-                            variables: {
-                                org_name: issue.org.login,
-                                repo_name: issue.repo.name,
-                                issue_name: newName
-                            },
-                            fetchPolicy: 'no-cache',
-                            errorPolicy: 'ignore',
-                        });
-                    }
-                    catch (error) {
-                        log.info(error);
-                    }
-                    log.info(data);
-                    if (data.data !== null) {
-                        const issueObj = {
-                            ...data.data.repository.issue,
-                            repo: issue.repo,
-                            org: issue.org,
-                        };
-                        log.info(issueObj);
-                        await cfgIssues.upsert({
-                            id: issueObj.id
-                        }, {
-                            $set: issueObj
-                        });
-                    }
-                }
-                */
-            } else if (action === 'update') {
-                setLoadingMsg('Updating issue ' + issue.name + ' in ' + issue.org.login + '/' + issue.repo.name);
-                
-            } else if (action === 'delete') {
-                setLoadingMsg('Deleting issue ' + issue.name + ' from ' + issue.org.login + '/' + issue.repo.name);
-
+                await this.updateSingleIssue(updatedIssue);
             }
         }
         setLoadingSuccessMsg('Update Completed');
         setLoadingSuccess(true);
         setLoading(false);
         onSuccess();
+    };
+
+    updateIssueLabel = async (issue, agileLabels, agileNewState) => {
+        const {
+            log,
+            setChipRemaining,
+        } = this.props;
+
+        let updateLabelPayload = {
+            owner: issue.org.login,
+            repo: issue.repo.name,
+            number: issue.number,
+        };
+        let result = false;
+        for (let label of agileLabels) {
+            log.info(label);
+            if (label.name === agileNewState) {
+                if (updateLabelPayload.name !== undefined) {delete updateLabelPayload.name;}
+                updateLabelPayload = {
+                    ...updateLabelPayload,
+                    labels: [label.name],
+                };
+                try {
+                    result = await this.octokit.issues.addLabels(updateLabelPayload);
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                if (result !== false) {
+                    setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                }
+            } else {
+                // Check if label is already attached to issue, if yes, remove
+                if (issue.labels.totalCount > 0 && issue.labels.edges.filter(lbl => lbl.node.name === label.name).length > 0) {
+                    if (updateLabelPayload.labels !== undefined) {delete updateLabelPayload.labels;}
+                    updateLabelPayload = {
+                        ...updateLabelPayload,
+                        name: label.name,
+                    };
+                    try {
+                        result = await this.octokit.issues.removeLabel(updateLabelPayload);
+                    }
+                    catch (error) {
+                        log.info(error);
+                    }
+                    if (result !== false) {
+                        setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+                    }
+                }
+            }
+        }
+    };
+
+    updateIssueState = async (issue, newState) => {
+        const {
+            log,
+            setChipRemaining,
+        } = this.props;
+        let result = false;
+
+        let updateIssuePayload = {
+            owner: issue.org.login,
+            repo: issue.repo.name,
+            number: issue.number,
+            state: newState,
+        };
+        try {
+            result = await this.octokit.issues.update(updateIssuePayload);
+        }
+        catch (error) {
+            log.info(error);
+        }
+        if (result !== false) {
+            setChipRemaining(parseInt(result.headers['x-ratelimit-remaining']));
+        }
+    };
+
+
+    updateSingleIssue = async (issue) => {
+        const {
+            client,
+            log,
+        } = this.props;
+        let data = {};
+        try {
+            data = await client.query({
+                query: GET_GITHUB_SINGLE_ISSUE,
+                variables: {
+                    org_name: issue.org.login,
+                    repo_name: issue.repo.name,
+                    issue_number: issue.number
+                },
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
+            });
+        }
+        catch (error) {
+            log.warn(error);
+        }
+        log.info(data);
+        if (data.data !== null) {
+            if (data.data !== undefined) {
+                this.props.updateChip(data.data.rateLimit);
+                if (data.data.repository.issue !== null) {
+                    await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
+                }
+            }
+        }
     };
 
     render() {
@@ -160,6 +213,8 @@ Data.propTypes = {
     action: PropTypes.string,
     log: PropTypes.object.isRequired,
     issues: PropTypes.array.isRequired,
+    agileLabels: PropTypes.array.isRequired,
+    agileNewState: PropTypes.string.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
@@ -180,6 +235,8 @@ const mapState = state => ({
     action: state.issuesEdit.action,
 
     issues: state.issuesEdit.issues,
+    agileLabels: state.issuesEdit.agileLabels,
+    agileNewState: state.issuesEdit.agileNewState,
 
     log: state.global.log,
     loading: state.loading.loading,

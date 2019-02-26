@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Staging from './Stage/Staging.js';
+import Data from './Data.js';
 
 class IssuesEdit extends Component {
     constructor(props) {
@@ -9,7 +10,10 @@ class IssuesEdit extends Component {
 
     render() {
         return (
-            <Staging />
+            <React.Fragment>
+                <Staging />
+                <Data />
+            </React.Fragment>
         );
     }
 }

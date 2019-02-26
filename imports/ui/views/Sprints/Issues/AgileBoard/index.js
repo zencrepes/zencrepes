@@ -10,105 +10,51 @@ import Issue from './Issue/index.js';
 import List from './List/index.js';
 import Column from './Column/index.js';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-/*
-const initialData = {
-    tasks: {
-        'task-1': { id: 'task-1', content: 'content task 1'},
-        'task-2': { id: 'task-2', content: 'content task 2'},
-        'task-3': { id: 'task-3', content: 'content task 3'},
-        'task-4': { id: 'task-4', content: 'content task 4'},
-    },
-    columns: {
-        'column-1': {
-            id: 'column-1',
-            title: 'To-Do',
-            taskIds: ['task-1', 'task-2', 'task-3', 'task-4'],
-        },
-    },
-    columnOrder: ['column-1'],
-};
-*/
 class AgileBoard extends Component {
     constructor(props) {
         super(props);
     }
 
     onDragEnd = result => {
-        const { issues } = this.props;
+        const {
+            issues,
+            setIssues,
+            setAction,
+            setVerifFlag,
+            setOnSuccess,
+            updateView,
+            agileBoardLabels,
+            setAgileLabels,
+            setAgileNewState,
+            log,
+        } = this.props;
 
         // ToDo - Reorder our column
-        console.log(result);
+        log.info(result);
 
         // If drag and drop in the same column, no action taken
         if (result.destination !== null && result.destination.droppableId !== result.source.droppableId) {
             const sourceId = result.draggableId;
             const destinationLabel = result.destination.droppableId;
-            const sourceLabel = result.destination.droppableId;
+            //const sourceLabel = result.source.droppableId;
 
             const issue = issues.find(iss => iss.id === sourceId);
-            console.log(issue);
-
             // Only process if issue is found
             if (issue !== undefined) {
-                console.log(issues);
-                console.log(sourceId);
-                let action = 'updateStateLabel';
-                if (sourceLabel === 'closed') {
-                    // Action is to re-open the issue, with destination Label
-                    action = 'openWithStateLabel';
-
-                } else if (destinationLabel === 'closed') {
-                    // Action is to close the issue, removing any label
-                    action = 'closeIssue';
-                }
+                setAgileNewState(destinationLabel);
+                setIssues([issue]);
+                setAgileLabels(agileBoardLabels.filter(lbl => lbl.repo.id === issue.repo.id));
+                setAction('updateStateLabel');
+                setOnSuccess(updateView);
+                setVerifFlag(true);
             }
-
-
         }
-        /*
-combine: null
-destination: {droppableId: "backlog", index: 0}
-draggableId: "MDU6SXNzdWU0MTI1MTkwODk="
-mode: "FLUID"
-reason: "DROP"
-source: {index: 0, droppableId: "next"}
-type: "DEFAULT"
-         */
+
         return result;
     };
-/*
-    setInitialData = (issues) => {
-        const allIssues = issues.reduce((obj, item) => {
-                obj[item['id']] = item;
-                return obj
-            }, {});
-        console.log(allIssues);
-        return {
-            issues: allIssues,
-            columns: {
-                'unassigned': {
-                    id: 'unassigned',
-                    title: 'Open',
-                    issueIds: issues.filter(issue => issue.state === 'OPEN').map(issue => issue.id),
-                },
-                'closed': {
-                    id: 'closed',
-                    title: 'Closed',
-                    issueIds: issues.filter(issue => issue.state === 'CLOSED').map(issue => issue.id),
-                },
-            },
-            columnOrder: ['unassigned', 'closed'],
-        }
-    };
-*/
+
     render() {
-        const { issues, agileBoardData } = this.props;
-//        const initialData = this.setInitialData(issues);
+        const { agileBoardData } = this.props;
         const initialData = agileBoardData;
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
@@ -205,59 +151,41 @@ type: "DEFAULT"
 AgileBoard.propTypes = {
     issues: PropTypes.array.isRequired,
     agileBoardData: PropTypes.object.isRequired,
+    agileBoardLabels: PropTypes.array.isRequired,
+
+    setAction: PropTypes.func.isRequired,
+    setVerifFlag: PropTypes.func.isRequired,
+    setStageFlag: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
+    setIssues: PropTypes.func.isRequired,
+    setAgileLabels: PropTypes.func.isRequired,
+    setAgileNewState: PropTypes.func.isRequired,
+    updateView: PropTypes.func.isRequired,
+    setOnSuccess: PropTypes.func.isRequired,
+    
+    log: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
     issues: state.sprintsView.issues,
     agileBoardData: state.sprintsView.agileBoardData,
+    agileBoardLabels: state.sprintsView.agileBoardLabels,
+
+    log: state.global.log,
 });
 
-export default connect(mapState, null)(AgileBoard);
+const mapDispatch = dispatch => ({
+    setAction: dispatch.issuesEdit.setAction,
+    setVerifFlag: dispatch.issuesEdit.setVerifFlag,
+    setStageFlag: dispatch.issuesEdit.setStageFlag,
+    setLoadFlag: dispatch.issuesEdit.setLoadFlag,
+    setIssues: dispatch.issuesEdit.setIssues,
+    setAgileLabels: dispatch.issuesEdit.setAgileLabels,
+    setAgileNewState: dispatch.issuesEdit.setAgileNewState,
 
-/*
+    updateView: dispatch.sprintsView.updateView,
+    setOnSuccess: dispatch.loading.setOnSuccess,
+});
 
-    render() {
-        const { issues, agileBoardData } = this.props;
-//        const initialData = this.setInitialData(issues);
-        const initialData = agileBoardData;
-        return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    {initialData.columnOrder.map((columnId) => {
-                        const column = initialData.columns[columnId];
-                        const issues = column.issueIds.map(issueId => initialData.issues[issueId]);
-                        return (
-                            <Grid item key={column.id}>
-                                <Column column={column}>
-                                    <Droppable droppableId={column.id}>
-                                        {provided => (
-                                            <List provided={provided} innerRef={provided.innerRef}>
-                                                {issues.map(issue => (
-                                                    <React.Fragment key={issue.id}>
-                                                        <Draggable draggableId={issue.id} index={0}>
-                                                            {provided => (
-                                                                <Issue issue={issue} provided={provided} innerRef={provided.innerRef} />
-                                                            )}
-                                                        </Draggable>
-                                                    </React.Fragment>
-                                                ))}
-                                                {provided.placeholder}
-                                            </List>
-                                        )}
-                                    </Droppable>
-                                </Column>
-                            </Grid>
-                        );
-                    })}
-                </Grid>
-            </DragDropContext>
-        );
-    }
 
- */
+export default connect(mapState, mapDispatch)(AgileBoard);

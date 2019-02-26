@@ -9,7 +9,7 @@ class List extends Component {
     render() {
         const { provided, innerRef, children } = this.props;
         return (
-            <div {...provided.droppableProps} ref={innerRef} style={{minHeight:'200px'}}>
+            <div {...provided.droppableProps} ref={innerRef} style={{height:'100%'}}>
                 {children}
             </div>
         );

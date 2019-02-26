@@ -7,13 +7,13 @@ import IssueCompact from '../../../../../components/Issue/IssueCompact.js';
 
 import {withStyles} from "@material-ui/core/styles";
 
-const styles = theme => ({
+const styles = {
     root: {
 //        border: `1px solid ${theme.palette.divider}`,
 //        margin: '5px',
 //        minWidth: '220px',
     },
-});
+};
 
 class IssueItem extends Component {
     constructor(props) {

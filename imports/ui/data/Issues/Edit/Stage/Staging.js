@@ -36,6 +36,7 @@ class Staging extends Component {
             setLoadingMsgAlt,
             setLoadingSuccessMsg,
             setLoadingSuccess,
+            setLoadFlag,
             issues,
             setVerifiedIssues,
             insVerifiedIssues,
@@ -97,6 +98,7 @@ class Staging extends Component {
                                 error: true,
                                 errorMsg: 'Unable to communicate with GitHub, please check your network connectivity',
                             });
+                            log.info('Unable to communicate with GitHub, please check your network connectivity');
                             this.verifErrors++;
                         }
                         else if (data.data.repository === null) {
@@ -106,6 +108,8 @@ class Staging extends Component {
                                 error: true,
                                 errorMsg: 'This repository doesn\'t exist in GitHub currently. Was it deleted ?',
                             });
+                            log.info('This repository doesn\'t exist in GitHub currently. Was it deleted ?');
+
                             await cfgIssues.remove({'id': issue.id});
                             await cfgSources.update({id: issue.repo.id}, {active: false}, {multi: false});
                             this.verifErrors++;
@@ -116,6 +120,8 @@ class Staging extends Component {
                                 error: true,
                                 errorMsg: 'This issue doesn\'t exist in GitHub currently. Was it deleted ?',
                             });
+                            log.info('This issue doesn\'t exist in GitHub currently. Was it deleted ?');
+
                             await cfgIssues.remove({'id': issue.id});
                             this.verifErrors++;
                         }
@@ -125,6 +131,7 @@ class Staging extends Component {
                                 error: true,
                                 errorMsg: 'There seems to be an ID mismatch between your local copy and GitHub, please clear all your Issues and reload. This can happen if a issue was created with the same number than a previously deleted issue.',
                             });
+                            log.info('There seems to be an ID mismatch between your local copy and GitHub, please clear all your Issues and reload. This can happen if a issue was created with the same number than a previously deleted issue.');
                             this.verifErrors++;
                         }
                         else {
@@ -135,26 +142,13 @@ class Staging extends Component {
                                     error: true,
                                     errorMsg: 'Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission,
                                 });
+                                log.info('Your missing write permission on this repository. Your permission: ' + data.data.repository.viewerPermission);
                                 this.verifErrors++;
                             }
-                            else if (data.data.repository.issue.updatedAt === issue.updatedAt && data.data.repository.issue.issues.totalCount === issue.issues.totalCount) {
+                            else {
                                 insVerifiedIssues({
                                     ...data.data.repository.issue,
                                     error: false,
-                                })
-                            }
-                            else if (data.data.repository.issue.updatedAt !== issue.updatedAt) {
-                                insVerifiedIssues({
-                                    ...data.data.repository.issue,
-                                    error: true,
-                                    errorMsg: 'This issue has been modified in GitHub since it was last loaded locally. updatedAt dates are different',
-                                })
-
-                            } else if (data.data.repository.issue.issues.totalCount !== issue.issues.totalCount) {
-                                insVerifiedIssues({
-                                    ...data.data.repository.issue,
-                                    error: true,
-                                    errorMsg: 'This issue has been modified in GitHub since it was last loaded locally. issues Counts are are different',
                                 })
                             }
                             const updatedIssue = await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
@@ -164,45 +158,6 @@ class Staging extends Component {
                             if (updatedIssue.boardState !== null) {
                                 log.info('This issue is in Agile State ' + updatedIssue.boardState.name);
                             }
-                            /*
-                            //Temporary, need to move this somewhere else
-                            let updatedIssue = {
-                                ...data.data.repository.issue,
-                                repo: issue.repo,
-                                org: issue.org,
-                                stats: getIssuesStats(data.data.repository.issue.createdAt, data.data.repository.issue.updatedAt, data.data.repository.issue.closedAt),
-                                points: 0,
-                                active: issue.active,
-                            };
-
-                            if (updatedIssue.labels !== undefined) {
-                                //Get points from labels
-                                // Regex to test: SP:[.\d]
-                                let pointsExp = RegExp('SP:[.\\d]');
-                                for (var currentLabel of updatedIssue.labels.edges) {
-                                    if (pointsExp.test(currentLabel.node.name)) {
-                                        let points = parseInt(currentLabel.node.name.replace('SP:', ''));
-                                        log.info('This issue has ' + points + ' story points');
-                                        updatedIssue['points'] = points;
-                                    }
-                                }
-                            }
-                            await cfgIssues.remove({'id': issue.id});
-                            await cfgIssues.upsert({
-                                id: updatedIssue.id
-                            }, {
-                                $set: updatedIssue
-                            });
-                            */
-                            /*
-                            await cfgIssues.upsert({
-                                id: data.data.repository.issue.id
-                            }, {
-                                $set: data.data.repository.issue
-                            });
-                            */
-
-
                         }
                     }
                 } else {
@@ -213,14 +168,19 @@ class Staging extends Component {
                 }
             }
         }
-        if (action === 'refresh') {
-            setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' update(s)');
-        } else {
-            setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' error(s)');
-        }
+
         setLoadingSuccess(true);
         setLoading(false);
-        onSuccess();
+        if (action === 'updateStateLabel') {
+            setLoadFlag(true);
+        } else {
+            if (action === 'refresh') {
+                setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' update(s)');
+            } else {
+                setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' error(s)');
+            }
+            onSuccess();
+        }
     };
 
     render() {
@@ -238,6 +198,7 @@ Staging.propTypes = {
     issues: PropTypes.array.isRequired,
 
     setVerifFlag: PropTypes.func.isRequired,
+    setLoadFlag: PropTypes.func.isRequired,
     setStageFlag: PropTypes.func.isRequired,
     setIssues: PropTypes.func.isRequired,
     setVerifiedIssues: PropTypes.func.isRequired,
@@ -270,6 +231,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
     setVerifFlag: dispatch.issuesEdit.setVerifFlag,
     setStageFlag: dispatch.issuesEdit.setStageFlag,
+    setLoadFlag: dispatch.issuesEdit.setLoadFlag,
     setIssues: dispatch.issuesEdit.setIssues,
     setVerifiedIssues: dispatch.issuesEdit.setVerifiedIssues,
     insVerifiedIssues: dispatch.issuesEdit.insVerifiedIssues,
