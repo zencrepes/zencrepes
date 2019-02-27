@@ -42,6 +42,8 @@ class Stats extends Component {
             issuesCountSelected,
             labelsCountTotal,
             labelsCountSelected,
+            projectsCountTotal,
+            projectsCountSelected,
             milestonesCountTotal,
             milestonesCountSelected,
         } = this.props;
@@ -93,6 +95,13 @@ class Stats extends Component {
                         title="Labels"
                     />
                 </Grid>
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
+                        selected={projectsCountSelected}
+                        total={projectsCountTotal}
+                        title="Projects"
+                    />
+                </Grid>
                 <Grid item xs={12} sm container className={classes.blank}>
 
                 </Grid>
@@ -115,6 +124,9 @@ Stats.propTypes = {
     labelsCountTotal: PropTypes.number.isRequired,
     labelsCountSelected: PropTypes.number.isRequired,
     labelsCountLoaded: PropTypes.number.isRequired,
+    projectsCountTotal: PropTypes.number.isRequired,
+    projectsCountSelected: PropTypes.number.isRequired,
+    projectsCountLoaded: PropTypes.number.isRequired,
     milestonesCountTotal: PropTypes.number.isRequired,
     milestonesCountSelected: PropTypes.number.isRequired,
     milestonesCountLoaded: PropTypes.number.isRequired,
@@ -131,6 +143,9 @@ const mapState = state => ({
     labelsCountTotal: state.settingsView.labelsCountTotal,
     labelsCountSelected: state.settingsView.labelsCountSelected,
     labelsCountLoaded: state.settingsView.labelsCountLoaded,
+    projectsCountTotal: state.settingsView.projectsCountTotal,
+    projectsCountSelected: state.settingsView.projectsCountSelected,
+    projectsCountLoaded: state.settingsView.projectsCountLoaded,
     milestonesCountTotal: state.settingsView.milestonesCountTotal,
     milestonesCountSelected: state.settingsView.milestonesCountSelected,
     milestonesCountLoaded: state.settingsView.milestonesCountLoaded,
