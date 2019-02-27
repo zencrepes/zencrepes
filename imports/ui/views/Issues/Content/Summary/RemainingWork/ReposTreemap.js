@@ -53,7 +53,7 @@ class ReposTreemap extends Component {
                     labelFormat=''
                     labelSkipSize={40}
                     labelTextColor="inherit:darker(1.2)"
-                    colors="d320"
+                    colors="nivo"
                     colorBy="name"
                     borderColor="inherit:darker(0.3)"
                     animate={true}
