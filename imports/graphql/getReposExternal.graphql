@@ -36,6 +36,9 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
               }
             }
           }
+          projects(first: 1, states: OPEN) {
+            totalCount
+          }
           labels(first: 1) {
             totalCount
           }
