@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/Fgerthoffert/zencrepes/tree/master.svg?style=svg)](https://circleci.com/gh/Fgerthoffert/zencrepes/tree/master) [![Slack](http://slack.overture.bio/badge.svg)](http://slack.overture.bio)
+[![CircleCI](https://circleci.com/gh/zencrepes/zencrepes/tree/master.svg?style=svg)](https://circleci.com/gh/zencrepes/zencrepes/tree/master) [![Slack](http://slack.overture.bio/badge.svg)](http://slack.overture.bio)
 
 
 <h1 align="center"> Zencrepes </h1><br>
