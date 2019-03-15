@@ -27,8 +27,8 @@ class FetchOrgs extends Component {
     }
 
     componentDidUpdate() {
-        const { setLoadFlag, loadFlag } = this.props;
-        if (loadFlag) {
+        const { setLoadFlag, loadFlag, loading } = this.props;
+        if (loadFlag && loading === false) {
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.resetCounts();     // Reset all counts since those will be refresh by loadIssues
             this.load();            // Logic to load Issues

@@ -23,6 +23,8 @@
     "@devexpress/dx-react-core": "^1.10.0",
     "@devexpress/dx-react-grid": "^1.10.0",
     "@devexpress/dx-react-grid-material-ui": "^1.10.0",
+    "@elastic/datemath": "^5.0.2",
+    "@elastic/eui": "^6.10.5",
     "@material-ui/core": "3.6.2",
     "@material-ui/icons": "3.0.1",
     "@nivo/bar": "^0.52.1",
@@ -76,7 +78,6 @@
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
-    "storybook": "^1.0.0",
     "@storybook/addon-actions": "^4.1.4",
     "@storybook/react": "^4.1.4",
     "@types/node": "^10.12.18",
@@ -89,6 +90,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-meteor": "^5.1.0",
-    "eslint-plugin-react": "^7.12.1"
+    "eslint-plugin-react": "^7.12.1",
+    "storybook": "^1.0.0"
   }
 }

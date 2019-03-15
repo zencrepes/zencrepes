@@ -15,9 +15,9 @@ class Staging extends Component {
     }
 
     componentDidUpdate = (prevProps) => {
-        const { setVerifFlag, verifFlag } = this.props;
+        const { setVerifFlag, verifFlag, loading } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
-        if (verifFlag === true && prevProps.verifFlag === false) {
+        if (verifFlag === true && prevProps.verifFlag === false && loading === false) {
             setVerifFlag(false);
             this.load();
         }
