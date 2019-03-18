@@ -33,8 +33,8 @@ jobs:
       #    command: echo $METEOR_SETTINGS > settings.json
 
       - run:
-          name: Install npm dependencies
-          command: meteor npm install
+          name: Install yarn dependencies
+          command: meteor yarn install
 
       - save_cache:
           name: Save NPM Cache
