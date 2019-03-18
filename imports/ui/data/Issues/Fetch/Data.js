@@ -22,9 +22,9 @@ class Data extends Component {
     }
 
     componentDidUpdate = (prevProps) => {
-        const { setLoadFlag, loadFlag } = this.props;
+        const { setLoadFlag, loadFlag, loading } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
-        if (loadFlag === true && prevProps.loadFlag === false) {
+        if (loadFlag === true && prevProps.loadFlag === false && loading === false) {
             setLoadFlag(false);
             this.load();
         }

@@ -34,8 +34,8 @@ class Data extends Component {
     }
 
     componentDidUpdate() {
-        const { setLoadFlag, loadFlag } = this.props;
-        if (loadFlag) {
+        const { setLoadFlag, loadFlag, loading } = this.props;
+        if (loadFlag, loading === false) {
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
