@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 
 /*
 *
@@ -21,11 +22,23 @@ const ingestIssue = async (cfgIssues, issueNode, repoNode, orgNode) => {
         //Get points from labels
         // Regex to test: SP:[.\d]
         let pointsExp = RegExp('SP:[.\\d]');
+        //let pointsLabelExp = RegExp('loe:(?<name>.+)');
         let boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
         for (var currentLabel of issueObj.labels.edges) {
             if (pointsExp.test(currentLabel.node.name)) {
                 let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                 issueObj['points'] = points;
+            } else if (Meteor.settings.public.effort !== undefined && Meteor.settings.public.effort[currentLabel.node.name] !== undefined) {
+                issueObj['points'] = parseInt(Meteor.settings.public.effort[currentLabel.node.name]);
+                /*
+                if (Meteor.settings.public.effort !== undefined) {
+                    const pointsLabel = pointsLabelExp.exec(currentLabel.node.name);
+                    const efforts = Meteor.settings.public.effort;
+                    if (efforts[pointsLabel.groups.name] !== undefined) {
+                        issueObj['points'] = efforts[pointsLabel.groups.name];
+                    }
+                }
+                */
             }
             if (boardExp.test(currentLabel.node.description)) {
                 const boardLabel = boardExp.exec(currentLabel.node.description);
