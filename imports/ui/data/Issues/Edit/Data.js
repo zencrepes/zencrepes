@@ -192,12 +192,10 @@ class Data extends Component {
             log.warn(error);
         }
         log.info(data);
-        if (data.data !== null) {
-            if (data.data !== undefined) {
-                this.props.updateChip(data.data.rateLimit);
-                if (data.data.repository.issue !== null) {
-                    await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
-                }
+        if (data.data !== null && data.data !== undefined) {
+            this.props.updateChip(data.data.rateLimit);
+            if (data.data.repository.issue !== null) {
+                await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
             }
         }
     };
