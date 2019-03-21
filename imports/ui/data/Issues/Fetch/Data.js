@@ -90,6 +90,10 @@ class Data extends Component {
         onSuccess();
     };
 
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 issues, but local only has 99
     // Query increment should not be just 1 since if the missing issue is far down, this will generate a large number of calls
     getIssuesPagination = async (cursor, increment, repoObj) => {
@@ -98,6 +102,7 @@ class Data extends Component {
             if (this.errorRetry <= 3) {
                 let data = {};
                 try {
+                    await this.sleep(2000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
                     data = await client.query({
                         query: GET_GITHUB_ISSUES,
                         variables: {repo_cursor: cursor, increment: increment, org_name: repoObj.org.login, repo_name: repoObj.name},
