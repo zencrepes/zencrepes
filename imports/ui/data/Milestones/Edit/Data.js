@@ -64,7 +64,7 @@ class Data extends Component {
             log.info(error);
         }
         log.info(data);
-        if (data.data !== null) {
+        if (data.data !== null && data.data !== undefined) {
             const milestoneObj = {
                 ...data.data.repository.milestone,
                 repo: milestone.repo,

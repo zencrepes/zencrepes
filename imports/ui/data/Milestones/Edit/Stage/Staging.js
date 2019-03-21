@@ -107,7 +107,7 @@ class Staging extends Component {
                             log.warn(error);
                         }
                         log.info(data);
-                        if (data.data !== null) {
+                        if (data.data !== null && data.data !== undefined) {
                             if (data.data !== undefined) {
                                 this.props.updateChip(data.data.rateLimit);
                             }
