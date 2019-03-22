@@ -36,6 +36,10 @@ class FetchOrgs extends Component {
         }
     }
 
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
     resetCounts = () => {
         const { setLoadedOrgs, setLoadedRepos} = this.props;
         this.githubOrgs = [];
@@ -130,6 +134,7 @@ class FetchOrgs extends Component {
                 if (OrgObj !== null) {
                     let data = {};
                     let repositories = {};
+                    await this.sleep(2000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
                     try {
                         if (type === 'org') {
                             data = await client.query({
