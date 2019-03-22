@@ -70,12 +70,20 @@ class FetchOrgs extends Component {
 
 
         log.info('Initiate Organizations Repositories load');
+        for (let OrgObj of this.githubOrgs) {
+            if (OrgObj !== null) {
+                log.info('Loading Org', OrgObj);
+                await this.getReposPagination(null, 5, OrgObj, 'org');
+            }
+        }
+        /*
         await Promise.map(this.githubOrgs, async (OrgObj): Promise<number> => {
             if (OrgObj !== null) {
                 log.info('Loading Org', OrgObj);
                 await this.getReposPagination(null, 5, OrgObj, 'org');
             }
         });
+        */
         log.info('Organizations Repositories loaded: ' + this.totalReposCount);
 
         log.info('Initiate Users own Repositories load');
