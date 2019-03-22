@@ -16,6 +16,7 @@ class FetchOrgRepos extends Component {
     constructor (props) {
         super(props);
         this.reposCount = 0;
+        this.errorRetry = 0;
     }
 
     componentDidUpdate() {
@@ -73,33 +74,51 @@ class FetchOrgRepos extends Component {
             setLoadingIterateTotal,
             setLoadingSuccessMsg,
             setLoadingSuccess,
-
+            setLoading,
         } = this.props;
         if (this.props.loading) {
-            let data = await client.query({
-                query: GET_GITHUB_REPOS,
-                variables: {repo_cursor: cursor, increment: increment, org_name: name},
-                fetchPolicy: 'no-cache',
-                errorPolicy: 'ignore',
-            });
-            log.info(data);
-            updateChip(data.data.rateLimit);
-            if (data.data.organization !== null) {
-                setAvailableRepos(data.data.organization.repositories.totalCount);
-                let lastCursor = await this.loadRepositories(data);
-                let queryIncrement = calculateQueryIncrement(this.reposCount, data.data.organization.repositories.totalCount);
-                log.info(cfgSources.find({'org.id': data.data.organization.id}));
-                log.info('Current count: ' + this.reposCount);
-                log.info('Total count: ' + data.data.organization.repositories.totalCount);
-                log.info('Query increment: ' + queryIncrement);
-                setLoadingIterateCurrent(this.reposCount);
-                setLoadingIterateTotal(data.data.organization.repositories.totalCount);
-                if (queryIncrement > 0) {
-                    await this.getReposPagination(lastCursor, queryIncrement);
+            if (this.errorRetry <= 3) {
+                let data = {};
+                try {
+                    data = await client.query({
+                        query: GET_GITHUB_REPOS,
+                        variables: {repo_cursor: cursor, increment: increment, org_name: name},
+                        fetchPolicy: 'no-cache',
+                        errorPolicy: 'ignore',
+                    });
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                log.info(data);
+                if (data.data !== null && data.data !== undefined) {
+                    this.errorRetry = 0;
+                    updateChip(data.data.rateLimit);
+                    if (data.data.organization !== null) {
+                        setAvailableRepos(data.data.organization.repositories.totalCount);
+                        let lastCursor = await this.loadRepositories(data);
+                        let queryIncrement = calculateQueryIncrement(this.reposCount, data.data.organization.repositories.totalCount);
+                        log.info(cfgSources.find({'org.id': data.data.organization.id}));
+                        log.info('Current count: ' + this.reposCount);
+                        log.info('Total count: ' + data.data.organization.repositories.totalCount);
+                        log.info('Query increment: ' + queryIncrement);
+                        setLoadingIterateCurrent(this.reposCount);
+                        setLoadingIterateTotal(data.data.organization.repositories.totalCount);
+                        if (queryIncrement > 0) {
+                            await this.getReposPagination(lastCursor, queryIncrement);
+                        }
+                    } else {
+                        setLoadingSuccessMsg('Organization not found');
+                        setLoadingSuccess(false);
+                    }
+                } else {
+                    this.errorRetry = this.errorRetry + 1;
+                    log.info('Error loading content, current count: ' + this.errorRetry)
+                    await this.getReposPagination(cursor, increment);
                 }
             } else {
-                setLoadingSuccessMsg('Organization not found');
-                setLoadingSuccess(false);
+                log.info('Got too many load errors, stopping');
+                setLoading(false);
             }
         }
     };
