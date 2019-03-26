@@ -5,6 +5,7 @@ export default {
         loadedLabels: null,
         loadedQueries: null,
         loadedMilestones: null,
+        loadedProjects: null,
     },
     reducers: {
         setLoadedIssues(state, payload) {return { ...state, loadedIssues: payload };},
@@ -12,6 +13,7 @@ export default {
         setLoadedLabels(state, payload) {return { ...state, loadedLabels: payload };},
         setLoadedQueries(state, payload) {return { ...state, loadedQueries: payload };},
         setLoadedMilestones(state, payload) {return { ...state, loadedMilestones: payload };},
+        setLoadedProjects(state, payload) {return { ...state, loadedProjects: payload };},
     },
 
     effects: {

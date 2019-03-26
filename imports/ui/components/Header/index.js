@@ -21,6 +21,7 @@ import {
     Label,
     RunFast,
     ChartGantt,
+    DeveloperBoard,
 } from 'mdi-material-ui';
 
 import UserMenu from './UserMenu.js';
@@ -59,9 +60,10 @@ class Header extends Component {
 
         const routes = [
             {path: '/issues', icon: (<ViewDashboard className={classes.leftIcon} />), text: 'Issues', key: 'issues'},
-            {path: '/roadmap', icon: (<ChartGantt className={classes.leftIcon} />), text: 'Roadmap', key: 'roadmap'},
+            {path: '/roadmap', icon: (<ChartGantt className={classes.leftIcon} />), text: 'Roadmap (dev)', key: 'roadmap'},
             {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprints'},
             {path: '/labels', icon: (<Label className={classes.leftIcon} />), text: 'Labels', key: 'labels'},
+            {path: '/projects', icon: (<DeveloperBoard className={classes.leftIcon} />), text: 'Projects (dev)', key: 'projects'},
             {path: '/milestones', icon: (<Calendar className={classes.leftIcon} />), text: 'Milestones', key: 'milestones'},
             {path: '/settings', icon: (<Settings className={classes.leftIcon} />), text: 'Settings', key: 'settings'},
         ];

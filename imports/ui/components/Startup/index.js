@@ -13,6 +13,7 @@ import { cfgQueries } from "../../data/Minimongo.js";
 import { cfgSources } from "../../data/Minimongo.js";
 import { cfgIssues } from "../../data/Minimongo.js";
 import { cfgMilestones } from "../../data/Minimongo.js";
+import { cfgProjects } from "../../data/Minimongo.js";
 
 class Startup extends Component {
     constructor (props) {
@@ -26,10 +27,12 @@ class Startup extends Component {
             loadedLabels,
             loadedQueries,
             loadedMilestones,
+            loadedProjects,
             issuesCount,
             labelsCount,
             queriesCount,
             milestonesCount,
+            projectsCount,
             sourcesCount
         } = this.props;
 
@@ -43,6 +46,7 @@ class Startup extends Component {
                         Queries: {queriesCount} {loadedQueries && <i>- Complete</i>} <br />
                         Repos: {sourcesCount} {loadedSources && <i>- Complete</i>} <br />
                         Milestones: {milestonesCount} {loadedMilestones && <i>- Complete</i>} <br />
+                        Projects: {projectsCount} {loadedProjects && <i>- Complete</i>} <br />
                     </div>
                 </DialogContent>
             </Dialog>
@@ -56,11 +60,13 @@ Startup.propTypes = {
     loadedLabels: PropTypes.bool,
     loadedQueries: PropTypes.bool,
     loadedMilestones: PropTypes.bool,
+    loadedProjects: PropTypes.bool,
     issuesCount: PropTypes.number,
     labelsCount: PropTypes.number,
     queriesCount: PropTypes.number,
     sourcesCount: PropTypes.number,
     milestonesCount: PropTypes.number,
+    projectsCount: PropTypes.number,
 };
 
 const mapState = state => ({
@@ -69,6 +75,7 @@ const mapState = state => ({
     loadedLabels: state.startup.loadedLabels,
     loadedQueries: state.startup.loadedQueries,
     loadedMilestones: state.startup.loadedMilestones,
+    loadedProjects: state.startup.loadedMilestones,
 });
 
 export default
@@ -79,5 +86,6 @@ export default
             queriesCount: cfgQueries.find({}).count(),
             sourcesCount: cfgSources.find({}).count(),
             milestonesCount: cfgMilestones.find({}).count(),
+            projectsCount: cfgProjects.find({}).count(),
         }})(Startup)
     );

@@ -43,5 +43,8 @@ query ($org_name: String!, $repo_name: String!){
     releases(first: 1) {
       totalCount
     }
+    projects(first: 1) {
+      totalCount
+    }
   }
 }
