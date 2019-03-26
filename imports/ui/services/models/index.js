@@ -51,3 +51,6 @@ export { default as wizardView } from './wizard/View.js';
 
 // Settings
 export { default as settingsView } from './settings/View.js';
+
+// Portfolio
+export { default as roadmapView } from './roadmap/View.js';

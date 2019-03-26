@@ -20,11 +20,14 @@ import {
     ViewDashboard,
     Label,
     RunFast,
+    ChartGantt,
 } from 'mdi-material-ui';
 
 import UserMenu from './UserMenu.js';
 import {connect} from "react-redux";
 import red from "@material-ui/core/colors/red";
+
+import {reactLocalStorage} from 'reactjs-localstorage';
 
 const style = theme => ({
     root: {
@@ -56,6 +59,7 @@ class Header extends Component {
 
         const routes = [
             {path: '/issues', icon: (<ViewDashboard className={classes.leftIcon} />), text: 'Issues', key: 'issues'},
+            {path: '/roadmap', icon: (<ChartGantt className={classes.leftIcon} />), text: 'Roadmap', key: 'roadmap'},
             {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprints'},
             {path: '/labels', icon: (<Label className={classes.leftIcon} />), text: 'Labels', key: 'labels'},
             {path: '/milestones', icon: (<Calendar className={classes.leftIcon} />), text: 'Milestones', key: 'milestones'},
@@ -89,7 +93,9 @@ class Header extends Component {
                                             spacing={8}
                                         >
                                             {routes.filter((route) => {
-                                                if (_.isEmpty(menus)) {return true;}
+                                                // First one is to hide something behind a feature flag
+                                                if (reactLocalStorage.get('feat-' + route.key, false)) {return true;}
+                                                else if (_.isEmpty(menus)) {return true;}
                                                 else if (menus[route.key] !== undefined && menus[route.key] === true) {
                                                     return true;
                                                 } else {
