@@ -72,6 +72,7 @@
     "react-redux": "^5.1.1",
     "react-router-dom": "^4.3.1",
     "react-simplemde-editor": "^3.6.22",
+    "react-timelines": "^2.5.2",
     "reactcss": "^1.2.3",
     "reactjs-localstorage": "0.0.7",
     "uuid": "^3.3.2"

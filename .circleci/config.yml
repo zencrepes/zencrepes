@@ -72,7 +72,7 @@ jobs:
         - run:
             name: SSH - Clone Repo locally
             command: |
-              ssh $SSH_USER@$SSH_HOST "git clone https://github.com/Fgerthoffert/zencrepes.git ~/zencrepes_prod/"
+              ssh $SSH_USER@$SSH_HOST "git clone https://github.com/zencrepes/zencrepes.git ~/zencrepes_prod/"
 
         - run:
             name: SSH - Update settings.json with environment variable
@@ -124,7 +124,7 @@ jobs:
         - run:
             name: SSH - Clone Repo locally
             command: |
-              ssh $SSH_USER@$SSH_HOST "git clone https://github.com/Fgerthoffert/zencrepes.git ~/zencrepes_dev/"
+              ssh $SSH_USER@$SSH_HOST "git clone https://github.com/zencrepes/zencrepes.git ~/zencrepes_dev/"
 
         - run:
             name: SSH - Moving to develop branch

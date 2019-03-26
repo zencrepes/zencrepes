@@ -1,7 +1,8 @@
 # Inspiration from:
 # - https://github.com/jshimko/meteor-launchpad/
 # - https://github.com/cloud66-samples/blog/blob/webinar_codeship_meteor/Dockerfile.production
-FROM node:8.9.0
+#FROM node:8.9.0
+FROM node:8.9.4-stretch
 MAINTAINER Francois Gerthoffert <fg@mail.gerthoffert.net>
 
 ENV GOSU_VERSION 1.11
