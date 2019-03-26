@@ -4,5 +4,6 @@
   "milestones": true,
   "labels": true,
   "settings": true,
-  "roadmap": true
+  "roadmap": true,
+  "projects": true
 }
