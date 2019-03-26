@@ -19,3 +19,7 @@ window.queries = cfgQueries;
 export const cfgMilestones = new Mongo.Collection('cfgMilestones', {connection: null});
 //export const localCfgQueries = new PersistentMinimongo2(cfgQueries, 'GAV-Queries');
 window.milestones = cfgMilestones;
+
+export const cfgProjects = new Mongo.Collection('cfgProjects', {connection: null});
+//export const localCfgQueries = new PersistentMinimongo2(cfgQueries, 'GAV-Queries');
+window.projects = cfgProjects;
