@@ -104,7 +104,7 @@ class Data extends Component {
             if (this.errorRetry <= 3) {
                 let data = {};
                 try {
-                    await this.sleep(2000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
+                    await this.sleep(1000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
                     data = await client.query({
                         query: GET_GITHUB_ISSUES,
                         variables: {repo_cursor: cursor, increment: increment, org_name: repoObj.org.login, repo_name: repoObj.name},
