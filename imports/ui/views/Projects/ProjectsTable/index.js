@@ -17,7 +17,6 @@ import {
     PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import {connect} from "react-redux";
-import uuidv1 from "uuid/v1";
 
 import {
     StateLabel,
@@ -87,7 +86,7 @@ const IssuesFormatter = ({ value }) => {
     if (value === undefined) {
         return 0
     } else {
-        return value.filter(project => project.issues !== undefined).map(project => project.issues.totalCount).reduce((acc, count) => acc + count, 0);
+        return value.filter(project => project.issues !== undefined).map(project => project.issues.length).reduce((acc, count) => acc + count, 0);
     }
 };
 IssuesFormatter.propTypes = {
@@ -111,32 +110,13 @@ const DatesFormatter = ({ value }) => {
     }
 };
 DatesFormatter.propTypes = {
-    value: PropTypes.array,
+    value: PropTypes.string,
 };
 
 
 const DatesTypeProvider = props => (
     <DataTypeProvider
         formatterComponent={DatesFormatter}
-        {...props}
-    />
-);
-
-const PrFormatter = ({ value }) => {
-    if (value === undefined) {
-        return 0
-    } else {
-        return value.filter(project => project.pullRequests !== undefined).map(project => project.pullRequests.totalCount).reduce((acc, count) => acc + count, 0);
-    }
-};
-PrFormatter.propTypes = {
-    value: PropTypes.array,
-};
-
-
-const PrTypeProvider = props => (
-    <DataTypeProvider
-        formatterComponent={PrFormatter}
         {...props}
     />
 );
@@ -254,7 +234,6 @@ class ProjectsTable extends Component {
             reposColumns,
             datesColumns,
             issuesColumns,
-            prColumns,
         } = this.state;
 
         return (

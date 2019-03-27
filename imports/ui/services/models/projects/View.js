@@ -1,4 +1,4 @@
-import { cfgProjects, cfgSources } from '../../../data/Minimongo.js';
+import { cfgProjects, cfgSources, cfgIssues } from '../../../data/Minimongo.js';
 import {buildFacets} from "../../../utils/facets/projects.js";
 
 export default {
@@ -39,7 +39,13 @@ export default {
         },
         async refreshProjects(payload, rootState) {
             const projects = cfgProjects.find(rootState.projectsView.query).fetch();
-            this.setProjects(projects);
+            const projectsIssues = projects.map((project) => {
+                return {
+                    ...project,
+                    issues: cfgIssues.find({'projectCards.edges.node.project.id':project.id}).fetch()
+                }
+            })
+            this.setProjects(projectsIssues);
         },
         async clearProjects() {
             cfgProjects.remove({});
