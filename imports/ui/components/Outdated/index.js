@@ -44,7 +44,7 @@ class Outdated extends React.Component {
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         We are doing our best to avoid disruption, but as we add new features, we sometime need to modify ZenCrepes data model. <br /><br />
-                        Data from an old model has been detected, to avoid UI crashes, please click on "Clear Data" and refresh this page.
+                        Data from an old model has been detected, to avoid UI crashes, please click on &apos;Clear Data&apos; and refresh this page.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

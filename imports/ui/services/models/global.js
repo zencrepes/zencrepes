@@ -1,6 +1,5 @@
 //https://github.com/pimterry/loglevel
 import * as log from 'loglevel';
-import _ from 'lodash';
 import { Meteor } from 'meteor/meteor';
 
 import { cfgLabels } from "../../data/Minimongo.js";
