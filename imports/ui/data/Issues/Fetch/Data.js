@@ -13,6 +13,8 @@ import calculateQueryIncrement from '../../utils/calculateQueryIncrement.js';
 import ingestIssue from '../../utils/ingestIssue.js';
 import { cfgLabels } from "../../Minimongo";
 
+import {reactLocalStorage} from 'reactjs-localstorage';
+
 class Data extends Component {
     constructor (props) {
         super(props);
@@ -22,9 +24,9 @@ class Data extends Component {
     }
 
     componentDidUpdate = (prevProps) => {
-        const { setLoadFlag, loadFlag } = this.props;
+        const { setLoadFlag, loadFlag, loading } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
-        if (loadFlag === true && prevProps.loadFlag === false) {
+        if (loadFlag === true && prevProps.loadFlag === false && loading === false) {
             setLoadFlag(false);
             this.load();
         }
@@ -90,6 +92,10 @@ class Data extends Component {
         onSuccess();
     };
 
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 issues, but local only has 99
     // Query increment should not be just 1 since if the missing issue is far down, this will generate a large number of calls
     getIssuesPagination = async (cursor, increment, repoObj) => {
@@ -98,6 +104,7 @@ class Data extends Component {
             if (this.errorRetry <= 3) {
                 let data = {};
                 try {
+                    await this.sleep(1000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
                     data = await client.query({
                         query: GET_GITHUB_ISSUES,
                         variables: {repo_cursor: cursor, increment: increment, org_name: repoObj.org.login, repo_name: repoObj.name},
@@ -110,7 +117,7 @@ class Data extends Component {
                     log.info(error);
                 }
                 log.info(repoObj);
-                if (data.data !== null) {
+                if (data.data !== null && data.data !== undefined) {
                     this.errorRetry = 0;
                     this.props.updateChip(data.data.rateLimit);
                     // Check if the repository actually exist and issues were returned
@@ -145,6 +152,11 @@ class Data extends Component {
 
         let lastCursor = null;
         let stopLoad = false;
+
+        var moment = require('moment');
+        //let loadHistoryDate = moment(new Date());
+        const loadHistoryDate = moment(new Date()).subtract(reactLocalStorage.get('issuesHistoryLoad', 12), 'months');
+
         log.info(data);
         for (var currentIssue of data.data.repository.issues.edges){
             log.info(currentIssue);
@@ -159,7 +171,7 @@ class Data extends Component {
 //                log.info(new Date(existNode.updatedAt).getTime());
             }
             if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
-                log.info('Issue already loaded, skipping');
+                log.info('Issue already loaded, stopping entire load');
 //                log.info(data.data.repository.issues.totalCount);
 //                log.info(cfgIssues.find({'repo.id': repoObj.id}).count());
 
@@ -167,9 +179,17 @@ class Data extends Component {
                 // is equal to updated date of a local issue, it means there is no "new" content, but there might still be
                 // issues that were not loaded for any reason. So the system only stops loaded if totalCount remote is equal
                 //  to the total number of issues locally
-                if (data.data.repository.issues.totalCount === cfgIssues.find({'repo.id': repoObj.id}).count()) {
-                    stopLoad = true;
-                }
+                // Note Mar 21: This logic might be fine when the number of issues is relatively small, definitely problematic for large repositories.
+                // Commenting it out for now, it will not keep looking in the past if load is interrupted for some reason.
+                //if (data.data.repository.issues.totalCount === cfgIssues.find({'repo.id': repoObj.id}).count()) {
+                //    stopLoad = true;
+                //}
+                stopLoad = true;
+            } else if (new Date(currentIssue.node.updatedAt).getTime() < loadHistoryDate.valueOf()) {
+                stopLoad = true;
+                // Need to add logic to limit how far back issues will be loaded by letting the user define a number of months
+                // To keep the logic simple, loading issues that were updated during the past X Months
+                //  - Note: GraphQL IssueOrder Field only works for CREATED_AT, UPDATED_AT & COMMENTS. The doc doesn't list CLOSED_AT as a possible sort field.
             } else {
                 log.info('New or updated issue');
 

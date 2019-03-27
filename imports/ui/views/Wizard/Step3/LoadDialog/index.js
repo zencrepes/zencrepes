@@ -29,7 +29,7 @@ class LoadDialog extends Component {
                         </React.Fragment>
                     ) : (
                         <React.Fragment>
-                            Do you want to load the {reposIssues} issues attached to the selected repositories ?<br />
+                            This might load up to {reposIssues} issues attached to the selected repositories ?<br />
                         </React.Fragment>
                     )}
                 </DialogContent>

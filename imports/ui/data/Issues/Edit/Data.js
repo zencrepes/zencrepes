@@ -34,8 +34,8 @@ class Data extends Component {
     }
 
     componentDidUpdate() {
-        const { setLoadFlag, loadFlag } = this.props;
-        if (loadFlag) {
+        const { setLoadFlag, loadFlag, loading } = this.props;
+        if (loadFlag, loading === false) {
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.load();            // Logic to load Issues
         }
@@ -192,12 +192,10 @@ class Data extends Component {
             log.warn(error);
         }
         log.info(data);
-        if (data.data !== null) {
-            if (data.data !== undefined) {
-                this.props.updateChip(data.data.rateLimit);
-                if (data.data.repository.issue !== null) {
-                    await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
-                }
+        if (data.data !== null && data.data !== undefined) {
+            this.props.updateChip(data.data.rateLimit);
+            if (data.data.repository.issue !== null) {
+                await ingestIssue(cfgIssues, data.data.repository.issue, issue.repo, issue.org);
             }
         }
     };

@@ -5,18 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Grid from "@material-ui/core/Grid/Grid";
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import CheckIcon from '@material-ui/icons/Check';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
-import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 
-import Moment from 'react-moment';
+import IssueWide from '../Issue/IssueWide.js';
 
 const styles = theme => ({
     repoName: {
@@ -81,135 +73,11 @@ class Issue extends Component {
     }
 
     render() {
-        const { classes, issue } = this.props;
-        const pointsExp = RegExp('SP:[.\\d]');
-        const boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
+        const { issue } = this.props;
         return (
             <TableRow key={issue.id}>
                 <TableCell component="th" scope="row">
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item >
-                            <Tooltip title={issue.state}>
-                                {issue.state === 'OPEN' ?
-                                    <HourglassEmptyIcon className={classes.iconOpen} />
-                                    :
-                                    <CheckIcon className={classes.iconClosed} />
-                                }
-                            </Tooltip>
-                        </Grid>
-                        <Grid item xs={12} sm container>
-                            <Grid
-                                container
-                                direction="row"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                                spacing={8}
-                            >
-                                <Grid item >
-                                    <a href={issue.repo.url} className={classes.repoName} target="_blank" rel="noopener noreferrer">{issue.org.login}/{issue.repo.name}</a>
-                                </Grid>
-                                <Grid item xs={12} sm container >
-                                    <a href={issue.url} className={classes.issueTitle} target="_blank" rel="noopener noreferrer">{issue.title}</a>
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                                spacing={8}
-                            >
-                                <Grid item xs={12} sm container className={classes.sprintName}>
-                                    {issue.milestone !== null &&
-                                    <Tooltip title="Issue attached to sprint">
-                                        <Chip
-                                            icon={<DirectionsRunIcon className={classes.iconSprint} />}
-                                            label={issue.milestone.title}
-                                            className={classes.chipAgile}
-                                            color="primary"
-                                            variant="outlined"
-                                        />
-                                    </Tooltip>
-                                    }
-                                    {issue.boardState !== undefined && issue.boardState !== null &&
-                                        <Tooltip title="Current Agile State of the issue">
-                                            <Chip
-                                                icon={<ViewColumnIcon className={classes.iconSprint} />}
-                                                label={issue.boardState.name}
-                                                className={classes.chipAgile}
-                                                color="primary"
-                                                variant="outlined"
-                                            />
-                                        </Tooltip>
-                                    }
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justify="flex-start"
-                                alignItems="flex-start"
-                                spacing={8}
-                            >
-                                <Grid item className={classes.issueSubTitle}>
-                                    <span><a href={issue.url} className={classes.issueSubTitle} target="_blank" rel="noopener noreferrer">#{issue.number}</a> </span>
-                                    <span>opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment></span>
-                                    {issue.author !== null &&
-                                        <span> by <a href={issue.author.url} className={classes.authorLink} >#{issue.author.login}</a></span>
-                                    }
-                                    {issue.closedAt !== null ? (
-                                        <span>, closed on <Moment format="ddd MMM D, YYYY">{issue.closedAt}</Moment></span>
-                                    ) : (
-                                        <span>, last updated on <Moment format="ddd MMM D, YYYY">{issue.updatedAt}</Moment></span>
-                                    )}
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item >
-                            {issue.labels.totalCount > 0 &&
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="flex-start"
-                                    spacing={8}
-                                >
-                                {
-                                    //Filters out labels which are point since points are listed in the last column anyway
-                                    issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
-                                        return <Grid item key={label.node.name} ><Chip className={classes.chip} style={{background: "#" + label.node.color}} label={label.node.name}/></Grid>
-                                    })
-                                }
-                                </Grid>
-                            }
-                        </Grid>
-                        <Grid item >
-                            {issue.assignees.totalCount > 0 &&
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="flex-start"
-                                    spacing={8}
-                                >
-                                {
-                                    issue.assignees.edges.map((assignee) => {
-                                        return <Grid item key={assignee.node.login} ><Avatar alt={assignee.node.login} src={assignee.node.avatarUrl} className={classes.avatar} /></Grid>
-                                    })
-                                }
-                                </Grid>
-                            }
-                        </Grid>
-                        <Grid item >
-                            <Avatar className={classes.avatar}>{issue.points}</Avatar>
-                        </Grid>
-                    </Grid>
+                    <IssueWide issue={issue} />
                 </TableCell>
             </TableRow>
         );

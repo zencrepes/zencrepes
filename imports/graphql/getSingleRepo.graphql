@@ -28,9 +28,6 @@ query ($org_name: String!, $repo_name: String!){
         }
       }
     }
-    projects(first: 1, states: OPEN) {
-      totalCount
-    }
     labels(first: 1) {
       totalCount
     }
@@ -41,6 +38,9 @@ query ($org_name: String!, $repo_name: String!){
       totalCount
     }
     releases(first: 1) {
+      totalCount
+    }
+    projects(first: 1) {
       totalCount
     }
   }

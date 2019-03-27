@@ -16,9 +16,9 @@ class Data extends Component {
     }
 
     componentDidUpdate = (prevProps) => {
-        const { setLoadFlag, loadFlag } = this.props;
+        const { setLoadFlag, loadFlag, loading } = this.props;
         // Only trigger load if loadFlag transitioned from false to true
-        if (loadFlag === true && prevProps.loadFlag === false) {
+        if (loadFlag === true && prevProps.loadFlag === false && loading === false) {
             setLoadFlag(false);
             this.load();
         }
@@ -27,7 +27,7 @@ class Data extends Component {
     load = async () => {
         const {
             setLoading,
-            setLoadSuccess,
+            setLoadingSuccess,
             loadUsers,
             client,
             refreshUsers,
@@ -60,7 +60,7 @@ class Data extends Component {
         refreshUsers(users);
         log.info('Load completed: There is a total of ' + users.length + ' users in memory');
         setLoading(false);  // Set to true to indicate milestones are done loading.
-        setLoadSuccess(true);
+        setLoadingSuccess(true);
     };
 
     render() {
@@ -75,9 +75,7 @@ Data.propTypes = {
 
     setLoadFlag: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
-    setLoadSuccess: PropTypes.func.isRequired,
-    setLoadedCount: PropTypes.func.isRequired,
-    incLoadedCount: PropTypes.func.isRequired,
+    setLoadingSuccess: PropTypes.func.isRequired,
     refreshUsers: PropTypes.func.isRequired,
     updateChip: PropTypes.func.isRequired,
 
@@ -87,7 +85,7 @@ Data.propTypes = {
 
 const mapState = state => ({
     loadFlag: state.usersFetch.loadFlag,
-    loading: state.usersFetch.loading,
+    loading: state.loading.loading,
 
     loadUsers: state.usersFetch.loadUsers,
 
@@ -96,11 +94,10 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.usersFetch.setLoadFlag,
-    setLoading: dispatch.usersFetch.setLoading,
-    setLoadSuccess: dispatch.usersFetch.setLoadSuccess,
-    setLoadedCount: dispatch.usersFetch.setLoadedCount,
 
-    incLoadedCount: dispatch.usersFetch.incLoadedCount,
+    setLoading: dispatch.loading.setLoading,
+    setLoadingSuccess: dispatch.loading.setLoadingSuccess,
+
     refreshUsers: dispatch.usersView.refreshUsers,
 
     updateChip: dispatch.chip.updateChip,

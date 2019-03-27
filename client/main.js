@@ -17,6 +17,7 @@ import { cfgSources } from '../imports/ui/data/Minimongo.js';
 import { cfgQueries } from '../imports/ui/data/Minimongo.js';
 import { cfgLabels } from '../imports/ui/data/Minimongo.js';
 import { cfgMilestones } from '../imports/ui/data/Minimongo.js';
+import { cfgProjects } from '../imports/ui/data/Minimongo.js';
 
 // generate Redux store
 const store = init({
@@ -46,6 +47,9 @@ Tracker.autorun(function () {
 
         const localCfgMilestones = new PersistentMinimongo2(cfgMilestones, 'GAV-Milestones-' + username);
         localCfgMilestones.refresh(true, () => {store.dispatch.startup.setLoadedMilestones(true);});
+
+        const localCfgProjects = new PersistentMinimongo2(cfgProjects, 'GAV-Projects-' + username);
+        localCfgProjects.refresh(true, () => {store.dispatch.startup.setLoadedProjects(true);});
     }
 });
 

@@ -96,7 +96,7 @@ class About extends Component {
                         and a chunk of their features are directly dependent on their platform.
                     </p>
                     <p className={classes.paragraph}>
-                        ZenCrepes was built to try to address some of these challenges, while helping to bring consistenty in cross-org, cross-repo projects.
+                        ZenCrepes was built to try to address some of these challenges, while helping to bring consistency in cross-org, cross-repo projects.
                         ZenCrepes is only built on top of the GitHub API model, all of the data in ZenCrepes is directly hosted on GitHub. <br />
                         Your team can operate with GitHub issues as normal, while a centralized view is available in ZenCrepes.
                     </p>

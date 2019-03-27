@@ -24,16 +24,21 @@ class FetchOrgs extends Component {
         this.totalReposCount = 0;
         this.orgReposCount = {};
         this.state = {};
+        this.errorRetry = 0;
     }
 
     componentDidUpdate() {
-        const { setLoadFlag, loadFlag } = this.props;
-        if (loadFlag) {
+        const { setLoadFlag, loadFlag, loading } = this.props;
+        if (loadFlag && loading === false) {
             setLoadFlag(false);     // Right away set loadRepositories to false
             this.resetCounts();     // Reset all counts since those will be refresh by loadIssues
             this.load();            // Logic to load Issues
         }
     }
+
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
 
     resetCounts = () => {
         const { setLoadedOrgs, setLoadedRepos} = this.props;
@@ -65,12 +70,20 @@ class FetchOrgs extends Component {
 
 
         log.info('Initiate Organizations Repositories load');
+        for (let OrgObj of this.githubOrgs) {
+            if (OrgObj !== null) {
+                log.info('Loading Org', OrgObj);
+                await this.getReposPagination(null, 5, OrgObj, 'org');
+            }
+        }
+        /*
         await Promise.map(this.githubOrgs, async (OrgObj): Promise<number> => {
             if (OrgObj !== null) {
                 log.info('Loading Org', OrgObj);
                 await this.getReposPagination(null, 5, OrgObj, 'org');
             }
         });
+        */
         log.info('Organizations Repositories loaded: ' + this.totalReposCount);
 
         log.info('Initiate Users own Repositories load');
@@ -122,43 +135,63 @@ class FetchOrgs extends Component {
             log,
             setLoadingIterateCurrent,
             setLoadingIterateTotal,
+            setLoading,
         } = this.props;
         if (this.props.loading) {
-            if (OrgObj !== null) {
-                let data = {};
-                let repositories = {};
-                if (type === 'org') {
-                    data = await client.query({
-                        query: GET_GITHUB_REPOS,
-                        variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
-                        fetchPolicy: 'no-cache',
-                    });
-                    repositories = data.data.viewer.organization.repositories;
-                } else {
-                    data = await client.query({
-                        query: GET_GITHUB_USER_REPOS,
-                        variables: {repo_cursor: cursor, increment: increment, login: OrgObj.login},
-                        fetchPolicy: 'no-cache',
-                    });
-                    OrgObj = data.data.user;
-                    repositories = data.data.viewer.repositories;
+            if (this.errorRetry <= 3) {
+                if (OrgObj !== null) {
+                    let data = {};
+                    let repositories = {};
+                    await this.sleep(1000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
+                    try {
+                        if (type === 'org') {
+                            data = await client.query({
+                                query: GET_GITHUB_REPOS,
+                                variables: {repo_cursor: cursor, increment: increment, org_name: OrgObj.login},
+                                fetchPolicy: 'no-cache',
+                            });
+                            repositories = data.data.viewer.organization.repositories;
+                        } else {
+                            data = await client.query({
+                                query: GET_GITHUB_USER_REPOS,
+                                variables: {repo_cursor: cursor, increment: increment, login: OrgObj.login},
+                                fetchPolicy: 'no-cache',
+                            });
+                            OrgObj = data.data.user;
+                            repositories = data.data.viewer.repositories;
+                        }
+                    }
+                    catch (error) {
+                        log.info(error);
+                    }
+                    log.info(OrgObj);
+                    if (data.data !== null && data.data !== undefined) {
+                        this.errorRetry = 0;
+                        if (this.orgReposCount[OrgObj.id] === undefined) {
+                            this.orgReposCount[OrgObj.id] = 0;
+                        }
+                        updateChip(data.data.rateLimit);
+                        let lastCursor = await this.loadRepositories(repositories, OrgObj);
+                        log.info('ORG OBJ: ' + OrgObj.id);
+                        let queryIncrement = calculateQueryIncrement(this.orgReposCount[OrgObj.id], repositories.totalCount);
+                        log.info(cfgSources.find({'org.id': OrgObj.id}).fetch());
+                        log.info('Current count: ' + this.orgReposCount[OrgObj.id]);
+                        log.info('Total count: ' + repositories.totalCount);
+                        log.info('Query increment: ' + queryIncrement);
+                        setLoadingIterateCurrent(this.orgReposCount[OrgObj.id]);
+                        setLoadingIterateTotal(repositories.totalCount);
+                        if (queryIncrement > 0) {
+                            await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
+                        }
+                    } else {
+                        this.errorRetry = this.errorRetry + 1;
+                        log.info('Error loading content, current count: ' + this.errorRetry)
+                        await this.getReposPagination(cursor, increment, OrgObj, type);
+                    }
                 }
-                if (this.orgReposCount[OrgObj.id] === undefined) {
-                    this.orgReposCount[OrgObj.id] = 0;
-                }
-                updateChip(data.data.rateLimit);
-                let lastCursor = await this.loadRepositories(repositories, OrgObj);
-                log.info('ORG OBJ: ' + OrgObj.id);
-                let queryIncrement = calculateQueryIncrement(this.orgReposCount[OrgObj.id], repositories.totalCount);
-                log.info(cfgSources.find({'org.id': OrgObj.id}).fetch());
-                log.info('Current count: ' + this.orgReposCount[OrgObj.id]);
-                log.info('Total count: ' + repositories.totalCount);
-                log.info('Query increment: ' + queryIncrement);
-                setLoadingIterateCurrent(this.orgReposCount[OrgObj.id]);
-                setLoadingIterateTotal(repositories.totalCount);
-                if (queryIncrement > 0) {
-                    await this.getReposPagination(lastCursor, queryIncrement, OrgObj, type);
-                }
+            } else {
+                log.info('Got too many load errors, stopping');
+                setLoading(false);
             }
         }
     };

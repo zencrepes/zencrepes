@@ -66,6 +66,22 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
       participants(first: 1) {
         totalCount
       }
+      projectCards(first: 5) {
+        totalCount
+        edges {
+          node {
+            id
+            project {
+              id
+              name
+            }
+            column {
+              id
+              name
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -37,7 +37,7 @@ class Selected extends Component {
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent className={classes.cardContent} >
-                        {selectedRepos.length} Repos and {issuesCountSelected} Issues selected
+                        {selectedRepos.length} Repos and up to {issuesCountSelected} Issues selected
                     </CardContent>
                 </Card>
             </div>

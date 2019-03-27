@@ -13,6 +13,14 @@ export const formatDate = (dateString) => {
     return day
 };
 
+export const formatDateEoD = (dateString) => {
+    let day = new Date(dateString);
+    day.setUTCHours(23);
+    day.setUTCMinutes(59);
+    day.setUTCSeconds(59);
+    return day
+};
+
 /*
 *
 * getLastDay() Return the last day from a minimongo dataset

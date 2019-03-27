@@ -1,0 +1,37 @@
+query ($org_name: String!, $repo_name: String!, $project_number: Int!){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  repository(owner:$org_name, name:$repo_name) {
+    viewerPermission
+    project(number: $project_number) {
+      id
+      createdAt
+      updatedAt
+      closedAt
+      databaseId
+      number
+      url
+      name
+      state
+      columns(first: 10) {
+        totalCount
+        edges {
+          node {
+            id
+		    name
+            cards(first: 1) {
+              totalCount
+            }
+          }
+        }
+      }
+      pendingCards(first: 100) {
+        totalCount
+      }
+    }
+  }
+}
