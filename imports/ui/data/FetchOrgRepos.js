@@ -79,7 +79,7 @@ class FetchOrgRepos extends Component {
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
-                await this.sleep(2000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
+                await this.sleep(1000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
                 try {
                     data = await client.query({
                         query: GET_GITHUB_REPOS,

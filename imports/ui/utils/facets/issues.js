@@ -32,12 +32,6 @@ const aggregationsModel = {
         nested: false,
         aggregations: {}
     },
-    boardState: {
-        key: 'boardState.name',
-        name: 'Agile States',
-        nested: false,
-        aggregations: {}
-    },
     milestones: {
         key: 'milestone.title',
         name: 'Milestones',
@@ -70,7 +64,19 @@ const aggregationsModel = {
         nestedKey: 'name',
         aggregations: {}
     },
+    projects: {
+        key: 'projectCards',
+        name: 'Project',
+        nullValue: 'NO PROJECT',
+        nullFilter: {'projectCards.totalCount': { $eq : 0 }},
+        nested: true,
+        nestedKey: 'project.name',
+        aggregations: {}
+    },
 };
+
+// NOTE: The query/facets mechanism currently doesn't support querying on multiple fields with the same "key".
+// It is not possible to get both project name and project column for example
 
 /*
 *
@@ -137,7 +143,8 @@ const buildFacetValues = (query, cfgIssues, facet) => {
                 allValues.push({...pushObj, issue: issue});
             } else {
                 issue[facet.key].edges.map((nestedValue) => {
-                    if (nestedValue.node[facet.nestedKey] === null || nestedValue.node[facet.nestedKey] === '' || nestedValue.node[facet.nestedKey] === undefined ) {
+                    // Using lodash get was needed due to the nested nature of some of the facets.
+                    if (_.get(nestedValue.node, facet.nestedKey) === null || _.get(nestedValue.node, facet.nestedKey) === '' || _.get(nestedValue.node, facet.nestedKey) === undefined ) {
                         //console.log({...nestedValue.node, name: nestedValue.node.login});
                         allValues.push({...nestedValue.node, name: nestedValue.node.login});
                     } else {

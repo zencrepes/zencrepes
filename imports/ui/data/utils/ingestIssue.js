@@ -18,6 +18,10 @@ const ingestIssue = async (cfgIssues, issueNode, repoNode, orgNode) => {
     issueObj['points'] = null;
     issueObj['boardState'] = null;
 
+    //The data version module is used to identify when the data model has changed and it is necessary to clear the cache.
+    // For now only doing this for issues
+    issueObj['data_version'] = Meteor.settings.public.data_version;
+
     if (issueObj.labels !== undefined) {
         //Get points from labels
         // Regex to test: SP:[.\d]
