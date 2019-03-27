@@ -11,7 +11,8 @@
       "loe:large": 7,
       "loe:x-large": 15,
       "loe:xx-large": 30
-    }
+    },
+    "data_version": 1    
   },
   "private": {
     "MAIL_URL": "",
