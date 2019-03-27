@@ -27,8 +27,8 @@ const aggregationsModel = {
         aggregations: {}
     },
     titles: {
-        key: 'title',
-        name: 'Titles',
+        key: 'name',
+        name: 'Names',
         nested: false,
         aggregations: {}
     },

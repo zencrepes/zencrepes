@@ -19,6 +19,10 @@ import {
 import {connect} from "react-redux";
 import uuidv1 from "uuid/v1";
 
+import {
+    StateLabel,
+} from '@primer/components';
+
 const StateFormatter = ({ value }) => {
     if (value === undefined) {
         return 'OPEN';
@@ -32,24 +36,13 @@ const StateFormatter = ({ value }) => {
         } else {
             if (value[0].name === 'OPEN') {
                 return (
-                    <React.Fragment>
-                        OPEN
-                    </React.Fragment>
+                    <StateLabel status="issueOpened">Open</StateLabel>
                 );
             } else {
                 return (
-                    <React.Fragment>
-                        CLOSED
-                    </React.Fragment>
+                    <StateLabel status="issueClosed">Closed</StateLabel>
                 );
             }
-            /*
-            if (value[0].name === undefined) {
-                return value[0].state;
-            } else {
-                return value[0].name;
-            }
-            */
         }
     }
 };
@@ -109,6 +102,26 @@ const IssuesTypeProvider = props => (
     />
 );
 
+const DatesFormatter = ({ value }) => {
+    //return value;
+    if (value === null) {
+        return null;
+    } else {
+        return value.slice(0,10);
+    }
+};
+DatesFormatter.propTypes = {
+    value: PropTypes.array,
+};
+
+
+const DatesTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={DatesFormatter}
+        {...props}
+    />
+);
+
 const PrFormatter = ({ value }) => {
     if (value === undefined) {
         return 0
@@ -140,36 +153,29 @@ class ProjectsTable extends Component {
 
         this.state = {
             columns: [
-                { name: 'name', title: 'Name' },
                 { name: 'state', title: 'State' },
+                { name: 'name', title: 'Name' },
+                { name: 'createdAt', title: 'Created', getCellValue: row => row.projects[0].createdAt },
+                { name: 'updatedAt', title: 'Updated', getCellValue: row => row.projects[0].updatedAt },
+                { name: 'closedAt', title: 'Closed', getCellValue: row => row.projects[0].closedAt },
                 { name: 'issues', title: 'Issues', getCellValue: row => row.projects },
-                { name: 'pullRequests', title: 'PRs', getCellValue: row => row.projects },
                 { name: 'repos', title: 'Repos', getCellValue: row => row.projects },
             ],
             tableColumnExtensions: [
                 { columnName: 'repos', width: 110 },
                 { columnName: 'issues', width: 90 },
-                { columnName: 'pullRequests', width: 90 },
-                { columnName: 'dueOn', width: 200 },
-                { columnName: 'state', width: 200 },
+                { columnName: 'createdAt', width: 100 },
+                { columnName: 'updatedAt', width: 100 },
+                { columnName: 'closedAt', width: 100 },
+                { columnName: 'state', width: 120 },
             ],
-            columnOrder: ['name', 'state', 'issues', 'pullRequests', 'repos'],
+            columnOrder: ['state', 'name', 'createdAt', 'updatedAt', 'closedAt', 'issues', 'repos'],
             stateColumns: ['state'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
-            prColumns: ['pullRequests'],
-            editingStateColumnExtensions: [
-                { columnName: 'state', editingEnabled: false },
-                { columnName: 'repos', editingEnabled: false },
-                { columnName: 'issues', editingEnabled: false },
-                { columnName: 'pullRequests', editingEnabled: false },
-            ],
+            datesColumns: ['createdAt', 'updatedAt', 'closedAt'],
             sorting: [],
-            editingRowIds: [],
-            addedRows: [],
-            rowChanges: {},
             currentPage: 0,
-            deletingRows: [],
             pageSize: 50,
             pageSizes: [20, 50, 100, 0],
             selection: [],
@@ -205,108 +211,6 @@ class ProjectsTable extends Component {
             this.setState({ columnOrder: order });
         };
     }
-
-    /*
-        This function is just a proxy. it doesn't do much other than recording a "newProject" line
-     */
-    changeAddedRows = (addedRows) => {
-        //Github requires a color to be set, by default setting this up to white
-        const {
-            setNewState,
-            setNewTitle,
-            setNewDueOn,
-            setOpenEditDialog,
-            projects,
-            setProjects,
-            setAction,
-            setOnSuccess,
-            updateView,
-        } = this.props;
-        //Empty data
-        if (addedRows.length > 0) {
-            setNewState('OPEN');
-            setNewTitle('New Project');
-            setNewDueOn(null);
-            const uniqRepos = _.uniqWith(projects, (arrVal, othVal) => {
-                if (arrVal.repo.id === othVal.repo.id) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            });
-            const createProjects = uniqRepos.map((mls) => {
-                return {
-                    org: mls.org,
-                    repo: mls.repo,
-                    id: uuidv1(),
-                }
-            });
-            setProjects(createProjects);
-            setAction('create');
-            setOnSuccess(updateView);
-            setOpenEditDialog(true);
-        }
-        this.setState({
-            addedRows: [],
-        })
-    };
-
-    changeEditingRowIds = (editingRowIds) => {
-        const {
-            startEditingProject,
-            setProjects,
-            projects,
-        } = this.props;
-        const projectTitle = editingRowIds[0];
-        const editProjects = projects.filter(mls => mls.title === projectTitle);
-        setProjects(editProjects);
-        startEditingProject();
-        this.setState({ editingRowIds: [] });
-    };
-
-    commitChanges = ({ deleted, added }) => {
-        const {
-            projects,
-            setProjects,
-            setVerifFlag,
-            setAction,
-            setOnSuccess,
-            setStageFlag,
-            updateView
-        } = this.props;
-        if (added !== undefined && added.length !== 0) {
-            // The plan here is to list repositories for which we'll be adding projects
-            // As a hack, will be using list filtered by repositories
-            const uniqRepos = _.uniqWith(projects, (arrVal, othVal) => {
-                if (arrVal.repo.id === othVal.repo.id) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            });
-//            console.log(uniqRepos);
-            const createProjects = uniqRepos.map((mls) => {
-                return {
-                    org: mls.org,
-                    repo: mls.repo,
-                    id: uuidv1(),
-                }
-            });
-            setProjects(createProjects);
-            setAction('create');
-        } else if (deleted !== undefined && deleted.length !== 0) {
-            const deleteProjects = projects.filter(mls => mls.title === deleted[0]);
-            setProjects(deleteProjects);
-            setAction('delete');
-        } else {
-            setAction('update');
-        }
-        setOnSuccess(updateView);
-        setStageFlag(true);
-        setVerifFlag(true);
-    };
 
     formatData() {
         const { projects } = this.props;
@@ -348,6 +252,7 @@ class ProjectsTable extends Component {
             pageSizes,
             stateColumns,
             reposColumns,
+            datesColumns,
             issuesColumns,
             prColumns,
         } = this.state;
@@ -378,12 +283,11 @@ class ProjectsTable extends Component {
                     <IssuesTypeProvider
                         for={issuesColumns}
                     />
-                    <PrTypeProvider
-                        for={prColumns}
+                    <DatesTypeProvider
+                        for={datesColumns}
                     />
                     <IntegratedSorting />
                     <IntegratedPaging />
-
                     <Table
                         columnExtensions={tableColumnExtensions}
                         cellComponent={Cell}
