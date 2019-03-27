@@ -73,8 +73,21 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
           participants(first: 1) {
             totalCount
           }
-          projectCards(first: 1) {
+          projectCards(first: 5) {
             totalCount
+            edges {
+              node {
+                id
+                project {
+                  id
+                  name
+                }
+                column {
+                  id
+                  name
+                }
+              }
+            }
           }
         }
       }
