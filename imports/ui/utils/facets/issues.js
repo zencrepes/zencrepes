@@ -67,7 +67,7 @@ const aggregationsModel = {
     projects: {
         key: 'projectCards',
         name: 'Project',
-        nullValue: 'NO LABEL',
+        nullValue: 'NO PROJECT',
         nullFilter: {'projectCards.totalCount': { $eq : 0 }},
         nested: true,
         nestedKey: 'project.name',
