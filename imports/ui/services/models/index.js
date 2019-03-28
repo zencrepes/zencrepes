@@ -36,6 +36,11 @@ export { default as issuesFetch } from './issues/Fetch.js';
 export { default as issuesView } from './issues/View.js';
 export { default as issuesEdit } from './issues/Edit.js';
 
+// Pullrequests
+export { default as pullrequestsFetch } from './pullrequests/Fetch.js';
+export { default as pullrequestsView } from './pullrequests/View.js';
+export { default as pullrequestsEdit } from './pullrequests/Edit.js';
+
 // Projects
 export { default as projectsView } from './projects/View.js';
 export { default as projectsEdit } from './projects/Edit.js';

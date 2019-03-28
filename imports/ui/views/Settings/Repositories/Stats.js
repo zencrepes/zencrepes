@@ -40,6 +40,8 @@ class Stats extends Component {
             orgCountSelected,
             issuesCountTotal,
             issuesCountSelected,
+            pullrequestsCountTotal,
+            pullrequestsCountSelected,
             labelsCountTotal,
             labelsCountSelected,
             projectsCountTotal,
@@ -83,6 +85,13 @@ class Stats extends Component {
                 </Grid>
                 <Grid item className={classes.pieHeight}>
                     <StatsCharts
+                        selected={pullrequestsCountSelected}
+                        total={pullrequestsCountTotal}
+                        title="Pullrequests"
+                    />
+                </Grid>
+                <Grid item className={classes.pieHeight}>
+                    <StatsCharts
                         selected={milestonesCountSelected}
                         total={milestonesCountTotal}
                         title="Milestones"
@@ -121,6 +130,9 @@ Stats.propTypes = {
     issuesCountTotal: PropTypes.number.isRequired,
     issuesCountSelected: PropTypes.number.isRequired,
     issuesCountLoaded: PropTypes.number.isRequired,
+    pullrequestsCountTotal: PropTypes.number.isRequired,
+    pullrequestsCountSelected: PropTypes.number.isRequired,
+    pullrequestsCountLoaded: PropTypes.number.isRequired,
     labelsCountTotal: PropTypes.number.isRequired,
     labelsCountSelected: PropTypes.number.isRequired,
     labelsCountLoaded: PropTypes.number.isRequired,
@@ -140,6 +152,9 @@ const mapState = state => ({
     issuesCountTotal: state.settingsView.issuesCountTotal,
     issuesCountSelected: state.settingsView.issuesCountSelected,
     issuesCountLoaded: state.settingsView.issuesCountLoaded,
+    pullrequestsCountTotal: state.settingsView.pullrequestsCountTotal,
+    pullrequestsCountSelected: state.settingsView.pullrequestsCountSelected,
+    pullrequestsCountLoaded: state.settingsView.pullrequestsCountLoaded,
     labelsCountTotal: state.settingsView.labelsCountTotal,
     labelsCountSelected: state.settingsView.labelsCountSelected,
     labelsCountLoaded: state.settingsView.labelsCountLoaded,

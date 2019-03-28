@@ -12,6 +12,7 @@ import { cfgLabels } from "../../data/Minimongo.js";
 import { cfgQueries } from "../../data/Minimongo.js";
 import { cfgSources } from "../../data/Minimongo.js";
 import { cfgIssues } from "../../data/Minimongo.js";
+import { cfgPullrequests } from "../../data/Minimongo.js";
 import { cfgMilestones } from "../../data/Minimongo.js";
 import { cfgProjects } from "../../data/Minimongo.js";
 
@@ -23,12 +24,14 @@ class Startup extends Component {
     render() {
         const {
             loadedIssues,
+            loadedPullrequests,
             loadedSources,
             loadedLabels,
             loadedQueries,
             loadedMilestones,
             loadedProjects,
             issuesCount,
+            pullrequestsCount,
             labelsCount,
             queriesCount,
             milestonesCount,
@@ -42,6 +45,7 @@ class Startup extends Component {
                 <DialogContent>
                     <div>
                         Issues: {issuesCount} {loadedIssues && <i>- Complete</i>} <br />
+                        PRs: {pullrequestsCount} {loadedPullrequests && <i>- Complete</i>} <br />
                         Labels: {labelsCount} {loadedLabels && <i>- Complete</i>} <br />
                         Queries: {queriesCount} {loadedQueries && <i>- Complete</i>} <br />
                         Repos: {sourcesCount} {loadedSources && <i>- Complete</i>} <br />
@@ -56,12 +60,14 @@ class Startup extends Component {
 
 Startup.propTypes = {
     loadedIssues: PropTypes.bool,
+    loadedPullrequests: PropTypes.bool,
     loadedSources: PropTypes.bool,
     loadedLabels: PropTypes.bool,
     loadedQueries: PropTypes.bool,
     loadedMilestones: PropTypes.bool,
     loadedProjects: PropTypes.bool,
     issuesCount: PropTypes.number,
+    pullrequestsCount: PropTypes.number,
     labelsCount: PropTypes.number,
     queriesCount: PropTypes.number,
     sourcesCount: PropTypes.number,
@@ -71,6 +77,7 @@ Startup.propTypes = {
 
 const mapState = state => ({
     loadedIssues: state.startup.loadedIssues,
+    loadedPullrequests: state.startup.loadedPullrequests,
     loadedSources: state.startup.loadedSources,
     loadedLabels: state.startup.loadedLabels,
     loadedQueries: state.startup.loadedQueries,
@@ -82,6 +89,7 @@ export default
     connect(mapState, null)(
         withTracker(() => {return {
             issuesCount: cfgIssues.find({}).count(),
+            pullrequestsCount: cfgPullrequests.find({}).count(),
             labelsCount: cfgLabels.find({}).count(),
             queriesCount: cfgQueries.find({}).count(),
             sourcesCount: cfgSources.find({}).count(),
