@@ -1,6 +1,7 @@
 export default {
     state: {
         loadedIssues: null,
+        loadedPullrequests: null,
         loadedSources: null,
         loadedLabels: null,
         loadedQueries: null,
@@ -9,6 +10,7 @@ export default {
     },
     reducers: {
         setLoadedIssues(state, payload) {return { ...state, loadedIssues: payload };},
+        setLoadedPullrequests(state, payload) {return { ...state, loadedPullrequests: payload };},
         setLoadedSources(state, payload) {return { ...state, loadedSources: payload };},
         setLoadedLabels(state, payload) {return { ...state, loadedLabels: payload };},
         setLoadedQueries(state, payload) {return { ...state, loadedQueries: payload };},

@@ -8,6 +8,10 @@ export const cfgIssues = new Mongo.Collection('cfgIssues', {connection: null});
 //export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
 window.issues = cfgIssues;
 
+export const cfgPullrequests = new Mongo.Collection('cfgPullrequests', {connection: null});
+//export const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues');
+window.pullrequests = cfgPullrequests;
+
 export const cfgLabels = new Mongo.Collection('cfgLabels', {connection: null});
 //export const localCfgLabels = new PersistentMinimongo2(cfgLabels, 'GAV-Labels');
 window.labels = cfgLabels;
