@@ -13,6 +13,7 @@ import * as models from "../imports/ui/services/models/index.js";
 import App from '../imports/ui/App.js';
 
 import { cfgIssues } from '../imports/ui/data/Minimongo.js';
+import { cfgPullrequests } from '../imports/ui/data/Minimongo.js';
 import { cfgSources } from '../imports/ui/data/Minimongo.js';
 import { cfgQueries } from '../imports/ui/data/Minimongo.js';
 import { cfgLabels } from '../imports/ui/data/Minimongo.js';
@@ -38,6 +39,9 @@ Tracker.autorun(function () {
 
         const localCfgIssues = new PersistentMinimongo2(cfgIssues, 'GAV-Issues-' + username);
         localCfgIssues.refresh(true, () => {store.dispatch.startup.setLoadedIssues(true);});
+
+        const localCfgPullrequests = new PersistentMinimongo2(cfgPullrequests, 'GAV-Pullrequests-' + username);
+        localCfgPullrequests.refresh(true, () => {store.dispatch.startup.setLoadedIssues(true);});
 
         const localCfgQueries = new PersistentMinimongo2(cfgQueries, 'GAV-Queries-' + username);
         localCfgQueries.refresh(true, () => {store.dispatch.startup.setLoadedQueries(true);});
