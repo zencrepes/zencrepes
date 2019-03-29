@@ -26,13 +26,20 @@ const ingestPullrequest = async (cfgPullrequests, pullrequestNode, repoNode, org
 
     // START - This feature (likely temporary), can be used to verify the presence of specific fields in a PR template
     // To use it, simply add an array of strings in a 'feat-prtemplate' in your browser's localStorage
+    // Format is
+    // [
+    //   {name: "Facet name", search: "search string, no space, no new line"}
+    // ]
+    // It would be better to use regex for search, but anyway, that's a quick start for a feature that might be removed
     const prtemplates = JSON.parse(reactLocalStorage.get('feat-prtemplate', "[]"));
     let templateValues = [];
     if (prtemplates.length > 0) {
-        templateValues = prtemplates.filter(template => pullrequestNode.body.includes(template)).map((template) => {
+        // We trim white spaces and line break, to make it easier (??really) to search through
+        templateValues = prtemplates.filter(template => pullrequestNode.body.replace(/(\r\n|\n|\r|\s)/gm, "").includes(template.search)).map((template) => {
             return {
                 node: {
-                    name: template
+                    name: template.name,
+                    search: template.search
                 }
             }
         });

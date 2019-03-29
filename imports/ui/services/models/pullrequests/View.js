@@ -5,6 +5,7 @@ import { cfgPullrequests, cfgQueries } from '../../../data/Minimongo.js';
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/pullrequests.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
+import { refreshTemplateUsage } from '../../../utils/templateUse/index.js';
 
 export default {
     state: {
@@ -34,6 +35,7 @@ export default {
         statsOpenedDuring: [],
         statsCreatedSince: [],
 
+        templateUsage: {},    // Breakdown of template usage per week. This might be removed
     },
     reducers: {
         setPullrequests(state, payload) {return { ...state, pullrequests: payload };},
@@ -52,6 +54,8 @@ export default {
 
         setShouldVelocityDataReload(state, payload) {return { ...state, shouldVelocityDataReload: payload };},
         setVelocity(state, payload) {return { ...state, velocity: JSON.parse(JSON.stringify(payload)) };},
+
+        setTemplateUsage(state, payload) {return { ...state, templateUsage: JSON.parse(JSON.stringify(payload)) };},
 
         setShouldSummaryDataReload(state, payload) {return { ...state, shouldSummaryDataReload: payload };},
         setRemainingWorkRepos(state, payload) {return { ...state, remainingWorkRepos: payload };},
@@ -84,11 +88,12 @@ export default {
             this.refreshQueries();
             this.refreshFacets();
             this.refreshPullrequests();
-            this.refreshBins();
+            //this.refreshBins();
 
             this.setShouldBurndownDataReload(true);
-            this.refreshSummary();
-            this.refreshVelocity();
+            //this.refreshSummary();
+            //this.refreshVelocity();
+            this.refreshTemplateUse();
         },
 
         async deleteQuery(query) {
@@ -193,6 +198,19 @@ export default {
             var t1 = performance.now();
             log.info("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
         },
+
+        async refreshTemplateUse(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+
+            let templateUsage = await refreshTemplateUsage(JSON.parse(JSON.stringify(rootState.pullrequestsView.query)), cfgPullrequests);
+
+            this.setTemplateUsage(templateUsage);
+
+            var t1 = performance.now();
+            log.info("refreshTemplateUse - took " + (t1 - t0) + " milliseconds.");
+        },
+
 
         async refreshBins(payload, rootState) {
             const log = rootState.global.log;

@@ -5,7 +5,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {withRouter} from "react-router-dom";
 
-class CombinationChart extends Component {
+class StackedBar extends Component {
     constructor(props) {
         super(props);
     }
@@ -21,7 +21,7 @@ class CombinationChart extends Component {
             const issuesArrayQuery = issues.map(issue => issue.id);
             const query = {'id': {'$in': issuesArrayQuery}};
             this.props.history.push({
-                pathname: '/issues',
+                pathname: '/pullrequests',
                 search: '?q=' + JSON.stringify(query),
                 state: { detail: query }
             });
@@ -35,20 +35,49 @@ class CombinationChart extends Component {
     */
     render() {
         const { dataset, metric } = this.props;
+        const stackedColumns = dataset.templateDict.map((template) => {
+            return {
+                type: 'line',
+                name: template,
+                data: dataset.weeks.map((week) => {
+                    let currentCount = 0;
+                    if (week.templates[template] !== undefined) {
+                        currentCount = week.templates[template].count
+                    }
+                    return {
+                        y: currentCount,
+                        issues: week.PRs,
+                    };
+                })
+            }
+        });
+
+        stackedColumns.push({
+            type: 'line',
+            name: 'NO TEMPLATE',
+            data: dataset.weeks.map((week) => {
+                let noTemplateCount = 0;
+                if (week.templateCount['0'] !== undefined) {
+                    noTemplateCount = week.templateCount['0'].count;
+                }
+                return {
+                    y: noTemplateCount,
+                    issues: week.PRs,
+                };
+            })
+        });
+
         let updatedOptions = {
             chart: {
                 height: 300,
             },
             title: null,
             xAxis: {
-                categories: dataset.map(week => new Date(week.weekStart)),
+                categories: dataset.weeks.map(week => new Date(week.weekStart)),
                 type: 'datetime',
                 labels: {
                     format: '{value:%b. %e}'
                 },
-            },
-            rangeSelector: {
-                selected: 1
             },
             tooltip: {
                 //formatter: this.formatTooltip
@@ -58,15 +87,25 @@ class CombinationChart extends Component {
                 },
             },
             yAxis: {
-                title: metric
+                title: metric,
+                /*
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }*/
             },
             plotOptions: {
                 column: {
                     stacking: 'normal',
+                    /*
                     dataLabels: {
                         enabled: true,
                         color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
                     }
+                    */
                 },
                 series: {
                     pointPadding: 0,
@@ -76,47 +115,21 @@ class CombinationChart extends Component {
                     }
                 }
             },
+
+            series: stackedColumns,
+
+/*
             series: [{
                 type: 'column',
-                name: 'Completed',
-                data: dataset.map((week) => {
-                    if (week.completion[metric].count - week.scopeChangeCompletion[metric].count > 0) {
-                        return {
-                            y: week.completion[metric].count - week.scopeChangeCompletion[metric].count,
-                            issues: week.completion.list,
-                        };
-                    } else {
-                        return 0;
-                    }
-                })
-            }, {
-                type: 'column',
-                name: 'Scope Change',
-                data: dataset.map((week) => {
+                name: 'Opened',
+                data: dataset.weeks.map((week) => {
                     return {
-                        y: week.scopeChangeCompletion[metric].count,
-                        issues: week.scopeChangeCompletion.list,
-                    }
+                        y: week.totalPRCount,
+                        issues: week.PRs,
+                    };
                 })
-            }, {
-                type: 'spline',
-                name: 'Velocity',
-                data: dataset.map(week => week.completion[metric].velocity),
-                marker: {
-                    lineWidth: 2,
-                    lineColor: Highcharts.getOptions().colors[3],
-                    fillColor: 'white'
-                }
-            }, {
-                type: 'spline',
-                name: 'SC Evo.',
-                data: dataset.map(week => week.scopeChangeCompletion[metric].velocity),
-                marker: {
-                    lineWidth: 2,
-                    lineColor: Highcharts.getOptions().colors[4],
-                    fillColor: 'white'
-                }
             }],
+*/
             credits: {
                 enabled: false
             }
@@ -132,13 +145,13 @@ class CombinationChart extends Component {
     }
 }
 
-CombinationChart.propTypes = {
+StackedBar.propTypes = {
     classes: PropTypes.object,
     completed: PropTypes.number,
     max: PropTypes.number,
     history: PropTypes.object,
-    dataset: PropTypes.array,
+    dataset: PropTypes.object,
     metric: PropTypes.string,
 };
 
-export default withRouter(CombinationChart);
+export default withRouter(StackedBar);

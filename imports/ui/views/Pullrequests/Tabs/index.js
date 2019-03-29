@@ -27,8 +27,6 @@ class PullrequestsTabs extends Component {
             >
                 <Tab label="Summary" />
                 <Tab label="List" />
-                <Tab label="Velocity" />
-                <Tab label="Burndown" />
             </Tabs>
         );
     }

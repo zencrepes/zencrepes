@@ -29,7 +29,7 @@ const aggregationsModel = {
     templates: {
         key: 'template',
         name: 'Template sections',
-        nullValue: 'NONE',
+        nullValue: 'NO TEMPLATE',
         nullFilter: {'template.totalCount': { $eq : 0 }},
         nested: true,
         nestedKey: 'name',
