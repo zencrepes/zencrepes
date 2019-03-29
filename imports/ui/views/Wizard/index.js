@@ -15,6 +15,7 @@ import Step1 from './Step1/index.js';
 import Step2 from './Step2/index.js';
 import Step3 from './Step3/index.js';
 import Step4 from './Step4/index.js';
+import Step5 from './Step5/index.js';
 import PropTypes from "prop-types";
 
 const styles = theme => ({
@@ -144,6 +145,7 @@ class Wizard extends Component {
                                 1: <Step2 />,
                                 2: <Step3 />,
                                 3: <Step4 />,
+                                4: <Step5 />,
                             }[activeStep]}
                         </div>
                     </CardContent>

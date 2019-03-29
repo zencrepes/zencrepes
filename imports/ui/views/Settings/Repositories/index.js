@@ -7,6 +7,7 @@ import FetchRepo  from '../../../data/FetchRepo.js';
 import FetchOrgs  from '../../../data/FetchOrgs.js';
 
 import Treeview from '../../../components/Settings/Repositories/Treeview/index.js';
+import DataFetch from '../../../components/Settings/Repositories/DataFetch/index.js';
 
 import IssuesFetch from '../../../data/Issues/Fetch/index.js';
 
@@ -34,11 +35,14 @@ class Repositories extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={6} sm container>
+                    <Grid item xs={4} sm container>
                         <Scan />
                     </Grid>
-                    <Grid item xs={6} sm container>
+                    <Grid item xs={4} sm container>
                         <Treeview />
+                    </Grid>
+                    <Grid item xs={4} sm container>
+                        <DataFetch />
                     </Grid>
                 </Grid>
             </React.Fragment>

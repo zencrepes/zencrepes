@@ -9,9 +9,6 @@ import Typography from '@material-ui/core/Typography';
 
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-import Input from '@material-ui/core/Input';
-
-import {reactLocalStorage} from 'reactjs-localstorage';
 
 const styles = {
     root: {
@@ -69,7 +66,6 @@ class Treeview extends Component {
         const { classes, treeNodes, selectedRepos} = this.props;
 
         return (
-            <React.Fragment>
             <div className={classes.root}>
                 <Card className={classes.card}>
                     <CardContent className={classes.cardContent} >
@@ -91,32 +87,6 @@ class Treeview extends Component {
                     </CardContent>
                 </Card>
             </div>
-            <div className={classes.root}>
-                <Card className={classes.cardHistory}>
-                    <CardContent className={classes.cardContent} >
-                        <Typography className={classes.title} color="textSecondary">
-                            Initial Data Fetch
-                        </Typography>
-                        <div className={classes.details} color="textPrimary">
-                            Limit dataset to issues updated in the last
-                            <Input
-                                defaultValue={reactLocalStorage.get('issuesHistoryLoad', 12)}
-                                className={classes.input}
-                                inputProps={{
-                                    'aria-label': 'Description',
-                                }}
-                                onChange={(event)=> {
-                                    reactLocalStorage.set('issuesHistoryLoad', parseInt(event.target.value));
-                                }}
-                            />
-                            Months.
-                            <br />
-                            <i>Note: Changing this parameter does not impact repositories for which issues were already loaded. To apply to existing repositories, please clear all issues first.</i>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-            </React.Fragment>
         );
     }
 }
