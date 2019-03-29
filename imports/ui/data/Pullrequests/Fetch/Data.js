@@ -129,6 +129,7 @@ class Data extends Component {
                         let lastCursor = await this.ingestPullrequests(data, repoObj);
                         let loadedPullrequestsCount = cfgPullrequests.find({'repo.id': repoObj.id, 'refreshed': true}).count();
                         let queryIncrement = calculateQueryIncrement(loadedPullrequestsCount, data.data.repository.pullRequests.totalCount);
+                        if (queryIncrement === 100) {queryIncrement = 50;} // Hack to reduce query increment to 50 due to performance issues
                         log.info('Loading pullRequests for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedPullrequestsCount + ' - Remote Count: ' + data.data.repository.pullRequests.totalCount);
                         if (queryIncrement > 0 && lastCursor !== null) {
                             //Start recurring call, to load all pullRequests from a repository
