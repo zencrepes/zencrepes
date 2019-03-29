@@ -69,7 +69,8 @@ class StackedBar extends Component {
 
         let updatedOptions = {
             chart: {
-                height: 300,
+                height: 400,
+                zoomType: 'x'
             },
             title: null,
             xAxis: {
