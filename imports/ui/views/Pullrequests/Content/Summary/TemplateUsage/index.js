@@ -25,7 +25,7 @@ class TemplateUsage extends Component {
 
         return (
             <CustomCard
-                headerTitle="Opened PRs per Week, use of template sections"
+                headerTitle="Use of templates in PRs opened each week"
                 headerFactTitle=""
                 headerFactValue=""
             >
