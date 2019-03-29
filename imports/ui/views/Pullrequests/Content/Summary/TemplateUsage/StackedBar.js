@@ -67,6 +67,17 @@ class StackedBar extends Component {
             })
         });
 
+        stackedColumns.push({
+            type: 'line',
+            name: 'Overall PR Creation',
+            data: dataset.weeks.map((week) => {
+                return {
+                    y: week.totalPRCount,
+                    issues: week.PRs,
+                };
+            })
+        });
+
         let updatedOptions = {
             chart: {
                 height: 400,
