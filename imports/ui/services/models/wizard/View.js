@@ -2,7 +2,7 @@ import { cfgSources } from '../../../data/Minimongo.js';
 
 export default {
     state: {
-        steps: ['Welcome !', 'Configure Repositories', 'Load Data', 'Be Agile !'],
+        steps: ['Welcome !', 'Repositories', 'API Configuration', 'Load Data', 'Be Agile !'],
         activeStep: 0,
         reposIssues: 0,
     },
