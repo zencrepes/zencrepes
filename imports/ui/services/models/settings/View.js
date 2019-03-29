@@ -19,6 +19,9 @@ export default {
         issuesCountTotal: 0,
         issuesCountSelected: 0,
         issuesCountLoaded: 0,
+        pullrequestsCountTotal: 0,
+        pullrequestsCountSelected: 0,
+        pullrequestsCountLoaded: 0,
         labelsCountTotal: 0,
         labelsCountSelected: 0,
         labelsCountLoaded: 0,
@@ -39,6 +42,9 @@ export default {
         setIssuesCountTotal(state, payload) {return { ...state, issuesCountTotal: payload };},
         setIssuesCountSelected(state, payload) {return { ...state, issuesCountSelected: payload };},
         setIssuesCountLoaded(state, payload) {return { ...state, issuesCountLoaded: payload };},
+        setPullrequestsCountTotal(state, payload) {return { ...state, pullrequestsCountTotal: payload };},
+        setPullrequestsCountSelected(state, payload) {return { ...state, pullrequestsCountSelected: payload };},
+        setPullrequestsCountLoaded(state, payload) {return { ...state, pullrequestsCountLoaded: payload };},
         setLabelsCountTotal(state, payload) {return { ...state, labelsCountTotal: payload };},
         setLabelsCountSelected(state, payload) {return { ...state, labelsCountSelected: payload };},
         setLabelsCountLoaded(state, payload) {return { ...state, labelsCountLoaded: payload };},
@@ -122,6 +128,9 @@ export default {
             this.setIssuesCountTotal(availableRepos.map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
             this.setIssuesCountSelected(selectedRepos.map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
             this.setIssuesCountLoaded(cfgIssues.find().count());
+            this.setPullrequestsCountTotal(availableRepos.map(repo => repo.pullRequests.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setPullrequestsCountSelected(selectedRepos.map(repo => repo.pullRequests.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setPullrequestsCountLoaded(cfgIssues.find().count());
             this.setLabelsCountTotal(availableRepos.map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
             this.setLabelsCountSelected(selectedRepos.map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
             this.setLabelsCountLoaded(cfgLabels.find().count());

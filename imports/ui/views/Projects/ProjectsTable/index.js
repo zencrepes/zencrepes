@@ -101,6 +101,25 @@ const IssuesTypeProvider = props => (
     />
 );
 
+const PendingCardsFormatter = ({ value }) => {
+    if (value === undefined) {
+        return 0
+    } else {
+        return value.filter(project => project.pendingCards.totalCount !== undefined).map(project => project.pendingCards.totalCount).reduce((acc, count) => acc + count, 0);
+    }
+};
+PendingCardsFormatter.propTypes = {
+    value: PropTypes.array,
+};
+
+
+const PendingCardsTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={PendingCardsFormatter}
+        {...props}
+    />
+);
+
 const DatesFormatter = ({ value }) => {
     //return value;
     if (value === null) {
@@ -139,11 +158,13 @@ class ProjectsTable extends Component {
                 { name: 'updatedAt', title: 'Updated', getCellValue: row => row.projects[0].updatedAt },
                 { name: 'closedAt', title: 'Closed', getCellValue: row => row.projects[0].closedAt },
                 { name: 'issues', title: 'Issues', getCellValue: row => row.projects },
+                { name: 'pendingCards', title: 'Pending', getCellValue: row => row.projects },
                 { name: 'repos', title: 'Repos', getCellValue: row => row.projects },
             ],
             tableColumnExtensions: [
-                { columnName: 'repos', width: 110 },
+                { columnName: 'repos', width: 90 },
                 { columnName: 'issues', width: 90 },
+                { columnName: 'pendingCards', width: 90 },
                 { columnName: 'createdAt', width: 100 },
                 { columnName: 'updatedAt', width: 100 },
                 { columnName: 'closedAt', width: 100 },
@@ -153,6 +174,7 @@ class ProjectsTable extends Component {
             stateColumns: ['state'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
+            pendingCardsColumns: ['pendingCards'],
             datesColumns: ['createdAt', 'updatedAt', 'closedAt'],
             sorting: [],
             currentPage: 0,
@@ -234,6 +256,7 @@ class ProjectsTable extends Component {
             reposColumns,
             datesColumns,
             issuesColumns,
+            pendingCardsColumns,
         } = this.state;
 
         return (
@@ -261,6 +284,9 @@ class ProjectsTable extends Component {
                     />
                     <IssuesTypeProvider
                         for={issuesColumns}
+                    />
+                    <PendingCardsTypeProvider
+                        for={pendingCardsColumns}
                     />
                     <DatesTypeProvider
                         for={datesColumns}

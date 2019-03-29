@@ -18,6 +18,7 @@ import Milestones from './views/Milestones/index.js';
 import Projects from './views/Projects/index.js';
 //import MilestoneEdit from './views/Milestones/Edit/index.js';
 import Issues from './views/Issues/index.js';
+import Pullrequests from './views/Pullrequests/index.js';
 import Roadmap from './views/Roadmap/index.js';
 import Terms from './views/Terms/index.js';
 import About from './views/About/index.js';
@@ -81,6 +82,7 @@ class App extends Component {
                                     <Authenticated exact path="/projects" component={Projects} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                    <Authenticated exact path="/pullrequests" component={Pullrequests} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Authenticated exact path="/roadmap" component={Roadmap} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                     <Public exact path="/terms" component={Terms} {...props} {...state} />
                                     <Public exact path="/about" component={About} {...props} {...state} />
