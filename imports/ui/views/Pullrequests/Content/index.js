@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
 import Summary from './Summary/index.js';
-import Burndown from './Burndown/index.js';
-import Velocity from './Velocity/index.js';
 import PullrequestsList from './PullrequestsList/index.js';
 
 class PullrequestsContent extends Component {
@@ -24,8 +22,6 @@ class PullrequestsContent extends Component {
                 {{
                     0: <Summary />,
                     1: <PullrequestsList />,
-                    2: <Velocity />,
-                    3: <Burndown />,
                 }[selectedTab]}
             </React.Fragment>
         );
