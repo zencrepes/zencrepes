@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { withSnackbar } from 'notistack';
 
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
@@ -100,13 +101,21 @@ class FetchOrgs extends Component {
     };
 
     getOrgsPagination = async (cursor, increment) => {
-        const { client, updateChip, log } = this.props;
+        const { client, updateChip, log, enqueueSnackbar } = this.props;
         let data = await client.query({
             query: GET_GITHUB_ORGS,
             variables: {repo_cursor: cursor, increment: increment},
             fetchPolicy: 'no-cache',
             errorPolicy: 'ignore',
         });
+        if (data.data.errors !== undefined && data.data.errors.length > 0) {
+            data.data.errors.forEach((error) => {
+                enqueueSnackbar(error.message, {
+                    variant: 'warning',
+                    persist: true,
+                });
+            });
+        }
         log.debug('GraphQL Response:', data);
         updateChip(data.data.rateLimit);
         let lastCursor = await this.loadOrganizations(data);
@@ -136,6 +145,7 @@ class FetchOrgs extends Component {
             setLoadingIterateCurrent,
             setLoadingIterateTotal,
             setLoading,
+            enqueueSnackbar,
         } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
@@ -164,6 +174,15 @@ class FetchOrgs extends Component {
                     catch (error) {
                         log.info(error);
                     }
+                    if (data.data.errors !== undefined && data.data.errors.length > 0) {
+                        data.data.errors.forEach((error) => {
+                            enqueueSnackbar(error.message, {
+                                variant: 'warning',
+                                persist: true,
+                            });
+                        });
+                    }
+                    log.info(data);
                     log.info(OrgObj);
                     if (data.data !== null && data.data !== undefined) {
                         this.errorRetry = 0;
@@ -238,6 +257,7 @@ FetchOrgs.propTypes = {
     loading: PropTypes.bool.isRequired,
     onSuccess: PropTypes.func.isRequired,
     log: PropTypes.object.isRequired,
+    enqueueSnackbar: PropTypes.func.isRequired,
 
     client: PropTypes.object.isRequired,
 
@@ -289,4 +309,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(FetchOrgs));
+export default connect(mapState, mapDispatch)(withApollo(withSnackbar(FetchOrgs)));
