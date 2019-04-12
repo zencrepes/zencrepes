@@ -34,6 +34,8 @@ export default {
         statsOpenedDuring: [],
         statsCreatedSince: [],
 
+        showTimeModal: false,
+        timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'closedAt', name: 'Closed'}],
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
@@ -60,6 +62,9 @@ export default {
 
         setStatsOpenedDuring(state, payload) {return { ...state, statsOpenedDuring: payload };},
         setStatsCreatedSince(state, payload) {return { ...state, statsCreatedSince: payload };},
+
+        setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
+        setTimeFields(state, payload) {return { ...state, timeFields: payload };},
     },
     effects: {
         async updateQuery(query) {

@@ -38,7 +38,10 @@ class Value extends Component {
 Value.propTypes = {
     classes: PropTypes.object.isRequired,
     value: PropTypes.string.isRequired,
-    updateQuery: PropTypes.func.isRequired,
+    updateQuery: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string
+    ]),
     currentFacet: PropTypes.object.isRequired,
 };
 

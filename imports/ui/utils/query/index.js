@@ -1,6 +1,6 @@
 /*
 *
-* refreshBurndown() Takes a mongo selector (finder) and Initialize an object containing indices for all days between two dates
+* addRemoveFromQuery() Build a mongo selector to update a query
 *
 * Arguments:
 * - valueName: Value to be added to or removed from the facet
@@ -46,5 +46,36 @@ export const addRemoveFromQuery = (valueName, facet, sourceQuery) => {
     ,"milestone.state":{"$in":["OPEN"]}
     ,"org.name":{"$in":["Human Cancer Models Initiative - Catalog","Kids First Data Resource Center"]}}
     */
+    return modifiedQuery;
+};
+
+/*
+*
+* addRemoveDateFromQuery() Build a mongo selector to update a query
+*
+* Arguments:
+* - field: field to be tested against
+* - direction: direction for the test (before or after)
+* - date: Date to test against
+* - sourceQuery: Actual query to be updated
+*/
+export const addRemoveDateFromQuery = (field, direction, date, sourceQuery) => {
+    //issues.find({createdAt:{'$lte':'2019-02-18T03:59:59.999Z'}}).fetch();
+    //issues.find({createdAt:{'$gte':'2019-02-18T03:59:59.999Z'}}).fetch();
+    let modifiedQuery = JSON.parse(JSON.stringify(sourceQuery));
+
+    //If index exists in query, simply drop it, we only support date condition per field
+    if (modifiedQuery[field] !== undefined) {
+        delete modifiedQuery[field];
+    }
+
+    //Passing date as null will remove it from query
+    if (date !== null) {
+        if (direction === 'after') {
+            modifiedQuery[field] = {'$gt':date}
+        } else {
+            modifiedQuery[field] = {'$lt':date}
+        }
+    }
     return modifiedQuery;
 };
