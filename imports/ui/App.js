@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 //import { Roles } from 'meteor/alanning:roles';
+import { SnackbarProvider } from 'notistack';
+import Button from '@material-ui/core/Button';
 
 import PropTypes from 'prop-types';
 import autoBind from 'react-autobind';
@@ -69,27 +71,36 @@ class App extends Component {
                     <UsersFetch />
                     <Loading />
                     <Outdated />
-                    <div className="App">
-                        <ErrorBoundary>
-                            <Router>
-                                <Switch>
-                                    <Route exact name="index" path="/" component={Index} />
-                                    <Public path="/login" component={Login} {...props} {...state} />
-                                    <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/projects" component={Projects} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/pullrequests" component={Pullrequests} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Authenticated exact path="/roadmap" component={Roadmap} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
-                                    <Public exact path="/terms" component={Terms} {...props} {...state} />
-                                    <Public exact path="/about" component={About} {...props} {...state} />
-                                </Switch>
-                            </Router>
-                        </ErrorBoundary>
-                    </div>
+                    <SnackbarProvider
+                        maxSnack={3}
+                        action={[
+                            <Button variant="outlined" size="small" key="notif-dismiss">
+                                {'Dismiss'}
+                            </Button>
+                        ]}
+                    >
+                        <div className="App">
+                            <ErrorBoundary>
+                                <Router>
+                                    <Switch>
+                                        <Route exact name="index" path="/" component={Index} />
+                                        <Public path="/login" component={Login} {...props} {...state} />
+                                        <Authenticated exact path="/wizard" component={Wizard} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/settings" component={Settings} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/sprints" component={Sprints} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/labels" component={Labels} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/projects" component={Projects} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/pullrequests" component={Pullrequests} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/roadmap" component={Roadmap} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Public exact path="/terms" component={Terms} {...props} {...state} />
+                                        <Public exact path="/about" component={About} {...props} {...state} />
+                                    </Switch>
+                                </Router>
+                            </ErrorBoundary>
+                        </div>
+                    </SnackbarProvider>
                 </ApolloProviderGithub>
             );
         }

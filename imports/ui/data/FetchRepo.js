@@ -7,6 +7,7 @@ import { withApollo } from 'react-apollo';
 import GET_GITHUB_SINGLEREPO from '../../graphql/getSingleRepo.graphql';
 
 import { cfgSources } from './Minimongo.js';
+import { withSnackbar } from 'notistack';
 
 /*
 Load data about GitHub Orgs
@@ -37,6 +38,7 @@ class FetchRepo extends Component {
             repoName,
             log,
             onSuccess,
+            enqueueSnackbar,
         } = this.props;
 
         setLoading(true);       // Set loading to true to indicate content is actually loading.
@@ -51,13 +53,19 @@ class FetchRepo extends Component {
             errorPolicy: 'ignore',
         });
 
+        if (data.data.errors !== undefined && data.data.errors.length > 0) {
+            data.data.errors.forEach((error) => {
+                enqueueSnackbar(error.message, {
+                    variant: 'warning',
+                    persist: true,
+                });
+            });
+        }
+
         log.info(data);
 
         updateChip(data.data.rateLimit);
-        if (data.data.repository === null) {
-            setLoadingSuccessMsg('Organization or repository not found');
-            setLoadingSuccess(false);
-        } else {
+        if (data.data.repository !== null) {
             let repoObj = JSON.parse(JSON.stringify(data.data.repository)); //TODO - Replace this with something better to copy object ?
             repoObj['org'] = {
                 login: data.data.repository.owner.login,
@@ -89,6 +97,7 @@ FetchRepo.propTypes = {
     loadFlag: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     onSuccess: PropTypes.func.isRequired,
+    enqueueSnackbar: PropTypes.func.isRequired,
 
     orgName: PropTypes.string,
     repoName: PropTypes.string,
@@ -136,4 +145,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(FetchRepo));
+export default connect(mapState, mapDispatch)(withApollo(withSnackbar(FetchRepo)));

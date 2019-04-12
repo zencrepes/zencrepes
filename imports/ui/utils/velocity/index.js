@@ -298,7 +298,8 @@ export const populateTicketsPerDay = (dataObject) => {
             let currentWindowIssues = ticketsPerDay.slice(startIdx, idx); // This limits the window or velocity calculation to 20 days (4 weeks).
             ticketsPerDay[idx]['completion']['issues']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'completion', 'issues');
             ticketsPerDay[idx]['completion']['points']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'completion', 'points');
-            ticketsPerDay[idx]['scopeChangeCompletion']['issues']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'scopeChangeCompletion', 'issues');
+            ticketsPerDay[idx]['scopeChangeCompletion']['issues']['velocity'] =
+                (currentWindowIssues, 'scopeChangeCompletion', 'issues');
             ticketsPerDay[idx]['scopeChangeCompletion']['points']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'scopeChangeCompletion', 'points');
         }
     });

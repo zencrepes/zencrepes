@@ -8,6 +8,7 @@ import { cfgSources } from './Minimongo.js';
 
 import calculateQueryIncrement from './calculateQueryIncrement.js';
 import PropTypes from "prop-types";
+import { withSnackbar } from 'notistack';
 
 /*
 Load data about GitHub Orgs
@@ -72,9 +73,8 @@ class FetchOrgRepos extends Component {
             log,
             setLoadingIterateCurrent,
             setLoadingIterateTotal,
-            setLoadingSuccessMsg,
-            setLoadingSuccess,
             setLoading,
+            enqueueSnackbar,
         } = this.props;
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
@@ -90,6 +90,14 @@ class FetchOrgRepos extends Component {
                 }
                 catch (error) {
                     log.info(error);
+                }
+                if (data.data.errors !== undefined && data.data.errors.length > 0) {
+                    data.data.errors.forEach((error) => {
+                        enqueueSnackbar(error.message, {
+                            variant: 'warning',
+                            persist: true,
+                        });
+                    });
                 }
                 log.info(data);
                 if (data.data !== null && data.data !== undefined) {
@@ -108,9 +116,6 @@ class FetchOrgRepos extends Component {
                         if (queryIncrement > 0) {
                             await this.getReposPagination(lastCursor, queryIncrement);
                         }
-                    } else {
-                        setLoadingSuccessMsg('Organization not found');
-                        setLoadingSuccess(false);
                     }
                 } else {
                     this.errorRetry = this.errorRetry + 1;
@@ -171,6 +176,7 @@ FetchOrgRepos.propTypes = {
     name: PropTypes.string,
     log: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
+    enqueueSnackbar: PropTypes.func.isRequired,
 
     setLoadFlag: PropTypes.func.isRequired,
     setAvailableRepos: PropTypes.func.isRequired,
@@ -217,4 +223,4 @@ const mapDispatch = dispatch => ({
     updateChip: dispatch.chip.updateChip,
 });
 
-export default connect(mapState, mapDispatch)(withApollo(FetchOrgRepos));
+export default connect(mapState, mapDispatch)(withApollo(withSnackbar(FetchOrgRepos)));

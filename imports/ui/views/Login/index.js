@@ -123,10 +123,10 @@ class Login extends Component {
                                 </Typography>
                             </Paper>
                             <GitHubLogin />
-                            <p className={classes.paragraphSmall}>This program is distributed in the hope that it will be useful,
+                            <p className={classes.paragraphSmall}>This library is distributed in the hope that it will be useful,
                                 but WITHOUT ANY WARRANTY; without even the implied warranty of
-                                MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                                GNU Affero General Public License for more details.</p>
+                                MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+                                Lesser General Public License for more details.</p>
                             <p className={classes.paragraphSmall}>By logging in, you are accepting the above-mentioned license.</p>
                         </Grid>
                     </Grid>
