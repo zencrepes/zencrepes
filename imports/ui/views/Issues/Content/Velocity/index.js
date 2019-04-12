@@ -25,16 +25,19 @@ class Velocity extends Component {
     getVelocityHighcharts(velocity) {
         let issuesCount = [];
         let storyPoints = [];
+        let storyPointsWeek = [];
         velocity.forEach((v) => {
             issuesCount.push([new Date(v.weekStart).getTime(), Math.round(v.completion.issues.velocity, 1)]);
             storyPoints.push([new Date(v.weekStart).getTime(), Math.round(v.completion.points.velocity, 1)]);
+            storyPointsWeek.push([new Date(v.weekStart).getTime(), Math.round(v.completion.points.count, 1)]);
         });
         if (issuesCount.length === 0) {
             return [];
         } else {
             return [
-                {id: 'issues-' + uuidv1(), name: 'Issues', weeks: issuesCount},
-                {id: 'points-' + uuidv1(), name: 'Story Points', weeks: storyPoints}
+                {id: 'issues-' + uuidv1(), type: 'spline', name: 'Issues', weeks: issuesCount},
+                {id: 'points-' + uuidv1(), type: 'spline', name: 'Story Points (Velocity)', weeks: storyPoints},
+                {id: 'pointsWeek-' + uuidv1(), type: 'column', name: 'Story Points (Week)', weeks: storyPointsWeek}
             ];
         }
     }
