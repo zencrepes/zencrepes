@@ -90,19 +90,19 @@ class Terms extends Component {
                     </div>
                     <p className={classes.paragraph}>You are using ZenCrepes at <u><b>your own risks</b></u>, ZenCrepes is provided with absolutely no warranty, NONE !</p>
                     <p className={classes.paragraph}>ZenCrepes allow its users to batch modify content in GitHub through provided APIs, again, you are doing so at your own risks.</p>
-                    <p className={classes.paragraph}>ZenCrepes is Open-Source and distributed under the AGPL 3.0: </p>
-                    <pre className={classes.preText} >This program is free software: you can redistribute it and/or modify
-                        it under the terms of the GNU Affero General Public License as
-                        published by the Free Software Foundation, either version 3 of the
-                        License, or (at your option) any later version.</pre>
+                    <p className={classes.paragraph}>ZenCrepes is Open-Source and distributed under the LGPL 2.1: </p>
+                    <pre className={classes.preText} >This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.</pre>
 
-                    <pre className={classes.preText} >This program is distributed in the hope that it will be useful,
-                        but WITHOUT ANY WARRANTY; without even the implied warranty of
-                        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                        GNU Affero General Public License for more details.</pre>
+                    <pre className={classes.preText} >This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.</pre>
 
-                    <pre className={classes.preText} >You should have received a copy of the GNU Affero General Public License
-                        along with this program.  If not, see https://www.gnu.org/licenses/.</pre>
+                    <pre className={classes.preText} >You should have received a copy of the GNU Lesser General Public
+    License along with this library.  If not, see https://www.gnu.org/licenses/.</pre>
                     <p className={classes.paragraph}>ZenCrepes is not affiliated with GitHub.</p>
                 </main>
             </General>
