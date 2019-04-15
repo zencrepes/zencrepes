@@ -16,7 +16,7 @@ export default {
         facets: [],
         queries: [],
 
-        selectedTab: 0, // Selected tab to be displayed
+        selectedTab: 'stats', // Selected tab to be displayed
 
         query: {},
 

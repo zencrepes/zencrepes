@@ -36,7 +36,7 @@ class Issues extends Component {
 
     //https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     componentDidMount() {
-        const { updateQuery } = this.props;
+        const { updateQuery, setSelectedTab, match } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
         if (queryUrl === null) {
@@ -44,10 +44,13 @@ class Issues extends Component {
         } else {
             updateQuery(JSON.parse(queryUrl));
         }
+        if (match.params.tab !== undefined) {
+            setSelectedTab(match.params.tab);
+        }
     }
 
     componentDidUpdate(prevProps) {
-        const { updateQuery } = this.props;
+        const { updateQuery, setSelectedTab, match } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
 
@@ -57,7 +60,24 @@ class Issues extends Component {
         if (queryUrl !== oldQueryUrl) {
             updateQuery(JSON.parse(queryUrl));
         }
+        if (match.params.tab !== undefined) {
+            setSelectedTab(match.params.tab);
+        }
     }
+
+    // Receive request to change tab, update URL accordingly
+    changeTab = (newTab) => {
+        const params = new URLSearchParams(this.props.location.search);
+        let queryUrl = "{}";
+        if (params.get('q') !== null) {
+            queryUrl = params.get('q');
+        }
+        this.props.history.push({
+            pathname: '/issues/' + newTab,
+            search: '?q=' + queryUrl,
+            state: { detail: queryUrl }
+        });
+    };
 
     render() {
         const { classes, issues } = this.props;
@@ -91,7 +111,7 @@ class Issues extends Component {
                                         <IssuesQuery />
                                     </Grid>
                                     <Grid item xs={12} sm className={classes.fullWidth}>
-                                        <IssuesTabs />
+                                        <IssuesTabs changeTab={this.changeTab}/>
                                     </Grid>
                                     <Grid item xs={12} sm className={classes.fullWidth}>
                                         <IssuesContent />
@@ -111,10 +131,14 @@ Issues.propTypes = {
     updateQuery: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     issues: PropTypes.array.isRequired,
+    setSelectedTab: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
+    setSelectedTab: dispatch.issuesView.setSelectedTab,
 });
 
 const mapState = state => ({

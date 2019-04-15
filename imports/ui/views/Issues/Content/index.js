@@ -23,11 +23,11 @@ class IssuesContent extends Component {
         return (
             <React.Fragment>
                 {{
-                    0: <Stats />,
-                    1: <Summary />,
-                    2: <IssuesList />,
-                    3: <Velocity />,
-                    4: <Burndown />,
+                    'stats': <Stats />,
+                    'list': <IssuesList />,
+                    'work': <Summary />,
+                    'velocity': <Velocity />,
+                    'burndown': <Burndown />,
                 }[selectedTab]}
             </React.Fragment>
         );
@@ -35,7 +35,7 @@ class IssuesContent extends Component {
 }
 
 IssuesContent.propTypes = {
-    selectedTab: PropTypes.number.isRequired,
+    selectedTab: PropTypes.string.isRequired,
 };
 
 const mapState = state => ({
