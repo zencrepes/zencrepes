@@ -6,6 +6,8 @@ import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
+import subDays from 'date-fns/subDays'
+
 export default {
     state: {
         issues: [],
@@ -14,7 +16,7 @@ export default {
         facets: [],
         queries: [],
 
-        selectedTab: 0, // Selected tab to be displayed
+        selectedTab: 'stats', // Selected tab to be displayed
 
         query: {},
 
@@ -33,7 +35,14 @@ export default {
 
         statsOpenedDuring: [],
         statsCreatedSince: [],
+        statsUpdatedSince: [],
+        statsProjectsCount: [],
+        statsMilestonesCount: [],
+        statsPointsCount: [],
+        statsAssigneesCount: [],
 
+        showTimeModal: false,
+        timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'closedAt', name: 'Closed'}],
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
@@ -60,6 +69,14 @@ export default {
 
         setStatsOpenedDuring(state, payload) {return { ...state, statsOpenedDuring: payload };},
         setStatsCreatedSince(state, payload) {return { ...state, statsCreatedSince: payload };},
+        setStatsUpdatedSince(state, payload) {return { ...state, statsUpdatedSince: payload };},
+        setStatsProjectsCount(state, payload) {return { ...state, statsProjectsCount: payload };},
+        setStatsMilestonesCount(state, payload) {return { ...state, statsMilestonesCount: payload };},
+        setStatsPointsCount(state, payload) {return { ...state, statsPointsCount: payload };},
+        setStatsAssigneesCount(state, payload) {return { ...state, statsAssigneesCount: payload };},
+
+        setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
+        setTimeFields(state, payload) {return { ...state, timeFields: payload };},
     },
     effects: {
         async updateQuery(query) {
@@ -85,6 +102,10 @@ export default {
             this.refreshFacets();
             this.refreshIssues();
             this.refreshBins();
+            this.refreshProjects();
+            this.refreshMilestones();
+            this.refreshPoints();
+            this.refreshAssignees();
 
             this.setShouldBurndownDataReload(true);
             this.refreshSummary();
@@ -228,34 +249,140 @@ export default {
 
             const createdSince = [{
                 label: '0 - 1 day',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gte :  0, $lte : 1}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
                 label: '1 - 7 days',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  1, $lte : 7}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
                 label: '1 - 2 weeks',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  7, $lte : 14}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}}).fetch()
             }, {
                 label: '2 - 4 weeks',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  14, $lte : 30}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}}).fetch()
             }, {
                 label: '1 - 3 months',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  30, $lte : 90}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}}).fetch()
             }, {
                 label: '3 - 6 months',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  90, $lte : 120}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}}).fetch()
             }, {
                 label: '6 - 12 months',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gte :  120, $lte : 365}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}}).fetch()
             }, {
                 label: '1 year or more',
-                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'stats.createdSince':{ $gt :  365}}}).fetch()
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $lt :  subDays(new Date(), 365).toISOString()}}}).fetch()
             }];
             this.setStatsCreatedSince(createdSince);
+
+            const updatedSince = [{
+                label: '0 - 1 day',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt : subDays(new Date(), 1).toISOString()}}}).fetch()
+            }, {
+                label: '1 - 7 days',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}}).fetch()
+            }, {
+                label: '1 - 2 weeks',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}}).fetch()
+            }, {
+                label: '2 - 4 weeks',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}}).fetch()
+            }, {
+                label: '1 - 3 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}}).fetch()
+            }, {
+                label: '3 - 6 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}}).fetch()
+            }, {
+                label: '6 - 12 months',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}}).fetch()
+            }, {
+                label: '1 year or more',
+                issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $lt :  subDays(new Date(), 365).toISOString()}}}).fetch()
+            }];
+            this.setStatsUpdatedSince(updatedSince);
 
             var t1 = performance.now();
             log.info("refreshBins - took " + (t1 - t0) + " milliseconds.");
         },
 
+        async refreshProjects(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.issuesView.query;
+
+            const projectsCount = [{
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $eq : 0}}}).fetch()
+            }, {
+                name: 'Populated',
+                color: '#2196f3',
+                issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $gt : 0}}}).fetch()
+            }];
+            this.setStatsProjectsCount(projectsCount);
+
+            var t1 = performance.now();
+            log.info("refreshProjects - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshMilestones(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.issuesView.query;
+
+            const milestonesCount = [{
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'milestone':null}}).fetch()
+            }, {
+                name: 'Populated',
+                color: '#2196f3',
+                issues: cfgIssues.find({...query, ...{'milestone':{ $ne : null}}}).fetch()
+            }];
+            this.setStatsMilestonesCount(milestonesCount);
+
+            var t1 = performance.now();
+            log.info("refreshMilestones - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshPoints(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.issuesView.query;
+
+            const pointsCount = [{
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'points':null}}).fetch()
+            }, {
+                name: 'Populated',
+                color: '#2196f3',
+                issues: cfgIssues.find({...query, ...{'points':{ $ne : null}}}).fetch()
+            }];
+            this.setStatsPointsCount(pointsCount);
+
+            var t1 = performance.now();
+            log.info("refreshPoints - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshAssignees(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.issuesView.query;
+
+            const assigneesCount = [{
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $eq : 0}}}).fetch()
+            }, {
+                name: 'Populated',
+                color: '#2196f3',
+                issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $gt : 0}}}).fetch()
+            }];
+            this.setStatsAssigneesCount(assigneesCount);
+
+            var t1 = performance.now();
+            log.info("refreshAssignees - took " + (t1 - t0) + " milliseconds.");
+        },
     }
 };

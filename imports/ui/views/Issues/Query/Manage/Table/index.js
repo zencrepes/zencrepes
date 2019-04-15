@@ -28,7 +28,7 @@ class QueriesTable extends Component {
     };
     
     render() {
-        const { queries, facets, loadQuery, deleteQuery } = this.props;
+        const { queries, facets, loadQuery, deleteQuery, timeFields } = this.props;
         const { rowsPerPage, page } = this.state;
 
         return (
@@ -48,6 +48,7 @@ class QueriesTable extends Component {
                               query={query}
                               key={query._id}
                               facets={facets}
+                              timeFields={timeFields}
                               loadQuery={loadQuery}
                               deleteQuery={deleteQuery}
                             />
@@ -62,6 +63,7 @@ class QueriesTable extends Component {
 QueriesTable.propTypes = {
     queries: PropTypes.array.isRequired,
     facets: PropTypes.array.isRequired,
+    timeFields: PropTypes.array.isRequired,
     loadQuery: PropTypes.func.isRequired,
     deleteQuery: PropTypes.func.isRequired,
 };

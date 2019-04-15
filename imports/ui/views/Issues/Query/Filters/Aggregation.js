@@ -81,7 +81,10 @@ Aggregation.propTypes = {
     query: PropTypes.object.isRequired,
     facets: PropTypes.array.isRequired,
     currentFacet: PropTypes.object.isRequired,
-    updateQuery: PropTypes.func.isRequired,
+    updateQuery: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string
+    ]),
 };
 
 export default withStyles(styles)(Aggregation);

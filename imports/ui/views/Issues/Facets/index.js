@@ -6,8 +6,12 @@ import { connect } from "react-redux";
 
 import { withRouter } from 'react-router-dom';
 
-import { addRemoveFromQuery } from '../../../utils/query/index.js';
+import {
+    addRemoveFromQuery,
+    addRemoveDateFromQuery,
+} from '../../../utils/query/index.js';
 import TermFacet from './Term/index.js';
+import TimeFacet from './Time/index.js';
 
 const styles = {
     root: {
@@ -31,10 +35,24 @@ class IssuesFacets extends Component {
         });
     };
 
+    addRemoveDateQuery = (field, direction, date) => {
+        const { query } = this.props;
+        const modifiedQuery = addRemoveDateFromQuery(field, direction, date, query);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + JSON.stringify(modifiedQuery),
+            state: { detail: modifiedQuery }
+        });
+    };
+
     render() {
         const { classes, facets, query, defaultPoints } = this.props;
         return (
             <div className={classes.root}>
+                <TimeFacet
+                    addRemoveDateQuery={this.addRemoveDateQuery}
+                    query={query}
+                />
                 {facets.filter(facet => facet.hiddenFacet === undefined).map(facet => {
                     return ( <TermFacet
                         facet={facet}

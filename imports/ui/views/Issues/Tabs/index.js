@@ -12,8 +12,8 @@ class IssuesTabs extends Component {
     }
 
     handleChange = (event, value) => {
-        const { setSelectedTab } = this.props;
-        setSelectedTab(value);
+        const { changeTab } = this.props;
+        changeTab(value);
     };
 
     render() {
@@ -25,18 +25,20 @@ class IssuesTabs extends Component {
                 indicatorColor="primary"
                 textColor="primary"
             >
-                <Tab label="Summary" />
-                <Tab label="List" />
-                <Tab label="Velocity" />
-                <Tab label="Burndown" />
+                <Tab label="Stats" value="stats" />
+                <Tab label="List" value="list" />
+                <Tab label="Work" value="work" />
+                <Tab label="Velocity" value="velocity" />
+                <Tab label="Burndown" value="burndown" />
             </Tabs>
         );
     }
 }
 
 IssuesTabs.propTypes = {
-    selectedTab: PropTypes.number.isRequired,
+    selectedTab: PropTypes.string.isRequired,
     setSelectedTab: PropTypes.func.isRequired,
+    changeTab: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({

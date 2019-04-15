@@ -26,7 +26,7 @@ class Query extends Component {
     };
 
     render() {
-        const { query, facets } = this.props;
+        const { query, facets, timeFields } = this.props;
 
         return (
             <TableRow>
@@ -37,8 +37,10 @@ class Query extends Component {
                 <TableCell>
                     <Filters
                         query={JSON.parse(query.filters)}
+                        timeFields={timeFields}
                         facets={facets}
                         updateQuery={null}
+                        updateQueryDate={null}
                     />
                 </TableCell>
                 <TableCell padding="none"><Delete onClick={this.deleteQuery} /></TableCell>
@@ -50,8 +52,9 @@ class Query extends Component {
 Query.propTypes = {
     query: PropTypes.object.isRequired,
     facets: PropTypes.array.isRequired,
+    timeFields: PropTypes.array.isRequired,
     deleteQuery: PropTypes.func.isRequired,
-    loadQuery: PropTypes.object.isRequired,
+    loadQuery: PropTypes.func.isRequired,
 };
 
 export default Query;

@@ -92,6 +92,7 @@ class App extends Component {
                                         <Authenticated exact path="/projects" component={Projects} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/issues/:tab" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/pullrequests" component={Pullrequests} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/roadmap" component={Roadmap} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Public exact path="/terms" component={Terms} {...props} {...state} />

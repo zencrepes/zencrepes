@@ -15,7 +15,7 @@ import Filters from './Filters/index.js';
 import QuerySave from './Save/index.js';
 import QueryManage from './Manage/index.js';
 
-import { addRemoveFromQuery } from "../../../utils/query/index.js";
+import { addRemoveFromQuery, addRemoveDateFromQuery} from "../../../utils/query/index.js";
 import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
@@ -77,6 +77,16 @@ class IssuesQuery extends Component {
         });
     };
 
+    updateQueryDate = (field, direction, date) => {
+        const { query } = this.props;
+        const modifiedQuery = addRemoveDateFromQuery(field, direction, date, query);
+        this.props.history.push({
+            pathname: '/issues',
+            search: '?q=' + JSON.stringify(modifiedQuery),
+            state: { detail: modifiedQuery }
+        });
+    };
+
     setOpenSaveQueryDialog = (state) => {
         this.setState({ openSaveQueryDialog: state });
     };
@@ -102,7 +112,7 @@ class IssuesQuery extends Component {
     };
 
     render() {
-        const { classes, query, facets, queries } = this.props;
+        const { classes, query, facets, queries, timeFields } = this.props;
 
         return (
             <div className={classes.root}>
@@ -121,6 +131,7 @@ class IssuesQuery extends Component {
                             <QueryManage
                                 queries={queries}
                                 facets={facets}
+                                timeFields={timeFields}
                                 loadQuery={this.loadQuery}
                                 deleteQuery={this.deleteQuery}
                                 openManageQueryDialog={this.state.openManageQueryDialog}
@@ -145,7 +156,9 @@ class IssuesQuery extends Component {
                         <Filters
                             query={query}
                             facets={facets}
+                            timeFields={timeFields}
                             updateQuery={this.updateQuery}
+                            updateQueryDate={this.updateQueryDate}
                         />
                     </Grid>
                     <Grid item >
@@ -176,6 +189,7 @@ IssuesQuery.propTypes = {
     query: PropTypes.object.isRequired,
     queries: PropTypes.array.isRequired,
     facets: PropTypes.array.isRequired,
+    timeFields: PropTypes.array.isRequired,
 
     saveQuery: PropTypes.func.isRequired,
     deleteQuery: PropTypes.func.isRequired,
@@ -187,6 +201,7 @@ const mapState = state => ({
     query: state.issuesView.query,
     queries: state.issuesView.queries,
     facets: state.issuesView.facets,
+    timeFields: state.issuesView.timeFields,
 });
 
 const mapDispatch = dispatch => ({

@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import Aggregation from './Aggregation.js';
+import FiltersDate from './FiltersDate.js';
 
 const styles = {
     root: {
@@ -39,8 +40,9 @@ class Filters extends Component {
     };
 
     render() {
-        const { classes, query, facets, updateQuery } = this.props;
+        const { classes, query, facets, timeFields, updateQuery, updateQueryDate } = this.props;
         const activeFacets = this.getActiveFacets(query, facets);
+        const activeDateFields = timeFields.filter(field => query[field.idx] !== undefined);
         return (
             <div className={classes.root}>
                 <Grid
@@ -60,6 +62,16 @@ class Filters extends Component {
                             />
                         </Grid>
                     ))}
+                    {activeDateFields.map(datefilter => (
+                        <Grid item key={datefilter.idx}>
+                            <FiltersDate
+                                query={query}
+                                datefilter={datefilter}
+                                updateQueryDate={updateQueryDate}
+                            />
+                        </Grid>
+                    ))}
+
                 </Grid>
             </div>
         );
@@ -70,7 +82,9 @@ Filters.propTypes = {
     classes: PropTypes.object.isRequired,
     query: PropTypes.object.isRequired,
     facets: PropTypes.array.isRequired,
-    updateQuery: PropTypes.func.isRequired,
+    timeFields: PropTypes.array.isRequired,
+    updateQuery: PropTypes.func,
+    updateQueryDate: PropTypes.func,
 };
 
 export default withStyles(styles)(Filters);
