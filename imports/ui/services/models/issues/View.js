@@ -421,7 +421,7 @@ export default {
             let t0 = performance.now();
             const query = rootState.issuesView.query;
 
-            const milestonesGroup = _.groupBy(cfgIssues.find({...query, ...{'milestone.state':{$in:['OPEN']}, 'state':{$in:['OPEN']}, 'milestone.dueOn':{ $lt : new Date().toISOString()}}}).map((issue) => {
+            const milestonesGroup = _.groupBy(cfgIssues.find({...query, ...{'milestone.state':{$in:['OPEN', 'CLOSED']}, 'state':{$in:['OPEN']}, 'milestone.dueOn':{ $lt : new Date().toISOString()}}}).map((issue) => {
                 return {
                     ...issue,
                     milestoneTitle: issue.milestone.title
