@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
+import Stats from './Stats/index.js';
 import Summary from './Summary/index.js';
 import Burndown from './Burndown/index.js';
 import Velocity from './Velocity/index.js';
@@ -22,10 +23,11 @@ class IssuesContent extends Component {
         return (
             <React.Fragment>
                 {{
-                    0: <Summary />,
-                    1: <IssuesList />,
-                    2: <Velocity />,
-                    3: <Burndown />,
+                    0: <Stats />,
+                    1: <Summary />,
+                    2: <IssuesList />,
+                    3: <Velocity />,
+                    4: <Burndown />,
                 }[selectedTab]}
             </React.Fragment>
         );

@@ -2,31 +2,31 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import StatsBinBar from '../../../../../components/Charts/StatsBinBar.js';
+import PieChart from '../../../../../components/Charts/PieChart.js';
 
-class BinsCreatedSince extends Component {
+class AssigneesPopulated extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { statsBins } = this.props;
+        const { stats } = this.props;
         return (
             <CustomCard
-                headerTitle="Issues currently in OPEN state"
+                headerTitle="Assignees field"
                 headerFactTitle=""
                 headerFactValue=""
             >
-                <StatsBinBar
-                    dataset={statsBins}
+                <PieChart
+                    dataset={stats}
                 />
             </CustomCard>
         );
     }
 }
 
-BinsCreatedSince.propTypes = {
-    statsBins: PropTypes.array.isRequired,
+AssigneesPopulated.propTypes = {
+    stats: PropTypes.array.isRequired,
 };
 
-export default BinsCreatedSince;
+export default AssigneesPopulated;

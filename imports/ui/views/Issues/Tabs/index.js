@@ -25,6 +25,7 @@ class IssuesTabs extends Component {
                 indicatorColor="primary"
                 textColor="primary"
             >
+                <Tab label="Stats" />
                 <Tab label="Summary" />
                 <Tab label="List" />
                 <Tab label="Velocity" />
