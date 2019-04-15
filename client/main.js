@@ -41,7 +41,7 @@ Tracker.autorun(function () {
         localCfgIssues.refresh(true, () => {store.dispatch.startup.setLoadedIssues(true);});
 
         const localCfgPullrequests = new PersistentMinimongo2(cfgPullrequests, 'GAV-Pullrequests-' + username);
-        localCfgPullrequests.refresh(true, () => {store.dispatch.startup.setLoadedIssues(true);});
+        localCfgPullrequests.refresh(true, () => {store.dispatch.startup.setLoadedPullrequests(true);});
 
         const localCfgQueries = new PersistentMinimongo2(cfgQueries, 'GAV-Queries-' + username);
         localCfgQueries.refresh(true, () => {store.dispatch.startup.setLoadedQueries(true);});

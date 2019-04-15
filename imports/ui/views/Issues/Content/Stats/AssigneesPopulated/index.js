@@ -13,7 +13,7 @@ class AssigneesPopulated extends Component {
         const { stats } = this.props;
         return (
             <CustomCard
-                headerTitle="Assignees field"
+                headerTitle="Assignees"
                 headerFactTitle=""
                 headerFactValue=""
             >
