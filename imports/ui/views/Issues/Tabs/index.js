@@ -37,7 +37,6 @@ class IssuesTabs extends Component {
 
 IssuesTabs.propTypes = {
     selectedTab: PropTypes.string.isRequired,
-    setSelectedTab: PropTypes.func.isRequired,
     changeTab: PropTypes.func.isRequired,
 };
 
@@ -45,8 +44,4 @@ const mapState = state => ({
     selectedTab: state.issuesView.selectedTab,
 });
 
-const mapDispatch = dispatch => ({
-    setSelectedTab: dispatch.issuesView.setSelectedTab,
-});
-
-export default connect(mapState, mapDispatch)(IssuesTabs);
+export default connect(mapState, null)(IssuesTabs);

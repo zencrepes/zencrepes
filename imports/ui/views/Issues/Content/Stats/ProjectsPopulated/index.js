@@ -13,7 +13,7 @@ class ProjectsPopulated extends Component {
         const { stats } = this.props;
         return (
             <CustomCard
-                headerTitle="Projects field"
+                headerTitle="Projects"
                 headerFactTitle=""
                 headerFactValue=""
             >

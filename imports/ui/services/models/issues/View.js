@@ -17,6 +17,8 @@ export default {
         queries: [],
 
         selectedTab: 'stats', // Selected tab to be displayed
+        tabStatsQuery: null, // This stores the current query, used to identify if data refresh is needed
+        tabWorkQuery: null, // This stores the current query, used to identify if data refresh is needed
 
         query: {},
 
@@ -40,6 +42,7 @@ export default {
         statsMilestonesCount: [],
         statsPointsCount: [],
         statsAssigneesCount: [],
+        statsMilestonesPastDue: [],
 
         showTimeModal: false,
         timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'closedAt', name: 'Closed'}],
@@ -51,6 +54,8 @@ export default {
         setFacets(state, payload) {return { ...state, facets: payload };},
         setQueries(state, payload) {return { ...state, queries: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
+        setTabStatsQuery(state, payload) {return { ...state, tabStatsQuery: payload };},
+        setTabWorkQuery(state, payload) {return { ...state, tabWorkQuery: payload };},
 
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
 
@@ -74,6 +79,7 @@ export default {
         setStatsMilestonesCount(state, payload) {return { ...state, statsMilestonesCount: payload };},
         setStatsPointsCount(state, payload) {return { ...state, statsPointsCount: payload };},
         setStatsAssigneesCount(state, payload) {return { ...state, statsAssigneesCount: payload };},
+        setStatsMilestonesPastDue(state, payload) {return { ...state, statsMilestonesPastDue: payload };},
 
         setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
         setTimeFields(state, payload) {return { ...state, timeFields: payload };},
@@ -101,15 +107,40 @@ export default {
             this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
-            this.refreshBins();
-            this.refreshProjects();
-            this.refreshMilestones();
-            this.refreshPoints();
-            this.refreshAssignees();
 
-            this.setShouldBurndownDataReload(true);
-            this.refreshSummary();
-            this.refreshVelocity();
+            this.updateStats();
+            this.updateWork();
+        },
+
+        async updateSelectedTab(payload, rootState) {
+            this.setSelectedTab(payload);
+
+            if (payload === 'stats' && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabStatsQuery)) {
+                this.updateStats();
+            } else if ((payload === 'work' || payload === 'burndown' || payload === 'velocity') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabWorkQuery)) {
+                this.updateWork();
+            }
+        },
+
+        async updateStats(payload, rootState) {
+            if (rootState.issuesView.selectedTab === 'stats') {
+                this.refreshBins();
+                this.refreshProjects();
+                this.refreshMilestones();
+                this.refreshPoints();
+                this.refreshAssignees();
+                this.refreshPastDue();
+                this.setTabStatsQuery(rootState.issuesView.query);
+            }
+        },
+
+        async updateWork(payload, rootState) {
+            if (rootState.issuesView.selectedTab === 'work' || rootState.issuesView.selectedTab === 'burndown' || rootState.issuesView.selectedTab === 'velocity') {
+                this.setShouldBurndownDataReload(true);
+                this.refreshSummary();
+                this.refreshVelocity();
+                this.setTabWorkQuery(rootState.issuesView.query);
+            }
         },
 
         async deleteQuery(query) {
@@ -383,6 +414,34 @@ export default {
 
             var t1 = performance.now();
             log.info("refreshAssignees - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshPastDue(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.issuesView.query;
+
+            const milestonesGroup = _.groupBy(cfgIssues.find({...query, ...{'milestone.state':{$in:['OPEN']}, 'state':{$in:['OPEN']}, 'milestone.dueOn':{ $lt : new Date().toISOString()}}}).map((issue) => {
+                return {
+                    ...issue,
+                    milestoneTitle: issue.milestone.title
+                }
+            }), 'milestoneTitle');
+
+            const milestonesPastDue = Object.entries(milestonesGroup)
+                .map(([name, content]) => {
+                    return {
+                        name: name,
+                        //issues: Object.values(content),
+                        count: Object.values(content).length,
+                        issues: Object.values(content)
+                    }
+                });
+
+            this.setStatsMilestonesPastDue(milestonesPastDue);
+
+            var t1 = performance.now();
+            log.info("refreshPastDue - took " + (t1 - t0) + " milliseconds.");
         },
     }
 };

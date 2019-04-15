@@ -13,7 +13,7 @@ class PointsPopulated extends Component {
         const { stats } = this.props;
         return (
             <CustomCard
-                headerTitle="Points assigned"
+                headerTitle="Points / LOE"
                 headerFactTitle=""
                 headerFactValue=""
             >

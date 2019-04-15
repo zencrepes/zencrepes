@@ -36,7 +36,7 @@ class Issues extends Component {
 
     //https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     componentDidMount() {
-        const { updateQuery, setSelectedTab, match } = this.props;
+        const { updateQuery, updateSelectedTab, match } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
         if (queryUrl === null) {
@@ -45,12 +45,12 @@ class Issues extends Component {
             updateQuery(JSON.parse(queryUrl));
         }
         if (match.params.tab !== undefined) {
-            setSelectedTab(match.params.tab);
+            updateSelectedTab(match.params.tab);
         }
     }
 
     componentDidUpdate(prevProps) {
-        const { updateQuery, setSelectedTab, match } = this.props;
+        const { updateQuery, updateSelectedTab, match } = this.props;
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
 
@@ -61,7 +61,7 @@ class Issues extends Component {
             updateQuery(JSON.parse(queryUrl));
         }
         if (match.params.tab !== undefined) {
-            setSelectedTab(match.params.tab);
+            updateSelectedTab(match.params.tab);
         }
     }
 
@@ -131,14 +131,14 @@ Issues.propTypes = {
     updateQuery: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     issues: PropTypes.array.isRequired,
-    setSelectedTab: PropTypes.func.isRequired,
+    updateSelectedTab: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
 };
 
 const mapDispatch = dispatch => ({
     updateQuery: dispatch.issuesView.updateQuery,
-    setSelectedTab: dispatch.issuesView.setSelectedTab,
+    updateSelectedTab: dispatch.issuesView.updateSelectedTab,
 });
 
 const mapState = state => ({
