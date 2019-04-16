@@ -99,7 +99,6 @@ class Refresh extends Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.refreshAllRepos}>Across all Repositories</MenuItem>
-                    <MenuItem onClick={this.refreshSelectedRepos}>Across selected Repositories</MenuItem>
                     <MenuItem onClick={this.refreshIssues}>Filtered Issues</MenuItem>
                 </Menu>
             </div>
