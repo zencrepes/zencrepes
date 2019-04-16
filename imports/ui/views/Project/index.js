@@ -43,7 +43,7 @@ class Project extends Component {
     }
 
     render() {
-        const { issues, velocity, burndown, assignees, sprints, defaultPoints } = this.props;
+        const { issues, sprints } = this.props;
         return (
             <General>
                 {(sprints.length === 0) ? (

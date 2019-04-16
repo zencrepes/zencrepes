@@ -107,7 +107,7 @@ class GaugeChart extends Component {
 
     render() {
         const {chartOptions} = this.state;
-        
+
         return (
             <HighchartsReact
                 highcharts={Highcharts}

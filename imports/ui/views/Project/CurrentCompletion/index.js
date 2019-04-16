@@ -24,11 +24,6 @@ class CurrentCompletion extends Component {
             .map(issue => issue.points)
             .reduce((acc, points) => acc + points, 0);
 
-        console.log(issues);
-        console.log(completedIssues);
-        console.log(completedPoints);
-        console.log(totalPoints);
-
         return (
             <CustomCard
                 headerTitle="Current Completion"

@@ -4,11 +4,11 @@ import { Meteor } from 'meteor/meteor';
 import { cfgMilestones, cfgIssues, cfgSources, cfgLabels } from "../../../data/Minimongo.js";
 
 import {
-    getAssigneesRepartition,
+//    getAssigneesRepartition,
     getAssignees,
     getRepositories,
-    getRepositoriesRepartition,
-    getLabelsRepartition,
+//    getRepositoriesRepartition,
+//    getLabelsRepartition,
 } from "../../../utils/repartition/index.js";
 
 import {
@@ -122,7 +122,7 @@ export default {
         setAgileBoardLabels(state, payload) {return { ...state, agileBoardLabels: payload };},
     },
     effects: {
-        async updateQuery(query, rootState) {
+        async updateQuery(query) {
             this.setQuery(query);
 
             this.updateSprints();
