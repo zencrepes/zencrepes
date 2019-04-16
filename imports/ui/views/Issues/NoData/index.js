@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -6,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import Button from '@material-ui/core/Button';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import ViewDashboardIcon from 'mdi-react/ViewDashboardIcon';
 
@@ -30,6 +32,12 @@ class NoData extends Component {
         super(props);
     }
 
+    clearQuery = () => {
+        const { setUpdateQueryPath, setUpdateQuery } = this.props;
+        setUpdateQuery({});
+        setUpdateQueryPath('/issues/stats');
+    };
+
     refreshAllRepos = () => {
         const { setLoadFlag, setLoadRepos, setOnSuccess, updateView  } = this.props;
         setOnSuccess(updateView);
@@ -39,7 +47,7 @@ class NoData extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, query } = this.props;
 
         return (
             <React.Fragment>
@@ -51,13 +59,28 @@ class NoData extends Component {
                     }}
                 >
                     <ViewDashboardIcon size={64} /><br />
-                    <span>No Issues in memory</span><br />
-                    <Button
-                        onClick={this.refreshAllRepos}
-                    >
-                        <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-                        Load Issues
-                    </Button>
+                    {!_.isEmpty(query) ? (
+                        <React.Fragment>
+                            <span>No issues found, try clearing your query</span><br />
+                            <Button
+                                onClick={this.clearQuery}
+                            >
+                                <ClearIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                                Clear Query
+                            </Button>
+                        </React.Fragment>
+                    ): (
+                        <React.Fragment>
+                            <span>No Issues in memory</span><br />
+                            <Button
+                                onClick={this.refreshAllRepos}
+                            >
+                                <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                                Load Issues
+                            </Button>
+                        </React.Fragment>
+                    )}
+
                 </div>
             </React.Fragment>
         );
@@ -66,11 +89,14 @@ class NoData extends Component {
 
 NoData.propTypes = {
     classes: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
     setLoadFlag: PropTypes.func.isRequired,
     setLoadRepos: PropTypes.func.isRequired,
     setOnSuccess: PropTypes.func.isRequired,
 
     updateView: PropTypes.func.isRequired,
+    setUpdateQueryPath: PropTypes.func.isRequired,
+    setUpdateQuery: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
@@ -80,7 +106,14 @@ const mapDispatch = dispatch => ({
     updateView: dispatch.issuesView.updateView,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
+
+    setUpdateQueryPath: dispatch.global.setUpdateQueryPath,
+    setUpdateQuery: dispatch.global.setUpdateQuery,
 });
 
-export default connect(null, mapDispatch)(withStyles(styles)(NoData));
+const mapState = state => ({
+    query: state.issuesView.query,
+});
+
+export default connect(mapState, mapDispatch)(withStyles(styles)(NoData));
 
