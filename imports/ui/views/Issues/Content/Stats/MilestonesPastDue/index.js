@@ -12,24 +12,25 @@ class MilestonesPopulated extends Component {
 
     render() {
         const { statsMilestonesPastDue, setUpdateQueryPath, setUpdateQuery } = this.props;
-        if (statsMilestonesPastDue.length > 0) {
-            return (
-                <CustomCard
-                    headerTitle="Milestones past due"
-                    headerFactTitle=""
-                    headerFactValue={statsMilestonesPastDue.length}
-                    headerLegend="Those milestones have a due date located in the past but still contain issues with an OPEN state. Associated issues should either be closed or moved to a future Milestone."
-                >
+        return (
+            <CustomCard
+                headerTitle="Milestones past due"
+                headerFactTitle=""
+                headerFactValue={statsMilestonesPastDue.length}
+                headerLegend="Those milestones have a due date located in the past but still contain issues with an OPEN state. Associated issues should either be closed or moved to a future Milestone."
+            >
+                {statsMilestonesPastDue.length > 0 ? (
                     <MsTreemap
                         dataset={statsMilestonesPastDue}
                         setUpdateQueryPath={setUpdateQueryPath}
                         setUpdateQuery={setUpdateQuery}
                     />
-                </CustomCard>
-            );
-        } else {
-            return null
-        }
+                ): (
+                    <span>No data available</span>
+                )}
+
+            </CustomCard>
+        );
     }
 }
 

@@ -14,6 +14,7 @@ import MilestonesPopulated from './MilestonesPopulated/index.js';
 import AssigneesPopulated from './AssigneesPopulated/index.js';
 import PointsPopulated from './PointsPopulated/index.js';
 import MilestonesPastDue from './MilestonesPastDue/index.js';
+import FacetsTree from './FacetsTree/index.js';
 
 class Stats extends Component {
     constructor (props) {
@@ -101,6 +102,60 @@ class Stats extends Component {
                             statsBins={statsUpdatedSince}
                         />
                         }
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FacetsTree
+                            facetKey="labels"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FacetsTree
+                            facetKey="projectCards"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FacetsTree
+                            facetKey="assignees"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FacetsTree
+                            facetKey="author.login"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FacetsTree
+                            facetKey="milestone.title"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <FacetsTree
+                            facetKey="repo.name"
+                        />
                     </Grid>
                 </Grid>
             </React.Fragment>
