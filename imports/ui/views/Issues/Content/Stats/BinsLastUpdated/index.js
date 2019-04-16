@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 import StatsBinBar from '../../../../../components/Charts/StatsBinBar.js';
+import {connect} from "react-redux";
 
 class BinsLastUpdated extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class BinsLastUpdated extends Component {
     }
 
     render() {
-        const { statsBins } = this.props;
+        const { statsUpdatedSince } = this.props;
         return (
             <CustomCard
                 headerTitle="Time since last update"
@@ -18,16 +19,24 @@ class BinsLastUpdated extends Component {
                 headerFactValue=""
                 headerLegend="Issues with an OPEN state, amount of time since they were last updated."
             >
-                <StatsBinBar
-                    dataset={statsBins}
-                />
+                {statsUpdatedSince.length > 0 ? (
+                    <StatsBinBar
+                        dataset={statsUpdatedSince}
+                    />
+                ): (
+                    <span>No data available</span>
+                )}
             </CustomCard>
         );
     }
 }
 
 BinsLastUpdated.propTypes = {
-    statsBins: PropTypes.array.isRequired,
+    statsUpdatedSince: PropTypes.array.isRequired,
 };
 
-export default BinsLastUpdated;
+const mapState = state => ({
+    statsUpdatedSince: state.issuesView.statsUpdatedSince,
+});
+
+export default connect(mapState, null)(BinsLastUpdated);

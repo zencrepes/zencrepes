@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 import PieChart from '../../../../../components/Charts/PieChart.js';
+import {connect} from "react-redux";
 
 class AssigneesPopulated extends Component {
     constructor(props) {
@@ -10,23 +11,33 @@ class AssigneesPopulated extends Component {
     }
 
     render() {
-        const { stats } = this.props;
+        const { statsAssigneesCount } = this.props;
         return (
             <CustomCard
                 headerTitle="Assignees"
                 headerFactTitle=""
                 headerFactValue=""
+                headerLegend="Display the number of issues (not points) with the field populated or not"
             >
-                <PieChart
-                    dataset={stats}
-                />
+                {statsAssigneesCount.length > 0 ? (
+                    <PieChart
+                        dataset={statsAssigneesCount}
+                    />
+                ): (
+                    <span>No data available</span>
+                )}
+
             </CustomCard>
         );
     }
 }
 
 AssigneesPopulated.propTypes = {
-    stats: PropTypes.array.isRequired,
+    statsAssigneesCount: PropTypes.array.isRequired,
 };
 
-export default AssigneesPopulated;
+const mapState = state => ({
+    statsAssigneesCount: state.issuesView.statsAssigneesCount,
+});
+
+export default connect(mapState, null)(AssigneesPopulated);
