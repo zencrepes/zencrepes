@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 import PieChart from '../../../../../components/Charts/PieChart.js';
+import {connect} from "react-redux";
 
 class MilestonesPopulated extends Component {
     constructor(props) {
@@ -10,23 +11,32 @@ class MilestonesPopulated extends Component {
     }
 
     render() {
-        const { stats } = this.props;
+        const { statsMilestonesCount } = this.props;
         return (
             <CustomCard
                 headerTitle="Milestones"
                 headerFactTitle=""
                 headerFactValue=""
+                headerLegend="Display the number of issues (not points) with the field populated or not"
             >
-                <PieChart
-                    dataset={stats}
-                />
+                {statsMilestonesCount.length > 0 ? (
+                    <PieChart
+                        dataset={statsMilestonesCount}
+                    />
+                ): (
+                    <span>No data available</span>
+                )}
             </CustomCard>
         );
     }
 }
 
 MilestonesPopulated.propTypes = {
-    stats: PropTypes.array.isRequired,
+    statsMilestonesCount: PropTypes.array.isRequired,
 };
 
-export default MilestonesPopulated;
+const mapState = state => ({
+    statsMilestonesCount: state.issuesView.statsMilestonesCount,
+});
+
+export default connect(mapState, null)(MilestonesPopulated);

@@ -14,11 +14,15 @@ export default {
         log: {},
         menus: {},
         dataRefresh: false,
+        updateQueryPath: '',
+        updateQuery: {},
     },
     reducers: {
         setLog(state, payload) {return { ...state, log: payload };},
         setMenus(state, payload) {return { ...state, menus: payload };},
         setDataRefresh(state, payload) {return { ...state, dataRefresh: payload };},
+        setUpdateQueryPath(state, payload) {return { ...state, updateQueryPath: payload };},
+        setUpdateQuery(state, payload) {return { ...state, updateQuery: JSON.parse(JSON.stringify(payload)) };},
     },
     effects: {
         async initApp() {

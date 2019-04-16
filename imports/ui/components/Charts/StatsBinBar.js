@@ -28,7 +28,7 @@ class StatsBinBar extends Component {
         const { dataset } = this.props;
         let updatedOptions = {
             chart: {
-                height: 300,
+                height: 200,
                 type: 'column',
             },
             title: null,

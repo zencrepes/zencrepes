@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 import StatsBinBar from '../../../../../components/Charts/StatsBinBar.js';
+import {connect} from "react-redux";
 
 class BinsOpenedDuring extends Component {
     constructor(props) {
@@ -10,23 +11,32 @@ class BinsOpenedDuring extends Component {
     }
 
     render() {
-        const { statsBins } = this.props;
+        const { statsOpenedDuring } = this.props;
         return (
             <CustomCard
-                headerTitle="CLOSED issues were open during"
+                headerTitle="Were open during"
                 headerFactTitle=""
                 headerFactValue=""
+                headerLegend="Issues with a CLOSED state, amount of time stayed open."
             >
-                <StatsBinBar
-                    dataset={statsBins}
-                />
+                {statsOpenedDuring.length > 0 ? (
+                    <StatsBinBar
+                        dataset={statsOpenedDuring}
+                    />
+                ): (
+                    <span>No data available</span>
+                )}
             </CustomCard>
         );
     }
 }
 
 BinsOpenedDuring.propTypes = {
-    statsBins: PropTypes.array.isRequired,
+    statsOpenedDuring: PropTypes.array.isRequired,
 };
 
-export default BinsOpenedDuring;
+const mapState = state => ({
+    statsOpenedDuring: state.issuesView.statsOpenedDuring,
+});
+
+export default connect(mapState, null)(BinsOpenedDuring);

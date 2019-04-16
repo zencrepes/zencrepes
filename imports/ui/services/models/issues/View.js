@@ -1,16 +1,21 @@
 import _ from 'lodash';
 
-import { cfgIssues, cfgQueries } from '../../../data/Minimongo.js';
+import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
-import subDays from 'date-fns/subDays'
+import subDays from 'date-fns/subDays';
 
 export default {
     state: {
         issues: [],
+        issuesTotalCount: 0,
+        issuesTotalGitHubCount: 0,
+        issuesFirstUpdate: {},
+        issuesLastUpdate: {},
+
         filteredIssues: [],
         filteredIssuesSearch: '',
         facets: [],
@@ -49,6 +54,10 @@ export default {
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
+        setIssuesTotalCount(state, payload) {return { ...state, issuesTotalCount: payload };},
+        setIssuesTotalGitHubCount(state, payload) {return { ...state, issuesTotalGitHubCount: payload };},
+        setIssuesFirstUpdate(state, payload) {return { ...state, issuesFirstUpdate: JSON.parse(JSON.stringify(payload)) };},
+        setIssuesLastUpdate(state, payload) {return { ...state, issuesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
@@ -163,10 +172,25 @@ export default {
         },
 
         async refreshIssues(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+
             let issues = cfgIssues.find(rootState.issuesView.query).fetch();
+            const firstUpdate = cfgIssues.findOne(rootState.issuesView.query, {sort: {updatedAt: 1},reactive: false,transform: null});
+            const lastUpdate = cfgIssues.findOne(rootState.issuesView.query, {sort: {updatedAt: -1},reactive: false,transform: null});
+
+            this.setIssuesFirstUpdate(firstUpdate);
+            this.setIssuesLastUpdate(lastUpdate);
+            this.setIssuesTotalCount(cfgIssues.find({}).count());
+
+            this.setIssuesTotalGitHubCount(cfgSources.find({active: true}).fetch().map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
+
             this.setIssues(issues);
             this.setFilteredIssues(issues);
             this.setFilteredIssuesSearch('');
+
+            var t1 = performance.now();
+            log.info("refreshIssues - took " + (t1 - t0) + " milliseconds.");
         },
 
         async searchIssues(searchString, rootState) {
@@ -252,82 +276,82 @@ export default {
             const query = rootState.issuesView.query;
 
             const openedDuring = [{
-                label: '0 - 1 day',
+                label: '0 - 1 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gte :  0, $lte : 1}}}).fetch()
             }, {
-                label: '1 - 7 days',
+                label: '1 - 7 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  1, $lte : 7}}}).fetch()
             }, {
-                label: '1 - 2 weeks',
+                label: '1 - 2 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  7, $lte : 14}}}).fetch()
             }, {
-                label: '2 - 4 weeks',
+                label: '2 - 4 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  14, $lte : 30}}}).fetch()
             }, {
-                label: '1 - 3 months',
+                label: '1 - 3 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  30, $lte : 90}}}).fetch()
             }, {
-                label: '3 - 6 months',
+                label: '3 - 6 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  90, $lte : 120}}}).fetch()
             }, {
-                label: '6 - 12 months',
+                label: '6 - 12 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gte :  120, $lte : 365}}}).fetch()
             }, {
-                label: '1 year or more',
+                label: '1 yr+',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  365}}}).fetch()
             }];
             this.setStatsOpenedDuring(openedDuring);
 
             const createdSince = [{
-                label: '0 - 1 day',
+                label: '0 - 1 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 7 days',
+                label: '1 - 7 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 2 weeks',
+                label: '1 - 2 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}}).fetch()
             }, {
-                label: '2 - 4 weeks',
+                label: '2 - 4 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}}).fetch()
             }, {
-                label: '1 - 3 months',
+                label: '1 - 3 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}}).fetch()
             }, {
-                label: '3 - 6 months',
+                label: '3 - 6 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}}).fetch()
             }, {
-                label: '6 - 12 months',
+                label: '6 - 12 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}}).fetch()
             }, {
-                label: '1 year or more',
+                label: '1 yr+',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $lt :  subDays(new Date(), 365).toISOString()}}}).fetch()
             }];
             this.setStatsCreatedSince(createdSince);
 
             const updatedSince = [{
-                label: '0 - 1 day',
+                label: '0 - 1 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 7 days',
+                label: '1 - 7 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 2 weeks',
+                label: '1 - 2 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}}).fetch()
             }, {
-                label: '2 - 4 weeks',
+                label: '2 - 4 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}}).fetch()
             }, {
-                label: '1 - 3 months',
+                label: '1 - 3 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}}).fetch()
             }, {
-                label: '3 - 6 months',
+                label: '3 - 6 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}}).fetch()
             }, {
-                label: '6 - 12 months',
+                label: '6 - 12 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}}).fetch()
             }, {
-                label: '1 year or more',
+                label: '1 yr+',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $lt :  subDays(new Date(), 365).toISOString()}}}).fetch()
             }];
             this.setStatsUpdatedSince(updatedSince);
@@ -342,13 +366,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const projectsCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $eq : 0}}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $gt : 0}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsProjectsCount(projectsCount);
 
@@ -362,13 +386,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const milestonesCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'milestone':null}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'milestone':{ $ne : null}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'milestone':null}}).fetch()
             }];
             this.setStatsMilestonesCount(milestonesCount);
 
@@ -382,13 +406,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const pointsCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'points':null}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'points':{ $ne : null}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'points':null}}).fetch()
             }];
             this.setStatsPointsCount(pointsCount);
 
@@ -402,13 +426,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const assigneesCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $eq : 0}}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $gt : 0}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsAssigneesCount(assigneesCount);
 

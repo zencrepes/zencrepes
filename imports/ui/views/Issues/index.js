@@ -20,6 +20,8 @@ import IssuesContent from './Content/index.js';
 
 import NoData from './NoData/index.js';
 
+import QueryUpdate from '../../components/Common/QueryUpdate/index.js';
+
 const style = {
     root: {
         marginRight: '10px'
@@ -83,6 +85,7 @@ class Issues extends Component {
         const { classes, issues } = this.props;
         return (
             <General>
+                <QueryUpdate />
                 <IssuesFetch />
                 <IssuesEdit />
                 {issues.length === 0 ? (
