@@ -1,16 +1,21 @@
 import _ from 'lodash';
 
-import { cfgIssues, cfgQueries } from '../../../data/Minimongo.js';
+import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
 
-import subDays from 'date-fns/subDays'
+import subDays from 'date-fns/subDays';
 
 export default {
     state: {
         issues: [],
+        issuesTotalCount: 0,
+        issuesTotalGitHubCount: 0,
+        issuesFirstUpdate: {},
+        issuesLastUpdate: {},
+
         filteredIssues: [],
         filteredIssuesSearch: '',
         facets: [],
@@ -49,6 +54,10 @@ export default {
     },
     reducers: {
         setIssues(state, payload) {return { ...state, issues: payload };},
+        setIssuesTotalCount(state, payload) {return { ...state, issuesTotalCount: payload };},
+        setIssuesTotalGitHubCount(state, payload) {return { ...state, issuesTotalGitHubCount: payload };},
+        setIssuesFirstUpdate(state, payload) {return { ...state, issuesFirstUpdate: JSON.parse(JSON.stringify(payload)) };},
+        setIssuesLastUpdate(state, payload) {return { ...state, issuesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
@@ -163,10 +172,25 @@ export default {
         },
 
         async refreshIssues(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+
             let issues = cfgIssues.find(rootState.issuesView.query).fetch();
+            const firstUpdate = cfgIssues.findOne(rootState.issuesView.query, {sort: {updatedAt: 1},reactive: false,transform: null});
+            const lastUpdate = cfgIssues.findOne(rootState.issuesView.query, {sort: {updatedAt: -1},reactive: false,transform: null});
+
+            this.setIssuesFirstUpdate(firstUpdate);
+            this.setIssuesLastUpdate(lastUpdate);
+            this.setIssuesTotalCount(cfgIssues.find({}).count());
+
+            this.setIssuesTotalGitHubCount(cfgSources.find({active: true}).fetch().map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
+
             this.setIssues(issues);
             this.setFilteredIssues(issues);
             this.setFilteredIssuesSearch('');
+
+            var t1 = performance.now();
+            log.info("refreshIssues - took " + (t1 - t0) + " milliseconds.");
         },
 
         async searchIssues(searchString, rootState) {
@@ -342,13 +366,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const projectsCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $eq : 0}}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $gt : 0}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'projectCards.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsProjectsCount(projectsCount);
 
@@ -362,13 +386,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const milestonesCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'milestone':null}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'milestone':{ $ne : null}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'milestone':null}}).fetch()
             }];
             this.setStatsMilestonesCount(milestonesCount);
 
@@ -382,13 +406,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const pointsCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'points':null}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'points':{ $ne : null}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'points':null}}).fetch()
             }];
             this.setStatsPointsCount(pointsCount);
 
@@ -402,13 +426,13 @@ export default {
             const query = rootState.issuesView.query;
 
             const assigneesCount = [{
-                name: 'Empty',
-                color: '#e0e0e0',
-                issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $eq : 0}}}).fetch()
-            }, {
                 name: 'Populated',
                 color: '#2196f3',
                 issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $gt : 0}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                issues: cfgIssues.find({...query, ...{'assignees.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsAssigneesCount(assigneesCount);
 

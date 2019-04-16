@@ -69,11 +69,16 @@ class PieChart extends Component {
                 name: 'Issues',
                 showInLegend: true,
                 data: dataset.map((cat) => {
+                    let issuesCount = 0;
+                    if (cat.issues !== undefined) {issuesCount = cat.issues.length;}
+                    else {issuesCount = cat.issuesCount;}
+                    let issues = [];
+                    if (cat.issues !== undefined) {issues = cat.issues;}
                     return {
                         name: cat.name,
                         color: cat.color,
-                        y: cat.issues.length,
-                        issues: cat.issues,
+                        y: issuesCount,
+                        issues: issues,
                     };
                 })
             }],

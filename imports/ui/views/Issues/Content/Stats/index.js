@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import Grid from '@material-ui/core/Grid';
 
+import Summary from './Summary/index.js';
 import BinsOpenedDuring from './BinsOpenedDuring/index.js';
 import BinsCreatedSince from './BinsCreatedSince/index.js';
 import BinsLastUpdated from './BinsLastUpdated/index.js';
@@ -38,28 +39,31 @@ class Stats extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={6} sm={3} md={3}>
+                    <Grid item xs={6} sm={3} md={4}>
+                        <Summary />
+                    </Grid>
+                    <Grid item xs={6} sm={3} md={2}>
                         {statsProjectsCount.length > 0  &&
                         <ProjectsPopulated
                             stats={statsProjectsCount}
                         />
                         }
                     </Grid>
-                    <Grid item xs={6} sm={3} md={3}>
+                    <Grid item xs={6} sm={3} md={2}>
                         {statsMilestonesCount.length > 0  &&
                         <MilestonesPopulated
                             stats={statsMilestonesCount}
                         />
                         }
                     </Grid>
-                    <Grid item xs={6} sm={3} md={3}>
+                    <Grid item xs={6} sm={3} md={2}>
                         {statsAssigneesCount.length > 0  &&
                         <AssigneesPopulated
                             stats={statsAssigneesCount}
                         />
                         }
                     </Grid>
-                    <Grid item xs={6} sm={3} md={3}>
+                    <Grid item xs={6} sm={3} md={2}>
                         {statsPointsCount.length > 0  &&
                         <PointsPopulated
                             stats={statsPointsCount}

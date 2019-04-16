@@ -26,9 +26,7 @@ const styles = theme => ({
     query: {
         flex: 1,
     },
-
 });
-
 
 class IssuesQuery extends Component {
     constructor (props) {

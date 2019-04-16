@@ -22,7 +22,6 @@ import NoData from './NoData/index.js';
 
 import QueryUpdate from '../../components/Common/QueryUpdate/index.js';
 
-
 const style = {
     root: {
         marginRight: '10px'

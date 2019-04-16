@@ -86,6 +86,7 @@ class Data extends Component {
         }
 
         log.info('Load completed: There is a total of ' + cfgIssues.find({}).count() + ' issues in memory');
+        reactLocalStorage.set('GitHubFetchIssues', new Date().toISOString());
         setLoadingSuccess(true);
         setLoading(false);  // Set to true to indicate issues are done loading.
         this.issuesCount = 0;

@@ -13,7 +13,7 @@ class BinsCreatedSince extends Component {
         const { statsBins } = this.props;
         return (
             <CustomCard
-                headerTitle="Issues still open after"
+                headerTitle="Still open after"
                 headerFactTitle=""
                 headerFactValue=""
                 headerLegend="Issues with an OPEN state, amount of time since they were created."
