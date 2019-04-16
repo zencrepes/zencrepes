@@ -12,6 +12,7 @@ import ProjectsPopulated from './ProjectsPopulated/index.js';
 import MilestonesPopulated from './MilestonesPopulated/index.js';
 import AssigneesPopulated from './AssigneesPopulated/index.js';
 import PointsPopulated from './PointsPopulated/index.js';
+import MilestonesPastDue from './MilestonesPastDue/index.js';
 
 class Stats extends Component {
     constructor (props) {
@@ -74,6 +75,17 @@ class Stats extends Component {
                     spacing={8}
                 >
                     <Grid item xs={12} sm={4} md={4}>
+                        <MilestonesPastDue />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={4} md={4}>
                         {statsOpenedDuring.length > 0  &&
                             <BinsOpenedDuring
                                 statsBins={statsOpenedDuring}
@@ -95,8 +107,6 @@ class Stats extends Component {
                         }
                     </Grid>
                 </Grid>
-
-
             </React.Fragment>
         );
     }

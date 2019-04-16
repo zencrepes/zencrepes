@@ -6,6 +6,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 import Grid from '@material-ui/core/Grid';
+import HelpIcon from '@material-ui/icons/Help';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = {
     root: {
@@ -61,6 +63,14 @@ const styles = {
         paddingTop: 0,
         paddingBottom: 5
     },
+    helpIcon: {
+        color: '#9c9c9c',
+        fontSize: 20,
+    },
+    tooltip: {
+        color: '#9c9c9c',
+        fontSize: 20,
+    },
 };
 
 class CustomCard extends Component {
@@ -69,7 +79,7 @@ class CustomCard extends Component {
     }
 
     render() {
-        const { classes, headerTitle, headerIcon, headerFactTitle, headerFactValue, children } = this.props;
+        const { classes, headerTitle, headerIcon, headerFactTitle, headerFactValue, headerLegend, children } = this.props;
         return (
             <Card className={classes.root}>
                 <div className={classes.liner}></div>
@@ -95,6 +105,13 @@ class CustomCard extends Component {
                                 <div className={classes.headerFactValue}>{headerFactValue}</div>
                             </Grid>
                         }
+                        {headerLegend !== undefined &&
+                            <Grid item className={classes.headerFact}>
+                                <Tooltip title={headerLegend}>
+                                    <HelpIcon className={classes.helpIcon} />
+                                </Tooltip>
+                            </Grid>
+                        }
                     </Grid>
                 </CardContent>
                 <CardContent className={classes.mainContent}>
@@ -108,6 +125,7 @@ class CustomCard extends Component {
 CustomCard.propTypes = {
     classes: PropTypes.object,
     headerTitle: PropTypes.string,
+    headerLegend: PropTypes.string,
     headerIcon: PropTypes.object,
     headerFactTitle: PropTypes.string,
     headerFactValue: PropTypes.oneOfType([
