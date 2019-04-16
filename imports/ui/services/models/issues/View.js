@@ -179,10 +179,11 @@ export default {
             const firstUpdate = cfgIssues.findOne(rootState.issuesView.query, {sort: {updatedAt: 1},reactive: false,transform: null});
             const lastUpdate = cfgIssues.findOne(rootState.issuesView.query, {sort: {updatedAt: -1},reactive: false,transform: null});
 
-            this.setIssuesFirstUpdate(firstUpdate);
-            this.setIssuesLastUpdate(lastUpdate);
+            if (issues.length > 0) {
+                this.setIssuesFirstUpdate(firstUpdate);
+                this.setIssuesLastUpdate(lastUpdate);
+            }
             this.setIssuesTotalCount(cfgIssues.find({}).count());
-
             this.setIssuesTotalGitHubCount(cfgSources.find({active: true}).fetch().map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
 
             this.setIssues(issues);
