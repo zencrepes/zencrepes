@@ -252,82 +252,82 @@ export default {
             const query = rootState.issuesView.query;
 
             const openedDuring = [{
-                label: '0 - 1 day',
+                label: '0 - 1 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gte :  0, $lte : 1}}}).fetch()
             }, {
-                label: '1 - 7 days',
+                label: '1 - 7 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  1, $lte : 7}}}).fetch()
             }, {
-                label: '1 - 2 weeks',
+                label: '1 - 2 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  7, $lte : 14}}}).fetch()
             }, {
-                label: '2 - 4 weeks',
+                label: '2 - 4 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  14, $lte : 30}}}).fetch()
             }, {
-                label: '1 - 3 months',
+                label: '1 - 3 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  30, $lte : 90}}}).fetch()
             }, {
-                label: '3 - 6 months',
+                label: '3 - 6 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  90, $lte : 120}}}).fetch()
             }, {
-                label: '6 - 12 months',
+                label: '6 - 12 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gte :  120, $lte : 365}}}).fetch()
             }, {
-                label: '1 year or more',
+                label: '1 yr+',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['CLOSED']}, 'stats.openedDuring':{ $gt :  365}}}).fetch()
             }];
             this.setStatsOpenedDuring(openedDuring);
 
             const createdSince = [{
-                label: '0 - 1 day',
+                label: '0 - 1 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 7 days',
+                label: '1 - 7 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 2 weeks',
+                label: '1 - 2 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}}).fetch()
             }, {
-                label: '2 - 4 weeks',
+                label: '2 - 4 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}}).fetch()
             }, {
-                label: '1 - 3 months',
+                label: '1 - 3 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}}).fetch()
             }, {
-                label: '3 - 6 months',
+                label: '3 - 6 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}}).fetch()
             }, {
-                label: '6 - 12 months',
+                label: '6 - 12 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}}).fetch()
             }, {
-                label: '1 year or more',
+                label: '1 yr+',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'createdAt':{ $lt :  subDays(new Date(), 365).toISOString()}}}).fetch()
             }];
             this.setStatsCreatedSince(createdSince);
 
             const updatedSince = [{
-                label: '0 - 1 day',
+                label: '0 - 1 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 7 days',
+                label: '1 - 7 d',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}}).fetch()
             }, {
-                label: '1 - 2 weeks',
+                label: '1 - 2 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}}).fetch()
             }, {
-                label: '2 - 4 weeks',
+                label: '2 - 4 wks',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}}).fetch()
             }, {
-                label: '1 - 3 months',
+                label: '1 - 3 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}}).fetch()
             }, {
-                label: '3 - 6 months',
+                label: '3 - 6 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}}).fetch()
             }, {
-                label: '6 - 12 months',
+                label: '6 - 12 mths',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}}).fetch()
             }, {
-                label: '1 year or more',
+                label: '1 yr+',
                 issues: cfgIssues.find({...query, ...{'state':{$in:['OPEN']}, 'updatedAt':{ $lt :  subDays(new Date(), 365).toISOString()}}}).fetch()
             }];
             this.setStatsUpdatedSince(updatedSince);

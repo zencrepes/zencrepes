@@ -74,36 +74,28 @@ class Stats extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={3} md={3}>
                         <MilestonesPastDue />
                     </Grid>
-                </Grid>
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={3} md={3}>
                         {statsOpenedDuring.length > 0  &&
-                            <BinsOpenedDuring
-                                statsBins={statsOpenedDuring}
-                            />
+                        <BinsOpenedDuring
+                            statsBins={statsOpenedDuring}
+                        />
                         }
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={3} md={3}>
                         {statsCreatedSince.length > 0  &&
-                            <BinsCreatedSince
-                                statsBins={statsCreatedSince}
-                            />
+                        <BinsCreatedSince
+                            statsBins={statsCreatedSince}
+                        />
                         }
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={3} md={3}>
                         {statsUpdatedSince.length > 0  &&
-                            <BinsLastUpdated
-                                statsBins={statsUpdatedSince}
-                            />
+                        <BinsLastUpdated
+                            statsBins={statsUpdatedSince}
+                        />
                         }
                     </Grid>
                 </Grid>

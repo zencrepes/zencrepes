@@ -13,9 +13,10 @@ class BinsOpenedDuring extends Component {
         const { statsBins } = this.props;
         return (
             <CustomCard
-                headerTitle="CLOSED issues were open during"
+                headerTitle="Time open"
                 headerFactTitle=""
                 headerFactValue=""
+                headerLegend="Issues with a CLOSED state, amount of time they stayed open."
             >
                 <StatsBinBar
                     dataset={statsBins}

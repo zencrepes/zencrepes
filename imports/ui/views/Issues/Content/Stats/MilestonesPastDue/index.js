@@ -15,7 +15,7 @@ class MilestonesPopulated extends Component {
         if (statsMilestonesPastDue.length > 0) {
             return (
                 <CustomCard
-                    headerTitle="Milestones past due date"
+                    headerTitle="Milestones past due"
                     headerFactTitle=""
                     headerFactValue={statsMilestonesPastDue.length}
                     headerLegend="Those milestones have a due date located in the past but still contain issues with an OPEN state. Associated issues should either be closed or moved to a future Milestone."

@@ -13,9 +13,10 @@ class BinsLastUpdated extends Component {
         const { statsBins } = this.props;
         return (
             <CustomCard
-                headerTitle="OPEN issues, time since last update"
+                headerTitle="Time since last update"
                 headerFactTitle=""
                 headerFactValue=""
+                headerLegend="Issues with an OPEN state, amount of time since they were last updated."
             >
                 <StatsBinBar
                     dataset={statsBins}

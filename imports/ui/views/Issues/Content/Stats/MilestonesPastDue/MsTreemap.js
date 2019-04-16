@@ -8,7 +8,7 @@ import { ResponsiveTreeMap } from '@nivo/treemap'
 
 const styles = {
     root: {
-        height: '150px'
+        height: '200px'
     },
 };
 
