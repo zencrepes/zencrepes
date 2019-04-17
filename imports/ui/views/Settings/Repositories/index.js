@@ -14,6 +14,8 @@ import IssuesFetch from '../../../data/Issues/Fetch/index.js';
 import Stats from './Stats.js';
 import Scan from "../../../components/Settings/Repositories/Scan/index.js";
 
+import Misc from './Misc/index.js';
+
 class Repositories extends Component {
     constructor(props) {
         super(props);
@@ -43,6 +45,7 @@ class Repositories extends Component {
                     </Grid>
                     <Grid item xs={4} sm container>
                         <DataFetch />
+                        <Misc />
                     </Grid>
                 </Grid>
             </React.Fragment>

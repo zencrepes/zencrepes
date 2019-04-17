@@ -28,7 +28,7 @@ export const getAssignees = (issues) => {
     });
 
     return assignees;
-}
+};
 
 export const getAssigneesRepartition = (issues) => {
     let statesGroup = [];
@@ -63,6 +63,38 @@ export const getAssigneesRepartition = (issues) => {
     });
 
     return assignees.sort((a, b) => b.issues.count - a.issues.count);
+};
+
+export const getMilestonesRepartition = (issues) => {
+    let statesGroup = [];
+    let allValues = [];
+    issues.forEach((issue) => {
+        if (issue.milestone === null) {
+            let issueCopy = JSON.parse(JSON.stringify(issue));
+            issueCopy.milestone = {title: 'NO MILESTONE'};
+            allValues.push(issueCopy);
+        } else {
+            allValues.push(issue);
+        }
+    });
+
+    statesGroup = _.groupBy(allValues, (value) => value.milestone.title);
+
+    let milestones = []
+    Object.keys(statesGroup).forEach(function(key) {
+        milestones.push({
+            ...statesGroup[key][0].milestone,
+            issues: {
+                list: statesGroup[key],
+                count: statesGroup[key].length
+            },
+            points: {
+                count: statesGroup[key].map(issue => issue.points). reduce((acc, count) => acc + count, 0)
+            },
+        });
+    });
+
+    return milestones.sort((a, b) => b.issues.count - a.issues.count);
 };
 
 export const getRepositories = (issues) => {

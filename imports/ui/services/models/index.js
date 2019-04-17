@@ -49,6 +49,9 @@ export { default as projectsFetch } from './projects/Fetch.js';
 // Sprints (specific view over milestones)
 export { default as sprintsView } from './sprints/View.js';
 
+// Project (specific view over a particular Project)
+export { default as projectView } from './project/View.js';
+
 // Burndown
 export { default as burndownView } from './burndown/View.js';
 

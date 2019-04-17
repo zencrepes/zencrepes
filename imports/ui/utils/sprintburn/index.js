@@ -66,25 +66,34 @@ export const getLastDay = (mongoFilter, cfgIssues, milestone) => {
         - If Milestone is open, last day is today is end of the sprint
      */
     let lastDay = new Date();
-    if (milestone.dueOn !== null) {
+    if (milestone !== null && milestone.dueOn !== null) {
         lastDay = formatDate(milestone.dueOn);
     }
 
     let lastClosedIssue = lastDay;
+    const lastIssue = cfgIssues.findOne(mongoFilter, {
+        sort: {closedAt: -1},
+        reactive: false,
+        transform: null
+    });
+    let lastIssueClosedAt = null;
+    if (lastIssue !== undefined) {
+        lastIssueClosedAt = lastIssue.closedAt
+    }
+    /*
     const lastIssueClosedAt = cfgIssues.findOne(mongoFilter, {
         sort: {closedAt: -1},
         reactive: false,
         transform: null
     }).closedAt;
-
+    */
     if (lastIssueClosedAt !== null) {
         lastClosedIssue = formatDate(lastIssueClosedAt);
     }
-    if (lastClosedIssue > lastDay) {
+    if (milestone === null || lastClosedIssue > lastDay) {
         lastDay = lastClosedIssue
     }
     return lastDay;
-
 };
 
 /*

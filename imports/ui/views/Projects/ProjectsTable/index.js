@@ -18,6 +18,9 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import {connect} from "react-redux";
 
+import ProjectLink from '../../../components/Common/ProjectLink/index.js'
+import ManageButton from './ManageButton.js';
+
 import {
     StateLabel,
 } from '@primer/components';
@@ -52,6 +55,39 @@ StateFormatter.propTypes = {
 const StateTypeProvider = props => (
     <DataTypeProvider
         formatterComponent={StateFormatter}
+        {...props}
+    />
+);
+
+
+const NameFormatter = ({ value }) => {
+    return <ProjectLink project={value} />;
+//    console.log(value);
+//    return value;
+};
+NameFormatter.propTypes = {
+    value: PropTypes.object,
+};
+
+const NameTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={NameFormatter}
+        {...props}
+    />
+);
+
+const ManageFormatter = ({ value }) => {
+    return <ManageButton project={value} />;
+//    console.log(value);
+//    return value;
+};
+ManageFormatter.propTypes = {
+    value: PropTypes.object,
+};
+
+const ManageTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={ManageFormatter}
         {...props}
     />
 );
@@ -153,7 +189,8 @@ class ProjectsTable extends Component {
         this.state = {
             columns: [
                 { name: 'state', title: 'State' },
-                { name: 'name', title: 'Name' },
+                { name: 'name', title: 'Name', getCellValue: row => row.projects[0] },
+                { name: 'id', title: 'Manage', getCellValue: row => row.projects[0] },
                 { name: 'createdAt', title: 'Created', getCellValue: row => row.projects[0].createdAt },
                 { name: 'updatedAt', title: 'Updated', getCellValue: row => row.projects[0].updatedAt },
                 { name: 'closedAt', title: 'Closed', getCellValue: row => row.projects[0].closedAt },
@@ -162,7 +199,8 @@ class ProjectsTable extends Component {
                 { name: 'repos', title: 'Repos', getCellValue: row => row.projects },
             ],
             tableColumnExtensions: [
-                { columnName: 'repos', width: 90 },
+                { columnName: 'id', width: 90 },
+                { columnName: 'repos', width: 100 },
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pendingCards', width: 90 },
                 { columnName: 'createdAt', width: 100 },
@@ -171,7 +209,9 @@ class ProjectsTable extends Component {
                 { columnName: 'state', width: 120 },
             ],
             columnOrder: ['state', 'name', 'createdAt', 'updatedAt', 'closedAt', 'issues', 'repos'],
+            nameColumns: ['name'],
             stateColumns: ['state'],
+            manageColumns: ['id'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
             pendingCardsColumns: ['pendingCards'],
@@ -253,6 +293,8 @@ class ProjectsTable extends Component {
             pageSize,
             pageSizes,
             stateColumns,
+            manageColumns,
+            nameColumns,
             reposColumns,
             datesColumns,
             issuesColumns,
@@ -278,6 +320,12 @@ class ProjectsTable extends Component {
                     />
                     <StateTypeProvider
                         for={stateColumns}
+                    />
+                    <NameTypeProvider
+                        for={nameColumns}
+                    />
+                    <ManageTypeProvider
+                        for={manageColumns}
                     />
                     <ReposTypeProvider
                         for={reposColumns}
