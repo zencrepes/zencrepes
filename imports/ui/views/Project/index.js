@@ -9,7 +9,6 @@ import General from '../../layouts/General/index.js';
 
 import Actions from './Actions/index.js';
 
-import NoData from './NoData/index.js';
 import CurrentCompletion from "./CurrentCompletion/index.js";
 import RemainingPoints from "./RemainingPoints/index.js";
 import DaysToCompletion from "./DaysToCompletion/index.js";
@@ -53,97 +52,91 @@ class Project extends Component {
     }
 
     render() {
-        const { issues, sprints, assignees, burndown, velocity, defaultPoints, project } = this.props;
+        const { issues, assignees, burndown, velocity, defaultPoints, project } = this.props;
         return (
             <General>
-                {(sprints.length === 0) ? (
-                    <NoData />
-                ) : (
-                    <React.Fragment>
-                        <Actions />
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm={12} md={12}>
-                                <Summary project={project}/>
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm={6} md={4}>
-                                <CurrentCompletion
-                                    issues={issues}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <RemainingPoints
-                                    assignees={assignees}
-                                    issues={issues}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <DaysToCompletion />
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm={6} md={6}>
-                                <Burndown
-                                    burndown={burndown}
-                                    defaultPoints={defaultPoints}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={6}>
-                                <VelocityWeeks
-                                    velocity={velocity}
-                                    defaultPoints={defaultPoints}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm={12} md={12}>
-                                <Issues />
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Assignees />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Milestones />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Labels />
-                            </Grid>
-                        </Grid>
-                    </React.Fragment>
-                )}
+                <Actions />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={12} md={12}>
+                        <Summary project={project}/>
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={4}>
+                        <CurrentCompletion
+                            issues={issues}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <RemainingPoints
+                            assignees={assignees}
+                            issues={issues}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <DaysToCompletion />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={6}>
+                        <Burndown
+                            burndown={burndown}
+                            defaultPoints={defaultPoints}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <VelocityWeeks
+                            velocity={velocity}
+                            defaultPoints={defaultPoints}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={12} md={12}>
+                        <Issues />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Assignees />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Milestones />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Labels />
+                    </Grid>
+                </Grid>
             </General>
         );
     }
@@ -152,7 +145,6 @@ class Project extends Component {
 Project.propTypes = {
     assignees: PropTypes.array.isRequired,
     issues: PropTypes.array.isRequired,
-    sprints: PropTypes.array.isRequired,
     velocity: PropTypes.object.isRequired,
     burndown: PropTypes.object.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
@@ -168,7 +160,6 @@ const mapState = state => ({
     issues: state.projectView.issues,
     velocity: state.projectView.velocity,
     burndown: state.projectView.burndown,
-    sprints: state.projectView.sprints,
     project: state.projectView.project,
     defaultPoints: state.projectView.defaultPoints,
 });
