@@ -11,6 +11,15 @@ import Actions from './Actions/index.js';
 
 import NoData from './NoData/index.js';
 import CurrentCompletion from "./CurrentCompletion/index.js";
+import RemainingPoints from "./RemainingPoints/index.js";
+import DaysToCompletion from "./DaysToCompletion/index.js";
+import Burndown from "./Burndown/index.js";
+import Issues from "./Issues/index.js";
+
+import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
+import Assignees from "./Assignees/index.js";
+import Milestones from "./Milestones/index.js";
+import Labels from "./Labels/index.js";
 
 class Project extends Component {
     constructor(props) {
@@ -43,7 +52,7 @@ class Project extends Component {
     }
 
     render() {
-        const { issues, sprints } = this.props;
+        const { issues, sprints, assignees, burndown, velocity, defaultPoints } = this.props;
         return (
             <General>
                 {(sprints.length === 0) ? (
@@ -64,21 +73,13 @@ class Project extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
-                                <span>Remaining Points</span>
+                                <RemainingPoints
+                                    assignees={assignees}
+                                    issues={issues}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
-                                <span>Days to completion</span>
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm={12} md={12}>
-                                <span>Summary</span>
+                                <DaysToCompletion />
                             </Grid>
                         </Grid>
                         <Grid
@@ -89,10 +90,16 @@ class Project extends Component {
                             spacing={8}
                         >
                             <Grid item xs={12} sm={6} md={6}>
-                                <span>Burndown</span>
+                                <Burndown
+                                    burndown={burndown}
+                                    defaultPoints={defaultPoints}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <span>Velocity</span>
+                                <VelocityWeeks
+                                    velocity={velocity}
+                                    defaultPoints={defaultPoints}
+                                />
                             </Grid>
                         </Grid>
                         <Grid
@@ -103,7 +110,7 @@ class Project extends Component {
                             spacing={8}
                         >
                             <Grid item xs={12} sm={12} md={12}>
-                                <span>Issues</span>
+                                <Issues />
                             </Grid>
                         </Grid>
                         <Grid
@@ -114,13 +121,13 @@ class Project extends Component {
                             spacing={8}
                         >
                             <Grid item xs={12} sm={6} md={4}>
-                                <span>Assignees</span>
+                                <Assignees />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
-                                <span>Repositories</span>
+                                <Milestones />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
-                                <span>Labels</span>
+                                <Labels />
                             </Grid>
                         </Grid>
                     </React.Fragment>
