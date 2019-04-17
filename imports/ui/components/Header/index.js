@@ -98,7 +98,8 @@ class Header extends Component {
                                         >
                                             {routes.filter((route) => {
                                                 // First one is to hide something behind a feature flag
-                                                if (reactLocalStorage.get('feat-' + route.key, false)) {return true;}
+                                                if (JSON.parse(reactLocalStorage.get('enableExperimental', false))) {return true;}
+                                                else if (reactLocalStorage.get('feat-' + route.key, false)) {return true;}
                                                 else if (_.isEmpty(menus)) {return true;}
                                                 else if (menus[route.key] !== undefined && menus[route.key] === true) {
                                                     return true;
