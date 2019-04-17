@@ -20,6 +20,7 @@ import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 import Assignees from "./Assignees/index.js";
 import Milestones from "./Milestones/index.js";
 import Labels from "./Labels/index.js";
+import Summary from "./Summary/index.js";
 
 class Project extends Component {
     constructor(props) {
@@ -52,7 +53,7 @@ class Project extends Component {
     }
 
     render() {
-        const { issues, sprints, assignees, burndown, velocity, defaultPoints } = this.props;
+        const { issues, sprints, assignees, burndown, velocity, defaultPoints, project } = this.props;
         return (
             <General>
                 {(sprints.length === 0) ? (
@@ -60,6 +61,17 @@ class Project extends Component {
                 ) : (
                     <React.Fragment>
                         <Actions />
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={8}
+                        >
+                            <Grid item xs={12} sm={12} md={12}>
+                                <Summary project={project}/>
+                            </Grid>
+                        </Grid>
                         <Grid
                             container
                             direction="row"
@@ -147,6 +159,7 @@ Project.propTypes = {
 
     initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
 
@@ -156,6 +169,7 @@ const mapState = state => ({
     velocity: state.projectView.velocity,
     burndown: state.projectView.burndown,
     sprints: state.projectView.sprints,
+    project: state.projectView.project,
     defaultPoints: state.projectView.defaultPoints,
 });
 

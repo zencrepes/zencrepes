@@ -59,8 +59,8 @@ class App extends Component {
 
     render() {
         const { props, state, setAfterLoginPath } = this;
-        const {loadedIssues, loadedSources, loadedLabels, loadedQueries, loadedMilestones} = this.props;
-        if ((loadedIssues === null || loadedSources === null || loadedLabels === null|| loadedQueries === null || loadedMilestones === null) && Meteor.user() !== null) {
+        const {loadedIssues, loadedSources, loadedLabels, loadedQueries, loadedMilestones, loadedProjects} = this.props;
+        if ((loadedIssues === null || loadedSources === null || loadedLabels === null|| loadedQueries === null || loadedMilestones === null || loadedProjects === null) && Meteor.user() !== null) {
             return (
                 <div>
                     <Startup />
@@ -142,6 +142,10 @@ App.propTypes = {
         PropTypes.number,
         PropTypes.bool,
     ]),
+    loadedProjects: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.bool,
+    ]),
 };
 
 const getUserName = name => ({
@@ -155,6 +159,7 @@ const mapState = state => ({
     loadedLabels: state.startup.loadedLabels,
     loadedQueries: state.startup.loadedQueries,
     loadedMilestones: state.startup.loadedMilestones,
+    loadedProjects: state.startup.loadedProjects,
 });
 
 const mapDispatch = dispatch => ({

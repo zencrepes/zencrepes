@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Meteor } from 'meteor/meteor';
 
-import { cfgMilestones, cfgIssues, cfgSources } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues, cfgSources, cfgProjects } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
@@ -30,6 +30,7 @@ import {
 export default {
     state: {
         query: {},
+        project: {},
         sprints: [],
         showClosed: false,
         selectedSprintLabel: 'no-sprint',
@@ -73,7 +74,8 @@ export default {
     },
 
     reducers: {
-        setQuery(state, payload) {return { ...state, query: payload };},
+        setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
+        setProject(state, payload) {return { ...state, project: JSON.parse(JSON.stringify(payload)) };},
 
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setShowClosed(state, payload) {return { ...state, showClosed: payload };},
@@ -123,6 +125,19 @@ export default {
 
             this.updateSprints();
             this.updateView();
+            this.updateProject();
+        },
+
+        async updateProject(payload, rootState) {
+            //{"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":["Test%20Project%201"]}}}}
+            const projectArray = _.get(rootState.projectView.query, ['projectCards.edges', '$elemMatch', 'node.project.name', '$in'], null);
+            if (projectArray[0] !== undefined) {
+                const projectName = projectArray[0];
+                const project = cfgProjects.findOne({'name': projectName});
+                this.setProject(project);
+            } else {
+                this.setProject({});
+            }
         },
 
         //Browse through all of the project's issues to fetch sprints values
