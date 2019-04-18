@@ -11,22 +11,27 @@ class Summary extends Component {
 
     render() {
         const {
-            project,
+            projects,
         } = this.props;
-        return (
-            <CustomCard
-                headerTitle={project.name}
-                headerFactTitle=""
-                headerFactValue=""
-            >
-                <ReactMarkdown source={project.body} />
-            </CustomCard>
-        );
+        if (projects[0] !== undefined && projects[0].name !== undefined) {
+            const project = projects[0];
+            return (
+                <CustomCard
+                    headerTitle={project.name}
+                    headerFactTitle=""
+                    headerFactValue=""
+                >
+                    <ReactMarkdown source={project.body} />
+                </CustomCard>
+            );
+        } else {
+            return null;
+        }
     }
 }
 
 Summary.propTypes = {
-    project: PropTypes.object.isRequired,
+    projects: PropTypes.array.isRequired,
 };
 
 export default Summary;

@@ -37,7 +37,7 @@ class Projects extends Component {
         const params = new URLSearchParams(this.props.location.search);
         const queryUrl = params.get('q');
         if (queryUrl === null) {
-            updateQuery({});
+            updateQuery({'state':{'$in':['OPEN']}});
         } else {
             updateQuery(JSON.parse(queryUrl));
         }
