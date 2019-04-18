@@ -80,7 +80,7 @@ class Data extends Component {
                 // TODO - Need to refresh issues content as well, so need to bring last updated date in the logic
                 await this.getIssuesPagination(null, 5, repo);
                 incLoadingIterateCurrent(1);
-                setLoadingSuccessMsg('Fetched ' + this.issuesCount + ' milestones');
+                setLoadingSuccessMsg('Fetched ' + this.issuesCount + ' issues');
 
             }
         }

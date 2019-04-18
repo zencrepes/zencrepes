@@ -33,25 +33,16 @@ class Refresh extends Component {
         };
     }
 
-    refreshAllRepos = () => {
-        const { reposSetLoadFlag, reposSetLoadRepos, setOnSuccess, sprintsUpdateView  } = this.props;
-        setOnSuccess(sprintsUpdateView);
-        reposSetLoadRepos([]);
-        reposSetLoadFlag(true);
-        this.setState({ anchorEl: null });
-    };
-
     refreshSelectedRepos = () => {
         const {
             reposSetLoadFlag,
             reposSetLoadRepos,
-            milestones,
+            projects,
             setOnSuccess,
-            sprintsUpdateView
+            updateView
         } = this.props;
-
-        setOnSuccess(sprintsUpdateView);
-        reposSetLoadRepos(milestones.map(milestone => milestone.repo.id));
+        setOnSuccess(updateView);
+        reposSetLoadRepos(projects.map(project => project.repo.id));
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
@@ -72,16 +63,6 @@ class Refresh extends Component {
             setAutoRefreshEnable(true);
         }
 
-        this.setState({ anchorEl: null });
-    };
-
-    refreshIssues = () => {
-        const { issuesSetStageFlag, issuesSetVerifFlag, issuesSetIssues, issuesSetAction, issues, setOnSuccess, sprintsUpdateView } = this.props;
-        setOnSuccess(sprintsUpdateView);
-        issuesSetIssues(issues);
-        issuesSetAction('refresh');
-        issuesSetStageFlag(false);
-        issuesSetVerifFlag(true);
         this.setState({ anchorEl: null });
     };
 
@@ -144,12 +125,8 @@ Refresh.propTypes = {
     setOnSuccess: PropTypes.func.isRequired,
 
     issues: PropTypes.array.isRequired,
-    milestones: PropTypes.array.isRequired,
-    issuesSetStageFlag: PropTypes.func.isRequired,
-    issuesSetVerifFlag: PropTypes.func.isRequired,
-    issuesSetIssues: PropTypes.func.isRequired,
-    issuesSetAction: PropTypes.func.isRequired,
-    sprintsUpdateView: PropTypes.func.isRequired,
+    projects: PropTypes.array.isRequired,
+    updateView: PropTypes.func.isRequired,
 
     setAutoRefreshEnable: PropTypes.func.isRequired,
     setAutoRefreshTimer: PropTypes.func.isRequired,
@@ -157,13 +134,12 @@ Refresh.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.sprintsView.issues,
-    milestones: state.sprintsView.milestones,
-    repositories: state.sprintsView.repositories,
+    issues: state.projectView.issues,
+    projects: state.projectView.projects,
 
-    autoRefreshEnable: state.sprintsView.autoRefreshEnable,
-    autoRefreshTimer: state.sprintsView.autoRefreshTimer,
-    autoRefreshDefaultTimer: state.sprintsView.autoRefreshDefaultTimer,
+    autoRefreshEnable: state.projectView.autoRefreshEnable,
+    autoRefreshTimer: state.projectView.autoRefreshTimer,
+    autoRefreshDefaultTimer: state.projectView.autoRefreshDefaultTimer,
 
     loading: state.loading.loading,
 });
@@ -172,16 +148,11 @@ const mapDispatch = dispatch => ({
     reposSetLoadFlag: dispatch.issuesFetch.setLoadFlag,
     reposSetLoadRepos: dispatch.issuesFetch.setLoadRepos,
 
-    issuesSetStageFlag: dispatch.issuesEdit.setStageFlag,
-    issuesSetVerifFlag: dispatch.issuesEdit.setVerifFlag,
-    issuesSetIssues: dispatch.issuesEdit.setIssues,
-    issuesSetAction: dispatch.issuesEdit.setAction,
+    updateView: dispatch.projectView.updateView,
 
-    sprintsUpdateView: dispatch.sprintsView.updateView,
-
-    setAutoRefreshEnable: dispatch.sprintsView.setAutoRefreshEnable,
-    setAutoRefreshTimer: dispatch.sprintsView.setAutoRefreshTimer,
-    setAutoRefreshCount: dispatch.sprintsView.setAutoRefreshCount,
+    setAutoRefreshEnable: dispatch.projectView.setAutoRefreshEnable,
+    setAutoRefreshTimer: dispatch.projectView.setAutoRefreshTimer,
+    setAutoRefreshCount: dispatch.projectView.setAutoRefreshCount,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });

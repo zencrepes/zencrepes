@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 
 import General from '../../layouts/General/index.js';
+import IssuesFetch from '../../data/Issues/Fetch/index.js';
+import IssuesEdit from '../../data/Issues/Edit/index.js';
 
 import Actions from './Actions/index.js';
 
@@ -52,10 +54,12 @@ class Project extends Component {
     }
 
     render() {
-        const { issues, assignees, burndown, velocity, defaultPoints, project } = this.props;
+        const { issues, assignees, burndown, velocity, defaultPoints, projects } = this.props;
         return (
             <General>
                 <Actions />
+                <IssuesFetch />
+                <IssuesEdit />
                 <Grid
                     container
                     direction="row"
@@ -64,7 +68,7 @@ class Project extends Component {
                     spacing={8}
                 >
                     <Grid item xs={12} sm={12} md={12}>
-                        <Summary project={project}/>
+                        <Summary projects={projects}/>
                     </Grid>
                 </Grid>
                 <Grid
@@ -151,7 +155,7 @@ Project.propTypes = {
 
     initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
-    project: PropTypes.object.isRequired,
+    projects: PropTypes.array.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
 
@@ -160,7 +164,7 @@ const mapState = state => ({
     issues: state.projectView.issues,
     velocity: state.projectView.velocity,
     burndown: state.projectView.burndown,
-    project: state.projectView.project,
+    projects: state.projectView.projects,
     defaultPoints: state.projectView.defaultPoints,
 });
 

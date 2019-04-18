@@ -30,7 +30,7 @@ import {
 export default {
     state: {
         query: {},
-        project: {},
+        projects: [],
         sprints: [],
         showClosed: false,
         selectedSprintLabel: 'no-sprint',
@@ -75,7 +75,7 @@ export default {
 
     reducers: {
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
-        setProject(state, payload) {return { ...state, project: JSON.parse(JSON.stringify(payload)) };},
+        setProjects(state, payload) {return { ...state, projects: JSON.parse(JSON.stringify(payload)) };},
 
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setShowClosed(state, payload) {return { ...state, showClosed: payload };},
@@ -131,16 +131,15 @@ export default {
         async updateProject(payload, rootState) {
             //{"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":["Test%20Project%201"]}}}}
             const projectArray = _.get(rootState.projectView.query, ['projectCards.edges', '$elemMatch', 'node.project.name', '$in'], null);
-            let identifiedProject = {};
+            let identifiedProject = [];
             if (projectArray[0] !== undefined) {
                 const projectName = projectArray[0];
-                identifiedProject = cfgProjects.findOne({'name': projectName});
+                identifiedProject = cfgProjects.find({'name': projectName}).fetch();
             }
-            if (identifiedProject.name !== rootState.projectView.project.name) {
+            if (rootState.projectView.projects[0] !== undefined && identifiedProject.name !== rootState.projectView.projects[0].name) {
                 this.setSelectedSprintLabel('no-sprint');
             }
-            this.setProject(identifiedProject);
-
+            this.setProjects(identifiedProject);
         },
 
         //Browse through all of the project's issues to fetch sprints values
