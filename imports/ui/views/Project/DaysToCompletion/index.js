@@ -85,6 +85,7 @@ class DaysToCompletion extends Component {
                 headerTitle="Forecast"
                 headerFactTitle="Estimated completion in"
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
+                headerLegend="Remaining points divided by current velocity. Using 4 weeks (4w) rolling average by default, this widget also provides metrics with an 8 weeks (8w), 12 weeks (12w), and all time (all) window."
             >
                 <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
             </CustomCard>
