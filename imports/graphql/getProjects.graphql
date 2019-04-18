@@ -24,6 +24,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
           url
           name
           state
+          body
           columns(first: 10) {
             totalCount
             edges {

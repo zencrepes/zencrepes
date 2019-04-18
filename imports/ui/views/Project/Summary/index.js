@@ -19,7 +19,7 @@ class Summary extends Component {
                 headerFactTitle=""
                 headerFactValue=""
             >
-                <ReactMarkdown source={project.description} />
+                <ReactMarkdown source={project.body} />
             </CustomCard>
         );
     }
