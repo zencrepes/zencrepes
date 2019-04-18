@@ -107,7 +107,7 @@ class Header extends Component {
                                                     return false;
                                                 }
                                             }).map((route) => {
-                                                if (this.props.location.pathname === route.path) { // Implement color selection based on path
+                                                if (this.props.location.pathname === route.path || this.props.location.pathname === route.path.slice(0, -1)) { // Implement color selection based on path
                                                     return (
                                                         <Grid item key={route.key} className={classes.currentPath}>
                                                             <Button color="secondary" className={classes.buttonBase} component={Link} to={route.path} >
