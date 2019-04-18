@@ -122,22 +122,25 @@ export default {
     effects: {
         async updateQuery(query) {
             this.setQuery(query);
+            this.updateProject();
 
             this.updateSprints();
             this.updateView();
-            this.updateProject();
         },
 
         async updateProject(payload, rootState) {
             //{"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":["Test%20Project%201"]}}}}
             const projectArray = _.get(rootState.projectView.query, ['projectCards.edges', '$elemMatch', 'node.project.name', '$in'], null);
+            let identifiedProject = {};
             if (projectArray[0] !== undefined) {
                 const projectName = projectArray[0];
-                const project = cfgProjects.findOne({'name': projectName});
-                this.setProject(project);
-            } else {
-                this.setProject({});
+                identifiedProject = cfgProjects.findOne({'name': projectName});
             }
+            if (identifiedProject.name !== rootState.projectView.project.name) {
+                this.setSelectedSprintLabel('no-sprint');
+            }
+            this.setProject(identifiedProject);
+
         },
 
         //Browse through all of the project's issues to fetch sprints values
@@ -232,7 +235,7 @@ export default {
         },
 
         async updateSelectedSprint(selectedSprintLabel) {
-            await this.setSelectedSprintTitle(selectedSprintLabel);
+            await this.setSelectedSprintLabel(selectedSprintLabel);
             this.updateView();
         },
 

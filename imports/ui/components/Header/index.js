@@ -61,11 +61,11 @@ class Header extends Component {
 
         const routes = [
             {path: '/issues', icon: (<ViewDashboard className={classes.leftIcon} />), text: 'Issues', key: 'issues'},
+            {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprints'},
+            {path: '/projects', icon: (<DeveloperBoard className={classes.leftIcon} />), text: 'Projects', key: 'projects'},
             {path: '/pullrequests', icon: (<SourcePull className={classes.leftIcon} />), text: 'PRs (dev)', key: 'pullrequests'},
             {path: '/roadmap', icon: (<ChartGantt className={classes.leftIcon} />), text: 'Roadmap (dev)', key: 'roadmap'},
-            {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprints'},
             {path: '/labels', icon: (<Label className={classes.leftIcon} />), text: 'Labels', key: 'labels'},
-            {path: '/projects', icon: (<DeveloperBoard className={classes.leftIcon} />), text: 'Projects (dev)', key: 'projects'},
             {path: '/milestones', icon: (<Calendar className={classes.leftIcon} />), text: 'Milestones', key: 'milestones'},
             {path: '/settings', icon: (<Settings className={classes.leftIcon} />), text: 'Settings', key: 'settings'},
         ];
@@ -107,7 +107,7 @@ class Header extends Component {
                                                     return false;
                                                 }
                                             }).map((route) => {
-                                                if (this.props.location.pathname === route.path) { // Implement color selection based on path
+                                                if (this.props.location.pathname === route.path || this.props.location.pathname === route.path.slice(0, -1)) { // Implement color selection based on path
                                                     return (
                                                         <Grid item key={route.key} className={classes.currentPath}>
                                                             <Button color="secondary" className={classes.buttonBase} component={Link} to={route.path} >

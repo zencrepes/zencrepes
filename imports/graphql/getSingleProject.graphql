@@ -17,6 +17,7 @@ query ($org_name: String!, $repo_name: String!, $project_number: Int!){
       url
       name
       state
+      body
       columns(first: 10) {
         totalCount
         edges {

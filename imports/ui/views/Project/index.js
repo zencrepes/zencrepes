@@ -13,9 +13,9 @@ import CurrentCompletion from "./CurrentCompletion/index.js";
 import RemainingPoints from "./RemainingPoints/index.js";
 import DaysToCompletion from "./DaysToCompletion/index.js";
 import Burndown from "./Burndown/index.js";
+import VelocityWeeks from "./VelocityWeeks/index.js";
 import Issues from "./Issues/index.js";
 
-import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
 import Assignees from "./Assignees/index.js";
 import Milestones from "./Milestones/index.js";
 import Labels from "./Labels/index.js";
