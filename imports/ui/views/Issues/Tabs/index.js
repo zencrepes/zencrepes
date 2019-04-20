@@ -28,6 +28,7 @@ class IssuesTabs extends Component {
                 <Tab label="Stats" value="stats" />
                 <Tab label="List" value="list" />
                 <Tab label="Work" value="work" />
+                <Tab label="Contributions" value="contributions" />
                 <Tab label="Velocity" value="velocity" />
                 <Tab label="Burndown" value="burndown" />
             </Tabs>

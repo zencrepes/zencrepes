@@ -5,8 +5,10 @@ import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
+import { refreshContributions } from '../../../utils/contributions/index.js';
 
 import subDays from 'date-fns/subDays';
+import { addRemoveDateFromQuery } from "../../../utils/query/index.js";
 
 export default {
     state: {
@@ -48,6 +50,8 @@ export default {
         statsPointsCount: [],
         statsAssigneesCount: [],
         statsMilestonesPastDue: [],
+
+        contributions: [],
 
         showTimeModal: false,
         timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'closedAt', name: 'Closed'}],
@@ -92,6 +96,8 @@ export default {
 
         setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
         setTimeFields(state, payload) {return { ...state, timeFields: payload };},
+
+        setContributions(state, payload) {return { ...state, contributions: JSON.parse(JSON.stringify(payload)) };},
     },
     effects: {
         async updateQuery(query) {
@@ -119,6 +125,7 @@ export default {
 
             this.updateStats();
             this.updateWork();
+            this.updateContributions();
         },
 
         async updateSelectedTab(payload, rootState) {
@@ -149,6 +156,29 @@ export default {
                 this.refreshSummary();
                 this.refreshVelocity();
                 this.setTabWorkQuery(rootState.issuesView.query);
+            }
+        },
+
+        async updateContributions(payload, rootState) {
+            if (rootState.issuesView.selectedTab === 'contributions') {
+                const log = rootState.global.log;
+                let t0 = performance.now();
+
+                //This section builds a view of assignees contributions to various projects & milestones
+                //Implemented by: project, milestone, area
+                const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 30).toISOString(), rootState.issuesView.query);
+                const issues = cfgIssues.find(modifiedQuery).fetch();
+                const firstIssue = cfgIssues.findOne(modifiedQuery, {
+                    sort: {closedAt: 1},
+                    reactive: false,
+                    transform: null
+                });
+                const contributions = refreshContributions(issues, firstIssue);
+                //console.log(contributions);
+                this.setContributions(contributions);
+
+                var t1 = performance.now();
+                log.info("updateContributions - took " + (t1 - t0) + " milliseconds.");
             }
         },
 

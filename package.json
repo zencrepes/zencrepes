@@ -65,6 +65,7 @@
     "react-beautiful-dnd": "^10.1.1",
     "react-checkbox-tree": "^1.5.1",
     "react-color": "^2.17.0",
+    "react-csv": "^1.1.1",
     "react-dom": "^16.8.6",
     "react-dual-listbox": "^1.4.2",
     "react-jsx-highstock": "^2.2.1",
