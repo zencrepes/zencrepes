@@ -23,42 +23,49 @@ export const refreshContributions = (issues, firstIssue) => {
                     tally[assignee.node.login] = {
                         login: assignee.node.login,
                         assignee: assignee.node,
-                        projects: {empty: {project: null, dates: _.cloneDeep(datesObject)}},
-                        milestones: {empty: {milestone: null, dates: _.cloneDeep(datesObject)}},
-                        areas: {empty: {label: null, dates: _.cloneDeep(datesObject)}},
-                        all: _.cloneDeep(datesObject),
+                        projects: {empty: {project: null, total: {issues: 0, points: 0}, dates: _.cloneDeep(datesObject)}},
+                        milestones: {empty: {milestone: null, total: {issues: 0, points: 0}, dates: _.cloneDeep(datesObject)}},
+                        areas: {empty: {label: null, total: {issues: 0, points: 0}, dates: _.cloneDeep(datesObject)}},
+                        all: {total: {issues: 0, points: 0}, dates: _.cloneDeep(datesObject)},
                     }
                 }
                 // 1- Populate the all section
-                if (tally[assignee.node.login]['all'][issue.closedAt.slice(0, 10)] !== undefined) {
-                    tally[assignee.node.login]['all'][issue.closedAt.slice(0, 10)]['issues']++;
-                    tally[assignee.node.login]['all'][issue.closedAt.slice(0, 10)]['list'].push(issue);
+                if (tally[assignee.node.login]['all']['dates'][issue.closedAt.slice(0, 10)] !== undefined) {
+                    tally[assignee.node.login]['all']['dates'][issue.closedAt.slice(0, 10)]['issues']++;
+                    tally[assignee.node.login]['all']['total']['issues']++;
+                    tally[assignee.node.login]['all']['dates'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                     if (issue.points !== null) {
-                        tally[assignee.node.login]['all'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                        tally[assignee.node.login]['all']['dates'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                        tally[assignee.node.login]['all']['total']['points'] += issue.points;
                     }
                 }
 
                 // 2- Populate by milestone
                 if (issue.milestone === null) {
                     if (tally[assignee.node.login]['milestones']['empty'][issue.closedAt.slice(0, 10)] !== undefined) {
+                        tally[assignee.node.login]['milestones']['empty']['total']['issues']++;
                         tally[assignee.node.login]['milestones']['empty'][issue.closedAt.slice(0, 10)]['issues']++;
                         tally[assignee.node.login]['milestones']['empty'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                         if (issue.points !== null) {
                             tally[assignee.node.login]['milestones']['empty'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                            tally[assignee.node.login]['milestones']['empty']['total']['points'] += issue.points;
                         }
                     }
                 } else {
                     if (tally[assignee.node.login]['milestones'][issue.milestone.title] === undefined) {
                         tally[assignee.node.login]['milestones'][issue.milestone.title] = {
                             milestone: issue.milestone,
+                            total: {issues: 0, points: 0},
                             dates: _.cloneDeep(datesObject)
                         }
                     }
                     if (tally[assignee.node.login]['milestones'][issue.milestone.title]['dates'][issue.closedAt.slice(0, 10)] !== undefined) {
                         tally[assignee.node.login]['milestones'][issue.milestone.title]['dates'][issue.closedAt.slice(0, 10)]['issues']++;
+                        tally[assignee.node.login]['milestones'][issue.milestone.title]['total']['issues']++;
                         tally[assignee.node.login]['milestones'][issue.milestone.title]['dates'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                         if (issue.points !== null) {
                             tally[assignee.node.login]['milestones'][issue.milestone.title]['dates'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                            tally[assignee.node.login]['milestones'][issue.milestone.title]['total']['points'] += issue.points;
                         }
                     }
                 }
@@ -70,23 +77,28 @@ export const refreshContributions = (issues, firstIssue) => {
                         if (tally[assignee.node.login]['projects'][project.node.project.name] === undefined) {
                             tally[assignee.node.login]['projects'][project.node.project.name] = {
                                 project: project.node.project,
+                                total: {issues: 0, points: 0},
                                 dates: _.cloneDeep(datesObject)
                             }
                         }
                         if (tally[assignee.node.login]['projects'][project.node.project.name]['dates'][issue.closedAt.slice(0, 10)] !== undefined) {
                             tally[assignee.node.login]['projects'][project.node.project.name]['dates'][issue.closedAt.slice(0, 10)]['issues']++;
+                            tally[assignee.node.login]['projects'][project.node.project.name]['total']['issues']++;
                             tally[assignee.node.login]['projects'][project.node.project.name]['dates'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                             if (issue.points !== null) {
                                 tally[assignee.node.login]['projects'][project.node.project.name]['dates'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                                tally[assignee.node.login]['projects'][project.node.project.name]['total']['points'] += issue.points;
                             }
                         }
                     });
                 } else {
                     if (tally[assignee.node.login]['projects']['empty']['dates'][issue.closedAt.slice(0, 10)] !== undefined) {
                         tally[assignee.node.login]['projects']['empty']['dates'][issue.closedAt.slice(0, 10)]['issues']++;
+                        tally[assignee.node.login]['projects']['empty']['total']['issues']++;
                         tally[assignee.node.login]['projects']['empty']['dates'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                         if (issue.points !== null) {
                             tally[assignee.node.login]['projects']['empty']['dates'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                            tally[assignee.node.login]['projects']['empty']['total']['points'] += issue.points;
                         }
                     }
                 }
@@ -101,14 +113,17 @@ export const refreshContributions = (issues, firstIssue) => {
                             if (tally[assignee.node.login]['areas'][label.node.name] === undefined) {
                                 tally[assignee.node.login]['areas'][label.node.name] = {
                                     label: label.node,
+                                    total: {issues: 0, points: 0},
                                     dates: _.cloneDeep(datesObject)
                                 }
                             }
                             if (tally[assignee.node.login]['areas'][label.node.name]['dates'][issue.closedAt.slice(0, 10)] !== undefined) {
                                 tally[assignee.node.login]['areas'][label.node.name]['dates'][issue.closedAt.slice(0, 10)]['issues']++;
+                                tally[assignee.node.login]['areas'][label.node.name]['total']['issues']++;
                                 tally[assignee.node.login]['areas'][label.node.name]['dates'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                                 if (issue.points !== null) {
                                     tally[assignee.node.login]['areas'][label.node.name]['dates'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                                    tally[assignee.node.login]['areas'][label.node.name]['total']['points'] += issue.points;
                                 }
                             }
                         }
@@ -116,9 +131,11 @@ export const refreshContributions = (issues, firstIssue) => {
                     if (areaFound === 0) {
                         if (tally[assignee.node.login]['areas']['empty']['dates'][issue.closedAt.slice(0, 10)] !== undefined) {
                             tally[assignee.node.login]['areas']['empty']['dates'][issue.closedAt.slice(0, 10)]['issues']++;
+                            tally[assignee.node.login]['areas']['empty']['total']['issues']++;
                             tally[assignee.node.login]['areas']['empty']['dates'][issue.closedAt.slice(0, 10)]['list'].push(issue);
                             if (issue.points !== null) {
                                 tally[assignee.node.login]['areas']['empty']['dates'][issue.closedAt.slice(0, 10)]['points'] += issue.points;
+                                tally[assignee.node.login]['areas']['empty']['total']['points'] += issue.points;
                             }
                         }
                     }
@@ -132,22 +149,28 @@ export const refreshContributions = (issues, firstIssue) => {
     dataArray = dataArray.map((assignee) => {
         return {
             ...assignee,
-            all: Object.values(assignee.all),
+            all: {
+                total: assignee.all.total,
+                dates: Object.values(assignee.all.dates)
+            },
             areas: Object.values(assignee.areas).map((area) => {
                 return {
                     label: area.label,
+                    total: area.total,
                     dates: Object.values(area.dates)
                 }
             }),
             milestones: Object.values(assignee.milestones).map((milestone) => {
                 return {
                     milestone: milestone.milestone,
+                    total: milestone.total,
                     dates: Object.values(milestone.dates)
                 }
             }),
             projects: Object.values(assignee.projects).map((project) => {
                 return {
                     project: project.project,
+                    total: project.total,
                     dates: Object.values(project.dates)
                 }
             }),

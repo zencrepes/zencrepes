@@ -26,7 +26,7 @@ class DownloadCSV extends Component {
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
-        let header = ['assignee', 'type', 'name', 'effort'];
+        let header = ['assignee', 'type', 'name', 'effort(total)', 'effort(%)'];
         let headerSet = false;
         let dataset = [];
         contributions.forEach((assignee) => {
@@ -34,8 +34,8 @@ class DownloadCSV extends Component {
             if (assigneeName === "") {
                 assigneeName = assignee.assignee.login;
             }
-            const allDataset = [assigneeName, 'all', 'n/a', ''];
-            assignee.all.forEach((date) =>{
+            const allDataset = [assigneeName, 'all', 'n/a', assignee.all.total[metric], '100'];
+            assignee.all.dates.forEach((date) =>{
                 //2019-03-23T00:00:00.000Z
                 if (headerSet === false) {
                     header.push(date.date.slice(5, 10));
@@ -52,6 +52,14 @@ class DownloadCSV extends Component {
             headerSet = true;
             dataset.push(allDataset);
 
+            const areaTotals = {
+                issues: assignee.areas
+                    .map(area => area.total.issues)
+                    .reduce((acc, issues) => acc + issues, 0),
+                points: assignee.areas
+                    .map(area => area.total.points)
+                    .reduce((acc, points) => acc + points, 0),
+            };
             assignee.areas.forEach((area) =>{
                 const areaDataset = [assigneeName, 'areas'];
                 let areaName = 'NO AREA';
@@ -59,7 +67,8 @@ class DownloadCSV extends Component {
                     areaName = area.label.name;
                 }
                 areaDataset.push(areaName);
-                areaDataset.push('');
+                areaDataset.push(area.total[metric]); // total
+                areaDataset.push(((area.total[metric] === 0 || areaTotals[metric] === 0) ? 0 : Math.floor(area.total[metric]*100/areaTotals[metric]))); // %
                 area.dates.forEach((date) => {
                     if (date[metric] === 0) {
                         areaDataset.push('');
@@ -70,6 +79,15 @@ class DownloadCSV extends Component {
                 dataset.push(areaDataset);
             });
 
+            const milestoneTotals = {
+                issues: assignee.milestones
+                    .map(milestone => milestone.total.issues)
+                    .reduce((acc, issues) => acc + issues, 0),
+                points: assignee.milestones
+                    .map(milestone => milestone.total.points)
+                    .reduce((acc, points) => acc + points, 0),
+            };
+
             assignee.milestones.forEach((milestone) =>{
                 const milestoneDataset = [assigneeName, 'milestones'];
                 let milestoneName = 'NO MILESTONE';
@@ -77,7 +95,8 @@ class DownloadCSV extends Component {
                     milestoneName = milestone.milestone.title;
                 }
                 milestoneDataset.push(milestoneName);
-                milestoneDataset.push('');
+                milestoneDataset.push(milestone.total[metric]); // total
+                milestoneDataset.push(((milestone.total[metric] === 0 || milestoneTotals[metric] === 0) ? 0 : Math.floor(milestone.total[metric]*100/milestoneTotals[metric]))); // %
                 milestone.dates.forEach((date) => {
                     if (date[metric] === 0) {
                         milestoneDataset.push('');
@@ -88,6 +107,14 @@ class DownloadCSV extends Component {
                 dataset.push(milestoneDataset);
             });
 
+            const projectsTotals = {
+                issues: assignee.projects
+                    .map(project => project.total.issues)
+                    .reduce((acc, issues) => acc + issues, 0),
+                points: assignee.projects
+                    .map(project => project.total.points)
+                    .reduce((acc, points) => acc + points, 0),
+            };
             assignee.projects.forEach((project) =>{
                 const projectDataset = [assigneeName, 'projects'];
                 let projectName = 'NO PROJECT';
@@ -95,7 +122,8 @@ class DownloadCSV extends Component {
                     projectName = project.project.name;
                 }
                 projectDataset.push(projectName);
-                projectDataset.push('');
+                projectDataset.push(project.total[metric]); // total
+                projectDataset.push(((project.total[metric] === 0 || projectsTotals[metric] === 0) ? 0 : Math.floor(project.total[metric]*100/projectsTotals[metric]))); // %
                 project.dates.forEach((date) => {
                     if (date[metric] === 0) {
                         projectDataset.push('');
