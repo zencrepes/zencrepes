@@ -22,6 +22,7 @@ class DownloadCSV extends Component {
     };
 
     formatData = (contributions) => {
+//        console.log(contributions);
         const { defaultPoints } = this.props;
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
@@ -76,7 +77,9 @@ class DownloadCSV extends Component {
                         areaDataset.push(date[metric]);
                     }
                 });
-                dataset.push(areaDataset);
+                if (area.total[metric] > 0) {
+                    dataset.push(areaDataset);
+                }
             });
 
             const milestoneTotals = {
@@ -104,7 +107,9 @@ class DownloadCSV extends Component {
                         milestoneDataset.push(date[metric]);
                     }
                 });
-                dataset.push(milestoneDataset);
+                if (milestone.total[metric] > 0) {
+                    dataset.push(milestoneDataset);
+                }
             });
 
             const projectsTotals = {
@@ -131,7 +136,9 @@ class DownloadCSV extends Component {
                         projectDataset.push(date[metric]);
                     }
                 });
-                dataset.push(projectDataset);
+                if (project.total[metric] > 0) {
+                    dataset.push(projectDataset);
+                }
             });
 
 
