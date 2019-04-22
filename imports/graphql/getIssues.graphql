@@ -80,6 +80,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
                 id
                 project {
                   id
+                  url
                   name
                 }
                 column {

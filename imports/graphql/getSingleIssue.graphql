@@ -73,6 +73,7 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
             id
             project {
               id
+              url
               name
             }
             column {
