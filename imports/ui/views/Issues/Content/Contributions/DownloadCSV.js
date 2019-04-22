@@ -26,7 +26,7 @@ class DownloadCSV extends Component {
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
-        let header = ['assignee', 'type', 'name', 'issues count', 'effort(pts)', 'effort(%)'];
+        let header = ['assignee', 'type', 'name', 'issues count', 'effort(' + metric + ')', 'effort(%)'];
         let headerSet = false;
         let dataset = [];
         contributions.forEach((assignee) => {
