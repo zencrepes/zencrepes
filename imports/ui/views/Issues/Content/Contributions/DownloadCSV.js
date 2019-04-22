@@ -22,12 +22,11 @@ class DownloadCSV extends Component {
     };
 
     formatData = (contributions) => {
-//        console.log(contributions);
         const { defaultPoints } = this.props;
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
-        let header = ['assignee', 'type', 'name', 'effort(total)', 'effort(%)'];
+        let header = ['assignee', 'type', 'name', 'issues count', 'effort(pts)', 'effort(%)'];
         let headerSet = false;
         let dataset = [];
         contributions.forEach((assignee) => {
@@ -35,7 +34,7 @@ class DownloadCSV extends Component {
             if (assigneeName === "") {
                 assigneeName = assignee.assignee.login;
             }
-            const allDataset = [assigneeName, 'all', 'n/a', assignee.all.total[metric], '100'];
+            const allDataset = [assigneeName, 'all', 'n/a', assignee.all.total['issues'], assignee.all.total[metric], '100'];
             assignee.all.dates.forEach((date) =>{
                 //2019-03-23T00:00:00.000Z
                 if (headerSet === false) {
@@ -68,6 +67,7 @@ class DownloadCSV extends Component {
                     areaName = area.label.name;
                 }
                 areaDataset.push(areaName);
+                areaDataset.push(area.total['issues']); // Issues count
                 areaDataset.push(area.total[metric]); // total
                 areaDataset.push(((area.total[metric] === 0 || areaTotals[metric] === 0) ? 0 : Math.floor(area.total[metric]*100/areaTotals[metric]))); // %
                 area.dates.forEach((date) => {
@@ -98,6 +98,7 @@ class DownloadCSV extends Component {
                     milestoneName = milestone.milestone.title;
                 }
                 milestoneDataset.push(milestoneName);
+                milestoneDataset.push(milestone.total['issues']); // Issues count
                 milestoneDataset.push(milestone.total[metric]); // total
                 milestoneDataset.push(((milestone.total[metric] === 0 || milestoneTotals[metric] === 0) ? 0 : Math.floor(milestone.total[metric]*100/milestoneTotals[metric]))); // %
                 milestone.dates.forEach((date) => {
@@ -127,6 +128,7 @@ class DownloadCSV extends Component {
                     projectName = project.project.name;
                 }
                 projectDataset.push(projectName);
+                projectDataset.push(project.total['issues']); // Issues count
                 projectDataset.push(project.total[metric]); // total
                 projectDataset.push(((project.total[metric] === 0 || projectsTotals[metric] === 0) ? 0 : Math.floor(project.total[metric]*100/projectsTotals[metric]))); // %
                 project.dates.forEach((date) => {
