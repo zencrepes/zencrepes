@@ -136,7 +136,8 @@ export default {
                 const projectName = projectArray[0];
                 identifiedProject = cfgProjects.find({'name': projectName}).fetch();
             }
-            if (rootState.projectView.projects[0] !== undefined && identifiedProject.name !== rootState.projectView.projects[0].name) {
+            if (rootState.projectView.projects[0] !== undefined && identifiedProject[0].name !== rootState.projectView.projects[0].name) {
+                this.setSelectedSprintLabel('no-sprint');
                 this.setSelectedSprintLabel('no-sprint');
             }
             this.setProjects(identifiedProject);

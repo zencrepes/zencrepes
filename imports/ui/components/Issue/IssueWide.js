@@ -7,10 +7,13 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+//import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
+
+import { Calendar } from 'mdi-material-ui';
+//import CalendarTodayIcon from '@material-ui/icons/Calendar';
 
 import Moment from 'react-moment';
 
@@ -18,7 +21,6 @@ import {
     StateLabel,
     Label,
 } from '@primer/components';
-
 
 const styles = theme => ({
     repoName: {
@@ -61,7 +63,7 @@ const styles = theme => ({
         color: green[800],
     },
     iconSprint: {
-        fontSize: 16,
+        fontSize: 14,
         margin: 0
     },
     label: {
@@ -128,26 +130,49 @@ class Issue extends Component {
                         >
                             <Grid item xs={12} sm container className={classes.sprintName}>
                                 {issue.milestone !== null &&
-                                <Tooltip title="Issue attached to sprint">
-                                    <Chip
-                                        icon={<DirectionsRunIcon className={classes.iconSprint} />}
-                                        label={issue.milestone.title}
-                                        className={classes.chipAgile}
-                                        color="primary"
-                                        variant="outlined"
-                                    />
-                                </Tooltip>
+                                    <Tooltip title="Issue attached to sprint">
+                                        <Chip
+                                            icon={<Calendar className={classes.iconSprint} />}
+                                            label={issue.milestone.title}
+                                            className={classes.chipAgile}
+                                            color="primary"
+                                            variant="outlined"
+                                            target="_blank"
+                                            component="a"
+                                            href={issue.milestone.url}
+                                            clickable
+                                        />
+                                    </Tooltip>
                                 }
                                 {issue.boardState !== undefined && issue.boardState !== null &&
-                                <Tooltip title="Current Agile State of the issue">
-                                    <Chip
-                                        icon={<ViewColumnIcon className={classes.iconSprint} />}
-                                        label={issue.boardState.name}
-                                        className={classes.chipAgile}
-                                        color="primary"
-                                        variant="outlined"
-                                    />
-                                </Tooltip>
+                                    <Tooltip title="Current Agile State of the issue">
+                                        <Chip
+                                            icon={<ViewColumnIcon className={classes.iconSprint} />}
+                                            label={issue.boardState.name}
+                                            className={classes.chipAgile}
+                                            color="primary"
+                                            variant="outlined"
+                                        />
+                                    </Tooltip>
+                                }
+                                {issue.projectCards.totalCount > 0  &&
+                                    <React.Fragment>
+                                        {issue.projectCards.edges.map(card => (
+                                            <Tooltip title={"GitHub Project: " + card.node.project.name} key={card.node.id}>
+                                                <Chip
+                                                    icon={<ViewColumnIcon className={classes.iconSprint} />}
+                                                    label={card.node.column !== null ? card.node.column.name : 'NO COLUMN SET'}
+                                                    className={classes.chipAgile}
+                                                    color="primary"
+                                                    variant="outlined"
+                                                    target="_blank"
+                                                    component="a"
+                                                    href={card.node.project.url !== undefined ? card.node.project.url : '#'}
+                                                    clickable
+                                                />
+                                            </Tooltip>
+                                        ))}
+                                    </React.Fragment>
                                 }
                             </Grid>
                         </Grid>

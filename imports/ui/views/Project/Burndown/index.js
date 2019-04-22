@@ -30,6 +30,9 @@ class CurrentCompletion extends Component {
     render() {
         const { defaultPoints } = this.props;
         const dataset = this.buildDataset();
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'count';}
+
         return (
             <CustomCard
                 headerTitle={"Burndown Chart" + this.getDefaultRemainingTxtShrt()}
@@ -41,6 +44,7 @@ class CurrentCompletion extends Component {
                     <CombinationChart
                         dataset={dataset}
                         defaultPoints={defaultPoints}
+                        metric={metric}
                     />
                 </React.Fragment>
             </CustomCard>

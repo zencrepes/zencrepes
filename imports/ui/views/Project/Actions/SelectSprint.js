@@ -56,7 +56,7 @@ class SelectSprint extends Component {
                 }}
             >
                 <MenuItem key='no-sprint' value='no-sprint'>
-                    No Sprint
+                    No Sprint (unfiltered)
                 </MenuItem>
                 {sprints.map(sprint => (
                     <MenuItem key={sprint.name} value={sprint.name}>

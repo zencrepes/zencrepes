@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import {withRouter} from "react-router-dom";
 
 class CombinationChart extends Component {
     constructor(props) {
@@ -12,6 +13,19 @@ class CombinationChart extends Component {
     getLegend = () => {
         const { completed, max } = this.props;
         return completed + " / " + max;
+    };
+
+    clickBar = (event) => {
+        if (event.point.issues !== undefined && event.point.issues.length > 0) {
+            const issues = event.point.issues;
+            const issuesArrayQuery = issues.map(issue => issue.id);
+            const query = {'id': {'$in': issuesArrayQuery}};
+            this.props.history.push({
+                pathname: '/issues',
+                search: '?q=' + JSON.stringify(query),
+                state: { detail: query }
+            });
+        }
     };
 
     render() {
@@ -48,6 +62,9 @@ class CombinationChart extends Component {
                 series: {
                     pointPadding: 0,
                     groupPadding: 0,
+                    events: {
+                        click: this.clickBar
+                    }
                 }
             },
             series: [{
@@ -103,6 +120,7 @@ CombinationChart.propTypes = {
     max: PropTypes.number,
     dataset: PropTypes.array,
     metric: PropTypes.string,
+    history: PropTypes.object,
 };
 
-export default CombinationChart;
+export default withRouter(CombinationChart);
