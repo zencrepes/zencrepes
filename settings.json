@@ -13,7 +13,7 @@
       "loe:xx-large": 30
     },
     "sprint_prefix": "sprint:",
-    "data_version": 1    
+    "data_version": 2    
   },
   "private": {
     "MAIL_URL": "",
