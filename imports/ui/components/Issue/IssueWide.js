@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+//import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
@@ -21,8 +21,6 @@ import {
     StateLabel,
     Label,
 } from '@primer/components';
-import Aggregation from "../../views/Issues/Query/Filters";
-
 
 const styles = theme => ({
     repoName: {
@@ -90,7 +88,6 @@ class Issue extends Component {
         const { classes, issue } = this.props;
         const pointsExp = RegExp('SP:[.\\d]');
         const boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
-        console.log(issue);
         return (
             <React.Fragment>
                 <Grid
