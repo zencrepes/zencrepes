@@ -188,3 +188,45 @@ export const getLabelsRepartition = (issues) => {
 
     return labels.sort((a, b) => b.issues.count - a.issues.count);
 };
+
+export const getColumnsRepartition = (issues, projectName) => {
+    let statesGroup = [];
+    let allValues = [];
+    issues.forEach((issue) => {
+        if (issue['projectCards'].totalCount === 0) {
+            let issueCopy = JSON.parse(JSON.stringify(issue));
+            issueCopy.column = {name: 'NO PROJECT SET'};
+            allValues.push(issueCopy);
+        } else {
+            issue['projectCards'].edges.forEach((card) => {
+                //Discard issues not part of the project
+                if (card.node.project.name === projectName) {
+                    let issueCopy = JSON.parse(JSON.stringify(issue));
+                    if (card.node.column === null) {
+                        issueCopy.column = {name: 'NO COLUMN SET'};
+                    } else {
+                        issueCopy.column = card.node.column;
+                    }
+                    allValues.push(issueCopy);
+                }
+            });
+        }
+    });
+    statesGroup = _.groupBy(allValues, (value) => value.column.name);
+
+    let columns = [];
+    Object.keys(statesGroup).forEach(function(key) {
+        columns.push({
+            ...statesGroup[key][0].column,
+            issues: {
+                list: statesGroup[key],
+                count: statesGroup[key].length
+            },
+            points: {
+                count: statesGroup[key].map(issue => issue.points). reduce((acc, count) => acc + count, 0)
+            },
+        });
+    });
+
+    return columns.sort((a, b) => b.issues.count - a.issues.count);
+};

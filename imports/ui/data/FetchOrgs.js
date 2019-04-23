@@ -231,12 +231,18 @@ class FetchOrgs extends Component {
             repoObj['org'] = OrgObj;
             repoObj['active'] = nodeActive;
 
-            await cfgSources.upsert({
-                id: repoObj.id
-            }, {
-                $set: repoObj
-            });
-            lastCursor = currentRepo.cursor
+            //There are occurences where duplicate repos might be fetched (from the organizations, then from the user).
+            //Skipping if coming from the user, giving higher priority to Organixation
+            if (existNode!== undefined && (existNode.org.__typename === "Organization" && OrgObj.__typename === "User")) {
+                log.info('This repo already exists as part of an organization, skipping...');
+            } else {
+                await cfgSources.upsert({
+                    id: repoObj.id
+                }, {
+                    $set: repoObj
+                });
+            }
+            lastCursor = currentRepo.cursor;
         }
         setIncrementLoadedRepos(Object.entries(repositories.edges).length);
         this.orgReposCount[OrgObj.id] = this.orgReposCount[OrgObj.id] + Object.entries(repositories.edges).length;

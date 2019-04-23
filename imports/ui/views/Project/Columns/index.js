@@ -4,33 +4,33 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../components/CustomCard/index.js";
-import LabelsTable from './LabelsTable.js';
+import ColumnsTable from './ColumnsTable.js';
 
-class Labels extends Component {
+class Columns extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const { labels } = this.props;
+        const { columns } = this.props;
         return (
             <CustomCard
-                headerTitle="Labels"
+                headerTitle="Columns"
                 headerFactTitle="Count"
-                headerFactValue={labels.length}
+                headerFactValue={columns.length}
             >
-                <LabelsTable labels={labels} />
+                <ColumnsTable columns={columns} />
             </CustomCard>
         );
     }
 }
 
-Labels.propTypes = {
-    labels: PropTypes.array.isRequired,
+Columns.propTypes = {
+    columns: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({
-    labels: state.projectView.labels,
+    columns: state.projectView.columns,
 });
 
-export default connect(mapState, null)(Labels);
+export default connect(mapState, null)(Columns);

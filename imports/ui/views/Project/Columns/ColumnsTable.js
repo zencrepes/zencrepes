@@ -7,13 +7,13 @@ import {
     TableHeaderRow,
 } from '@devexpress/dx-react-grid-material-ui';
 
-class LabelsTable extends Component {
+class ColumnsTable extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            columns: [
-                { name: 'name', title: 'Label'},
+            columnsConfig: [
+                { name: 'name', title: 'Column'},
                 { name: 'issues', title: 'Issues*', getCellValue: row => (row.issues ? row.issues.count : undefined)},
                 { name: 'points', title: 'Points*', getCellValue: row => (row.issues ? row.points.count : undefined)},
             ],
@@ -25,26 +25,25 @@ class LabelsTable extends Component {
     }
 
     render() {
-        const { labels } = this.props;
-        const { columns, tableColumnExtensions} = this.state;
+        const { columns } = this.props;
+        const { columnsConfig, tableColumnExtensions} = this.state;
 
         return (
             <React.Fragment>
                 <Grid
-                    rows={labels}
-                    columns={columns}
+                    rows={columns}
+                    columns={columnsConfig}
                 >
                     <Table columnExtensions={tableColumnExtensions} />
                     <TableHeaderRow />
                 </Grid>
-                <i>*Issues with multiple labels are counted multiple times</i>
             </React.Fragment>
         );
     }
 }
 
-LabelsTable.propTypes = {
-    labels: PropTypes.array.isRequired,
+ColumnsTable.propTypes = {
+    columns: PropTypes.array.isRequired,
 };
 
-export default LabelsTable;
+export default ColumnsTable;
