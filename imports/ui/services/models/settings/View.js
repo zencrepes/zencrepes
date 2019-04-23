@@ -81,18 +81,18 @@ export default {
             const t0 = performance.now();
 
             const uniqueOrgs = _.toArray(_.groupBy(allRepos, 'org.login'));
-            const treeNodes = uniqueOrgs.map((org) => {
+            const treeNodes = _.orderBy(uniqueOrgs.map((org) => {
                 return {
                     label: org[0].org.name,
                     value: org[0].org.login,
-                    children: org.map((repo) => {
+                    children: _.orderBy(org.map((repo) => {
                         return {
                             label: repo.name,
                             value: repo.id
                         };
-                    })
+                    }), 'label')
                 };
-            });
+            }), 'label');
             this.setTreeNodes(treeNodes);
 
             const t1 = performance.now();
