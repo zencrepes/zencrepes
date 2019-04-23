@@ -21,6 +21,13 @@ class DownloadCSV extends Component {
         this.setState({ clicked: !this.state.clicked });
     };
 
+    //https://stackoverflow.com/questions/5435228/sort-an-array-with-arrays-in-it-by-string
+    comparator = (a, b) => {
+        if (a[0].toLowerCase() < b[0].toLowerCase()) return -1;
+        if (a[0].toLowerCase() > b[0].toLowerCase()) return 1;
+        return 0;
+    };
+
     formatData = (contributions) => {
         const { defaultPoints } = this.props;
         let metric = 'points';
@@ -46,9 +53,9 @@ class DownloadCSV extends Component {
                     allDataset.push(date[metric]);
                 }
             });
-            if (headerSet === false) {
-                dataset.push(header);
-            }
+//            if (headerSet === false) {
+//                dataset.push(header);
+//            }
             headerSet = true;
             dataset.push(allDataset);
 
@@ -145,6 +152,8 @@ class DownloadCSV extends Component {
 
 
         });
+        dataset = dataset.sort(this.comparator);
+        dataset.unshift(header);
         return dataset;
     };
 
