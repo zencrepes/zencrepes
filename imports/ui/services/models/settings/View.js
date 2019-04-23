@@ -90,9 +90,9 @@ export default {
                             label: repo.name,
                             value: repo.id
                         };
-                    }), 'label')
+                    }), [repo => repo.label.toLowerCase()])
                 };
-            }), 'label');
+            }), [org => org.label.toLowerCase()]);
             this.setTreeNodes(treeNodes);
 
             const t1 = performance.now();
