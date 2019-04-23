@@ -10,6 +10,7 @@ import {
 //    getRepositories,
 //    getRepositoriesRepartition,
     getLabelsRepartition,
+    getColumnsRepartition,
 } from "../../../utils/repartition/index.js";
 
 import {
@@ -59,6 +60,7 @@ export default {
         issues: [],
 
         milestones: [],
+        columns: [],                      // Breakdown of issues by columns
 
         velocity: {},
         burndown: {},
@@ -104,6 +106,7 @@ export default {
         setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
 
         setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
+        setColumns(state, payload) {return { ...state, columns: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
 
@@ -210,6 +213,9 @@ export default {
 
             let milestones = getMilestonesRepartition(cfgIssues.find(rootState.projectView.query).fetch());
             this.setMilestones(milestones);
+
+            let columns = getColumnsRepartition(cfgIssues.find(rootState.projectView.query).fetch(), rootState.projectView.projects[0].name);
+            this.setColumns(columns);
 
         },
 

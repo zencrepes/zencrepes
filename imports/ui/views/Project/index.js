@@ -21,6 +21,7 @@ import Issues from "./Issues/index.js";
 import Assignees from "./Assignees/index.js";
 import Milestones from "./Milestones/index.js";
 import Labels from "./Labels/index.js";
+import Columns from "./Columns/index.js";
 import Summary from "./Summary/index.js";
 
 class Project extends Component {
@@ -131,13 +132,16 @@ class Project extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Assignees />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <Columns />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Milestones />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Labels />
                     </Grid>
                 </Grid>

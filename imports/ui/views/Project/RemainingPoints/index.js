@@ -33,7 +33,7 @@ class RemainingPoints extends Component {
         });
         return (
             <CustomCard
-                headerTitle="Remaining"
+                headerTitle="Remaining by Assignee"
                 headerFactTitle="Remaining points"
                 headerFactValue={openPoints + " Pts"}
             >
