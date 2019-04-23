@@ -110,7 +110,7 @@ export default {
             this.setSelectedRepos(cfgSources.find({ active: true }).fetch());
 
             const t1 = performance.now();
-            log.info("updateTreeNodes - took " + (t1 - t0) + " milliseconds.");
+            log.info("updateCheckedRepos - took " + (t1 - t0) + " milliseconds.");
 
             this.updateCounts();
         },
