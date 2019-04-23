@@ -23,8 +23,8 @@ class DownloadCSV extends Component {
 
     //https://stackoverflow.com/questions/5435228/sort-an-array-with-arrays-in-it-by-string
     comparator = (a, b) => {
-        if (a[0].toLowerCase() < b[0].toLowerCase()) return -1;
-        if (a[0].toLowerCase() > b[0].toLowerCase()) return 1;
+        if (String(a[0]).toLowerCase() < String(b[0]).toLowerCase()) return -1;
+        if (String(a[0]).toLowerCase() > String(b[0]).toLowerCase()) return 1;
         return 0;
     };
 
