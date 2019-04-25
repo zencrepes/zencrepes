@@ -53,9 +53,6 @@ class DownloadCSV extends Component {
                     allDataset.push(date[metric]);
                 }
             });
-//            if (headerSet === false) {
-//                dataset.push(header);
-//            }
             headerSet = true;
             dataset.push(allDataset);
 
@@ -178,12 +175,6 @@ class DownloadCSV extends Component {
         }
     }
 }
-
-DownloadCSV.propTypes = {
-    classes: PropTypes.object.isRequired,
-    clearIssues: PropTypes.func.isRequired,
-    issues: PropTypes.array.isRequired,
-};
 
 DownloadCSV.propTypes = {
     contributions: PropTypes.array.isRequired,

@@ -5,7 +5,12 @@ import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
-import { refreshContributions } from '../../../utils/contributions/index.js';
+import {
+    refreshAssigneesContributions,
+    refreshMilestonesContributions,
+    refreshProjectsContributions,
+    refreshAreasContributions
+} from '../../../utils/contributions/index.js';
 
 import subDays from 'date-fns/subDays';
 import { addRemoveDateFromQuery } from "../../../utils/query/index.js";
@@ -26,6 +31,7 @@ export default {
         selectedTab: 'stats', // Selected tab to be displayed
         tabStatsQuery: null, // This stores the current query, used to identify if data refresh is needed
         tabWorkQuery: null, // This stores the current query, used to identify if data refresh is needed
+        tabContributionsQuery: null, // This stores the current query, used to identify if data refresh is needed
 
         query: {},
 
@@ -51,7 +57,10 @@ export default {
         statsAssigneesCount: [],
         statsMilestonesPastDue: [],
 
-        contributions: [],
+        contributionsAssignees: [],
+        contributionsMilestones: [],
+        contributionsProjects: [],
+        contributionsAreas: [],
 
         showTimeModal: false,
         timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'closedAt', name: 'Closed'}],
@@ -69,6 +78,7 @@ export default {
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
         setTabStatsQuery(state, payload) {return { ...state, tabStatsQuery: payload };},
         setTabWorkQuery(state, payload) {return { ...state, tabWorkQuery: payload };},
+        setTabContributionsQuery(state, payload) {return { ...state, tabContributionsQuery: payload };},
 
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
 
@@ -97,7 +107,10 @@ export default {
         setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
         setTimeFields(state, payload) {return { ...state, timeFields: payload };},
 
-        setContributions(state, payload) {return { ...state, contributions: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsAssignees(state, payload) {return { ...state, contributionsAssignees: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsMilestones(state, payload) {return { ...state, contributionsMilestones: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsProjects(state, payload) {return { ...state, contributionsProjects: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsAreas(state, payload) {return { ...state, contributionsAreas: JSON.parse(JSON.stringify(payload)) };},
     },
     effects: {
         async updateQuery(query) {
@@ -130,11 +143,12 @@ export default {
 
         async updateSelectedTab(payload, rootState) {
             this.setSelectedTab(payload);
-
             if (payload === 'stats' && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabStatsQuery)) {
                 this.updateStats();
             } else if ((payload === 'work' || payload === 'burndown' || payload === 'velocity') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabWorkQuery)) {
                 this.updateWork();
+            } else if ((payload === 'contributions') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabContributionsQuery)) {
+                this.updateContributions();
             }
         },
 
@@ -161,25 +175,35 @@ export default {
 
         async updateContributions(payload, rootState) {
             if (rootState.issuesView.selectedTab === 'contributions') {
-                const log = rootState.global.log;
-                let t0 = performance.now();
-
-                //This section builds a view of assignees contributions to various projects & milestones
-                //Implemented by: project, milestone, area
-                const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 30).toISOString(), rootState.issuesView.query);
-                const issues = cfgIssues.find(modifiedQuery).fetch();
-                const firstIssue = cfgIssues.findOne(modifiedQuery, {
-                    sort: {closedAt: 1},
-                    reactive: false,
-                    transform: null
-                });
-                const contributions = refreshContributions(issues, firstIssue);
-                //console.log(contributions);
-                this.setContributions(contributions);
-
-                var t1 = performance.now();
-                log.info("updateContributions - took " + (t1 - t0) + " milliseconds.");
+                this.refreshContributions();
+                this.setTabContributionsQuery(rootState.issuesView.query);
             }
+        },
+
+        async refreshContributions(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+
+            //This section builds a view of assignees contributions to various projects & milestones
+            //Implemented by: project, milestone, area
+            const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 28).toISOString(), rootState.issuesView.query);
+            const issues = cfgIssues.find(modifiedQuery).fetch();
+
+            const assigneesContributions = refreshAssigneesContributions(issues);
+            //console.log(contributions);
+            this.setContributionsAssignees(assigneesContributions);
+
+            const milestonesContributions = refreshMilestonesContributions(issues);
+            this.setContributionsMilestones(milestonesContributions);
+
+            const projectsContributions = refreshProjectsContributions(issues);
+            this.setContributionsProjects(projectsContributions);
+
+            const areasContributions = refreshAreasContributions(issues);
+            this.setContributionsAreas(areasContributions);
+
+            var t1 = performance.now();
+            log.info("refreshContributions - took " + (t1 - t0) + " milliseconds.");
         },
 
         async deleteQuery(query) {

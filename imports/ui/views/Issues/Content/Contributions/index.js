@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 
-import CustomCard from "../../../../components/CustomCard/index.js";
+import Grid from '@material-ui/core/Grid';
 
-import DownloadCSV from './DownloadCSV.js';
+import Assignees from './Assignees/index.js';
+import Projects from './Projects/index.js';
+import Milestones from './Milestones/index.js';
+import Areas from './Areas/index.js';
 
 class Contributions extends Component {
     constructor (props) {
@@ -11,18 +14,38 @@ class Contributions extends Component {
 
     render() {
         return (
-            <CustomCard
-                headerTitle="Contributions over the past 30 days"
-                headerFactTitle=""
-                headerFactValue=""
-                headerLegend="This view will contain a breakdown of all areas, projects and milestones, users contributed to (in the form of closed issues) during the past 30 days."
-            >
-                <span>This view will contain a breakdown of all areas, projects and milestones, users contributed to through closing issues in the past 30 days.</span><br />
-                <DownloadCSV/>
-            </CustomCard>
+            <React.Fragment>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={6} sm={3} md={4}>
+                        <Projects />
+                    </Grid>
+                    <Grid item xs={6} sm={3} md={4}>
+                        <Milestones />
+                    </Grid>
+                    <Grid item xs={6} sm={3} md={4}>
+                        <Areas />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={12} md={12}>
+                        <Assignees />
+                    </Grid>
+                </Grid>
+            </React.Fragment>
         );
     }
 }
 
 export default Contributions;
-
