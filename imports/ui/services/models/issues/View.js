@@ -5,7 +5,12 @@ import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/issues.js';
 import { refreshVelocity } from '../../../utils/velocity/index.js';
-import { refreshContributions } from '../../../utils/contributions/index.js';
+import {
+    refreshAssigneesContributions,
+    refreshMilestonesContributions,
+    refreshProjectsContributions,
+    refreshAreasContributions
+} from '../../../utils/contributions/index.js';
 
 import subDays from 'date-fns/subDays';
 import { addRemoveDateFromQuery } from "../../../utils/query/index.js";
@@ -52,7 +57,10 @@ export default {
         statsAssigneesCount: [],
         statsMilestonesPastDue: [],
 
-        contributions: [],
+        contributionsAssignees: [],
+        contributionsMilestones: [],
+        contributionsProjects: [],
+        contributionsAreas: [],
 
         showTimeModal: false,
         timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'closedAt', name: 'Closed'}],
@@ -99,7 +107,10 @@ export default {
         setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
         setTimeFields(state, payload) {return { ...state, timeFields: payload };},
 
-        setContributions(state, payload) {return { ...state, contributions: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsAssignees(state, payload) {return { ...state, contributionsAssignees: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsMilestones(state, payload) {return { ...state, contributionsMilestones: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsProjects(state, payload) {return { ...state, contributionsProjects: JSON.parse(JSON.stringify(payload)) };},
+        setContributionsAreas(state, payload) {return { ...state, contributionsAreas: JSON.parse(JSON.stringify(payload)) };},
     },
     effects: {
         async updateQuery(query) {
@@ -178,12 +189,21 @@ export default {
             const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 28).toISOString(), rootState.issuesView.query);
             const issues = cfgIssues.find(modifiedQuery).fetch();
 
-            const contributions = refreshContributions(issues);
+            const assigneesContributions = refreshAssigneesContributions(issues);
             //console.log(contributions);
-            this.setContributions(contributions);
+            this.setContributionsAssignees(assigneesContributions);
+
+            const milestonesContributions = refreshMilestonesContributions(issues);
+            this.setContributionsMilestones(milestonesContributions);
+
+            const projectsContributions = refreshProjectsContributions(issues);
+            this.setContributionsProjects(projectsContributions);
+
+            const areasContributions = refreshAreasContributions(issues);
+            this.setContributionsAreas(areasContributions);
 
             var t1 = performance.now();
-            log.info("updateContributions - took " + (t1 - t0) + " milliseconds.");
+            log.info("refreshContributions - took " + (t1 - t0) + " milliseconds.");
         },
 
         async deleteQuery(query) {

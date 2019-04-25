@@ -3,12 +3,12 @@ import subDays from 'date-fns/subDays';
 
 /*
 *
-* refreshContributions() Takes an array of issues and build a matrix of individual contributions per day
+* refreshAssigneesContributions() Takes an array of issues and build a matrix of individual contributions per day
 *
 * Arguments:
 * - issues: Array of issues
 */
-export const refreshContributions = (issues) => {
+export const refreshAssigneesContributions = (issues) => {
     //Build an array of days corresponding to the interval
     //let firstDay = formatDate(firstIssue.closedAt);
     let firstDay = formatDate(subDays(new Date(), 28));
@@ -185,6 +185,116 @@ export const refreshContributions = (issues) => {
             }),
         }
     });
+    return dataArray;
+};
+
+/*
+*
+* refreshMilestonesContributions() Takes an array of issues and build a matrix of individual contributions per day
+*
+* Arguments:
+* - issues: Array of issues
+*/
+export const refreshMilestonesContributions = (issues) => {
+    const dataObject = issues.reduce((tally, issue) => {
+        if (issue.milestone === null) {
+            tally['empty']['total']['issues']++;
+            tally['empty']['total']['list'].push(issue);
+            if (issue.points !== null) {
+                tally['empty']['total']['points'] += issue.points;
+            }
+        } else {
+            if (tally[issue.milestone.title] === undefined) {
+                tally[issue.milestone.title] = {
+                    milestone: issue.milestone,
+                    total: {issues: 0, points: 0, list:[]},
+                }
+            }
+            tally[issue.milestone.title]['total']['issues']++;
+            tally[issue.milestone.title]['total']['list'].push(issue);
+            if (issue.points !== null) {
+                tally[issue.milestone.title]['total']['points'] += issue.points;
+            }
+        }
+        return tally;
+    }, {empty: {milestone: null, total: {issues: 0, points: 0, list: []}}});
+    //Convert dataObject to array
+    let dataArray = Object.values(dataObject);
+    return dataArray;
+};
+
+/*
+*
+* refreshProjectsContributions() Takes an array of issues and build a matrix of individual contributions per day
+*
+* Arguments:
+* - issues: Array of issues
+*/
+export const refreshProjectsContributions = (issues) => {
+    const dataObject = issues.reduce((tally, issue) => {
+        if (issue.projectCards.totalCount === 0) {
+            tally['empty']['total']['issues']++;
+            tally['empty']['total']['list'].push(issue);
+            if (issue.points !== null) {
+                tally['empty']['total']['points'] += issue.points;
+            }
+        } else {
+            issue.projectCards.edges.forEach((project) => {
+                if (tally[project.node.project.name] === undefined) {
+                    tally[project.node.project.name] = {
+                        project: project.node.project,
+                        total: {issues: 0, points: 0, list:[]},
+                    }
+                }
+                tally[project.node.project.name]['total']['issues']++;
+                tally[project.node.project.name]['total']['list'].push(issue);
+                tally[project.node.project.name]['total']['points'] += issue.points;
+            });
+        }
+        return tally;
+    }, {empty: {project: null, total: {issues: 0, points: 0, list: []}}});
+    //Convert dataObject to array
+    let dataArray = Object.values(dataObject);
+    return dataArray;
+};
+
+/*
+*
+* refreshAreasContributions() Takes an array of issues and build a matrix of individual contributions per day
+*
+* Arguments:
+* - issues: Array of issues
+*/
+export const refreshAreasContributions = (issues) => {
+    const dataObject = issues.reduce((tally, issue) => {
+        if (issue.labels.totalCount > 0) {
+            let areaFound = 0;
+            issue.labels.edges.forEach((label) => {
+                if (label.node.name.slice(0, 5) === 'area:') {
+                    areaFound = 1;
+                    if (tally[label.node.name] === undefined) {
+                        tally[label.node.name] = {
+                            label: label.node,
+                            total: {issues: 0, points: 0, list:[]},
+                        }
+                    }
+                    tally[label.node.name]['total']['issues']++;
+                    tally[label.node.name]['total']['list'].push(issue);
+                    if (issue.points !== null) {
+                        tally[label.node.name]['total']['points'] += issue.points;
+                    }
+                }
+            });
+            if (areaFound === 0) {
+                tally['empty']['total']['issues']++;
+                tally['empty']['total']['list'].push(issue);
+                tally['empty']['total']['points'] += issue.points;
+            }
+        }
+        return tally;
+    }, {empty: {label: null, total: {issues: 0, points: 0, list: []}}});
+    //Convert dataObject to array
+    let dataArray = Object.values(dataObject);
     return dataArray;
 };
 
