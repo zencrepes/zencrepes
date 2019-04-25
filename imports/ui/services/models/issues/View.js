@@ -26,6 +26,7 @@ export default {
         selectedTab: 'stats', // Selected tab to be displayed
         tabStatsQuery: null, // This stores the current query, used to identify if data refresh is needed
         tabWorkQuery: null, // This stores the current query, used to identify if data refresh is needed
+        tabContributionsQuery: null, // This stores the current query, used to identify if data refresh is needed
 
         query: {},
 
@@ -69,6 +70,7 @@ export default {
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
         setTabStatsQuery(state, payload) {return { ...state, tabStatsQuery: payload };},
         setTabWorkQuery(state, payload) {return { ...state, tabWorkQuery: payload };},
+        setTabContributionsQuery(state, payload) {return { ...state, tabContributionsQuery: payload };},
 
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
 
@@ -130,11 +132,12 @@ export default {
 
         async updateSelectedTab(payload, rootState) {
             this.setSelectedTab(payload);
-
             if (payload === 'stats' && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabStatsQuery)) {
                 this.updateStats();
             } else if ((payload === 'work' || payload === 'burndown' || payload === 'velocity') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabWorkQuery)) {
                 this.updateWork();
+            } else if ((payload === 'contributions') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabContributionsQuery)) {
+                this.updateContributions();
             }
         },
 
@@ -161,25 +164,26 @@ export default {
 
         async updateContributions(payload, rootState) {
             if (rootState.issuesView.selectedTab === 'contributions') {
-                const log = rootState.global.log;
-                let t0 = performance.now();
-
-                //This section builds a view of assignees contributions to various projects & milestones
-                //Implemented by: project, milestone, area
-                const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 30).toISOString(), rootState.issuesView.query);
-                const issues = cfgIssues.find(modifiedQuery).fetch();
-                const firstIssue = cfgIssues.findOne(modifiedQuery, {
-                    sort: {closedAt: 1},
-                    reactive: false,
-                    transform: null
-                });
-                const contributions = refreshContributions(issues, firstIssue);
-                //console.log(contributions);
-                this.setContributions(contributions);
-
-                var t1 = performance.now();
-                log.info("updateContributions - took " + (t1 - t0) + " milliseconds.");
+                this.refreshContributions();
+                this.setTabContributionsQuery(rootState.issuesView.query);
             }
+        },
+
+        async refreshContributions(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+
+            //This section builds a view of assignees contributions to various projects & milestones
+            //Implemented by: project, milestone, area
+            const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 28).toISOString(), rootState.issuesView.query);
+            const issues = cfgIssues.find(modifiedQuery).fetch();
+
+            const contributions = refreshContributions(issues);
+            //console.log(contributions);
+            this.setContributions(contributions);
+
+            var t1 = performance.now();
+            log.info("updateContributions - took " + (t1 - t0) + " milliseconds.");
         },
 
         async deleteQuery(query) {
