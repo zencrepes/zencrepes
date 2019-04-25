@@ -25,12 +25,12 @@ class IssuesTabs extends Component {
                 indicatorColor="primary"
                 textColor="primary"
             >
-                <Tab label="Stats" value="stats" />
+                <Tab label="Explore" value="stats" />
                 <Tab label="List" value="list" />
-                <Tab label="Work" value="work" />
-                <Tab label="Contributions" value="contributions" />
+                <Tab label="Plan" value="work" />
                 <Tab label="Velocity" value="velocity" />
                 <Tab label="Burndown" value="burndown" />
+                <Tab label="Past 4 weeks" value="contributions" />
             </Tabs>
         );
     }

@@ -121,7 +121,7 @@ class ContributionsTable extends Component {
                 columns={columns}
                 noDataText="No data available!"
                 className="-striped -highlight"
-                defaultPageSize={50}
+                defaultPageSize={25}
                 pageSizeOptions={[25, 50, 100, 200]}
                 defaultFilterMethod={this.filterCaseInsensitive}
                 filterable={false}

@@ -22,6 +22,7 @@ class Assignees extends Component {
             if (assigneeName === "") {
                 assigneeName = assignee.assignee.login;
             }
+            /*
             let datesObj = {};
             assignee.all.dates.forEach((date) => {
                 datesObj[date.date.slice(5, 10)] = date;
@@ -39,7 +40,7 @@ class Assignees extends Component {
                 dates: assignee.all.dates,
                 ...datesObj
             });
-
+            */
             const areaTotals = {
                 issues: assignee.areas
                     .map(area => area.total.issues)
@@ -152,7 +153,7 @@ class Assignees extends Component {
         const tableData = this.prepData(contributionsAssignees, defaultPoints);
         return (
             <CustomCard
-                headerTitle="Contributions over the past 4 weeks"
+                headerTitle="Assignees"
                 headerFactTitle=""
                 headerFactValue=""
                 headerLegend="This table provides a view of closed issues within the past 4 weeks, broken down by project, by milestone and by area."
