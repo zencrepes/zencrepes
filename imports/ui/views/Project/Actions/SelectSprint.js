@@ -65,29 +65,6 @@ class SelectSprint extends Component {
                 ))}
             </Select>
         );
-        /*
-        if (selectedSprintTitle === null) {
-            return null
-        } else {
-            return (
-                <Select
-                    value={selectedSprintTitle}
-                    onChange={this.handleChange}
-                    className={classes.selectedField}
-                    inputProps={{
-                        name: 'age',
-                        id: 'age-simple',
-                    }}
-                >
-                    {sprints.map(sprintTitle => (
-                        <MenuItem key={sprintTitle} value={sprintTitle}>
-                            {sprintTitle}
-                        </MenuItem>
-                    ))}
-                </Select>
-            );
-        }
-        */
     }
 }
 
