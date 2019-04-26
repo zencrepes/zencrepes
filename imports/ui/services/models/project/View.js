@@ -295,7 +295,7 @@ export default {
 
         async updateVelocity(assignees, rootState) {
             //Build velocity based on past assignees performance
-            let currentSprintFilter = rootState.projectView.query;
+            let currentSprintFilter = {...rootState.projectView.query, 'state': { $eq : 'OPEN' }};
 
             let assigneesLogin = assignees.map((assignee) => assignee.login);
             let closedIssuesFilter = {'state': { $eq : 'CLOSED' },'assignees.edges':{'$elemMatch':{'node.login':{'$in':assigneesLogin}}}};
