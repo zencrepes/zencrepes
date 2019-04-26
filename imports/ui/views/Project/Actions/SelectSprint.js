@@ -24,9 +24,9 @@ class SelectSprint extends Component {
         const { query } = this.props;
         // Update Query to new sprint title
         let updatedQuery = {...query};
-        if(labelName === 'no-sprint' && updatedQuery['labels.edges'] !== undefined) {
+        if(labelName === 'no-filter' && updatedQuery['labels.edges'] !== undefined) {
             delete updatedQuery['labels.edges'];
-        } else if (labelName !== 'no-sprint') {
+        } else if (labelName !== 'no-filter') {
             updatedQuery = {...query, 'labels.edges':{'$elemMatch':{'node.name':{'$in':[labelName]}}}};
         }
         //{"labels.edges":{"$elemMatch":{"node.name":{"$in":["loe:xx-large"]}}}}
@@ -55,8 +55,8 @@ class SelectSprint extends Component {
                     id: 'age-simple',
                 }}
             >
-                <MenuItem key='no-sprint' value='no-sprint'>
-                    No Sprint (unfiltered)
+                <MenuItem key='no-filter' value='no-filter'>
+                    No Filter
                 </MenuItem>
                 {sprints.map(sprint => (
                     <MenuItem key={sprint.name} value={sprint.name}>

@@ -34,7 +34,7 @@ export default {
         projects: [],
         sprints: [],
         showClosed: false,
-        selectedSprintLabel: 'no-sprint',
+        selectedSprintLabel: 'no-filter',
         selectedSprintDescription: null,
         selectedSprintDueDate: null,
 
@@ -140,8 +140,8 @@ export default {
                 identifiedProject = cfgProjects.find({'name': projectName}).fetch();
             }
             if (rootState.projectView.projects[0] !== undefined && identifiedProject[0].name !== rootState.projectView.projects[0].name) {
-                this.setSelectedSprintLabel('no-sprint');
-                this.setSelectedSprintLabel('no-sprint');
+                this.setSelectedSprintLabel('no-filter');
+                this.setSelectedSprintLabel('no-filter');
             }
             this.setProjects(identifiedProject);
         },
@@ -157,12 +157,24 @@ export default {
 
             cfgIssues.find(projectQuery).forEach((issue) => {
                 issue.labels.edges.map((label) => {
-                    let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
-                    if (sprintLabelFilter.test(label.node.name)) {
-                        if (sprintsValues[label.node.name] === undefined) {
-                            sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.sprint_prefix, '')};
-                        } else {
-                            sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
+                    if (Meteor.settings.public.sprint_prefix !== undefined) {
+                        let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
+                        if (sprintLabelFilter.test(label.node.name)) {
+                            if (sprintsValues[label.node.name] === undefined) {
+                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.sprint_prefix, '')};
+                            } else {
+                                sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
+                            }
+                        }
+                    }
+                    if (Meteor.settings.public.phase_prefix !== undefined) {
+                        let sprintLabelFilter = RegExp(Meteor.settings.public.phase_prefix + '(.+)');
+                        if (sprintLabelFilter.test(label.node.name)) {
+                            if (sprintsValues[label.node.name] === undefined) {
+                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.sprint_prefix, '')};
+                            } else {
+                                sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
+                            }
                         }
                     }
                 });
