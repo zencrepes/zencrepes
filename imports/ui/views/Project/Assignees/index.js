@@ -20,6 +20,7 @@ class Assignees extends Component {
                 headerFactTitle="Count"
                 headerFactValue={assignees.length}
             >
+                <a className="anchor-link" id="assignees-table"></a>
                 <AssigneesTable assignees={assignees} />
             </CustomCard>
         );

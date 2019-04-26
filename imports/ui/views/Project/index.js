@@ -111,6 +111,7 @@ class Project extends Component {
                         <VelocityWeeks
                             velocity={velocity}
                             defaultPoints={defaultPoints}
+                            assignees={assignees}
                         />
                     </Grid>
                 </Grid>

@@ -74,7 +74,7 @@ class VelocityWeeks extends Component {
     }
 
     render() {
-        const { defaultPoints } = this.props;
+        const { defaultPoints, assignees } = this.props;
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
@@ -89,6 +89,9 @@ class VelocityWeeks extends Component {
                     dataset={dataset}
                     metric={metric}
                 />
+                {(assignees !== undefined && assignees.length > 0) &&
+                    <i>Combined velocity of <a href="#assignees-table">{assignees.length} assignees</a> across all their closed issues.</i>
+                }
             </CustomCard>
         );
     }
@@ -98,6 +101,7 @@ VelocityWeeks.propTypes = {
     dataset: PropTypes.array,
     defaultPoints: PropTypes.bool,
     velocity: PropTypes.object,
+    assignees: PropTypes.array,
 };
 
 export default VelocityWeeks;
