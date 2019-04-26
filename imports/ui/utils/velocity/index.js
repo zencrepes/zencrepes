@@ -227,6 +227,11 @@ export const calculateAverageVelocity = (array, category, indexValue) => {
         });
 };
 
+const stringClean = (labelName) => {
+    return String(labelName).replace(/[^a-z0-9+]+/gi, '').toLowerCase();
+};
+
+
 /*
 *
 * populateArrays() Initialize an object containing indices for all days between two dates
@@ -246,7 +251,7 @@ export const populateObject = (dataObject, issues) => {
                 }
 
                 //Calculating if scope changed for this issue
-                if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length !== 0) {
+                if (issue.labels.edges.filter(label => stringClean(label.node.name) === stringClean('Scope Change')).length !== 0) {
                     dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['issues']['count']++;
                     dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['list'].push(issue);
                     if (issue.points !== null) {
@@ -268,7 +273,7 @@ export const populateObject = (dataObject, issues) => {
                 }
 
                 //Calculating if scope changed for this issue
-                if (issue.labels.edges.filter(label => label.node.name === 'Scope Change').length !== 0) {
+                if (issue.labels.edges.filter(label => stringClean(label.node.name) === stringClean('Scope Change')).length !== 0) {
                     dataObject['weeks'][closedWeek]['scopeChangeCompletion']['issues']['count']++;
                     dataObject['weeks'][closedWeek]['scopeChangeCompletion']['list'].push(issue);
                     if (issue.points !== null) {
