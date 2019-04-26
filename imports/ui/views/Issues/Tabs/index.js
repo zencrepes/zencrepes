@@ -28,9 +28,9 @@ class IssuesTabs extends Component {
                 <Tab label="Explore" value="stats" />
                 <Tab label="List" value="list" />
                 <Tab label="Plan" value="work" />
+                <Tab label="Review (past 4 weeks)" value="contributions" />
                 <Tab label="Velocity" value="velocity" />
                 <Tab label="Burndown" value="burndown" />
-                <Tab label="Past 4 weeks" value="contributions" />
             </Tabs>
         );
     }

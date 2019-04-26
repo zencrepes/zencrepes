@@ -34,7 +34,7 @@ export default {
         projects: [],
         sprints: [],
         showClosed: false,
-        selectedSprintLabel: 'no-sprint',
+        selectedSprintLabel: 'no-filter',
         selectedSprintDescription: null,
         selectedSprintDueDate: null,
 
@@ -140,8 +140,8 @@ export default {
                 identifiedProject = cfgProjects.find({'name': projectName}).fetch();
             }
             if (rootState.projectView.projects[0] !== undefined && identifiedProject[0].name !== rootState.projectView.projects[0].name) {
-                this.setSelectedSprintLabel('no-sprint');
-                this.setSelectedSprintLabel('no-sprint');
+                this.setSelectedSprintLabel('no-filter');
+                this.setSelectedSprintLabel('no-filter');
             }
             this.setProjects(identifiedProject);
         },
@@ -157,12 +157,24 @@ export default {
 
             cfgIssues.find(projectQuery).forEach((issue) => {
                 issue.labels.edges.map((label) => {
-                    let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
-                    if (sprintLabelFilter.test(label.node.name)) {
-                        if (sprintsValues[label.node.name] === undefined) {
-                            sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.sprint_prefix, '')};
-                        } else {
-                            sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
+                    if (Meteor.settings.public.sprint_prefix !== undefined) {
+                        let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
+                        if (sprintLabelFilter.test(label.node.name)) {
+                            if (sprintsValues[label.node.name] === undefined) {
+                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.sprint_prefix, '')};
+                            } else {
+                                sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
+                            }
+                        }
+                    }
+                    if (Meteor.settings.public.phase_prefix !== undefined) {
+                        let sprintPhaseFilter = RegExp(Meteor.settings.public.phase_prefix + '(.+)');
+                        if (sprintPhaseFilter.test(label.node.name)) {
+                            if (sprintsValues[label.node.name] === undefined) {
+                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.phase_prefix, '')};
+                            } else {
+                                sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
+                            }
                         }
                     }
                 });
@@ -171,19 +183,50 @@ export default {
             sprintsValues = sprintsValues.map((label) => {
                 return {...label, display: label.name + ' (' + label.issues + ' issues)'}
             });
-
             // If one of the sprint label has a numerical value but gaps, the system will try to fill those.
-            const sprintsNumIncrement = sprintsValues.filter(label => Number.isInteger(parseInt(label.increment))).map(label => parseInt(label.increment));
-            if (sprintsNumIncrement.length > 0) {
-                const highestSprint = Math.max(...sprintsNumIncrement);
-                for (var i=0; i < highestSprint+2; i++) {
-                    if (_.findIndex(sprintsValues, (label) => {return label.increment === String(i);}) === -1) {
-                        let labelName = Meteor.settings.public.sprint_prefix + i;
-                        sprintsValues.push({name: labelName, issues: 0, increment: i, display: labelName + ' (0 issues)'})
+            if (Meteor.settings.public.sprint_prefix !== undefined) {
+                let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
+                const sprintsNumIncrement = sprintsValues.filter(label => sprintLabelFilter.test(label.name)).filter(label => Number.isInteger(parseInt(label.increment))).map(label => parseInt(label.increment));
+                if (sprintsNumIncrement.length > 0) {
+                    const highestSprint = Math.max(...sprintsNumIncrement);
+                    for (var i = 0; i < highestSprint + 2; i++) {
+                        if (_.findIndex(sprintsValues.filter(label => sprintLabelFilter.test(label.name)), (label) => {
+                            return label.increment === String(i);
+                        }) === -1) {
+                            let labelName = Meteor.settings.public.sprint_prefix + i;
+                            sprintsValues.push({
+                                name: labelName,
+                                issues: 0,
+                                increment: i,
+                                display: labelName + ' (0 issues)'
+                            })
+                        }
                     }
                 }
             }
-            sprintsValues = _.sortBy(sprintsValues, ['increment']);
+
+            if (Meteor.settings.public.phase_prefix !== undefined) {
+                let sprintPhaseFilter = RegExp(Meteor.settings.public.phase_prefix + '(.+)');
+                const sprintsNumIncrement = sprintsValues.filter(label => sprintPhaseFilter.test(label.name)).filter(label => Number.isInteger(parseInt(label.increment))).map(label => parseInt(label.increment));
+                if (sprintsNumIncrement.length > 0) {
+                    const highestSprint = Math.max(...sprintsNumIncrement);
+                    for (var j = 0; j < highestSprint + 2; j++) {
+                        if (_.findIndex(sprintsValues.filter(label => sprintPhaseFilter.test(label.name)), (label) => {
+                            return label.increment === String(j);
+                        }) === -1) {
+                            let labelName = Meteor.settings.public.phase_prefix + j;
+                            sprintsValues.push({
+                                name: labelName,
+                                issues: 0,
+                                increment: j,
+                                display: labelName + ' (0 issues)'
+                            })
+                        }
+                    }
+                }
+            }
+
+            sprintsValues = _.sortBy(sprintsValues, ['name']);
             this.setSprints(sprintsValues);
         },
 
