@@ -111,15 +111,22 @@ const initObject = (firstDay, lastDay) => {
         currentDate.setDate(currentDate.getDate() + 1);
         initObject['days'][currentDate.toJSON().slice(0, 10)] = {
             date: currentDate.toJSON(),
-            issues: [],
-            count: {closed: 0, remaining: 0, velocity: 0},
-            points: {closed: 0, remaining: 0, velocity: 0},
+            completion: {
+                list: [],
+                issues: {closed: 0, remaining: 0, velocity: 0},
+                points: {closed: 0, remaining: 0, velocity: 0},
+            },
+            scopeChangeCompletion: {
+                list: [],
+                issues: {closed: 0, remaining: 0, velocity: 0},
+                points: {closed: 0, remaining: 0, velocity: 0},
+            }
         };
     }
     initObject['total'] = {
-        count: {closed: 0, opened: 0, total: 0},
+        issues: {closed: 0, opened: 0, total: 0},
         points: {closed: 0, opened: 0, total: 0}
-    }
+    };
     return initObject;
 };
 
@@ -133,16 +140,20 @@ const initObject = (firstDay, lastDay) => {
 * - openedIssues: array of opened issues
 */
 const populateTotals = (dataObject, closedIssues, openedIssues) => {
-    dataObject['total']['count']['closed'] = closedIssues.length;
+    dataObject['total']['issues']['closed'] = closedIssues.length;
     dataObject['total']['points']['closed'] = closedIssues.map(issue => issue.points).reduce((acc, count) => acc + count, 0);
 
-    dataObject['total']['count']['opened'] = openedIssues.length;
+    dataObject['total']['issues']['opened'] = openedIssues.length;
     dataObject['total']['points']['opened'] = openedIssues.map(issue => issue.points).reduce((acc, count) => acc + count, 0);
 
-    dataObject['total']['count']['total'] = dataObject['total']['count']['closed'] + dataObject['total']['count']['opened'];
+    dataObject['total']['issues']['total'] = dataObject['total']['issues']['closed'] + dataObject['total']['issues']['opened'];
     dataObject['total']['points']['total'] = dataObject['total']['points']['closed'] + dataObject['total']['points']['opened'];
 
     return dataObject;
+};
+
+const stringClean = (labelName) => {
+    return String(labelName).replace(/[^a-z0-9+]+/gi, '').toLowerCase();
 };
 
 /*
@@ -156,11 +167,21 @@ const populateTotals = (dataObject, closedIssues, openedIssues) => {
 const populateClosed = (dataObject, issues) => {
     issues.forEach((issue) => {
         if (dataObject['days'][issue.closedAt.slice(0, 10)] !== undefined) {
-            dataObject['days'][issue.closedAt.slice(0, 10)]['count']['closed']++;
+            dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['issues']['closed']++;
             if (issue.points !== null) {
-                dataObject['days'][issue.closedAt.slice(0, 10)]['points']['closed'] += issue.points;
+                dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['points']['closed'] += issue.points;
             }
-            dataObject['days'][issue.closedAt.slice(0, 10)]['issues'].push(issue);
+            dataObject['days'][issue.closedAt.slice(0, 10)]['completion']['list'].push(issue);
+
+            //Calculating if scope changed for this issue
+            if (issue.labels.edges.filter(label => stringClean(label.node.name) === stringClean('Scope Change')).length !== 0) {
+                dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['issues']['closed']++;
+                dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['list'].push(issue);
+                if (issue.points !== null) {
+                    dataObject['days'][issue.closedAt.slice(0, 10)]['scopeChangeCompletion']['points']['closed'] += issue.points;
+                }
+            }
+
         }
     });
     return dataObject;
@@ -175,13 +196,13 @@ const populateClosed = (dataObject, issues) => {
 * - dataObject: Object to modify
 */
 const populateBurndown = (dataObject) => {
-    let totalRemainingCount = dataObject.total.count.total;
+    let totalRemainingCount = dataObject.total.issues.total;
     let totalRemainingPoints = dataObject.total.points.total;
     for (let [key, day] of Object.entries(dataObject.days)){
-        totalRemainingCount = totalRemainingCount - day['count']['closed'];
-        totalRemainingPoints = totalRemainingPoints - day['points']['closed'];
-        dataObject.days[key]['count']['remaining'] = totalRemainingCount;
-        dataObject.days[key]['points']['remaining'] = totalRemainingPoints;
+        totalRemainingCount = totalRemainingCount - day['completion']['issues']['closed'];
+        totalRemainingPoints = totalRemainingPoints - day['completion']['points']['closed'];
+        dataObject.days[key]['completion']['issues']['remaining'] = totalRemainingCount;
+        dataObject.days[key]['completion']['points']['remaining'] = totalRemainingPoints;
     }
     return dataObject;
 };
@@ -201,8 +222,8 @@ const populateVelocity = (dataObject) => {
         else {startIdx = idx - 20;}
         if (idx !== 0) {
             let currentWindowIssues = ticketsPerDay.slice(startIdx, idx); // This limits the window or velocity calculation to 20 days (4 weeks).
-            ticketsPerDay[idx]['count']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'count');
-            ticketsPerDay[idx]['points']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'points');
+            ticketsPerDay[idx]['completion']['issues']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'issues');
+            ticketsPerDay[idx]['completion']['points']['velocity'] = calculateAverageVelocity(currentWindowIssues, 'points');
         }
     });
     dataObject['days'] = ticketsPerDay;
@@ -219,7 +240,7 @@ const populateVelocity = (dataObject) => {
 */
 const calculateAverageVelocity = (array, indexValue) => {
     return array
-        .map(values => values[indexValue]['closed'])
+        .map(values => values['completion'][indexValue]['closed'])
         .reduce((accumulator, currentValue, currentIndex, array) => {
             accumulator += currentValue;
             if (currentIndex === array.length-1) {

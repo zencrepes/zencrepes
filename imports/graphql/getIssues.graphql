@@ -55,7 +55,7 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
             title
             url
           }
-          assignees(first: 4) {
+          assignees(first: 10) {
             totalCount
             edges {
               node {

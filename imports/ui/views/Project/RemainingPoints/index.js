@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import CustomCard from "../../../components/CustomCard/index.js";
 import ReposTreemap from './ReposTreemap.js';
+import {connect} from "react-redux";
 
 class RemainingPoints extends Component {
     constructor(props) {
@@ -37,9 +38,14 @@ class RemainingPoints extends Component {
                 headerFactTitle="Remaining points"
                 headerFactValue={openPoints + " Pts"}
             >
-                <ReposTreemap
-                    assignees={repartitionAssignees}
-                />
+                {openPoints > 0 ? (
+                    <ReposTreemap
+                        assignees={repartitionAssignees}
+                    />
+                ) : (
+                    <span>All tickets closed</span>
+                )}
+
             </CustomCard>
         );
     }
@@ -50,4 +56,9 @@ RemainingPoints.propTypes = {
     issues: PropTypes.array.isRequired,
 };
 
-export default RemainingPoints;
+const mapState = state => ({
+    issues: state.projectView.issues,
+    assignees: state.projectView.assignees,
+});
+
+export default connect(mapState, null)(RemainingPoints);

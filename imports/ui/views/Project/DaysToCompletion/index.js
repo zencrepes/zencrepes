@@ -87,7 +87,11 @@ class DaysToCompletion extends Component {
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
                 headerLegend="In business days, remaining points divided by current velocity. Using 4 weeks (4w) rolling average by default, this widget also provides metrics with an 8 weeks (8w), 12 weeks (12w), and all time (all) window."
             >
-                <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
+                {this.getTimeToCompletion(velocity.velocity) > 0 ? (
+                    <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
+                ) : (
+                    <span>All tickets closed</span>
+                )}
             </CustomCard>
         );
     }

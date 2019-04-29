@@ -31,7 +31,8 @@ import {
 export default {
     state: {
         query: {},
-        projects: [],
+        projects: [],                       // Array of projects
+        projectsIssues: [],                 // Array of projects issues, project issues are used to link the project to a milestone as well as to define team members
         sprints: [],
         showClosed: false,
         selectedSprintLabel: 'no-filter',
@@ -63,6 +64,7 @@ export default {
         columns: [],                      // Breakdown of issues by columns
 
         velocity: {},
+        velocityTeam: false,            // Velocity based only on team members
         burndown: {},
 
         autoRefreshEnable: false,       // Enable auto-refresh of repository issues
@@ -78,6 +80,7 @@ export default {
     reducers: {
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
         setProjects(state, payload) {return { ...state, projects: JSON.parse(JSON.stringify(payload)) };},
+        setProjectsIssues(state, payload) {return { ...state, projectsIssues: JSON.parse(JSON.stringify(payload)) };},
 
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setShowClosed(state, payload) {return { ...state, showClosed: payload };},
@@ -109,6 +112,7 @@ export default {
         setColumns(state, payload) {return { ...state, columns: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
+        setVelocityTeam(state, payload) {return { ...state, velocityTeam: payload };},
 
         setBurndown(state, payload) {return { ...state, burndown: payload };},
 
@@ -138,6 +142,10 @@ export default {
             if (projectArray[0] !== undefined) {
                 const projectName = projectArray[0];
                 identifiedProject = cfgProjects.find({'name': projectName}).fetch();
+
+                //Find activity cards
+                const activityIssues = cfgIssues.find({"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":[projectName]}}},"labels.edges":{"$elemMatch":{"node.name":{"$in":["Activity"]}}}}).fetch();
+                this.setProjectsIssues(activityIssues);
             }
             if (rootState.projectView.projects[0] !== undefined && identifiedProject[0].name !== rootState.projectView.projects[0].name) {
                 this.setSelectedSprintLabel('no-filter');
@@ -245,10 +253,32 @@ export default {
             this.setIssues(issues);
 
             // Create an array of assignees involved in a particular sprint
+            const primaryAssignees = rootState.projectView.projectsIssues.reduce((tally, issue) => {
+                if (issue.assignees.totalCount > 0) {
+                    issue.assignees.edges.forEach((assignee) => {
+                        tally[assignee.node.login] = assignee.node;
+                    })
+                }
+                return tally;
+            }, {});
+
             let assignees = getAssigneesRepartition(cfgIssues.find(rootState.projectView.query).fetch());
+
+            //Decorate with flag for members part of the core project team.
+            assignees = assignees.map((assignee) => {
+                return {
+                    ...assignee,
+                    core: (primaryAssignees[assignee.login] !== undefined ? true : false)
+                }
+            });
             this.setAssignees(assignees);
 
+
+            if (rootState.projectView.velocityTeam === true) {
+                assignees = assignees.filter(assignee => assignee.core === true);
+            }
             this.updateVelocity(assignees);
+
             this.updateBurndown(rootState.projectView.query);
 
             let labels = getLabelsRepartition(cfgIssues.find(rootState.projectView.query).fetch());
@@ -291,6 +321,16 @@ export default {
         async updateBurndown(currentSprintFilter, rootState) {
             const burndown = refreshBurndown(currentSprintFilter, cfgIssues, null, rootState.sprintsView.velocity);
             this.setBurndown(burndown);
+        },
+
+        async updateVelocityTeam(payload, rootState) {
+            this.setVelocityTeam(payload);
+
+            let assignees = rootState.projectView.assignees;
+            if (payload === true) {
+                assignees = assignees.filter(assignee => assignee.core === true);
+            }
+            this.updateVelocity(assignees);
         },
 
         async updateVelocity(assignees, rootState) {

@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 
 import CustomCard from '../../../components/CustomCard/index.js';
 import GaugeChart from './GaugeChart.js';
+import {connect} from "react-redux";
 
 class CurrentCompletion extends Component {
     constructor(props) {
@@ -63,7 +64,11 @@ CurrentCompletion.propTypes = {
     issues: PropTypes.array.isRequired,
 };
 
-export default CurrentCompletion;
+const mapState = state => ({
+    issues: state.projectView.issues,
+});
+
+export default connect(mapState, null)(CurrentCompletion);
 
 /*
                         <GaugeChart
