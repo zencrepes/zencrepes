@@ -108,7 +108,7 @@ class FetchOrgs extends Component {
             fetchPolicy: 'no-cache',
             errorPolicy: 'ignore',
         });
-        if (data.data.errors !== undefined && data.data.errors.length > 0) {
+        if (data.data !== undefined && data.data.errors !== undefined && data.data.errors.length > 0) {
             data.data.errors.forEach((error) => {
                 enqueueSnackbar(error.message, {
                     variant: 'warning',
@@ -174,7 +174,7 @@ class FetchOrgs extends Component {
                     catch (error) {
                         log.info(error);
                     }
-                    if (data.data.errors !== undefined && data.data.errors.length > 0) {
+                    if (data.data !== undefined && data.data.errors !== undefined && data.data.errors.length > 0) {
                         data.data.errors.forEach((error) => {
                             enqueueSnackbar(error.message, {
                                 variant: 'warning',
@@ -184,7 +184,7 @@ class FetchOrgs extends Component {
                     }
                     log.info(data);
                     log.info(OrgObj);
-                    if (data.data !== null && data.data !== undefined) {
+                    if (data.data !== undefined && data.data !== null) {
                         this.errorRetry = 0;
                         if (this.orgReposCount[OrgObj.id] === undefined) {
                             this.orgReposCount[OrgObj.id] = 0;
