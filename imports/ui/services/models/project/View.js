@@ -144,7 +144,8 @@ export default {
                 identifiedProject = cfgProjects.find({'name': projectName}).fetch();
 
                 //Find activity cards
-                const activityIssues = cfgIssues.find({"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":[projectName]}}},"labels.edges":{"$elemMatch":{"node.name":{"$in":["Activity"]}}}}).fetch();
+
+                const activityIssues = cfgIssues.find({"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":[projectName]}}},"labels.edges":{"$elemMatch":{"node.name":{"$in":[Meteor.settings.public.labels.activity_label]}}}}).fetch();
                 this.setProjectsIssues(activityIssues);
             }
             if (rootState.projectView.projects[0] !== undefined && identifiedProject[0].name !== rootState.projectView.projects[0].name) {
@@ -165,21 +166,21 @@ export default {
 
             cfgIssues.find(projectQuery).forEach((issue) => {
                 issue.labels.edges.map((label) => {
-                    if (Meteor.settings.public.sprint_prefix !== undefined) {
-                        let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
+                    if (Meteor.settings.public.labels.sprint_prefix !== undefined) {
+                        let sprintLabelFilter = RegExp(Meteor.settings.public.labels.sprint_prefix + '(.+)');
                         if (sprintLabelFilter.test(label.node.name)) {
                             if (sprintsValues[label.node.name] === undefined) {
-                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.sprint_prefix, '')};
+                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.labels.sprint_prefix, '')};
                             } else {
                                 sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
                             }
                         }
                     }
-                    if (Meteor.settings.public.phase_prefix !== undefined) {
-                        let sprintPhaseFilter = RegExp(Meteor.settings.public.phase_prefix + '(.+)');
+                    if (Meteor.settings.public.labels.phase_prefix !== undefined) {
+                        let sprintPhaseFilter = RegExp(Meteor.settings.public.labels.phase_prefix + '(.+)');
                         if (sprintPhaseFilter.test(label.node.name)) {
                             if (sprintsValues[label.node.name] === undefined) {
-                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.phase_prefix, '')};
+                                sprintsValues[label.node.name] = {name: label.node.name, issues: 1, increment: label.node.name.replace(Meteor.settings.public.labels.phase_prefix, '')};
                             } else {
                                 sprintsValues[label.node.name]['issues'] = sprintsValues[label.node.name]['issues'] + 1;
                             }
@@ -192,8 +193,8 @@ export default {
                 return {...label, display: label.name + ' (' + label.issues + ' issues)'}
             });
             // If one of the sprint label has a numerical value but gaps, the system will try to fill those.
-            if (Meteor.settings.public.sprint_prefix !== undefined) {
-                let sprintLabelFilter = RegExp(Meteor.settings.public.sprint_prefix + '(.+)');
+            if (Meteor.settings.public.labels.sprint_prefix !== undefined) {
+                let sprintLabelFilter = RegExp(Meteor.settings.public.labels.sprint_prefix + '(.+)');
                 const sprintsNumIncrement = sprintsValues.filter(label => sprintLabelFilter.test(label.name)).filter(label => Number.isInteger(parseInt(label.increment))).map(label => parseInt(label.increment));
                 if (sprintsNumIncrement.length > 0) {
                     const highestSprint = Math.max(...sprintsNumIncrement);
@@ -201,7 +202,7 @@ export default {
                         if (_.findIndex(sprintsValues.filter(label => sprintLabelFilter.test(label.name)), (label) => {
                             return label.increment === String(i);
                         }) === -1) {
-                            let labelName = Meteor.settings.public.sprint_prefix + i;
+                            let labelName = Meteor.settings.public.labels.sprint_prefix + i;
                             sprintsValues.push({
                                 name: labelName,
                                 issues: 0,
@@ -213,8 +214,8 @@ export default {
                 }
             }
 
-            if (Meteor.settings.public.phase_prefix !== undefined) {
-                let sprintPhaseFilter = RegExp(Meteor.settings.public.phase_prefix + '(.+)');
+            if (Meteor.settings.public.labels.phase_prefix !== undefined) {
+                let sprintPhaseFilter = RegExp(Meteor.settings.public.labels.phase_prefix + '(.+)');
                 const sprintsNumIncrement = sprintsValues.filter(label => sprintPhaseFilter.test(label.name)).filter(label => Number.isInteger(parseInt(label.increment))).map(label => parseInt(label.increment));
                 if (sprintsNumIncrement.length > 0) {
                     const highestSprint = Math.max(...sprintsNumIncrement);
@@ -222,7 +223,7 @@ export default {
                         if (_.findIndex(sprintsValues.filter(label => sprintPhaseFilter.test(label.name)), (label) => {
                             return label.increment === String(j);
                         }) === -1) {
-                            let labelName = Meteor.settings.public.phase_prefix + j;
+                            let labelName = Meteor.settings.public.labels.phase_prefix + j;
                             sprintsValues.push({
                                 name: labelName,
                                 issues: 0,

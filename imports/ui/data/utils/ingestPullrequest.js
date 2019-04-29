@@ -62,14 +62,14 @@ const ingestPullrequest = async (cfgPullrequests, pullrequestNode, repoNode, org
             if (pointsExp.test(currentLabel.node.name)) {
                 let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                 pullrequestObj['points'] = points;
-            } else if (Meteor.settings.public.effort !== undefined && Meteor.settings.public.effort[currentLabel.node.name] !== undefined && Number.isInteger(Meteor.settings.public.effort[currentLabel.node.name])) {
+            } else if (Meteor.settings.public.labels.effort !== undefined && Meteor.settings.public.labels.effort[currentLabel.node.name] !== undefined && Number.isInteger(Meteor.settings.public.labels.effort[currentLabel.node.name])) {
                 // Interesting edge case, if the label is actually named "constructor"
                 // Added this check: Number.isInteger(Meteor.settings.public.effort[currentLabel.node.name])
-                pullrequestObj['points'] = parseInt(Meteor.settings.public.effort[currentLabel.node.name]);
+                pullrequestObj['points'] = parseInt(Meteor.settings.public.labels.effort[currentLabel.node.name]);
                 /*
-                if (Meteor.settings.public.effort !== undefined) {
+                if (Meteor.settings.public.labels.effort !== undefined) {
                     const pointsLabel = pointsLabelExp.exec(currentLabel.node.name);
-                    const efforts = Meteor.settings.public.effort;
+                    const efforts = Meteor.settings.public.labels.effort;
                     if (efforts[pointsLabel.groups.name] !== undefined) {
                         pullrequestObj['points'] = efforts[pointsLabel.groups.name];
                     }

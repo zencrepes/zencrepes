@@ -231,7 +231,6 @@ const stringClean = (labelName) => {
     return String(labelName).replace(/[^a-z0-9+]+/gi, '').toLowerCase();
 };
 
-
 /*
 *
 * populateArrays() Initialize an object containing indices for all days between two dates
