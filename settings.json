@@ -4,16 +4,19 @@
       "Google Analytics" : {"trackingId": "GOOGLE_ANALYTICS"}
     },
     "menus": {},
-    "effort": {
-      "loe:x-small": 1,
-      "loe:small": 1,
-      "loe:medium": 3,
-      "loe:large": 7,
-      "loe:x-large": 15,
-      "loe:xx-large": 30
-    },
-    "sprint_prefix": "sprint:",
-    "phase_prefix": "phase:",    
+    "labels": {
+      "effort": {
+        "loe:x-small": 1,
+        "loe:small": 1,
+        "loe:medium": 3,
+        "loe:large": 7,
+        "loe:x-large": 15,
+        "loe:xx-large": 30
+      },
+      "sprint_prefix": "sprint:",
+      "phase_prefix": "phase:",
+      "activity_label": "Activity"
+    },  
     "data_version": 2    
   },
   "private": {
