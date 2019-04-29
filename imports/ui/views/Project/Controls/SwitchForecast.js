@@ -26,7 +26,7 @@ class SwitchForecast extends Component {
     };
 
     render() {
-        const { classes, velocityTeam } = this.props;
+        const { classes, velocityTeam, projectsIssues } = this.props;
 
         return (
             <Grid
@@ -46,6 +46,7 @@ class SwitchForecast extends Component {
                             checked={velocityTeam}
                             onChange={this.handleChange}
                             value="velocityTeam"
+                            disabled={projectsIssues.length > 0 ? false : true}
                         />
                         Project Team
                     </div>
@@ -58,12 +59,14 @@ class SwitchForecast extends Component {
 
 SwitchForecast.propTypes = {
     classes: PropTypes.object.isRequired,
+    projectsIssues: PropTypes.array.isRequired,
     velocityTeam: PropTypes.bool.isRequired,
     updateVelocityTeam: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     velocityTeam: state.projectView.velocityTeam,
+    projectsIssues: state.projectView.projectsIssues,
 });
 
 const mapDispatch = dispatch => ({
