@@ -23,6 +23,7 @@ import Milestones from "./Milestones/index.js";
 import Labels from "./Labels/index.js";
 import Columns from "./Columns/index.js";
 import Summary from "./Summary/index.js";
+import Controls from "./Controls/index.js";
 
 class Project extends Component {
     constructor(props) {
@@ -55,7 +56,6 @@ class Project extends Component {
     }
 
     render() {
-        const { issues, assignees, burndown, velocity, defaultPoints, projects } = this.props;
         return (
             <General>
                 <Actions />
@@ -68,8 +68,11 @@ class Project extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={12} sm={12} md={12}>
-                        <Summary projects={projects}/>
+                    <Grid item xs={12} sm={8} md={8}>
+                        <Summary />
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={4}>
+                        <Controls />
                     </Grid>
                 </Grid>
                 <Grid
@@ -80,15 +83,10 @@ class Project extends Component {
                     spacing={8}
                 >
                     <Grid item xs={12} sm={6} md={4}>
-                        <CurrentCompletion
-                            issues={issues}
-                        />
+                        <CurrentCompletion />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <RemainingPoints
-                            assignees={assignees}
-                            issues={issues}
-                        />
+                        <RemainingPoints />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                         <DaysToCompletion />
@@ -102,17 +100,10 @@ class Project extends Component {
                     spacing={8}
                 >
                     <Grid item xs={12} sm={6} md={6}>
-                        <Burndown
-                            burndown={burndown}
-                            defaultPoints={defaultPoints}
-                        />
+                        <Burndown />
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
-                        <VelocityWeeks
-                            velocity={velocity}
-                            defaultPoints={defaultPoints}
-                            assignees={assignees}
-                        />
+                        <VelocityWeeks />
                     </Grid>
                 </Grid>
                 <Grid
@@ -152,31 +143,15 @@ class Project extends Component {
 }
 
 Project.propTypes = {
-    assignees: PropTypes.array.isRequired,
-    issues: PropTypes.array.isRequired,
-    velocity: PropTypes.object.isRequired,
-    burndown: PropTypes.object.isRequired,
-    defaultPoints: PropTypes.bool.isRequired,
-
     initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
-    projects: PropTypes.array.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
-
-const mapState = state => ({
-    assignees: state.projectView.assignees,
-    issues: state.projectView.issues,
-    velocity: state.projectView.velocity,
-    burndown: state.projectView.burndown,
-    projects: state.projectView.projects,
-    defaultPoints: state.projectView.defaultPoints,
-});
 
 const mapDispatch = dispatch => ({
     initView: dispatch.projectView.initView,
     updateQuery: dispatch.projectView.updateQuery,
 });
 
-export default connect(mapState, mapDispatch)(withRouter(Project));
+export default connect(null, mapDispatch)(withRouter(Project));
 

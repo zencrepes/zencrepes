@@ -33,6 +33,9 @@ const styles = {
         height: 6,
         backgroundImage: 'linear-gradient(to right, rgb(43, 56, 143), rgb(92, 107, 192) 51%, rgb(121, 134, 203))',
     },
+    spacer: {
+        margin: '8px 0px 0px',
+    },
     headerTitle: {
         color: 'rgb(43, 56, 143)',
         fontWeight: 500,
@@ -83,37 +86,41 @@ class CustomCard extends Component {
         return (
             <Card className={classes.root}>
                 <div className={classes.liner}></div>
-                <CardContent className={classes.header}>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        {headerIcon !== undefined &&
+                {(headerTitle !== undefined && headerTitle !== "") ? (
+                    <CardContent className={classes.header}>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={8}
+                        >
+                            {headerIcon !== undefined &&
                             <Grid item>
                                 {headerIcon}
                             </Grid>
-                        }
-                        <Grid item xs={12} sm container>
-                            <h2 className={classes.headerTitle}>{headerTitle}</h2>
-                        </Grid>
-                        {headerFactTitle !== undefined &&
+                            }
+                            <Grid item xs={12} sm container>
+                                <h2 className={classes.headerTitle}>{headerTitle}</h2>
+                            </Grid>
+                            {headerFactTitle !== undefined &&
                             <Grid item className={classes.headerFact}>
                                 <div className={classes.headerFactTitle}>{headerFactTitle}</div>
                                 <div className={classes.headerFactValue}>{headerFactValue}</div>
                             </Grid>
-                        }
-                        {headerLegend !== undefined &&
+                            }
+                            {headerLegend !== undefined &&
                             <Grid item className={classes.headerFact}>
                                 <Tooltip title={headerLegend}>
-                                    <HelpIcon className={classes.helpIcon} />
+                                    <HelpIcon className={classes.helpIcon}/>
                                 </Tooltip>
                             </Grid>
-                        }
-                    </Grid>
-                </CardContent>
+                            }
+                        </Grid>
+                    </CardContent>
+                ) : (
+                    <div className={classes.spacer}></div>
+                )}
                 <CardContent className={classes.mainContent}>
                     {children}
                 </CardContent>

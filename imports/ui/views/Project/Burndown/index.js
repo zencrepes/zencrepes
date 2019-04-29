@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import CustomCard from '../../../components/CustomCard/index.js';
 import CombinationChart from './CombinationChart.js';
+import {connect} from "react-redux";
 
 class CurrentCompletion extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class CurrentCompletion extends Component {
         const { defaultPoints } = this.props;
         const dataset = this.buildDataset();
         let metric = 'points';
-        if (!defaultPoints) {metric = 'count';}
+        if (!defaultPoints) {metric = 'issues';}
 
         return (
             <CustomCard
@@ -57,4 +58,9 @@ CurrentCompletion.propTypes = {
     defaultPoints: PropTypes.bool.isRequired,
 };
 
-export default CurrentCompletion;
+const mapState = state => ({
+    burndown: state.projectView.burndown,
+    defaultPoints: state.projectView.defaultPoints,
+});
+
+export default connect(mapState, null)(CurrentCompletion);

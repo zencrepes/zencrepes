@@ -16,8 +16,8 @@ class CombinationChart extends Component {
     };
 
     clickBar = (event) => {
-        if (event.point.issues !== undefined && event.point.issues.length > 0) {
-            const issues = event.point.issues;
+        if (event.point.list !== undefined && event.point.list.length > 0) {
+            const issues = event.point.list;
             const issuesArrayQuery = issues.map(issue => issue.id);
             const query = {'id': {'$in': issuesArrayQuery}};
             this.props.history.push({
@@ -69,15 +69,24 @@ class CombinationChart extends Component {
             },
             series: [{
                 type: 'column',
-                name: 'Daily completion',
+                name: 'Completed',
                 data: dataset.map((day) => {
-                    if (day[metric].closed > 0) {
+                    if (day.completion[metric].closed - day.scopeChangeCompletion[metric].closed > 0) {
                         return {
-                            y: day[metric].closed,
-                            issues: day.issues,
+                            y: day.completion[metric].closed - day.scopeChangeCompletion[metric].closed,
+                            list: day.completion.list,
                         };
                     } else {
                         return 0;
+                    }
+                })
+            }, {
+                type: 'column',
+                name: 'Scope Change',
+                data: dataset.map((day) => {
+                    return {
+                        y: day.scopeChangeCompletion[metric].closed,
+                        list: day.scopeChangeCompletion.list,
                     }
                 })
             }, {
@@ -85,9 +94,9 @@ class CombinationChart extends Component {
                 name: 'Burndown',
                 data: dataset.map((day) => {
                     if (defaultPoints) {
-                        return day.points.remaining;
+                        return day.completion.points.remaining;
                     } else {
-                        return day.count.remaining;
+                        return day.completion.issues.remaining;
                     }
                 }),
                 marker: {

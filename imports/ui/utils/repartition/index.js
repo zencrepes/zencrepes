@@ -48,7 +48,7 @@ export const getAssigneesRepartition = (issues) => {
     });
     statesGroup = _.groupBy(allValues, (value) => value.assignee.login);
 
-    let assignees = []
+    let assignees = [];
     Object.keys(statesGroup).forEach(function(key) {
         assignees.push({
             ...statesGroup[key][0].assignee,
