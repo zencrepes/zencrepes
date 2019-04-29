@@ -43,7 +43,7 @@ class RemainingPoints extends Component {
                         assignees={repartitionAssignees}
                     />
                 ) : (
-                    <span>All tickets closed</span>
+                    <span>Data not available.</span>
                 )}
 
             </CustomCard>

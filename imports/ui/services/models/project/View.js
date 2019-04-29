@@ -144,12 +144,10 @@ export default {
                 identifiedProject = cfgProjects.find({'name': projectName}).fetch();
 
                 //Find activity cards
-
                 const activityIssues = cfgIssues.find({"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":[projectName]}}},"labels.edges":{"$elemMatch":{"node.name":{"$in":[Meteor.settings.public.labels.activity_label]}}}}).fetch();
                 this.setProjectsIssues(activityIssues);
             }
             if (rootState.projectView.projects[0] !== undefined && identifiedProject[0].name !== rootState.projectView.projects[0].name) {
-                this.setSelectedSprintLabel('no-filter');
                 this.setSelectedSprintLabel('no-filter');
             }
             this.setProjects(identifiedProject);
@@ -160,6 +158,18 @@ export default {
             //Go through all of the projects issues to find out if there are sprints.
             let sprintsValues = {};
             let projectQuery = {...rootState.projectView.query};
+
+
+            // Fetch sprint label (if any)
+            //"labels.edges":{"$elemMatch":{"node.name":{"$in":["phase:ga"]}}}}
+            const labelArray = _.get(rootState.projectView.query, ['labels.edges', '$elemMatch', 'node.name', '$in'], []);
+            if (labelArray.length > 0) {
+                this.setSelectedSprintLabel(labelArray[0]);
+            } else {
+                this.setSelectedSprintLabel('no-filter');
+            }
+
+
             if (projectQuery['labels.edges'] !== undefined) {
                 delete projectQuery['labels.edges'];
             }

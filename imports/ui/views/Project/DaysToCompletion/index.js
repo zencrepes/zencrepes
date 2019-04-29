@@ -90,7 +90,7 @@ class DaysToCompletion extends Component {
                 {this.getTimeToCompletion(velocity.velocity) > 0 ? (
                     <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
                 ) : (
-                    <span>All tickets closed</span>
+                    <span>Data not available.</span>
                 )}
             </CustomCard>
         );
