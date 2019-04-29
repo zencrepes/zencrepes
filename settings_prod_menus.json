@@ -3,5 +3,6 @@
   "sprints": true,
   "milestones": true,
   "labels": true,
-  "settings": true
+  "settings": true,
+  "projects": true
 }

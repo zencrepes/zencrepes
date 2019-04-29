@@ -6,6 +6,7 @@ import CustomCard from "../../../../../components/CustomCard/index.js";
 import ContributionsTable from './Table/index.js';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
+import {reactLocalStorage} from "reactjs-localstorage";
 
 class Assignees extends Component {
     constructor (props) {
@@ -151,21 +152,25 @@ class Assignees extends Component {
     render() {
         const { contributionsAssignees, defaultPoints, setUpdateQueryPath, setUpdateQuery } = this.props;
         const tableData = this.prepData(contributionsAssignees, defaultPoints);
-        return (
-            <CustomCard
-                headerTitle="Assignees"
-                headerFactTitle=""
-                headerFactValue=""
-                headerLegend="This table provides a view of closed issues within the past 4 weeks, broken down by project, by milestone and by area."
-            >
-                <ContributionsTable
-                    contributions={tableData}
-                    defaultPoints={defaultPoints}
-                    setUpdateQueryPath={setUpdateQueryPath}
-                    setUpdateQuery={setUpdateQuery}
-                />
-            </CustomCard>
-        );
+        if (JSON.parse(reactLocalStorage.get('feat-contrib', false))) {
+            return (
+                <CustomCard
+                    headerTitle="Assignees"
+                    headerFactTitle=""
+                    headerFactValue=""
+                    headerLegend="This table provides a view of closed issues within the past 4 weeks, broken down by project, by milestone and by area."
+                >
+                    <ContributionsTable
+                        contributions={tableData}
+                        defaultPoints={defaultPoints}
+                        setUpdateQueryPath={setUpdateQueryPath}
+                        setUpdateQuery={setUpdateQuery}
+                    />
+                </CustomCard>
+            );
+        } else {
+            return null;
+        }
     }
 }
 
