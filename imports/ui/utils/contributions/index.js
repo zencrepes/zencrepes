@@ -8,7 +8,7 @@ import subDays from 'date-fns/subDays';
 * Arguments:
 * - issues: Array of issues
 */
-export const refreshAssigneesContributions = (issues) => {
+export const refreshAssigneesContributions = (issues, area_prefix) => {
     //Build an array of days corresponding to the interval
     //let firstDay = formatDate(firstIssue.closedAt);
     let firstDay = formatDate(subDays(new Date(), 28));
@@ -115,7 +115,7 @@ export const refreshAssigneesContributions = (issues) => {
                 if (issue.labels.totalCount > 0) {
                     let areaFound = 0;
                     issue.labels.edges.forEach((label) => {
-                        if (label.node.name.slice(0, 5) === 'area:') {
+                        if (label.node.name.slice(0, 5) === area_prefix) {
                             areaFound = 1;
                             if (tally[assignee.node.login]['areas'][label.node.name] === undefined) {
                                 tally[assignee.node.login]['areas'][label.node.name] = {
@@ -265,12 +265,12 @@ export const refreshProjectsContributions = (issues) => {
 * Arguments:
 * - issues: Array of issues
 */
-export const refreshAreasContributions = (issues) => {
+export const refreshAreasContributions = (issues, area_prefix) => {
     const dataObject = issues.reduce((tally, issue) => {
         if (issue.labels.totalCount > 0) {
             let areaFound = 0;
             issue.labels.edges.forEach((label) => {
-                if (label.node.name.slice(0, 5) === 'area:') {
+                if (label.node.name.slice(0, 5) === area_prefix) {
                     areaFound = 1;
                     if (tally[label.node.name] === undefined) {
                         tally[label.node.name] = {

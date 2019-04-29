@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Meteor } from 'meteor/meteor';
 
 import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 
@@ -189,7 +190,7 @@ export default {
             const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 28).toISOString(), rootState.issuesView.query);
             const issues = cfgIssues.find(modifiedQuery).fetch();
 
-            const assigneesContributions = refreshAssigneesContributions(issues);
+            const assigneesContributions = refreshAssigneesContributions(issues, Meteor.settings.public.labels.area_prefix);
             //console.log(contributions);
             this.setContributionsAssignees(assigneesContributions);
 
@@ -199,7 +200,7 @@ export default {
             const projectsContributions = refreshProjectsContributions(issues);
             this.setContributionsProjects(projectsContributions);
 
-            const areasContributions = refreshAreasContributions(issues);
+            const areasContributions = refreshAreasContributions(issues, Meteor.settings.public.labels.area_prefix);
             this.setContributionsAreas(areasContributions);
 
             var t1 = performance.now();
