@@ -32,6 +32,10 @@ const ingestIssue = async (cfgIssues, issueNode, repoNode, orgNode) => {
             if (pointsExp.test(currentLabel.node.name)) {
                 let points = parseInt(currentLabel.node.name.replace('SP:', ''));
                 issueObj['points'] = points;
+            }
+            else if (pointsExp.test(currentLabel.node.description)) {
+                let points = parseInt(currentLabel.node.description.replace('SP:', ''));
+                issueObj['points'] = points;
             } else if (Meteor.settings.public.effort !== undefined && Meteor.settings.public.effort[currentLabel.node.name] !== undefined && Number.isInteger(Meteor.settings.public.effort[currentLabel.node.name])) {
                 // Interesting edge case, if the label is actually named "constructor"
                 // Added this check: Number.isInteger(Meteor.settings.public.effort[currentLabel.node.name])
