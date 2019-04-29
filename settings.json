@@ -15,7 +15,8 @@
       },
       "sprint_prefix": "sprint:",
       "phase_prefix": "phase:",
-      "activity_label": "Activity"
+      "activity_label": "Activity",
+      "area_prefix": "area:"
     },  
     "data_version": 2    
   },
