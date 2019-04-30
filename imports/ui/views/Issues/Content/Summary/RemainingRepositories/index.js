@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 
-import ReposTreemap from "./ReposTreemap";
+import IssuesTree from "../../../../../components/Charts/Nivo/IssuesTree.js";
+import {connect} from "react-redux";
 
 class RemainingWork extends Component {
     constructor (props) {
@@ -11,11 +12,11 @@ class RemainingWork extends Component {
     }
 
     getDefaultRemaining() {
-        const { defaultPoints, remainingWorkPoints, remainingWorkCount } = this.props;
+        const { defaultPoints, remainingWorkRepos } = this.props;
         if (defaultPoints) {
-            return remainingWorkPoints;
+            return remainingWorkRepos.map(r => r.points).reduce((acc, points) => acc + points, 0);
         } else {
-            return remainingWorkCount;
+            return remainingWorkRepos.map(r => r.issues.length).reduce((acc, count) => acc + count, 0);
         }
     }
 
@@ -41,21 +42,28 @@ class RemainingWork extends Component {
 
         return (
             <CustomCard
-                headerTitle="Remaining work distribution"
+                headerTitle="Remaining by Repository"
                 headerFactTitle={"Remaining " + this.getDefaultRemainingTxt()}
                 headerFactValue={this.getDefaultRemaining() + " " + this.getDefaultRemainingTxtShrt()}
             >
-                <ReposTreemap repos={remainingWorkRepos} defaultPoints={defaultPoints}/>
+                <IssuesTree
+                    dataset={remainingWorkRepos}
+                    defaultPoints={defaultPoints}
+                    emptyName="Repositories"
+                />
             </CustomCard>
         );
     }
 }
 
 RemainingWork.propTypes = {
-    remainingWorkRepos: PropTypes.array.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
-    remainingWorkPoints: PropTypes.number.isRequired,
-    remainingWorkCount: PropTypes.number.isRequired,
+    remainingWorkRepos: PropTypes.array.isRequired,
 };
 
-export default RemainingWork;
+const mapState = state => ({
+    defaultPoints: state.issuesView.defaultPoints,
+    remainingWorkRepos: state.issuesView.remainingWorkRepos,
+});
+
+export default connect(mapState, null)(RemainingWork);

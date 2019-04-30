@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from '../../../components/CustomCard/index.js';
-import CombinationChart from './CombinationChart.js';
+import BurndownChart from '../../../components/Charts/Highcharts/BurndownChart.js';
 import {connect} from "react-redux";
 
 class CurrentCompletion extends Component {
@@ -42,7 +42,7 @@ class CurrentCompletion extends Component {
                 headerLegend="This chart displays the burndown as well as closed issues per day. Start and End date of the chart are based on first closed and last closed issues."
             >
                 <React.Fragment>
-                    <CombinationChart
+                    <BurndownChart
                         dataset={dataset}
                         defaultPoints={defaultPoints}
                         metric={metric}

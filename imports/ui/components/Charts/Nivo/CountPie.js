@@ -74,7 +74,9 @@ class StatsCharts extends Component {
                 innerRadius={0.6}
                 padAngle={0.7}
                 cornerRadius={2}
-                colors="nivo"
+                colors={{
+                    "scheme": "pastel1"
+                }}
                 colorBy={function(e){return e.color}}
                 borderWidth={1}
                 borderColor="inherit:darker(0.2)"
@@ -93,76 +95,6 @@ class StatsCharts extends Component {
                 motionStiffness={90}
                 motionDamping={15}
                 isInteractive={false}
-                defs={[
-                    {
-                        "id": "dots",
-                        "type": "patternDots",
-                        "background": "inherit",
-                        "color": "rgba(255, 255, 255, 0.3)",
-                        "size": 4,
-                        "padding": 1,
-                        "stagger": true
-                    },
-                    {
-                        "id": "lines",
-                        "type": "patternLines",
-                        "background": "inherit",
-                        "color": "rgba(255, 255, 255, 0.3)",
-                        "rotation": -45,
-                        "lineWidth": 6,
-                        "spacing": 10
-                    }
-                ]}
-                fill={[
-                    {
-                        "match": {
-                            "id": "ruby"
-                        },
-                        "id": "dots"
-                    },
-                    {
-                        "match": {
-                            "id": "c"
-                        },
-                        "id": "dots"
-                    },
-                    {
-                        "match": {
-                            "id": "go"
-                        },
-                        "id": "dots"
-                    },
-                    {
-                        "match": {
-                            "id": "python"
-                        },
-                        "id": "dots"
-                    },
-                    {
-                        "match": {
-                            "id": "scala"
-                        },
-                        "id": "lines"
-                    },
-                    {
-                        "match": {
-                            "id": "lisp"
-                        },
-                        "id": "lines"
-                    },
-                    {
-                        "match": {
-                            "id": "elixir"
-                        },
-                        "id": "lines"
-                    },
-                    {
-                        "match": {
-                            "id": "javascript"
-                        },
-                        "id": "lines"
-                    }
-                ]}
             />
                 <div className={classes.overlay}>
                     <span className={classes.totalLabel}>{title}</span>

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
-import {getWeekYear} from "../../../utils/velocity/index";
-import CustomCard from '../../../components/CustomCard/index.js';
-import VelocityChart from '../../../components/Charts/Highcharts/VelocityChart.js';
+import {getWeekYear} from "../../../../../utils/velocity/index";
 
-//import CombinationChart from "./CombinationChart.js";
-
+import CustomCard from "../../../../../components/CustomCard/index.js";
+import VelocityChart from '../../../../../components/Charts/Highcharts/VelocityChart.js';
 import {connect} from "react-redux";
 
 class VelocityWeeks extends Component {
@@ -77,7 +75,7 @@ class VelocityWeeks extends Component {
     }
 
     render() {
-        const { defaultPoints, assignees, velocityTeam } = this.props;
+        const { defaultPoints } = this.props;
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
@@ -87,39 +85,24 @@ class VelocityWeeks extends Component {
                 headerTitle="Week velocity over 16 weeks"
                 headerFactTitle="Completed this week"
                 headerFactValue={this.getThisWeekCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
-                headerLegend="This chart is the combined rolling average (4 weeks) velocity of all people assigned to a ticket (see table widget below), but without consideration to their respective project. This (on purpose) assumes people are dedicated to the project."
             >
                 <VelocityChart
                     dataset={dataset}
                     metric={metric}
                 />
-                {(assignees !== undefined && assignees.length > 0) &&
-                    <i>Combined velocity of&nbsp;
-                        {velocityTeam === true ? (
-                            <a href="#assignees-table">{assignees.filter(assignee => assignee.core === true).length} project team members</a>
-                        ) : (
-                            <a href="#assignees-table">{assignees.length} assignees</a>
-                        )}
-                        &nbsp;across all of their closed issues.</i>
-                }
             </CustomCard>
         );
     }
 }
 
 VelocityWeeks.propTypes = {
-    dataset: PropTypes.array,
-    assignees: PropTypes.array,
     defaultPoints: PropTypes.bool,
     velocity: PropTypes.object,
-    velocityTeam: PropTypes.bool,
 };
 
 const mapState = state => ({
-    assignees: state.projectView.assignees,
-    velocity: state.projectView.velocity,
-    velocityTeam: state.projectView.velocityTeam,
-    defaultPoints: state.projectView.defaultPoints,
+    defaultPoints: state.issuesView.defaultPoints,
+    velocity: state.issuesView.velocity,
 });
 
 export default connect(mapState, null)(VelocityWeeks);

@@ -5,7 +5,9 @@ import {connect} from "react-redux";
 import Grid from '@material-ui/core/Grid';
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import PieChart from '../../../../../components/Charts/PieChart.js';
+//import PieChart from '../../../../../components/Charts/PieChart.js';
+import IssuesPie from '../../../../../components/Charts/ChartJS/IssuesPie.js';
+
 
 import Moment from 'react-moment';
 import {reactLocalStorage} from "reactjs-localstorage";
@@ -79,7 +81,7 @@ class Summary extends Component {
 
                         </Grid>
                         <Grid item xs={6} sm={6} md={6}>
-                            <PieChart
+                            <IssuesPie
                                 dataset={stats}
                             />
                         </Grid>

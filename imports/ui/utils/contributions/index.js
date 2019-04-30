@@ -220,7 +220,16 @@ export const refreshMilestonesContributions = (issues) => {
     }, {empty: {milestone: null, total: {issues: 0, points: 0, list: []}}});
     //Convert dataObject to array
     let dataArray = Object.values(dataObject);
-    return dataArray;
+    return dataArray.map((d) => {
+        let name = 'NO MILESTONE';
+        if (d.milestone !== null) {name = d.milestone.title;}
+        return {
+            name: name,
+            count: d.total.issues,
+            points: d.total.points,
+            issues: d.total.list
+        }
+    });
 };
 
 /*
@@ -255,7 +264,16 @@ export const refreshProjectsContributions = (issues) => {
     }, {empty: {project: null, total: {issues: 0, points: 0, list: []}}});
     //Convert dataObject to array
     let dataArray = Object.values(dataObject);
-    return dataArray;
+    return dataArray.map((d) => {
+        let name = 'NO PROJET';
+        if (d.project !== null) {name = d.project.name;}
+        return {
+            name: name,
+            count: d.total.issues,
+            points: d.total.points,
+            issues: d.total.list
+        }
+    });
 };
 
 /*
@@ -295,7 +313,16 @@ export const refreshAreasContributions = (issues, area_prefix) => {
     }, {empty: {label: null, total: {issues: 0, points: 0, list: []}}});
     //Convert dataObject to array
     let dataArray = Object.values(dataObject);
-    return dataArray;
+    return dataArray.map((d) => {
+        let name = 'NO AREA';
+        if (d.label !== null) {name = d.label.name;}
+        return {
+            name: name,
+            count: d.total.issues,
+            points: d.total.points,
+            issues: d.total.list
+        }
+    });
 };
 
 /*

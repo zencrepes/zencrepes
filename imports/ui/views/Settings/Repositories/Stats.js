@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 
 import Grid from "@material-ui/core/Grid/Grid";
-import StatsCharts from './StatsCharts/index.js';
+import CountPie from '../../../components/Charts/Nivo/CountPie.js';
 
 const styles = {
     root: {
@@ -63,49 +63,49 @@ class Stats extends Component {
 
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={orgCountSelected}
                         total={orgCountTotal}
                         title="Orgs"
                     />
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={selectedRepos.length}
                         total={availableRepos.length}
                         title="Repos"
                     />
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={issuesCountSelected}
                         total={issuesCountTotal}
                         title="Issues"
                     />
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={pullrequestsCountSelected}
                         total={pullrequestsCountTotal}
                         title="Pullrequests"
                     />
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={milestonesCountSelected}
                         total={milestonesCountTotal}
                         title="Milestones"
                     />
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={labelsCountSelected}
                         total={labelsCountTotal}
                         title="Labels"
                     />
                 </Grid>
                 <Grid item className={classes.pieHeight}>
-                    <StatsCharts
+                    <CountPie
                         selected={projectsCountSelected}
                         total={projectsCountTotal}
                         title="Projects"

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import MsTreemap from './MsTreemap.js';
+import IssuesTree from '../../../../../components/Charts/Nivo/IssuesTree.js';
+
 import {connect} from "react-redux";
 
 class FacetsTree extends Component {
@@ -51,9 +52,9 @@ class FacetsTree extends Component {
                     headerLegend="This chart is automatically built from facets data on the left panel"
                 >
                     {facet.values.length > 0 ? (
-                        <MsTreemap
+                        <IssuesTree
                             dataset={dataset}
-                            facetName={facet.name}
+                            emptyName={facet.name}
                             setUpdateQueryPath={setUpdateQueryPath}
                             setUpdateQuery={setUpdateQuery}
                             defaultPoints={defaultPoints}

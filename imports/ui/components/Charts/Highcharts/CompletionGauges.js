@@ -6,7 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
 
-class GaugeChart extends Component {
+class CompletionGauges extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -119,10 +119,10 @@ class GaugeChart extends Component {
     }
 }
 
-GaugeChart.propTypes = {
+CompletionGauges.propTypes = {
     title: PropTypes.string.isRequired,
     completed: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
 };
 
-export default GaugeChart;
+export default CompletionGauges;

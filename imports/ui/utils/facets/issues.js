@@ -168,7 +168,7 @@ const buildFacetValues = (query, cfgIssues, facet) => {
         .map(([name, content]) => {
             return {
                 name: name,
-                issues: Object.values(content),
+                issues: Object.values(content).map(issue => issue.issue),
                 count: Object.values(content).length,
                 points: Object.values(content).map((node) => {
                     if (node.issue !== undefined) { return node.issue.points;}

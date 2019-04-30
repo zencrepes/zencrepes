@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import Paper from '@material-ui/core/Paper';
 import uuidv1 from "uuid/v1";
 
-import VelocityChart from './Chart.js';
+import VelocityOverallChart from '../../../../components/Charts/Highcharts/VelocityOverallChart.js';
 
 class Velocity extends Component {
     constructor (props) {
@@ -47,7 +47,7 @@ class Velocity extends Component {
 
         return (
             <Paper elevation={1}>
-                <VelocityChart data={this.getVelocityHighcharts(dataset)} />
+                <VelocityOverallChart data={this.getVelocityHighcharts(dataset)} />
             </Paper>
         );
     }

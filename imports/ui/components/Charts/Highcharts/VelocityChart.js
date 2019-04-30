@@ -5,7 +5,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {withRouter} from "react-router-dom";
 
-class StackedBar extends Component {
+class VelocityChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -21,75 +21,29 @@ class StackedBar extends Component {
             const issuesArrayQuery = issues.map(issue => issue.id);
             const query = {'id': {'$in': issuesArrayQuery}};
             this.props.history.push({
-                pathname: '/pullrequests',
+                pathname: '/issues',
                 search: '?q=' + JSON.stringify(query),
                 state: { detail: query }
             });
         }
     };
 
-    /*
-    formatTooltip = (tooltip) => {
-        console.log(tooltip);
-    };
-    */
     render() {
         const { dataset, metric } = this.props;
-        const stackedColumns = dataset.templateDict.map((template) => {
-            return {
-                type: 'line',
-                name: template,
-                data: dataset.weeks.map((week) => {
-                    let currentCount = 0;
-                    if (week.templates[template] !== undefined) {
-                        currentCount = week.templates[template].count
-                    }
-                    return {
-                        y: currentCount,
-                        issues: week.PRs,
-                    };
-                })
-            }
-        });
-
-        stackedColumns.push({
-            type: 'line',
-            name: 'NO TEMPLATE',
-            data: dataset.weeks.map((week) => {
-                let noTemplateCount = 0;
-                if (week.templateCount['0'] !== undefined) {
-                    noTemplateCount = week.templateCount['0'].count;
-                }
-                return {
-                    y: noTemplateCount,
-                    issues: week.PRs,
-                };
-            })
-        });
-
-        stackedColumns.push({
-            type: 'line',
-            name: 'Overall PR Creation',
-            data: dataset.weeks.map((week) => {
-                return {
-                    y: week.totalPRCount,
-                    issues: week.PRs,
-                };
-            })
-        });
-
         let updatedOptions = {
             chart: {
-                height: 400,
-                zoomType: 'x'
+                height: 300,
             },
             title: null,
             xAxis: {
-                categories: dataset.weeks.map(week => new Date(week.weekStart)),
+                categories: dataset.map(pt => new Date(pt.date)),
                 type: 'datetime',
                 labels: {
                     format: '{value:%b. %e}'
                 },
+            },
+            rangeSelector: {
+                selected: 1
             },
             tooltip: {
                 //formatter: this.formatTooltip
@@ -99,25 +53,15 @@ class StackedBar extends Component {
                 },
             },
             yAxis: {
-                title: metric,
-                /*
-                stackLabels: {
-                    enabled: true,
-                    style: {
-                        fontWeight: 'bold',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                    }
-                }*/
+                title: metric
             },
             plotOptions: {
                 column: {
                     stacking: 'normal',
-                    /*
                     dataLabels: {
                         enabled: true,
                         color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
                     }
-                    */
                 },
                 series: {
                     pointPadding: 0,
@@ -127,21 +71,47 @@ class StackedBar extends Component {
                     }
                 }
             },
-
-            series: stackedColumns,
-
-/*
             series: [{
                 type: 'column',
-                name: 'Opened',
-                data: dataset.weeks.map((week) => {
-                    return {
-                        y: week.totalPRCount,
-                        issues: week.PRs,
-                    };
+                name: 'Completed',
+                data: dataset.map((pt) => {
+                    if (pt.completion[metric].count - pt.scopeChangeCompletion[metric].count > 0) {
+                        return {
+                            y: pt.completion[metric].count - pt.scopeChangeCompletion[metric].count,
+                            issues: pt.completion.list,
+                        };
+                    } else {
+                        return 0;
+                    }
                 })
+            }, {
+                type: 'column',
+                name: 'Scope Change',
+                data: dataset.map((pt) => {
+                    return {
+                        y: pt.scopeChangeCompletion[metric].count,
+                        issues: pt.scopeChangeCompletion.list,
+                    }
+                })
+            }, {
+                type: 'spline',
+                name: 'Velocity',
+                data: dataset.map(pt => pt.completion[metric].velocity),
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[3],
+                    fillColor: 'white'
+                }
+            }, {
+                type: 'spline',
+                name: 'SC Evo.',
+                data: dataset.map(pt => pt.scopeChangeCompletion[metric].velocity),
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[4],
+                    fillColor: 'white'
+                }
             }],
-*/
             credits: {
                 enabled: false
             }
@@ -157,13 +127,13 @@ class StackedBar extends Component {
     }
 }
 
-StackedBar.propTypes = {
+VelocityChart.propTypes = {
     classes: PropTypes.object,
     completed: PropTypes.number,
     max: PropTypes.number,
     history: PropTypes.object,
-    dataset: PropTypes.object,
+    dataset: PropTypes.array,
     metric: PropTypes.string,
 };
 
-export default withRouter(StackedBar);
+export default withRouter(VelocityChart);

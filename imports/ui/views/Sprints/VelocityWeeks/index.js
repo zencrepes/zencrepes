@@ -5,8 +5,6 @@ import {getWeekYear} from "../../../utils/velocity/index";
 import CustomCard from '../../../components/CustomCard/index.js';
 import VelocityChart from '../../../components/Charts/Highcharts/VelocityChart.js';
 
-//import CombinationChart from "./CombinationChart.js";
-
 import {connect} from "react-redux";
 
 class VelocityWeeks extends Component {
@@ -77,7 +75,7 @@ class VelocityWeeks extends Component {
     }
 
     render() {
-        const { defaultPoints, assignees, velocityTeam } = this.props;
+        const { defaultPoints, assignees } = this.props;
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
 
@@ -94,13 +92,7 @@ class VelocityWeeks extends Component {
                     metric={metric}
                 />
                 {(assignees !== undefined && assignees.length > 0) &&
-                    <i>Combined velocity of&nbsp;
-                        {velocityTeam === true ? (
-                            <a href="#assignees-table">{assignees.filter(assignee => assignee.core === true).length} project team members</a>
-                        ) : (
-                            <a href="#assignees-table">{assignees.length} assignees</a>
-                        )}
-                        &nbsp;across all of their closed issues.</i>
+                    <i>Combined velocity of&nbsp; <a href="#assignees-table">{assignees.length} assignees</a> &nbsp;across all of their closed issues.</i>
                 }
             </CustomCard>
         );
@@ -108,18 +100,15 @@ class VelocityWeeks extends Component {
 }
 
 VelocityWeeks.propTypes = {
-    dataset: PropTypes.array,
     assignees: PropTypes.array,
     defaultPoints: PropTypes.bool,
     velocity: PropTypes.object,
-    velocityTeam: PropTypes.bool,
 };
 
 const mapState = state => ({
-    assignees: state.projectView.assignees,
-    velocity: state.projectView.velocity,
-    velocityTeam: state.projectView.velocityTeam,
-    defaultPoints: state.projectView.defaultPoints,
+    assignees: state.sprintsView.assignees,
+    velocity: state.sprintsView.velocity,
+    defaultPoints: state.sprintsView.defaultPoints,
 });
 
 export default connect(mapState, null)(VelocityWeeks);

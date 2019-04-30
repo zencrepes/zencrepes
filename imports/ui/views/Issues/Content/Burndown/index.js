@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import Paper from '@material-ui/core/Paper';
 import uuidv1 from "uuid/v1";
 
-import BurndownChart from './Chart.js';
+import BurndownOverallChart from '../../../../components/Charts/Highcharts/BurndownOverallChart.js';
 
 class Burndown extends Component {
     constructor (props) {
@@ -52,7 +52,7 @@ class Burndown extends Component {
     render() {
         return (
             <Paper elevation={1}>
-                <BurndownChart data={this.getVelocityHighcharts()} />
+                <BurndownOverallChart data={this.getVelocityHighcharts()} />
             </Paper>
         );
     }

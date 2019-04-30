@@ -190,6 +190,7 @@ export const initObject = (firstDay, lastDay) => {
             initObject['weeks'][currentWeekYear] = {
                 //weekStart: currentDate.toJSON(),
                 weekStart: currentWeekYear.toJSON(),
+                date: currentWeekYear.toJSON(),
                 completion: {
                     issues: {count: 0, velocity: 0},
                     points: {count: 0, velocity: 0},

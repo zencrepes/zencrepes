@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 
-class VelocityChart extends Component {
+class VelocityOverallChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -55,8 +55,8 @@ class VelocityChart extends Component {
     }
 }
 
-VelocityChart.propTypes = {
+VelocityOverallChart.propTypes = {
     data: PropTypes.array.isRequired,
 };
 
-export default VelocityChart;
+export default VelocityOverallChart;

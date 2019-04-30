@@ -1,9 +1,11 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import VelocityBarHorizontal from "./VelocityBarHorizontal.js";
+import DaysToCompletionBars from "../../../../../components/Charts/Nivo/DaysToCompletionBars.js";
+import {connect} from "react-redux";
 
 class DaysToCompletion extends Component {
     constructor (props) {
@@ -77,22 +79,32 @@ class DaysToCompletion extends Component {
     }
 
     render() {
-        const { velocity } = this.props;
+        const { velocity, defaultPoints } = this.props;
         return (
             <CustomCard
-                headerTitle="Remaining work"
+                headerTitle="Forecast"
                 headerFactTitle="Days to Completion"
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
             >
-                <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
+                {!_.isEmpty(velocity) ? (
+                    <DaysToCompletionBars velocity={velocity.velocity} defaultPoints={defaultPoints} />
+                ) : (
+                    <span>No Data available</span>
+                )}
             </CustomCard>
         );
     }
 }
+//                <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
 
 DaysToCompletion.propTypes = {
     velocity: PropTypes.object.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
 };
 
-export default DaysToCompletion;
+const mapState = state => ({
+    defaultPoints: state.issuesView.defaultPoints,
+    velocity: state.issuesView.velocity,
+});
+
+export default connect(mapState, null)(DaysToCompletion);

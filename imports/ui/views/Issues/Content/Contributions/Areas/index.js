@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import MsTreemap from './MsTreemap.js';
+import IssuesTree from '../../../../../components/Charts/Nivo/IssuesTree.js';
+
 import {connect} from "react-redux";
 
 class Milestones extends Component {
@@ -11,8 +12,7 @@ class Milestones extends Component {
     }
 
     render() {
-        const { contributionsAreas, defaultPoints, setUpdateQueryPath, setUpdateQuery } = this.props;
-
+        const { contributionsAreas, defaultPoints } = this.props;
         return (
             <CustomCard
                 headerTitle="Areas"
@@ -21,10 +21,9 @@ class Milestones extends Component {
                 headerLegend="Repartition of effort per area over the past 4 weeks"
             >
                 {contributionsAreas.length > 0 ? (
-                    <MsTreemap
+                    <IssuesTree
                         dataset={contributionsAreas}
-                        setUpdateQueryPath={setUpdateQueryPath}
-                        setUpdateQuery={setUpdateQuery}
+                        emptyName="Area"
                         defaultPoints={defaultPoints}
                     />
                 ): (
@@ -39,8 +38,6 @@ class Milestones extends Component {
 Milestones.propTypes = {
     contributionsAreas: PropTypes.array.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
-    setUpdateQueryPath: PropTypes.func.isRequired,
-    setUpdateQuery: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -48,9 +45,4 @@ const mapState = state => ({
     defaultPoints: state.issuesView.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-    setUpdateQueryPath: dispatch.global.setUpdateQueryPath,
-    setUpdateQuery: dispatch.global.setUpdateQuery,
-});
-
-export default connect(mapState, mapDispatch)(Milestones);
+export default connect(mapState, null)(Milestones);

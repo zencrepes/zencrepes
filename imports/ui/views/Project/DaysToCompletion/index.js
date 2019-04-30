@@ -1,9 +1,11 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
 
-import VelocityBarHorizontal from "../../../components/Charts/VelocityBarHorizontal";
+import DaysToCompletionBars from "../../../components/Charts/Nivo/DaysToCompletionBars.js";
+
 import CustomCard from "../../../components/CustomCard/index.js";
 
 class DaysToCompletion extends Component {
@@ -87,10 +89,10 @@ class DaysToCompletion extends Component {
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
                 headerLegend="In business days, remaining points divided by current velocity. Using 4 weeks (4w) rolling average by default, this widget also provides metrics with an 8 weeks (8w), 12 weeks (12w), and all time (all) window."
             >
-                {this.getTimeToCompletion(velocity.velocity) > 0 ? (
-                    <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
+                {!_.isEmpty(velocity) ? (
+                    <DaysToCompletionBars velocity={velocity.velocity} defaultPoints={true} />
                 ) : (
-                    <span>Data not available.</span>
+                    <span>No Data available</span>
                 )}
             </CustomCard>
         );

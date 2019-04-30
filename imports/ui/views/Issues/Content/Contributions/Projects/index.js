@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import MsTreemap from './MsTreemap.js';
+import IssuesTree from '../../../../../components/Charts/Nivo/IssuesTree.js';
 import {connect} from "react-redux";
 
 class Projects extends Component {
@@ -11,8 +11,7 @@ class Projects extends Component {
     }
 
     render() {
-        const { contributionsProjects, defaultPoints, setUpdateQueryPath, setUpdateQuery } = this.props;
-
+        const { contributionsProjects, defaultPoints } = this.props;
         return (
             <CustomCard
                 headerTitle="Projects"
@@ -21,11 +20,10 @@ class Projects extends Component {
                 headerLegend="Repartition of effort per project over the past 4 weeks"
             >
                 {contributionsProjects.length > 0 ? (
-                    <MsTreemap
+                    <IssuesTree
                         dataset={contributionsProjects}
-                        setUpdateQueryPath={setUpdateQueryPath}
-                        setUpdateQuery={setUpdateQuery}
                         defaultPoints={defaultPoints}
+                        emptyName="Projects"
                     />
                 ): (
                     <span>No data available</span>
@@ -39,8 +37,6 @@ class Projects extends Component {
 Projects.propTypes = {
     contributionsProjects: PropTypes.array.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
-    setUpdateQueryPath: PropTypes.func.isRequired,
-    setUpdateQuery: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -48,9 +44,4 @@ const mapState = state => ({
     defaultPoints: state.issuesView.defaultPoints,
 });
 
-const mapDispatch = dispatch => ({
-    setUpdateQueryPath: dispatch.global.setUpdateQueryPath,
-    setUpdateQuery: dispatch.global.setUpdateQuery,
-});
-
-export default connect(mapState, mapDispatch)(Projects);
+export default connect(mapState, null)(Projects);

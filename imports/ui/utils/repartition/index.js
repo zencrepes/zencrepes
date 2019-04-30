@@ -54,7 +54,8 @@ export const getAssigneesRepartition = (issues) => {
             ...statesGroup[key][0].assignee,
             issues: {
                 list: statesGroup[key],
-                count: statesGroup[key].length
+                count: statesGroup[key].length,
+                points: statesGroup[key].map(issue => issue.points). reduce((acc, count) => acc + count, 0)
             },
             points: {
                 count: statesGroup[key].map(issue => issue.points). reduce((acc, count) => acc + count, 0)

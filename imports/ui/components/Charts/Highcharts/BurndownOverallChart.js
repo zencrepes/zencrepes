@@ -13,7 +13,7 @@ import {
 */
 import PropTypes from "prop-types";
 
-class BurndownChart extends Component {
+class BurndownOverallChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -64,10 +64,10 @@ class BurndownChart extends Component {
     }
 }
 
-BurndownChart.propTypes = {
+BurndownOverallChart.propTypes = {
     data: PropTypes.array.isRequired,
 };
 
 
-export default withHighcharts(BurndownChart, Highcharts);
+export default withHighcharts(BurndownOverallChart, Highcharts);
 

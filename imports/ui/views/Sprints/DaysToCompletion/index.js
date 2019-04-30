@@ -1,10 +1,11 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
 
-import VelocityBarHorizontal from "../../../components/Charts/VelocityBarHorizontal";
 import CustomCard from "../../../components/CustomCard/index.js";
+import DaysToCompletionBars from "../../../components/Charts/Nivo/DaysToCompletionBars.js";
 
 class DaysToCompletion extends Component {
     constructor(props) {
@@ -86,7 +87,11 @@ class DaysToCompletion extends Component {
                 headerFactTitle="Estimated completion in"
                 headerFactValue={this.getTimeToCompletion(velocity.velocity) + " days"}
             >
-                <VelocityBarHorizontal data={this.getVelocityBar(velocity.velocity)} />
+                {!_.isEmpty(velocity) ? (
+                    <DaysToCompletionBars velocity={velocity.velocity} defaultPoints={true} />
+                ) : (
+                    <span>No Data available</span>
+                )}
             </CustomCard>
         );
     }

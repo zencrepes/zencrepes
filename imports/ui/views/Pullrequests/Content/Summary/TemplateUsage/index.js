@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
 
-import StackedBar from './StackedBar.js';
 //import StatsBinBar from '../../../../../components/Charts/StatsBinBar.js';
+import StackedLinesPr from '../../../../../components/Charts/Highcharts/StackedLinesPr.js';
 
 class TemplateUsage extends Component {
     constructor(props) {
@@ -30,7 +30,7 @@ class TemplateUsage extends Component {
                 headerFactValue=""
             >
                 {dataset.weeks.length > 0 ?
-                    <StackedBar
+                    <StackedLinesPr
                         dataset={dataset}
                     />
                 :

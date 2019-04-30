@@ -5,7 +5,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {withRouter} from "react-router-dom";
 
-class CombinationChart extends Component {
+class BurndownChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -16,8 +16,8 @@ class CombinationChart extends Component {
     };
 
     clickBar = (event) => {
-        if (event.point.issues !== undefined && event.point.issues.length > 0) {
-            const issues = event.point.issues;
+        if (event.point.list !== undefined && event.point.list.length > 0) {
+            const issues = event.point.list;
             const issuesArrayQuery = issues.map(issue => issue.id);
             const query = {'id': {'$in': issuesArrayQuery}};
             this.props.history.push({
@@ -28,37 +28,28 @@ class CombinationChart extends Component {
         }
     };
 
-    /*
-    formatTooltip = (tooltip) => {
-        console.log(tooltip);
-    };
-    */
     render() {
-        const { dataset, metric } = this.props;
+        const { dataset, defaultPoints, metric } = this.props;
         let updatedOptions = {
             chart: {
                 height: 300,
             },
             title: null,
             xAxis: {
-                categories: dataset.map(week => new Date(week.weekStart)),
+                categories: dataset.map(day => new Date(day.date)),
                 type: 'datetime',
                 labels: {
-                    format: '{value:%b. %e}'
+                    format: '{value:%a %b. %e}'
                 },
             },
-            rangeSelector: {
-                selected: 1
-            },
             tooltip: {
-                //formatter: this.formatTooltip
                 formatter: function () {
                     return Highcharts.dateFormat('%B %e, %Y', this.x) + '<br/>' +
                         this.series.name + ':' + Highcharts.numberFormat(this.y);
                 },
             },
             yAxis: {
-                title: metric
+                title: 'Points'
             },
             plotOptions: {
                 column: {
@@ -79,11 +70,11 @@ class CombinationChart extends Component {
             series: [{
                 type: 'column',
                 name: 'Completed',
-                data: dataset.map((week) => {
-                    if (week.completion[metric].count - week.scopeChangeCompletion[metric].count > 0) {
+                data: dataset.map((day) => {
+                    if (day.completion[metric].closed - day.scopeChangeCompletion[metric].closed > 0) {
                         return {
-                            y: week.completion[metric].count - week.scopeChangeCompletion[metric].count,
-                            issues: week.completion.list,
+                            y: day.completion[metric].closed - day.scopeChangeCompletion[metric].closed,
+                            list: day.completion.list,
                         };
                     } else {
                         return 0;
@@ -92,25 +83,22 @@ class CombinationChart extends Component {
             }, {
                 type: 'column',
                 name: 'Scope Change',
-                data: dataset.map((week) => {
+                data: dataset.map((day) => {
                     return {
-                        y: week.scopeChangeCompletion[metric].count,
-                        issues: week.scopeChangeCompletion.list,
+                        y: day.scopeChangeCompletion[metric].closed,
+                        list: day.scopeChangeCompletion.list,
                     }
                 })
             }, {
                 type: 'spline',
-                name: 'Velocity',
-                data: dataset.map(week => week.completion[metric].velocity),
-                marker: {
-                    lineWidth: 2,
-                    lineColor: Highcharts.getOptions().colors[3],
-                    fillColor: 'white'
-                }
-            }, {
-                type: 'spline',
-                name: 'SC Evo.',
-                data: dataset.map(week => week.scopeChangeCompletion[metric].velocity),
+                name: 'Burndown',
+                data: dataset.map((day) => {
+                    if (defaultPoints) {
+                        return day.completion.points.remaining;
+                    } else {
+                        return day.completion.issues.remaining;
+                    }
+                }),
                 marker: {
                     lineWidth: 2,
                     lineColor: Highcharts.getOptions().colors[4],
@@ -132,13 +120,13 @@ class CombinationChart extends Component {
     }
 }
 
-CombinationChart.propTypes = {
-    classes: PropTypes.object,
+BurndownChart.propTypes = {
     completed: PropTypes.number,
     max: PropTypes.number,
-    history: PropTypes.object,
     dataset: PropTypes.array,
+    defaultPoints: PropTypes.bool.isRequired,
+    history: PropTypes.object,
     metric: PropTypes.string,
 };
 
-export default withRouter(CombinationChart);
+export default withRouter(BurndownChart);
