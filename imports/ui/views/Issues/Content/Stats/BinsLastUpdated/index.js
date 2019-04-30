@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import StatsBinBar from '../../../../../components/Charts/StatsBinBar.js';
+import StatsBinBar from '../../../../../components/Charts/Highcharts/StatsBinBar.js';
 import {connect} from "react-redux";
 
 class BinsLastUpdated extends Component {

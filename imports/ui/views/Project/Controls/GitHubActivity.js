@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import Grid from '@material-ui/core/Grid';
 
-import IssueLink from '../../../components/Common/IssueLink/index.js';
+import IssueLink from '../../../components/Links/IssueLink/index.js';
 
 const styles = {
     root: {

@@ -14,9 +14,9 @@ import Grid from '@material-ui/core/Grid';
 import RemoveButton from './RemoveButton.js';
 import EditButton from './EditButton.js';
 
-import RepoLink from '../../../../components/Common/RepoLink/index.js';
-import OrgLink from '../../../../components/Common/OrgLink/index.js';
-import ProjectLink from '../../../../components/Common/ProjectLink/index.js';
+import RepoLink from '../../../../components/Links/RepoLink/index.js';
+import OrgLink from '../../../../components/Links/OrgLink/index.js';
+import ProjectLink from '../../../../components/Links/ProjectLink/index.js';
 
 const styles = {
     blank: {
