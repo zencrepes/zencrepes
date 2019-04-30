@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { Provider } from 'react-redux';
 import { init } from "@rematch/core";
 
-import Actions from '../imports/ui/views/Sprints/Actions/index.js';
+import NivoPie from '../imports/ui/components/Charts/NivoPie.js';
 
 // The *.mock.js files contains static redux stores configuration with no external dependencies (such as minimongo).
 import * as models from "../imports/ui/services/models/index.mock.js";
@@ -13,9 +13,9 @@ const store = init({
     models
 });
 
-storiesOf('Sprints', module)
+storiesOf('Charts', module)
     .addDecorator(story => <Provider store={store}>{story()}</Provider>)
-    .add('Action Bar', () => (
-        <Actions />
+    .add('Nivo Pie', () => (
+        <NivoPie />
     ))
 ;
