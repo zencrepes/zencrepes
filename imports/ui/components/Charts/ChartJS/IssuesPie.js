@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 
 const style = {
     root: {
-        height: '200px'
+        height: '200px',
     },
 };
 
@@ -52,6 +52,7 @@ class IssuesPie extends Component {
             data: data,
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 events: ['click'],
                 onClick: this.clickSlice,
                 legend: {
@@ -131,8 +132,6 @@ class IssuesPie extends Component {
                 <canvas
                     id="myChart"
                     ref={this.chartRef}
-                    height={150}
-                    width={150}
                 />
             </div>
         );
