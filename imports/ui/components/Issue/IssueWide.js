@@ -21,6 +21,7 @@ import {
     StateLabel,
     Label,
 } from '@primer/components';
+import fontColorContrast from "font-color-contrast";
 
 const styles = theme => ({
     repoName: {
@@ -211,7 +212,7 @@ class Issue extends Component {
                                 issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
                                     return (
                                         <Grid item key={label.node.name} >
-                                            <Label size="large" m={1} style={{background: "#" + label.node.color}}>{label.node.name}</Label>
+                                            <Label size="large" m={1} style={{background: "#" + label.node.color, color: fontColorContrast("#" + label.node.color)}}>{label.node.name}</Label>
                                         </Grid>
                                     )
                                 })

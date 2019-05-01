@@ -9,6 +9,8 @@ import {Label} from '@primer/components';
 import { addRemoveFilterOutFromQuery } from '../../../../utils/query/index.js';
 import {withRouter} from "react-router-dom";
 
+import fontColorContrast from 'font-color-contrast';
+
 class LabelsFilters extends Component {
     constructor(props) {
         super(props);
@@ -49,7 +51,7 @@ class LabelsFilters extends Component {
                         >
                             {filterLabelsAvailable.map((label) => (
                                 <Grid item key={label.id} >
-                                    <Label size="small" m={1} style={{background: "#" + label.color}} onClick={() => this.addRemoveLabel(label, 'add')}>{label.name}</Label>
+                                    <Label size="medium" m={1} style={{background: "#" + label.color, color: fontColorContrast("#" + label.color) }} onClick={() => this.addRemoveLabel(label, 'add')}>{label.name}</Label>
                                 </Grid>
                             ))}
                         </Grid>

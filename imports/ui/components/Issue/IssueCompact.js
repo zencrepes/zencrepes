@@ -15,6 +15,7 @@ import {
     CounterLabel,
     Avatar,
 } from '@primer/components';
+import fontColorContrast from 'font-color-contrast';
 
 import Moment from 'react-moment';
 
@@ -143,7 +144,7 @@ class IssueCompact extends Component {
                                 issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
                                     return (
                                         <Grid item key={label.node.name} >
-                                            <Label size="small" m={1} style={{background: "#" + label.node.color}}>{label.node.name}</Label>
+                                            <Label size="small" m={1} style={{background: "#" + label.node.color, color: fontColorContrast("#" + label.node.color)}}>{label.node.name}</Label>
                                         </Grid>
                                     )
                                 })
