@@ -20,7 +20,7 @@ import IssuesContent from './Content/index.js';
 
 import NoData from './NoData/index.js';
 
-import QueryUpdate from '../../components/Common/QueryUpdate/index.js';
+import QueryUpdate from '../../components/Links/QueryUpdate/index.js';
 
 const style = {
     root: {

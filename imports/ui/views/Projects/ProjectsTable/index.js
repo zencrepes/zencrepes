@@ -18,7 +18,7 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import {connect} from "react-redux";
 
-import ProjectLink from '../../../components/Common/ProjectLink/index.js'
+import ProjectLink from '../../../components/Links/ProjectLink/index.js'
 import ManageButton from './ManageButton.js';
 
 import {

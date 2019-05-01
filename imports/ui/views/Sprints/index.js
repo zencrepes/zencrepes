@@ -7,8 +7,6 @@ import Grid from '@material-ui/core/Grid';
 
 import General from '../../layouts/General/index.js';
 
-import VelocityWeeks from '../../components/Cards/VelocityWeeks/index.js';
-
 import DaysToCompletion from './DaysToCompletion/index.js';
 
 import Assignees from './Assignees/index.js';
@@ -21,6 +19,7 @@ import RemainingPoints from './RemainingPoints/index.js';
 
 import CurrentCompletion from './CurrentCompletion/index.js';
 import Burndown from './Burndown/index.js';
+import VelocityWeeks from './VelocityWeeks/index.js';
 
 import NoData from './NoData/index.js';
 
@@ -35,13 +34,6 @@ class Sprints extends Component {
     constructor(props) {
         super(props);
     }
-
-/*
-    componentDidMount() {
-        const { initView } = this.props;
-        initView();
-    }
-    */
 
     //https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     componentDidMount() {
@@ -69,7 +61,7 @@ class Sprints extends Component {
     }
 
     render() {
-        const { issues, velocity, burndown, assignees, sprints, defaultPoints } = this.props;
+        const { sprints } = this.props;
         return (
             <General>
                 <IssuesFetch />
@@ -90,15 +82,10 @@ class Sprints extends Component {
                             spacing={8}
                         >
                             <Grid item xs={12} sm={6} md={4}>
-                                <CurrentCompletion
-                                    issues={issues}
-                                />
+                                <CurrentCompletion />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
-                                <RemainingPoints
-                                    assignees={assignees}
-                                    issues={issues}
-                                />
+                                <RemainingPoints  />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
                                 <DaysToCompletion />
@@ -123,17 +110,10 @@ class Sprints extends Component {
                             spacing={8}
                         >
                             <Grid item xs={12} sm={6} md={6}>
-                                <Burndown
-                                    burndown={burndown}
-                                    defaultPoints={defaultPoints}
-                                />
+                                <Burndown />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <VelocityWeeks
-                                    velocity={velocity}
-                                    defaultPoints={defaultPoints}
-                                    assignees={assignees}
-                                />
+                                <VelocityWeeks />
                             </Grid>
                         </Grid>
                         <Grid
@@ -172,25 +152,16 @@ class Sprints extends Component {
 }
 
 Sprints.propTypes = {
-    assignees: PropTypes.array.isRequired,
-    issues: PropTypes.array.isRequired,
     sprints: PropTypes.array.isRequired,
-    velocity: PropTypes.object.isRequired,
-    burndown: PropTypes.object.isRequired,
-    defaultPoints: PropTypes.bool.isRequired,
 
     initView: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
+
+    location: PropTypes.object.isRequired,
 };
 
 const mapState = state => ({
-    assignees: state.sprintsView.assignees,
-    issues: state.sprintsView.issues,
-    velocity: state.sprintsView.velocity,
-    burndown: state.sprintsView.burndown,
     sprints: state.sprintsView.sprints,
-    defaultPoints: state.sprintsView.defaultPoints,
 });
 
 const mapDispatch = dispatch => ({

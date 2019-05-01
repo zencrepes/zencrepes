@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import BroomIcon from 'mdi-react/BroomIcon';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import {connect} from "react-redux";
 
@@ -52,9 +53,11 @@ class Clear extends Component {
         if (issues.length > 0) {
             return (
                 <div className={classes.root}>
-                    <IconButton aria-label="Open" onClick={this.handleClick} className={classes.button}>
-                        <BroomIcon />
-                    </IconButton>
+                    <Tooltip title="Clear issues from your browser">
+                        <IconButton aria-label="Open" onClick={this.handleClick} className={classes.button}>
+                            <BroomIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}

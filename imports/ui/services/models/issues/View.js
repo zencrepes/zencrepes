@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Meteor } from 'meteor/meteor';
 
 import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
 
@@ -11,6 +12,8 @@ import {
     refreshProjectsContributions,
     refreshAreasContributions
 } from '../../../utils/contributions/index.js';
+
+import { getAssigneesRepartition } from '../../../utils/repartition/index.js';
 
 import subDays from 'date-fns/subDays';
 import { addRemoveDateFromQuery } from "../../../utils/query/index.js";
@@ -44,8 +47,7 @@ export default {
         shouldVelocityDataReload: false,  // We don't want to reload the velocity data automatically when issues are changed
 
         remainingWorkRepos: [],                  // List repos with open issues
-        remainingWorkPoints: 0,
-        remainingWorkCount: 0,
+        remainingWorkAssignees: [],              // List assignees with open issues
         shouldSummaryDataReload: false,
 
         statsOpenedDuring: [],
@@ -92,8 +94,7 @@ export default {
 
         setShouldSummaryDataReload(state, payload) {return { ...state, shouldSummaryDataReload: payload };},
         setRemainingWorkRepos(state, payload) {return { ...state, remainingWorkRepos: payload };},
-        setRemainingWorkPoints(state, payload) {return { ...state, remainingWorkPoints: payload };},
-        setRemainingWorkCount(state, payload) {return { ...state, remainingWorkCount: payload };},
+        setRemainingWorkAssignees(state, payload) {return { ...state, remainingWorkAssignees: payload };},
 
         setStatsOpenedDuring(state, payload) {return { ...state, statsOpenedDuring: payload };},
         setStatsCreatedSince(state, payload) {return { ...state, statsCreatedSince: payload };},
@@ -189,7 +190,7 @@ export default {
             const modifiedQuery = addRemoveDateFromQuery('closedAt', 'after', subDays(new Date(), 28).toISOString(), rootState.issuesView.query);
             const issues = cfgIssues.find(modifiedQuery).fetch();
 
-            const assigneesContributions = refreshAssigneesContributions(issues);
+            const assigneesContributions = refreshAssigneesContributions(issues, Meteor.settings.public.labels.area_prefix);
             //console.log(contributions);
             this.setContributionsAssignees(assigneesContributions);
 
@@ -199,7 +200,7 @@ export default {
             const projectsContributions = refreshProjectsContributions(issues);
             this.setContributionsProjects(projectsContributions);
 
-            const areasContributions = refreshAreasContributions(issues);
+            const areasContributions = refreshAreasContributions(issues, Meteor.settings.public.labels.area_prefix);
             this.setContributionsAreas(areasContributions);
 
             var t1 = performance.now();
@@ -279,8 +280,18 @@ export default {
                 });
             });
             this.setRemainingWorkRepos(repos);
-            this.setRemainingWorkPoints(repos.map(r => r.points).reduce((acc, points) => acc + points, 0));
-            this.setRemainingWorkCount(repos.map(r => r.issues.length).reduce((acc, count) => acc + count, 0));
+
+            const assignees = getAssigneesRepartition(openedIssues).map((assignee) => {
+                let name = assignee.login;
+                if (assignee.name !== undefined && assignee.name !== '' && assignee.name !== null) {name = assignee.name;}
+                return {
+                    name: name,
+                    count: assignee.issues.list.length,
+                    points: assignee.issues.points,
+                    issues: assignee.issues.list,
+                }
+            });
+            this.setRemainingWorkAssignees(assignees);
 
             var t1 = performance.now();
             log.info("refreshSummary - took " + (t1 - t0) + " milliseconds.");
@@ -513,6 +524,10 @@ export default {
                         name: name,
                         //issues: Object.values(content),
                         count: Object.values(content).length,
+                        points: Object.values(content)
+                            .filter(issue => issue.points !== null)
+                            .map(issue => issue.points)
+                            .reduce((acc, points) => acc + points, 0),
                         issues: Object.values(content)
                     }
                 });

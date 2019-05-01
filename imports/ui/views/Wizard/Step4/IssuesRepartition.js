@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 import Typography from '@material-ui/core/Typography';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import {ResponsiveTreeMap} from "@nivo/treemap";
+
+import IssuesTree from '../../../components/Charts/Nivo/IssuesTree.js';
 
 const styles = {
     root: {
@@ -26,13 +27,9 @@ class IssuesRepartition extends Component {
     buildDataset = () => {
         const { issues } = this.props;
         let reposGroup = _.groupBy(issues, 'repo.name');
-        return {
-            name: 'repositories'
-            , color: 'hsl(67, 70%, 50%)'
-            , children: Object.keys(reposGroup).map((key) => {
-                    return {name: key, count: reposGroup[key].length};
-                })
-        };
+        return Object.keys(reposGroup).map((key) => {
+            return {name: key, count: reposGroup[key].length, issues: reposGroup[key]};
+        });
     };
 
     render() {
@@ -44,32 +41,11 @@ class IssuesRepartition extends Component {
                         <Typography className={classes.title} color="textSecondary">
                             Issues per repository
                         </Typography>
-                        <div className={classes.treemap}>
-                            <ResponsiveTreeMap
-                                root={this.buildDataset()}
-                                identity="name"
-                                value="count"
-                                innerPadding={3}
-                                outerPadding={3}
-                                leavesOnly={true}
-                                margin={{
-                                    "top": 0,
-                                    "right": 0,
-                                    "bottom": 0,
-                                    "left": 0
-                                }}
-                                label="name"
-                                labelFormat=""
-                                labelSkipSize={40}
-                                labelTextColor="inherit:darker(1.2)"
-                                colors="nivo"
-                                colorBy="name"
-                                borderColor="inherit:darker(0.3)"
-                                animate={true}
-                                motionStiffness={90}
-                                motionDamping={11}
-                            />
-                        </div>
+                        <IssuesTree
+                            dataset={this.buildDataset()}
+                            defaultPoints={false}
+                            emptyName="Repositories"
+                        />
                     </CardContent>
                 </Card>
             </div>

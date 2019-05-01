@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 
 import CustomCard from '../../../components/CustomCard/index.js';
-import GaugeChart from './GaugeChart.js';
+import CompletionGauges from '../../../components/Charts/Highcharts/CompletionGauges.js';
 import {connect} from "react-redux";
 
 class CurrentCompletion extends Component {
@@ -39,7 +39,7 @@ class CurrentCompletion extends Component {
                     spacing={8}
                 >
                     <Grid item xs={12} sm={6} md={6}>
-                        <GaugeChart
+                        <CompletionGauges
                             title={"Issues Count"}
                             legend={"Issues"}
                             completed={completedIssues}
@@ -47,7 +47,7 @@ class CurrentCompletion extends Component {
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
-                        <GaugeChart
+                        <CompletionGauges
                             title={"Points"}
                             legend={"Points"}
                             completed={completedPoints}
@@ -69,19 +69,3 @@ const mapState = state => ({
 });
 
 export default connect(mapState, null)(CurrentCompletion);
-
-/*
-                        <GaugeChart
-                            title={"Issues Count"}
-                            legend={"Issues"}
-                            completed={completedIssues}
-                            max={issues.length}
-                        />
-
-                        <GaugeChart
-                            title={"Points"}
-                            legend={"Points"}
-                            completed={completedPoints}
-                            max={totalPoints}
-                        />
- */

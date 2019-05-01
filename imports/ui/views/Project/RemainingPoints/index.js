@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../components/CustomCard/index.js";
-import ReposTreemap from './ReposTreemap.js';
+import IssuesTree from "../../../components/Charts/Nivo/IssuesTree.js";
+
 import {connect} from "react-redux";
 
 class RemainingPoints extends Component {
@@ -20,16 +21,13 @@ class RemainingPoints extends Component {
             .reduce((acc, points) => acc + points, 0);
 
         const repartitionAssignees = assignees.map((assignee) => {
+            let name = assignee.login;
+            if (assignee.name !== undefined && assignee.name !== '' && assignee.name !== null) {name = assignee.name;}
             return {
-                ...assignee,
-                open: {
-                    points: assignee.issues.list.filter(issue => issue.state === 'OPEN').map(issue => issue.points).reduce((acc, points) => acc + points, 0),
-                    issues: assignee.issues.list.filter(issue => issue.state === 'OPEN').length,
-                },
-                closed: {
-                    points: assignee.issues.list.filter(issue => issue.state === 'CLOSED').map(issue => issue.points).reduce((acc, points) => acc + points, 0),
-                    issues: assignee.issues.list.filter(issue => issue.state === 'CLOSED').length,
-                },
+                name: name,
+                count: assignee.issues.list.length,
+                points: assignee.issues.points,
+                issues: assignee.issues.list,
             }
         });
         return (
@@ -39,11 +37,13 @@ class RemainingPoints extends Component {
                 headerFactValue={openPoints + " Pts"}
             >
                 {openPoints > 0 ? (
-                    <ReposTreemap
-                        assignees={repartitionAssignees}
+                    <IssuesTree
+                        dataset={repartitionAssignees}
+                        defaultPoints={true}
+                        emptyName="Assignees"
                     />
                 ) : (
-                    <span>All tickets closed</span>
+                    <span>Data not available.</span>
                 )}
 
             </CustomCard>

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from '../../../components/CustomCard/index.js';
-import CombinationChart from './CombinationChart.js';
+import BurndownChart from '../../../components/Charts/Highcharts/BurndownChart.js';
+import {connect} from "react-redux";
 
 class CurrentCompletion extends Component {
     constructor(props) {
@@ -30,9 +31,9 @@ class CurrentCompletion extends Component {
     render() {
         const { defaultPoints } = this.props;
         const dataset = this.buildDataset();
-
         let metric = 'points';
         if (!defaultPoints) {metric = 'issues';}
+
         return (
             <CustomCard
                 headerTitle={"Burndown Chart" + this.getDefaultRemainingTxtShrt()}
@@ -40,7 +41,7 @@ class CurrentCompletion extends Component {
                 headerFactValue={""}
             >
                 <React.Fragment>
-                    <CombinationChart
+                    <BurndownChart
                         dataset={dataset}
                         defaultPoints={defaultPoints}
                         metric={metric}
@@ -56,4 +57,9 @@ CurrentCompletion.propTypes = {
     defaultPoints: PropTypes.bool.isRequired,
 };
 
-export default CurrentCompletion;
+const mapState = state => ({
+    burndown: state.sprintsView.burndown,
+    defaultPoints: state.sprintsView.defaultPoints,
+});
+
+export default connect(mapState, null)(CurrentCompletion);

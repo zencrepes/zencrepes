@@ -33,7 +33,7 @@ class Step1 extends Component {
             <React.Fragment>
                 <p className={classes.subtitle}>Select your repositories</p>
                 <p className={classes.paragraph}>
-                    The next screen will offer you to select repositories to load data from. ZenCrepes will then load date from GitHub to your local browser.
+                    The next screen will offer you to select repositories to load data from. ZenCrepes will then load data from GitHub to your local browser.
                 </p>
                 <p className={classes.subtitle}>Add external orgs and repos</p>
                 <p className={classes.paragraph}>

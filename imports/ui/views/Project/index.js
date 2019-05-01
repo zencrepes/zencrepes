@@ -24,6 +24,7 @@ import Labels from "./Labels/index.js";
 import Columns from "./Columns/index.js";
 import Summary from "./Summary/index.js";
 import Controls from "./Controls/index.js";
+import LabelsExclude from "./LabelsExclude/index.js";
 
 class Project extends Component {
     constructor(props) {
@@ -61,6 +62,7 @@ class Project extends Component {
                 <Actions />
                 <IssuesFetch />
                 <IssuesEdit />
+                <LabelsExclude />
                 <Grid
                     container
                     direction="row"

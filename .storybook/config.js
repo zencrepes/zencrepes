@@ -8,6 +8,7 @@ function loadStories() {
     require('../stories/cards.js');
     require('../stories/milestones.js');
     require('../stories/contributions.js');
+    require('../stories/charts.js');
 }
 
 configure(loadStories, module);

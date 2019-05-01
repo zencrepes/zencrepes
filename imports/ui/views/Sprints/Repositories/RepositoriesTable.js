@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import RepoLink from '../../../components/Common/RepoLink/index.js';
-import OrgLink from '../../../components/Common/OrgLink/index.js';
+import RepoLink from '../../../components/Links/RepoLink/index.js';
+import OrgLink from '../../../components/Links/OrgLink/index.js';
 
 import PropTypes from 'prop-types';
 import {

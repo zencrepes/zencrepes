@@ -16,8 +16,8 @@ import StateField from "./StateField.js";
 import DueOnField from "./DueOnField.js";
 import DescriptionField from "./DescriptionField.js";
 
-import OrgLink from '../../../../../components/Common/OrgLink/index.js';
-import RepoLink from '../../../../../components/Common/RepoLink/index.js';
+import OrgLink from '../../../../../components/Links/OrgLink/index.js';
+import RepoLink from '../../../../../components/Links/RepoLink/index.js';
 
 import green from "@material-ui/core/colors/green";
 import red from "@material-ui/core/colors/red";

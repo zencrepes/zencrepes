@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 
 import {getWeekYear} from "../../../utils/velocity/index";
 import CustomCard from '../../../components/CustomCard/index.js';
+import VelocityChart from '../../../components/Charts/Highcharts/VelocityChart.js';
 
-import CombinationChart from "./CombinationChart.js";
+//import CombinationChart from "./CombinationChart.js";
+
 import {connect} from "react-redux";
 
 class VelocityWeeks extends Component {
@@ -87,7 +89,7 @@ class VelocityWeeks extends Component {
                 headerFactValue={this.getThisWeekCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
                 headerLegend="This chart is the combined rolling average (4 weeks) velocity of all people assigned to a ticket (see table widget below), but without consideration to their respective project. This (on purpose) assumes people are dedicated to the project."
             >
-                <CombinationChart
+                <VelocityChart
                     dataset={dataset}
                     metric={metric}
                 />

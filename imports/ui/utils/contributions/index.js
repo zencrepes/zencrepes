@@ -8,7 +8,7 @@ import subDays from 'date-fns/subDays';
 * Arguments:
 * - issues: Array of issues
 */
-export const refreshAssigneesContributions = (issues) => {
+export const refreshAssigneesContributions = (issues, area_prefix) => {
     //Build an array of days corresponding to the interval
     //let firstDay = formatDate(firstIssue.closedAt);
     let firstDay = formatDate(subDays(new Date(), 28));
@@ -115,7 +115,7 @@ export const refreshAssigneesContributions = (issues) => {
                 if (issue.labels.totalCount > 0) {
                     let areaFound = 0;
                     issue.labels.edges.forEach((label) => {
-                        if (label.node.name.slice(0, 5) === 'area:') {
+                        if (label.node.name.slice(0, 5) === area_prefix) {
                             areaFound = 1;
                             if (tally[assignee.node.login]['areas'][label.node.name] === undefined) {
                                 tally[assignee.node.login]['areas'][label.node.name] = {
@@ -220,7 +220,16 @@ export const refreshMilestonesContributions = (issues) => {
     }, {empty: {milestone: null, total: {issues: 0, points: 0, list: []}}});
     //Convert dataObject to array
     let dataArray = Object.values(dataObject);
-    return dataArray;
+    return dataArray.map((d) => {
+        let name = 'NO MILESTONE';
+        if (d.milestone !== null) {name = d.milestone.title;}
+        return {
+            name: name,
+            count: d.total.issues,
+            points: d.total.points,
+            issues: d.total.list
+        }
+    });
 };
 
 /*
@@ -255,7 +264,16 @@ export const refreshProjectsContributions = (issues) => {
     }, {empty: {project: null, total: {issues: 0, points: 0, list: []}}});
     //Convert dataObject to array
     let dataArray = Object.values(dataObject);
-    return dataArray;
+    return dataArray.map((d) => {
+        let name = 'NO PROJET';
+        if (d.project !== null) {name = d.project.name;}
+        return {
+            name: name,
+            count: d.total.issues,
+            points: d.total.points,
+            issues: d.total.list
+        }
+    });
 };
 
 /*
@@ -265,12 +283,12 @@ export const refreshProjectsContributions = (issues) => {
 * Arguments:
 * - issues: Array of issues
 */
-export const refreshAreasContributions = (issues) => {
+export const refreshAreasContributions = (issues, area_prefix) => {
     const dataObject = issues.reduce((tally, issue) => {
         if (issue.labels.totalCount > 0) {
             let areaFound = 0;
             issue.labels.edges.forEach((label) => {
-                if (label.node.name.slice(0, 5) === 'area:') {
+                if (label.node.name.slice(0, 5) === area_prefix) {
                     areaFound = 1;
                     if (tally[label.node.name] === undefined) {
                         tally[label.node.name] = {
@@ -295,7 +313,16 @@ export const refreshAreasContributions = (issues) => {
     }, {empty: {label: null, total: {issues: 0, points: 0, list: []}}});
     //Convert dataObject to array
     let dataArray = Object.values(dataObject);
-    return dataArray;
+    return dataArray.map((d) => {
+        let name = 'NO AREA';
+        if (d.label !== null) {name = d.label.name;}
+        return {
+            name: name,
+            count: d.total.issues,
+            points: d.total.points,
+            issues: d.total.list
+        }
+    });
 };
 
 /*

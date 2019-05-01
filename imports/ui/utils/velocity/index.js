@@ -190,6 +190,7 @@ export const initObject = (firstDay, lastDay) => {
             initObject['weeks'][currentWeekYear] = {
                 //weekStart: currentDate.toJSON(),
                 weekStart: currentWeekYear.toJSON(),
+                date: currentWeekYear.toJSON(),
                 completion: {
                     issues: {count: 0, velocity: 0},
                     points: {count: 0, velocity: 0},
@@ -230,7 +231,6 @@ export const calculateAverageVelocity = (array, category, indexValue) => {
 const stringClean = (labelName) => {
     return String(labelName).replace(/[^a-z0-9+]+/gi, '').toLowerCase();
 };
-
 
 /*
 *

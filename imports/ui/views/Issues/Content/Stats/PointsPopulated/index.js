@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import PieChart from '../../../../../components/Charts/PieChart.js';
+import IssuesPie from '../../../../../components/Charts/ChartJS/IssuesPie.js';
+
 import {connect} from "react-redux";
 
 class PointsPopulated extends Component {
@@ -20,7 +21,7 @@ class PointsPopulated extends Component {
                 headerLegend="Display the number of issues (not points) with the field populated or not"
             >
                 {statsPointsCount.length > 0 ? (
-                    <PieChart
+                    <IssuesPie
                         dataset={statsPointsCount}
                     />
                 ): (
