@@ -28,6 +28,20 @@ import {
     refreshBurndown,
 } from "../../../utils/sprintburn/index.js";
 
+const labelsFromQuery = (query) => {
+    const labels = [];
+    cfgIssues.find(query).forEach((issue) => {
+        if (issue.labels.totalCount > 0) {
+            issue.labels.edges.forEach((edge) => {
+                if (_.findIndex(labels, {'id': edge.node.id}) === -1) {
+                    labels.push(edge.node);
+                }
+            })
+        }
+    });
+    return labels;
+};
+
 export default {
     state: {
         query: {},
@@ -75,6 +89,9 @@ export default {
 
         agileBoardData: {},
         agileBoardLabels: [],
+
+        filterLabelsAvailable: [],
+        filterLabelsSelected: [],
     },
 
     reducers: {
@@ -125,6 +142,9 @@ export default {
 
         setAgileBoardData(state, payload) {return { ...state, agileBoardData: JSON.parse(JSON.stringify(payload)) };},
         setAgileBoardLabels(state, payload) {return { ...state, agileBoardLabels: payload };},
+
+        setFilterLabelsAvailable(state, payload) {return { ...state, filterLabelsAvailable: payload };},
+        setFilterLabelsSelected(state, payload) {return { ...state, filterLabelsSelected: payload };},
     },
     effects: {
         async updateQuery(query) {
@@ -133,6 +153,8 @@ export default {
 
             this.updateSprints();
             this.updateView();
+
+            this.updateFilterLabels();
         },
 
         async updateProject(payload, rootState) {
@@ -153,6 +175,38 @@ export default {
             this.setProjects(identifiedProject);
         },
 
+        async updateFilterLabels(payload, rootState) {
+            const query = rootState.projectView.query;
+
+            let labels = labelsFromQuery(query);
+            if (Meteor.settings.public.labels.area_prefix !== undefined) {
+                let areaLabelFilter = RegExp(Meteor.settings.public.labels.area_prefix + '(.+)');
+                labels = labels.filter(label => areaLabelFilter.test(label.name));
+            }
+            this.setFilterLabelsAvailable(labels);
+
+            //Need to build an array of labels without any filters, just the project
+            const cleanfilter = {'projectCards.edges': {...query['projectCards.edges']}};
+            const allLabels = labelsFromQuery(cleanfilter);
+
+            let notFiltersCombo = [];
+            if (rootState.projectView.query['$and'] !== undefined) {
+                rootState.projectView.query['$and'].forEach((k) => {
+                    if (k['labels.edges'] !== undefined && k['labels.edges']['$not'] !== undefined) {
+                        notFiltersCombo = _.get(k, ['labels.edges', '$not', '$elemMatch', 'node.name', '$in'], []);
+                    }
+                })
+            }
+            //_.get(rootState.projectView.query, ['$and', 'labels.edges', '$not', '$elemMatch', 'node.name', '$in'], []);
+            const notFiltersSolo = _.get(rootState.projectView.query, ['labels.edges', '$not', '$elemMatch', 'node.name', '$in'], []);
+            const notFilters = [...notFiltersCombo, ...notFiltersSolo];
+//            console.log(notFilters);
+//            console.log(JSON.stringify(rootState.projectView.query));
+//            console.log(rootState.projectView.query);
+            const labelsSelected = allLabels.filter(label => notFilters.find(elem => elem === label.name) !== undefined);
+            this.setFilterLabelsSelected(labelsSelected)
+        },
+
         //Browse through all of the project's issues to fetch sprints values
         async updateSprints(payload, rootState) {
             //Go through all of the projects issues to find out if there are sprints.
@@ -162,13 +216,22 @@ export default {
 
             // Fetch sprint label (if any)
             //"labels.edges":{"$elemMatch":{"node.name":{"$in":["phase:ga"]}}}}
-            const labelArray = _.get(rootState.projectView.query, ['labels.edges', '$elemMatch', 'node.name', '$in'], []);
+            const LabelFilter = _.get(rootState.projectView.query, ['labels.edges', '$elemMatch', 'node.name', '$in'], []);
+            let andInLabelFilter = [];
+            if (rootState.projectView.query['$and'] !== undefined) {
+                rootState.projectView.query['$and'].forEach((k) => {
+                    if (k['labels.edges'] !== undefined && k['labels.edges']['$elemMatch'] !== undefined) {
+                        andInLabelFilter = _.get(k, ['labels.edges', '$elemMatch', 'node.name', '$in'], []);
+                    }
+                })
+            }
+            const labelArray = [...LabelFilter, ...andInLabelFilter];
+
             if (labelArray.length > 0) {
                 this.setSelectedSprintLabel(labelArray[0]);
             } else {
                 this.setSelectedSprintLabel('no-filter');
             }
-
 
             if (projectQuery['labels.edges'] !== undefined) {
                 delete projectQuery['labels.edges'];

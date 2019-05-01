@@ -26,8 +26,13 @@ class SelectSprint extends Component {
         let updatedQuery = {...query};
         if(labelName === 'no-filter' && updatedQuery['labels.edges'] !== undefined) {
             delete updatedQuery['labels.edges'];
+        } else if(labelName === 'no-filter' && updatedQuery['$and'] !== undefined) {
+            delete updatedQuery['$and'];
         } else if (labelName !== 'no-filter') {
             updatedQuery = {...query, 'labels.edges':{'$elemMatch':{'node.name':{'$in':[labelName]}}}};
+            if (updatedQuery['$and'] !== undefined) {
+                delete updatedQuery['$and'];
+            }
         }
         //{"labels.edges":{"$elemMatch":{"node.name":{"$in":["loe:xx-large"]}}}}
         this.props.history.push({
