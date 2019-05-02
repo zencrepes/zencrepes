@@ -59,6 +59,36 @@ const ingestIssue = async (cfgIssues, issueNode, repoNode, orgNode) => {
                 };
             }
         }
+
+        issueObj['pullRequests'] = {
+            totalCount: 0,
+            edges : []
+        };
+        issueObj['pullRequestsLinked'] = 'NO';
+        issueObj['linkedIssues'] = {
+            source: [],
+            target: []
+        };
+        // Logic to attach pull requests directly to the issue
+        if (issueObj.timelineItems.totalCount > 0) {
+            issueObj.timelineItems.edges.forEach((event) => {
+                if (event.node.source.__typename === "PullRequest") {
+                    issueObj['pullRequests'].edges.push({node: event.node.source});
+                    issueObj['pullRequests'].totalCount = issueObj['pullRequests'].totalCount + 1;
+                    issueObj['pullRequestsLinked'] = 'YES';
+                }
+                else if (event.node.target.__typename === "PullRequest") {
+                    issueObj['pullRequests'].edges.push({node: event.node.target});
+                    issueObj['pullRequests'].totalCount = issueObj['pullRequests'].totalCount + 1;
+                    issueObj['pullRequestsLinked'] = 'YES';
+                } else if (event.node.source.__typename === "Issue" && event.node.source.id !== issueObj.id) {
+                    issueObj['linkedIssues'].source.push(event.node.source);
+                } else if (event.node.target.__typename === "Issue" && event.node.target.id !== issueObj.id) {
+                    issueObj['linkedIssues'].target.push(event.node.target);
+                }
+            });
+        }
+
     }
     await cfgIssues.remove({'id': issueObj.id});
     await cfgIssues.upsert({

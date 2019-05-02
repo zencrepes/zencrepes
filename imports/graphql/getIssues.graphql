@@ -29,6 +29,58 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
             avatarUrl
             url
           }
+          timelineItems(first: 30, itemTypes: [CROSS_REFERENCED_EVENT]) {
+            totalCount
+            edges {
+              node {
+                ... on CrossReferencedEvent {
+                  id
+                  createdAt
+                  referencedAt
+                  resourcePath
+                  isCrossRepository
+                  url
+                  willCloseTarget
+                  source {
+                    ... on Issue {
+                      __typename
+                      id
+                      number
+                      title
+                      state
+                      url
+                    }
+                    ... on PullRequest {
+                      __typename
+                      id
+                      number
+                      title
+                      state
+                      url
+                    }
+                  }
+                  target {
+                    ... on Issue {
+                      __typename
+                      id
+                      number
+                      title
+                      state
+                      url
+                    }
+                    ... on PullRequest {
+                      __typename
+                      id
+                      number
+                      title
+                      state
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }
           labels (first: 10) {
             totalCount
             edges {
