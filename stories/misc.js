@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { Provider } from 'react-redux';
 import { init } from "@rematch/core";
 
-import CountPie from '../imports/ui/components/Charts/Nivo/CountPie.js';
+import PrIcon from '../imports/ui/components/Issue/PrIcon.js';
 
 // The *.mock.js files contains static redux stores configuration with no external dependencies (such as minimongo).
 import * as models from "../imports/ui/services/models/index.mock.js";
@@ -13,9 +13,14 @@ const store = init({
     models
 });
 
-storiesOf('Charts', module)
+storiesOf('Misc', module)
     .addDecorator(story => <Provider store={store}>{story()}</Provider>)
-    .add('Nivo Pie', () => (
-        <CountPie />
+    .add('PR Icon', () => (
+        <PrIcon pr={
+            {state: 'CLOSED',
+            number: 1234,
+            title: 'A title',
+            url: 'http://test.com'}
+        }/>
     ))
 ;
