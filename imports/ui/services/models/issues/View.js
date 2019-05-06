@@ -193,11 +193,10 @@ export default {
         async updateGraph(payload, rootState) {
             if (rootState.issuesView.selectedTab === 'graph') {
                 this.setTabGraphQuery(rootState.issuesView.query);
-//                this.initGraphData();
+                this.initGraphData();
             }
         },
 
-        /*
         async initGraphData(payload, rootState) {
             const filteredIssues = rootState.issuesView.issues.filter(issue => (issue.linkedIssues.target.length > 0 || issue.linkedIssues.source.length > 0)).slice(0,this.maxIssues);
             const filteredIssuesIds = filteredIssues.map((issue) => {
@@ -213,9 +212,14 @@ export default {
                 if (issue.linkedIssues.target.length > 0) {
                     issue.linkedIssues.target.forEach((target) => {
                         if (_.findIndex(filteredIssuesIds, {id: target.id}) === -1) {
+                            // Issue not found
+                            let foundIssue = cfgIssues.findOne({id: target.id});
+                            if (foundIssue === undefined) {
+                                foundIssue = {...target, partial: true};
+                            }
                             filteredIssuesIds.push({
                                 data: {
-                                    ...target,
+                                    ...foundIssue,
                                     label: target.title,
                                 }
                             });
@@ -228,9 +232,14 @@ export default {
                 if (issue.linkedIssues.source.length > 0) {
                     issue.linkedIssues.source.forEach((source) => {
                         if (_.findIndex(filteredIssuesIds, {id: source.id}) === -1) {
+                            // Issue not found
+                            let foundIssue = cfgIssues.findOne({id: source.id});
+                            if (foundIssue === undefined) {
+                                foundIssue = {...source, partial: true};
+                            }
                             filteredIssuesIds.push({
                                 data: {
-                                    ...source,
+                                    ...foundIssue,
                                     label: source.title,
                                 }
                             });
@@ -241,11 +250,8 @@ export default {
                     })
                 }
             });
-            console.log(filteredIssuesIds);
-            this.setIssuesGraph(filteredIssuesIds)
+            this.setIssuesGraph(filteredIssuesIds);
         },
-        */
-
 
         async refreshContributions(payload, rootState) {
             const log = rootState.global.log;
