@@ -9,6 +9,7 @@ import Burndown from './Burndown/index.js';
 import Velocity from './Velocity/index.js';
 import IssuesList from './IssuesList/index.js';
 import Contributions from './Contributions/index.js';
+import Graph from './Graph/index.js';
 
 class IssuesContent extends Component {
     constructor (props) {
@@ -28,6 +29,7 @@ class IssuesContent extends Component {
                     'list': <IssuesList />,
                     'work': <Summary />,
                     'contributions': <Contributions />,
+                    'graph': <Graph />,
                     'velocity': <Velocity />,
                     'burndown': <Burndown />,
                 }[selectedTab]}

@@ -26,15 +26,19 @@ export default {
         issuesFirstUpdate: {},
         issuesLastUpdate: {},
 
+        issuesGraph: [],
+        maxIssuesGraph: 200,
+
         filteredIssues: [],
         filteredIssuesSearch: '',
         facets: [],
         queries: [],
 
-        selectedTab: 'stats', // Selected tab to be displayed
-        tabStatsQuery: null, // This stores the current query, used to identify if data refresh is needed
-        tabWorkQuery: null, // This stores the current query, used to identify if data refresh is needed
-        tabContributionsQuery: null, // This stores the current query, used to identify if data refresh is needed
+        selectedTab: 'stats',           // Selected tab to be displayed
+        tabStatsQuery: null,            // This stores the current query, used to identify if data refresh is needed
+        tabWorkQuery: null,             // This stores the current query, used to identify if data refresh is needed
+        tabContributionsQuery: null,    // This stores the current query, used to identify if data refresh is needed
+        tabGraphQuery: null,            // This stores the current query, used to identify if data refresh is needed
 
         query: {},
 
@@ -73,6 +77,7 @@ export default {
         setIssuesTotalGitHubCount(state, payload) {return { ...state, issuesTotalGitHubCount: payload };},
         setIssuesFirstUpdate(state, payload) {return { ...state, issuesFirstUpdate: JSON.parse(JSON.stringify(payload)) };},
         setIssuesLastUpdate(state, payload) {return { ...state, issuesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
+        setIssuesGraph(state, payload) {return { ...state, issuesGraph: payload };},
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
@@ -81,6 +86,7 @@ export default {
         setTabStatsQuery(state, payload) {return { ...state, tabStatsQuery: payload };},
         setTabWorkQuery(state, payload) {return { ...state, tabWorkQuery: payload };},
         setTabContributionsQuery(state, payload) {return { ...state, tabContributionsQuery: payload };},
+        setTabGraphQuery(state, payload) {return { ...state, tabGraphQuery: payload };},
 
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
 
@@ -140,6 +146,7 @@ export default {
             this.updateStats();
             this.updateWork();
             this.updateContributions();
+            this.updateGraph();
         },
 
         async updateSelectedTab(payload, rootState) {
@@ -150,6 +157,8 @@ export default {
                 this.updateWork();
             } else if ((payload === 'contributions') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabContributionsQuery)) {
                 this.updateContributions();
+            } else if ((payload === 'graph') && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabGraphQuery)) {
+                this.updateGraph();
             }
         },
 
@@ -180,6 +189,63 @@ export default {
                 this.setTabContributionsQuery(rootState.issuesView.query);
             }
         },
+
+        async updateGraph(payload, rootState) {
+            if (rootState.issuesView.selectedTab === 'graph') {
+                this.setTabGraphQuery(rootState.issuesView.query);
+//                this.initGraphData();
+            }
+        },
+
+        /*
+        async initGraphData(payload, rootState) {
+            const filteredIssues = rootState.issuesView.issues.filter(issue => (issue.linkedIssues.target.length > 0 || issue.linkedIssues.source.length > 0)).slice(0,this.maxIssues);
+            const filteredIssuesIds = filteredIssues.map((issue) => {
+                return {
+                    data: {
+                        ...issue,
+                        label: issue.title,
+                    }
+                };
+
+            });
+            filteredIssues.forEach((issue) => {
+                if (issue.linkedIssues.target.length > 0) {
+                    issue.linkedIssues.target.forEach((target) => {
+                        if (_.findIndex(filteredIssuesIds, {id: target.id}) === -1) {
+                            filteredIssuesIds.push({
+                                data: {
+                                    ...target,
+                                    label: target.title,
+                                }
+                            });
+                        }
+                        filteredIssuesIds.push({
+                            data: {target: target.id, source: issue.id}
+                        });
+                    })
+                }
+                if (issue.linkedIssues.source.length > 0) {
+                    issue.linkedIssues.source.forEach((source) => {
+                        if (_.findIndex(filteredIssuesIds, {id: source.id}) === -1) {
+                            filteredIssuesIds.push({
+                                data: {
+                                    ...source,
+                                    label: source.title,
+                                }
+                            });
+                        }
+                        filteredIssuesIds.push({
+                            data: {source: source.id, target: issue.id}
+                        });
+                    })
+                }
+            });
+            console.log(filteredIssuesIds);
+            this.setIssuesGraph(filteredIssuesIds)
+        },
+        */
+
 
         async refreshContributions(payload, rootState) {
             const log = rootState.global.log;
