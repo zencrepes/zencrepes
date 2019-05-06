@@ -4,8 +4,12 @@ import React, { Component } from 'react';
 import CustomCard from "../../../../../components/CustomCard/index.js";
 import { cfgIssues } from '../../../../../data/Minimongo.js';
 
+import Grid from '@material-ui/core/Grid';
+
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
+
+import Controls from './Controls/index.js';
 
 import Cytoscape from 'cytoscape';
 import COSEBilkent from 'cytoscape-cose-bilkent';
@@ -70,6 +74,10 @@ class IssuesGraph extends Component {
         });
         this.tippyInstances = {};
         this.selectedTippies = {};
+    };
+
+    resetView = () => {
+        this.chartRef.fit();
     };
 
     updateChart = (cy) => {
@@ -251,16 +259,32 @@ class IssuesGraph extends Component {
                 headerFactValue=""
                 headerLegend="To be added"
             >
-                {issues.length > this.maxIssues &&
-                    <span>You have too many issues in your current selection, the dataset has been automatically reduced to {this.maxIssues}</span>
-                }
-                <CytoscapeComponent
-                    elements={[]}
-                    layout={{ name: 'cose-bilkent' }}
-                    style={ { height: '600px' } }
-                    stylesheet={stylesheet}
-                    cy={cy => this.chartRef = cy}
-                />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={10} md={10}>
+                        {issues.length > this.maxIssues &&
+                        <span>You have too many issues in your current selection, the dataset has been automatically reduced to {this.maxIssues}</span>
+                        }
+                        <CytoscapeComponent
+                            elements={[]}
+                            layout={{ name: 'cose-bilkent' }}
+                            style={ { height: '600px' } }
+                            stylesheet={stylesheet}
+                            cy={cy => this.chartRef = cy}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2} md={2}>
+                        <Controls
+                            resetView={this.resetView}
+                        />
+                    </Grid>
+                </Grid>
+
             </CustomCard>
         );
     }
