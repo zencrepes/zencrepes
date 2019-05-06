@@ -46,6 +46,18 @@ class IssuesGraph extends Component {
         this.updateChart(this.chartRef);
     }
 
+    // TO-DO This is very hacky, need a better implementation
+    shouldComponentUpdate(nextProps) {
+        const { issuesGraph } = this.props;
+        const sourceNodes = issuesGraph.map(node => node.id);
+        const updatedNodes = nextProps.issuesGraph.map(node => node.id);
+        if (_.isEqual(_.sortBy(sourceNodes), _.sortBy(updatedNodes))) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //https://github.com/cytoscape/cytoscape.js/blob/master/documentation/demos/tokyo-railways/tokyo-railways.js
     makeTippy = (node, text, nodeElement) => {
         return Tippy(node.popperRef(), {
@@ -81,32 +93,54 @@ class IssuesGraph extends Component {
     };
 
     updateChart = (cy) => {
+        const { issuesGraph } = this.props;
+
+//        console.log('updateChart');
         this.clearTippies();
         cy.elements().remove();
-        cy.add(this.prepareDataset());
+        cy.add(issuesGraph);
+
+        cy.on("mouseover", "node", (event) => {
+            const nodeId = event.target.id();
+            const dataNode = event.target.data();
+            const node = event.target;
+            if (this.tippyInstances[nodeId] === undefined) {
+                this.tippyInstances[nodeId] = this.makeTippy(node, dataNode.title, dataNode);
+                this.tippyInstances[nodeId].show();
+            }
+        });
+
+        cy.on("mouseout", "node", (event) => {
+            const nodeId = event.target.id();
+            if (this.tippyInstances[nodeId] !== undefined) {
+                this.tippyInstances[nodeId].hide();
+                this.tippyInstances[nodeId].destroy();
+                delete this.tippyInstances[nodeId];
+            }
+        });
 
         /*
         cy.on("tap", "node", (event) => {
             const nodeId = event.target.id();
             console.log('tap - ' + nodeId);
+            console.log('mouseover');
+            console.log(this.tippyInstances);
+            console.log(this.selectedTippies);
 
             const dataNode = event.target.data();
             const node = event.target;
             console.log(node);
             console.log(node.popperRef());
 
-            this.tippyInstances[nodeId] = this.makeTippy(node, dataNode.title, dataNode);
-            this.tippyInstances[nodeId].show();
+            if (this.selectedTippies[nodeId] === undefined) {
+                this.selectedTippies[nodeId] = this.makeTippy(node, dataNode.title, dataNode);
+                this.selectedTippies[nodeId].show();
+            } else {
+                this.selectedTippies[nodeId].hide();
+                this.selectedTippies[nodeId].destroy();
+            }
         });
         */
-
-        cy.on("mouseover", "node", (event) => {
-            const nodeId = event.target.id();
-            const dataNode = event.target.data();
-            const node = event.target;
-            this.tippyInstances[nodeId] = this.makeTippy(node, dataNode.title, dataNode);
-            this.tippyInstances[nodeId].show();
-        });
 
 /*
         cy.on("click", "node", (event) => {
@@ -138,15 +172,6 @@ class IssuesGraph extends Component {
             console.log(nodeId);
         });
 */
-
-
-        cy.on("mouseout", "node", (event) => {
-            const nodeId = event.target.id();
-            //We only hide on mouseout for non-clicked nodes
-            if (this.selectedTippies[nodeId] === undefined) {
-                this.tippyInstances[nodeId].hide();
-            }
-        });
 
         let layout = cy.layout({
             name: 'cose-bilkent'
@@ -291,10 +316,12 @@ class IssuesGraph extends Component {
 }
 
 IssuesGraph.propTypes = {
+    issuesGraph: PropTypes.array.isRequired,
     issues: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({
+    issuesGraph: state.issuesView.issuesGraph,
     issues: state.issuesView.issues,
 });
 

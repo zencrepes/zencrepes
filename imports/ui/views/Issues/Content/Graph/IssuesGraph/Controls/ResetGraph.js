@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-import ClearIcon from '@material-ui/icons/Clear';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
 const styles = theme => ({
     root: {
@@ -31,7 +31,7 @@ class ResetGraph extends Component {
 
         return (
             <Button variant="contained" color="primary" size="small" className={classes.button} onClick={resetView}>
-                <ClearIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                <FullscreenIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Reset View
             </Button>
         )
