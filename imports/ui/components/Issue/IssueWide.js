@@ -21,6 +21,12 @@ import {
     StateLabel,
     Label,
 } from '@primer/components';
+import fontColorContrast from "font-color-contrast";
+import PrIcon from './PrIcon.js';
+
+//https://forums.meteor.com/t/meteor-scss-react/41654/8
+//https://styleguide.github.com/primer/components/avatars/
+//import "primer-avatars";
 
 const styles = theme => ({
     repoName: {
@@ -198,26 +204,53 @@ class Issue extends Component {
                         </Grid>
                     </Grid>
                     <Grid item >
-                        {issue.labels.totalCount > 0 &&
                         <Grid
                             container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
+                            direction="column"
+                            justify="flex-end"
+                            alignItems="flex-end"
                             spacing={8}
                         >
-                            {
-                                //Filters out labels which are point since points are listed in the last column anyway
-                                issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
-                                    return (
-                                        <Grid item key={label.node.name} >
-                                            <Label size="large" m={1} style={{background: "#" + label.node.color}}>{label.node.name}</Label>
-                                        </Grid>
-                                    )
-                                })
+                            <Grid item >
+                                {issue.labels.totalCount > 0 &&
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-end"
+                                    alignItems="flex-end"
+                                    spacing={8}
+                                >
+                                    {
+                                        //Filters out labels which are point since points are listed in the last column anyway
+                                        issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
+                                            return (
+                                                <Grid item key={label.node.name} >
+                                                    <Label size="medium" m={1} style={{background: "#" + label.node.color, color: fontColorContrast("#" + label.node.color)}}>{label.node.name}</Label>
+                                                </Grid>
+                                            )
+                                        })
+                                    }
+                                </Grid>
+                                }
+                            </Grid>
+                            {issue.pullRequests.totalCount > 0 !== undefined &&
+                                <Grid item >
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justify="flex-end"
+                                        alignItems="flex-end"
+                                        spacing={8}
+                                    >
+                                        {issue.pullRequests.edges.map(node => (
+                                            <Grid item key={node.node.id}>
+                                                <PrIcon pr={node.node} />
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </Grid>
                             }
                         </Grid>
-                        }
                     </Grid>
                     <Grid item >
                         {issue.assignees.totalCount > 0 &&

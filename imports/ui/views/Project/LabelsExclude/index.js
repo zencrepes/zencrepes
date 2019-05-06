@@ -7,6 +7,8 @@ import { connect } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from "react-router-dom";
 import {Label} from "@primer/components";
+import fontColorContrast from 'font-color-contrast';
+
 import { addRemoveFilterOutFromQuery } from "../../../utils/query/index.js";
 
 import IconButton from '@material-ui/core/IconButton';
@@ -91,7 +93,7 @@ class LabelsExclude extends Component {
                                 >
                                     {filterLabelsSelected.map((label) => (
                                         <Grid item key={label.id} >
-                                            <Label size="large" m={1} style={{background: "#" + label.color}} onClick={() => this.addRemoveLabel(label, 'remove')}>{label.name}</Label>
+                                            <Label size="large" m={1} style={{background: "#" + label.color, color: fontColorContrast("#" + label.color)}} onClick={() => this.addRemoveLabel(label, 'remove')}>{label.name}</Label>
                                         </Grid>
                                     ))}
                                 </Grid>

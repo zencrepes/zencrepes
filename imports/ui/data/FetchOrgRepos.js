@@ -91,7 +91,7 @@ class FetchOrgRepos extends Component {
                 catch (error) {
                     log.info(error);
                 }
-                if (data.data.errors !== undefined && data.data.errors.length > 0) {
+                if (data.data !== undefined && data.data.errors !== undefined && data.data.errors.length > 0) {
                     data.data.errors.forEach((error) => {
                         enqueueSnackbar(error.message, {
                             variant: 'warning',

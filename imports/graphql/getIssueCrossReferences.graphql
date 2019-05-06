@@ -1,13 +1,12 @@
-query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
+query ($issue_array: [ID!]!){
   rateLimit {
     limit
     cost
     remaining
     resetAt
   }
-  repository(owner:$org_name, name:$repo_name) {
-    viewerPermission
-    issue(number: $issue_number) {
+  nodes(ids:$issue_array) {
+    ... on Issue {
       id
       createdAt
       updatedAt
@@ -17,11 +16,6 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
       url
       title
       state
-      author {
-        login
-        avatarUrl
-        url
-      }
       timelineItems(first: 30, itemTypes: [CROSS_REFERENCED_EVENT]) {
         totalCount
         edges {
@@ -41,7 +35,6 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
                   number
                   title
                   state
-                  url
                 }
                 ... on PullRequest {
                   __typename
@@ -49,7 +42,6 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
                   number
                   title
                   state
-                  url
                 }
               }
               target {
@@ -59,7 +51,6 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
                   number
                   title
                   state
-                  url
                 }
                 ... on PullRequest {
                   __typename
@@ -67,70 +58,8 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
                   number
                   title
                   state
-                  url
                 }
               }
-            }
-          }
-        }
-      }
-      labels (first: 10) {
-        totalCount
-        edges {
-          node {
-            id
-            color
-            name
-            description
-          }
-        }
-      }
-      milestone {
-        id
-        createdAt
-        updatedAt
-        closedAt
-        description
-        dueOn
-        issues (first: 1) {
-          totalCount
-        }
-        number
-        state
-        title
-        url
-      }
-      assignees(first: 10) {
-        totalCount
-        edges {
-          node {
-            id
-            avatarUrl
-            login
-            name
-            url
-          }
-        }
-      }
-      comments(first: 1) {
-        totalCount
-      }
-      participants(first: 1) {
-        totalCount
-      }
-      projectCards(first: 5) {
-        totalCount
-        edges {
-          node {
-            id
-            project {
-              id
-              url
-              name
-            }
-            column {
-              id
-              name
             }
           }
         }

@@ -73,6 +73,21 @@ const aggregationsModel = {
         nestedKey: 'project.name',
         aggregations: {}
     },
+    hasPullRequest: {
+        key: 'pullRequestsLinked',
+        name: 'Linked PR(s)',
+        nested: false,
+        aggregations: {}
+    },
+    prState: {
+        key: 'pullRequests',
+        name: 'PR State',
+        nullValue: 'NO PR',
+        nullFilter: {'pullRequests.totalCount': { $eq : 0 }},
+        nested: true,
+        nestedKey: 'state',
+        aggregations: {}
+    },
 };
 
 // NOTE: The query/facets mechanism currently doesn't support querying on multiple fields with the same "key".
