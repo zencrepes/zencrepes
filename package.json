@@ -49,6 +49,8 @@
     "babel-runtime": "^6.26.0",
     "bluebird": "^3.5.4",
     "chart.js": "^2.8.0",
+    "cytoscape-cose-bilkent": "^4.0.0",
+    "cytoscape-popper": "^1.0.4",
     "date-fns": "^2.0.0-alpha.27",
     "fibers": "^3.1.1",
     "fibonacci-fast": "^0.2.0",
@@ -74,6 +76,7 @@
     "react-checkbox-tree": "^1.5.1",
     "react-color": "^2.17.0",
     "react-csv": "^1.1.1",
+    "react-cytoscapejs": "^1.1.0",
     "react-dom": "^16.8.6",
     "react-dual-listbox": "^1.4.2",
     "react-jsx-highstock": "^2.2.1",
@@ -87,6 +90,7 @@
     "reactcss": "^1.2.3",
     "reactjs-localstorage": "0.0.7",
     "styled-components": "^4.2.0",
+    "tippy.js": "^4.3.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
