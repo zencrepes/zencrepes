@@ -94,7 +94,7 @@ const buildFacetValues = (query, miniMongo, facet) => {
     if (facet.nested === true) {
         let allValues = [];
         miniMongo.find(facetQuery).forEach((issue) => {
-            if (issue[facet.key].totalCount !== undefined) {
+            if (issue[facet.key] !== undefined) {
                 if (issue[facet.key].totalCount === 0) {
                     let pushObj = {};
                     pushObj[facet.nestedKey] = facet.nullValue;
