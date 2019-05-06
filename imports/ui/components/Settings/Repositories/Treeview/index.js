@@ -74,7 +74,7 @@ class Treeview extends Component {
                         </Typography>
                         {treeNodes.length === 0 &&
                             <Typography className={classes.title} color="textPrimary">
-                                Please load data first
+                                Please load data first by selected an data source on the left.
                             </Typography>
                         }
                         <CheckboxTree

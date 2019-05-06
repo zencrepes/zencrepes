@@ -15,6 +15,9 @@ import { cfgLabels } from "../../Minimongo";
 
 import {reactLocalStorage} from 'reactjs-localstorage';
 
+import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO';
+
 class Data extends Component {
     constructor (props) {
         super(props);
@@ -104,6 +107,7 @@ class Data extends Component {
         if (this.props.loading) {
             if (this.errorRetry <= 3) {
                 let data = {};
+                const t0 = performance.now();
                 try {
                     await this.sleep(1000); // Wait 2s between requests to avoid hitting GitHub API rate limit => https://developer.github.com/v3/guides/best-practices-for-integrators/
                     data = await client.query({
@@ -117,6 +121,8 @@ class Data extends Component {
                 catch (error) {
                     log.info(error);
                 }
+                const t1 = performance.now();
+                const callDuration = t1 - t0;
                 log.info(repoObj);
                 if (data.data !== null && data.data !== undefined) {
                     this.errorRetry = 0;
@@ -127,7 +133,7 @@ class Data extends Component {
                         // Refresh the repository with the updated issues count
                         cfgSources.update({'id': repoObj.id}, {$set: {'issues.totalCount': data.data.repository.issues.totalCount}});
 
-                        let lastCursor = await this.ingestIssues(data, repoObj);
+                        let lastCursor = await this.ingestIssues(data, repoObj, callDuration);
                         let loadedIssuesCount = cfgIssues.find({'repo.id': repoObj.id, 'refreshed': true}).count();
                         let queryIncrement = calculateQueryIncrement(loadedIssuesCount, data.data.repository.issues.totalCount);
                         log.info('Loading issues for repo:  ' + repoObj.name + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedIssuesCount + ' - Remote Count: ' + data.data.repository.issues.totalCount);
@@ -148,8 +154,8 @@ class Data extends Component {
         }
     };
 
-    ingestIssues = async (data, repoObj) => {
-        const { setLoadingMsg, log } = this.props;
+    ingestIssues = async (data, repoObj, callDuration) => {
+        const { setLoadingMsg, setLoadingMsgAlt, log } = this.props;
 
         let lastCursor = null;
         let stopLoad = false;
@@ -157,6 +163,14 @@ class Data extends Component {
         var moment = require('moment');
         //let loadHistoryDate = moment(new Date());
         const loadHistoryDate = moment(new Date()).subtract(reactLocalStorage.get('issuesHistoryLoad', 12), 'months');
+
+        if (data.data.repository.issues.edges.length > 0) {
+            const apiPerf = Math.round(data.data.repository.issues.edges.length / (callDuration / 1000));
+            //console.log(callDuration);
+            //console.log(data.data.repository.issues.edges.length);
+            //console.log(Math.round(data.data.repository.issues.edges.length / (callDuration / 1000) , 1));
+            setLoadingMsgAlt('Fetching issues from ' + repoObj.org.login + '/' + repoObj.name + ', oldest updated date: ' + format(parseISO(data.data.repository.issues.edges[0].node.updatedAt), 'LLL do yyyy') + ' (' + apiPerf + ' issues/s)');
+        }
 
         log.info(data);
         for (var currentIssue of data.data.repository.issues.edges){

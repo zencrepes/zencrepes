@@ -1,9 +1,9 @@
 import {reactLocalStorage} from 'reactjs-localstorage';
 
 function calculateQueryIncrement(recordsInCollection, totalCount) {
-    var queryIncrement = parseInt(reactLocalStorage.get('dataFetchNodes', 50));
+    var queryIncrement = parseInt(reactLocalStorage.get('dataFetchNodes', 30));
     if (totalCount == recordsInCollection) {queryIncrement = 0}
-    else if (totalCount - recordsInCollection <= parseInt(reactLocalStorage.get('dataFetchNodes', 50))) {queryIncrement = totalCount - recordsInCollection;}
+    else if (totalCount - recordsInCollection <= parseInt(reactLocalStorage.get('dataFetchNodes', 30))) {queryIncrement = totalCount - recordsInCollection;}
 
     //console.log("Records in collection: " + recordsInCollection);
     //console.log("Total Count: " + totalCount);

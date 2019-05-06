@@ -21,15 +21,16 @@ class LoadDialog extends Component {
 
         return (
             <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                <DialogTitle id="simple-dialog-title">Load issues ?</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Load issues</DialogTitle>
                 <DialogContent>
                     {reposIssues === 0 ? (
                         <React.Fragment>
-                            Please select a repository with issues.
+                            Please select a repository with issues !
                         </React.Fragment>
                     ) : (
                         <React.Fragment>
-                            This might load up to {reposIssues} issues attached to the selected repositories ?<br />
+                            This might load up to {reposIssues} issues attached to the selected repositories ?<br /><br />
+                            <i>Issues are loaded, sorted by last update date in descending order (most recent first).</i>
                         </React.Fragment>
                     )}
                 </DialogContent>

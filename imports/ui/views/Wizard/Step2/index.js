@@ -18,7 +18,7 @@ class Step2 extends Component {
     constructor(props) {
         super(props);
     }
-
+/*
     componentDidMount() {
         const { availableRepos, setLoadFlag, connectedUser, initView, setLogin, setOnSuccess } = this.props;
         if (availableRepos.length === 0) {
@@ -27,7 +27,7 @@ class Step2 extends Component {
             setLoadFlag(true);
         }
     }
-
+*/
     render() {
         return (
             <React.Fragment>
