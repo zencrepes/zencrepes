@@ -94,19 +94,21 @@ const buildFacetValues = (query, miniMongo, facet) => {
     if (facet.nested === true) {
         let allValues = [];
         miniMongo.find(facetQuery).forEach((issue) => {
-            if (issue[facet.key].totalCount === 0) {
-                let pushObj = {};
-                pushObj[facet.nestedKey] = facet.nullValue;
-                allValues.push({...pushObj, issue: issue});
-            } else {
-                issue[facet.key].edges.map((nestedValue) => {
-                    if (nestedValue.node[facet.nestedKey] === null || nestedValue.node[facet.nestedKey] === '' || nestedValue.node[facet.nestedKey] === undefined ) {
-                        //console.log({...nestedValue.node, name: nestedValue.node.login});
-                        allValues.push({...nestedValue.node, name: nestedValue.node.login});
-                    } else {
-                        allValues.push({...nestedValue.node, issue: issue});
-                    }
-                })
+            if (issue[facet.key] !== undefined) {
+                if (issue[facet.key].totalCount === 0) {
+                    let pushObj = {};
+                    pushObj[facet.nestedKey] = facet.nullValue;
+                    allValues.push({...pushObj, issue: issue});
+                } else {
+                    issue[facet.key].edges.map((nestedValue) => {
+                        if (nestedValue.node[facet.nestedKey] === null || nestedValue.node[facet.nestedKey] === '' || nestedValue.node[facet.nestedKey] === undefined) {
+                            //console.log({...nestedValue.node, name: nestedValue.node.login});
+                            allValues.push({...nestedValue.node, name: nestedValue.node.login});
+                        } else {
+                            allValues.push({...nestedValue.node, issue: issue});
+                        }
+                    })
+                }
             }
         });
         statesGroup = _.groupBy(allValues, facet.nestedKey);
