@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import {connect} from "react-redux";
 
 const styles = theme => ({
     root: {
@@ -26,11 +27,16 @@ class ResetGraph extends Component {
         super(props);
     }
 
+    resetView = () => {
+        const { graphNode } = this.props;
+        graphNode.fit();
+    };
+
     render() {
-        const { classes, resetView } = this.props;
+        const { classes } = this.props;
 
         return (
-            <Button variant="contained" color="primary" size="small" className={classes.button} onClick={resetView}>
+            <Button variant="contained" color="primary" size="small" className={classes.button} onClick={this.resetView}>
                 <FullscreenIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Reset View
             </Button>
@@ -40,7 +46,11 @@ class ResetGraph extends Component {
 
 ResetGraph.propTypes = {
     classes: PropTypes.object.isRequired,
-    resetView: PropTypes.func.isRequired,
+    graphNode: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ResetGraph);
+const mapState = state => ({
+    graphNode: state.issuesView.graphNode,
+});
+
+export default connect(mapState, null)(withStyles(styles)(ResetGraph));

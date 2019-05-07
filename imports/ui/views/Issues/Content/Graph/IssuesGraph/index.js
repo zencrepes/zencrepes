@@ -2,14 +2,10 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import CustomCard from "../../../../../components/CustomCard/index.js";
-import { cfgIssues } from '../../../../../data/Minimongo.js';
-
-import Grid from '@material-ui/core/Grid';
+import IssueCompact from '../../../../../components/Issue/IssueTooltip.js';
 
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-
-import Controls from './Controls/index.js';
 
 import Cytoscape from 'cytoscape';
 import COSEBilkent from 'cytoscape-cose-bilkent';
@@ -19,7 +15,6 @@ import popper from 'cytoscape-popper';
 
 import Tippy from 'tippy.js';
 import 'tippy.js/themes/light-border.css';
-import IssueCompact from '../../../../../components/Issue/IssueTooltip.js';
 import ReactDOMServer from 'react-dom/server';
 
 import CytoscapeComponent from 'react-cytoscapejs';
@@ -27,13 +22,10 @@ import CytoscapeComponent from 'react-cytoscapejs';
 Cytoscape.use(COSEBilkent);
 Cytoscape.use(popper);
 
-//Cytoscape.use(cytoscapeQtip);
-
 class IssuesGraph extends Component {
     constructor(props) {
         super(props);
         this.chartRef = React.createRef();
-        this.maxIssues = 400;
         this.tippyInstances = {};
         this.selectedTippies = {};
     }
@@ -43,6 +35,8 @@ class IssuesGraph extends Component {
     }
 
     componentDidMount() {
+        const { setGraphNode } = this.props;
+        setGraphNode(this.chartRef);
         this.updateChart(this.chartRef);
     }
 
@@ -57,6 +51,13 @@ class IssuesGraph extends Component {
             return true;
         }
     }
+
+    clickIssue = (issue) => {
+        const { setUpdateQueryPath, setUpdateQuery } = this.props;
+        const query = {'id': {'$in': [issue.id]}};
+        setUpdateQuery(query);
+        setUpdateQueryPath('/issues/graph');
+    };
 
     //https://github.com/cytoscape/cytoscape.js/blob/master/documentation/demos/tokyo-railways/tokyo-railways.js
     makeTippy = (node, text, nodeElement) => {
@@ -88,14 +89,8 @@ class IssuesGraph extends Component {
         this.selectedTippies = {};
     };
 
-    resetView = () => {
-        this.chartRef.fit();
-    };
-
     updateChart = (cy) => {
         const { issuesGraph } = this.props;
-
-//        console.log('updateChart');
         this.clearTippies();
         cy.elements().remove();
         cy.add(issuesGraph);
@@ -119,127 +114,19 @@ class IssuesGraph extends Component {
             }
         });
 
-        /*
-        cy.on("tap", "node", (event) => {
-            const nodeId = event.target.id();
-            console.log('tap - ' + nodeId);
-            console.log('mouseover');
-            console.log(this.tippyInstances);
-            console.log(this.selectedTippies);
-
-            const dataNode = event.target.data();
-            const node = event.target;
-            console.log(node);
-            console.log(node.popperRef());
-
-            if (this.selectedTippies[nodeId] === undefined) {
-                this.selectedTippies[nodeId] = this.makeTippy(node, dataNode.title, dataNode);
-                this.selectedTippies[nodeId].show();
-            } else {
-                this.selectedTippies[nodeId].hide();
-                this.selectedTippies[nodeId].destroy();
-            }
-        });
-        */
-
-/*
         cy.on("click", "node", (event) => {
-            const nodeId = event.target.id();
-            const node = event.target;
-            console.log(node);
-            // If tippy node doesn't exist, we create it.
-            if (this.tippyInstances[nodeId] === undefined) {
-                console.log('Tippy doesnt exist, creating');
-                const dataNode = event.target.data();
-                const node = event.target;
-                this.tippyInstances[nodeId] = this.makeTippy(node, dataNode.title, dataNode);
-            }
-            if (this.selectedTippies[nodeId] === undefined) {
-                console.log('Tippy show');
-                console.log(this.tippyInstances[nodeId]);
-
-//                this.selectedTippies[nodeId] = this.tippyInstances[nodeId];
-                this.tippyInstances[nodeId].show();
-
-            } else {
-                console.log('Tippy hide');
-                console.log(this.tippyInstances[nodeId]);
-
-                this.tippyInstances[nodeId].hide();
-//                delete(this.selectedTippies[nodeId]);
-            }
-
-            console.log(nodeId);
+            const nodeData = event.target.data();
+            this.clickIssue(nodeData);
         });
-*/
 
         let layout = cy.layout({
-            name: 'cose-bilkent'
+            name: 'cose-bilkent',
+            animate: false
         });
         layout.run();
     };
 
-    prepareDataset = () => {
-        const { issues } = this.props;
-
-        const filteredIssues = issues.filter(issue => (issue.linkedIssues.target.length > 0 || issue.linkedIssues.source.length > 0)).slice(0,this.maxIssues);
-        const filteredIssuesIds = filteredIssues.map((issue) => {
-            return {
-                data: {
-                    ...issue,
-                    label: issue.title,
-                }
-            };
-
-        });
-        filteredIssues.forEach((issue) => {
-            if (issue.linkedIssues.target.length > 0) {
-                issue.linkedIssues.target.forEach((target) => {
-                    if (_.findIndex(filteredIssuesIds, {id: target.id}) === -1) {
-                        // Issue not found
-                        let foundIssue = cfgIssues.findOne({id: target.id});
-                        if (foundIssue === undefined) {
-                            foundIssue = {...target, partial: true};
-                        }
-                        filteredIssuesIds.push({
-                            data: {
-                                ...foundIssue,
-                                label: target.title,
-                            }
-                        });
-                    }
-                    filteredIssuesIds.push({
-                        data: {target: target.id, source: issue.id}
-                    });
-                })
-            }
-            if (issue.linkedIssues.source.length > 0) {
-                issue.linkedIssues.source.forEach((source) => {
-                    if (_.findIndex(filteredIssuesIds, {id: source.id}) === -1) {
-                        // Issue not found
-                        let foundIssue = cfgIssues.findOne({id: source.id});
-                        if (foundIssue === undefined) {
-                            foundIssue = {...source, partial: true};
-                        }
-                        filteredIssuesIds.push({
-                            data: {
-                                ...foundIssue,
-                                label: source.title,
-                            }
-                        });
-                    }
-                    filteredIssuesIds.push({
-                        data: {source: source.id, target: issue.id}
-                    });
-                })
-            }
-        });
-        return filteredIssuesIds;
-    };
-
     render() {
-        const { issues } = this.props;
-
         const stylesheet = [
             {
                 selector: 'node',
@@ -247,6 +134,7 @@ class IssuesGraph extends Component {
                     width: 10,
                     height: 10,
 //                    content: 'data(id)'
+//                    shape: 'vee'
                 }
             },
             {
@@ -260,19 +148,34 @@ class IssuesGraph extends Component {
                 }
             },
             {
+                selector: ':parent',
+                style: {
+                    'background-opacity': 0.333
+                }
+            },
+            {
                 selector: '[state = "OPEN"]',
                 style: {
-                    width: 10,
-                    height: 10,
                     backgroundColor: '#28a745',
                 }
             },
             {
                 selector: '[state = "CLOSED"]',
                 style: {
-                    width: 10,
-                    height: 10,
                     backgroundColor: '#cb2431',
+                }
+            },
+            {
+                selector: '[?partial]',
+                style: {
+                    shape: 'rectangle'
+                }
+            },
+            {
+                selector: '[distance = 0]',
+                style: {
+                    width: 20,
+                    height: 20,
                 }
             },
         ];
@@ -284,32 +187,13 @@ class IssuesGraph extends Component {
                 headerFactValue=""
                 headerLegend="To be added"
             >
-                <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item xs={12} sm={10} md={10}>
-                        {issues.length > this.maxIssues &&
-                        <span>You have too many issues in your current selection, the dataset has been automatically reduced to {this.maxIssues}</span>
-                        }
-                        <CytoscapeComponent
-                            elements={[]}
-                            layout={{ name: 'cose-bilkent' }}
-                            style={ { height: '600px' } }
-                            stylesheet={stylesheet}
-                            cy={cy => this.chartRef = cy}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={2} md={2}>
-                        <Controls
-                            resetView={this.resetView}
-                        />
-                    </Grid>
-                </Grid>
-
+                <CytoscapeComponent
+                    elements={[]}
+                    layout={{ name: 'cose-bilkent' }}
+                    style={ { height: '600px' } }
+                    stylesheet={stylesheet}
+                    cy={cy => this.chartRef = cy}
+                />
             </CustomCard>
         );
     }
@@ -317,13 +201,21 @@ class IssuesGraph extends Component {
 
 IssuesGraph.propTypes = {
     issuesGraph: PropTypes.array.isRequired,
-    issues: PropTypes.array.isRequired,
+
+    setUpdateQueryPath: PropTypes.func.isRequired,
+    setUpdateQuery: PropTypes.func.isRequired,
+    setGraphNode: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
     issuesGraph: state.issuesView.issuesGraph,
-    issues: state.issuesView.issues,
 });
 
-export default connect(mapState, null)(IssuesGraph);
+const mapDispatch = dispatch => ({
+    setUpdateQueryPath: dispatch.global.setUpdateQueryPath,
+    setUpdateQuery: dispatch.global.setUpdateQuery,
+    setGraphNode: dispatch.issuesView.setGraphNode,
+});
+
+export default connect(mapState, mapDispatch)(IssuesGraph);
 

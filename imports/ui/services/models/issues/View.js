@@ -18,6 +18,9 @@ import { getAssigneesRepartition } from '../../../utils/repartition/index.js';
 import subDays from 'date-fns/subDays';
 import { addRemoveDateFromQuery } from "../../../utils/query/index.js";
 
+import { fetchGraphIssues } from '../../../utils/graph/index.js';
+
+
 export default {
     state: {
         issues: [],
@@ -27,7 +30,8 @@ export default {
         issuesLastUpdate: {},
 
         issuesGraph: [],
-        maxIssuesGraph: 200,
+        maxIssuesGraph: 50,
+        graphNode: {},
 
         filteredIssues: [],
         filteredIssuesSearch: '',
@@ -78,6 +82,7 @@ export default {
         setIssuesFirstUpdate(state, payload) {return { ...state, issuesFirstUpdate: JSON.parse(JSON.stringify(payload)) };},
         setIssuesLastUpdate(state, payload) {return { ...state, issuesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
         setIssuesGraph(state, payload) {return { ...state, issuesGraph: payload };},
+        setGraphNode(state, payload) {return { ...state, graphNode: payload };},
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
@@ -195,64 +200,40 @@ export default {
         async updateGraph(payload, rootState) {
             if (rootState.issuesView.selectedTab === 'graph') {
                 this.setTabGraphQuery(rootState.issuesView.query);
-                this.initGraphData();
+
+                const log = rootState.global.log;
+                let t0 = performance.now();
+
+                const sourceIssues = fetchGraphIssues(rootState.issuesView.issues.slice(0,rootState.issuesView.maxIssuesGraph), cfgIssues);
+
+                var t1 = performance.now();
+                log.info("fetchGraphIssues - took " + (t1 - t0) + " milliseconds.");
+
+                this.initGraphData(sourceIssues);
             }
         },
 
-        async initGraphData(payload, rootState) {
-            const filteredIssues = rootState.issuesView.issues.filter(issue => (issue.linkedIssues.target.length > 0 || issue.linkedIssues.source.length > 0)).slice(0,rootState.issuesView.maxIssuesGraph);
-            const filteredIssuesIds = filteredIssues.map((issue) => {
-                return {
-                    data: {
-                        ...issue,
-                        label: issue.title,
+        async initGraphData(graphIssues) {
+            const graphData = [...graphIssues];
+            graphData.forEach((issue) => {
+                if (issue.data.linkedIssues !== undefined) {
+                    if (issue.data.linkedIssues.target.length > 0) {
+                        issue.data.linkedIssues.target.forEach((target) => {
+                            graphData.push({
+                                data: {group: 'edges', target: target.id, source: issue.id}
+                            });
+                        })
                     }
-                };
-
-            });
-            filteredIssues.forEach((issue) => {
-                if (issue.linkedIssues.target.length > 0) {
-                    issue.linkedIssues.target.forEach((target) => {
-                        if (_.findIndex(filteredIssuesIds, {id: target.id}) === -1) {
-                            // Issue not found
-                            let foundIssue = cfgIssues.findOne({id: target.id});
-                            if (foundIssue === undefined) {
-                                foundIssue = {...target, partial: true};
-                            }
-                            filteredIssuesIds.push({
-                                data: {
-                                    ...foundIssue,
-                                    label: target.title,
-                                }
+                    if (issue.data.linkedIssues.source.length > 0) {
+                        issue.data.linkedIssues.source.forEach((source) => {
+                            graphData.push({
+                                data: {group: 'edges', target: issue.id, source: source.id}
                             });
-                        }
-                        filteredIssuesIds.push({
-                            data: {target: target.id, source: issue.id}
-                        });
-                    })
-                }
-                if (issue.linkedIssues.source.length > 0) {
-                    issue.linkedIssues.source.forEach((source) => {
-                        if (_.findIndex(filteredIssuesIds, {id: source.id}) === -1) {
-                            // Issue not found
-                            let foundIssue = cfgIssues.findOne({id: source.id});
-                            if (foundIssue === undefined) {
-                                foundIssue = {...source, partial: true};
-                            }
-                            filteredIssuesIds.push({
-                                data: {
-                                    ...foundIssue,
-                                    label: source.title,
-                                }
-                            });
-                        }
-                        filteredIssuesIds.push({
-                            data: {source: source.id, target: issue.id}
-                        });
-                    })
+                        })
+                    }
                 }
             });
-            this.setIssuesGraph(filteredIssuesIds);
+            this.setIssuesGraph(graphData);
         },
 
         async refreshContributions(payload, rootState) {

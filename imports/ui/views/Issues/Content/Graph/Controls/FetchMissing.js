@@ -85,7 +85,6 @@ const mapDispatch = dispatch => ({
     issuesSetAction: dispatch.issuesEdit.setAction,
     issuesUpdateView: dispatch.issuesView.updateView,
 
-    loading: dispatch.loading.setOnSuccess,
     setOnSuccess: dispatch.loading.setOnSuccess,
 });
 

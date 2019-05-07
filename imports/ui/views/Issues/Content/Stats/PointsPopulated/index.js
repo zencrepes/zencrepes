@@ -15,7 +15,7 @@ class PointsPopulated extends Component {
         const { statsPointsCount } = this.props;
         return (
             <CustomCard
-                headerTitle="Points / LOE"
+                headerTitle="LOE"
                 headerFactTitle=""
                 headerFactValue=""
                 headerLegend="Display the number of issues (not points) with the field populated or not"
