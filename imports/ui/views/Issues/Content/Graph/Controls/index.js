@@ -7,6 +7,7 @@ import Explore from "./Explore.js";
 import Notes from "./Notes.js";
 import ResetGraph from "./ResetGraph.js";
 import RedrawGraph from "./RedrawGraph.js";
+import DistanceSlider from "./DistanceSlider.js";
 import Grid from '@material-ui/core/Grid';
 
 class Controls extends Component {
@@ -34,6 +35,9 @@ class Controls extends Component {
                     </Grid>
                     <Grid item>
                         <RedrawGraph />
+                    </Grid>
+                    <Grid item>
+                        <DistanceSlider />
                     </Grid>
                     <Grid item>
                         <FetchMissing />

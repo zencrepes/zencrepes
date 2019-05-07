@@ -20,6 +20,9 @@ import { addRemoveDateFromQuery } from "../../../utils/query/index.js";
 
 import { fetchGraphIssues } from '../../../utils/graph/index.js';
 
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
 
 export default {
     state: {
@@ -30,7 +33,9 @@ export default {
         issuesLastUpdate: {},
 
         issuesGraph: [],
-        maxIssuesGraph: 50,
+        maxIssuesGraph: 200,
+        maxDistanceGraph: 5,
+        maxDistanceGraphCeiling: 10,
         graphNode: {},
 
         filteredIssues: [],
@@ -83,6 +88,9 @@ export default {
         setIssuesLastUpdate(state, payload) {return { ...state, issuesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
         setIssuesGraph(state, payload) {return { ...state, issuesGraph: payload };},
         setGraphNode(state, payload) {return { ...state, graphNode: payload };},
+        setMaxDistanceGraph(state, payload) {return { ...state, maxDistanceGraph: payload };},
+        setMaxDistanceGraphCeiling(state, payload) {return { ...state, maxDistanceGraphCeiling: payload };},
+
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
@@ -145,7 +153,10 @@ export default {
             this.updateView();
         },
 
-        async updateView() {
+        async updateView(payload, rootState) {
+            const log = rootState.global.log;
+            log.info("Triggered updateView()");
+
             this.refreshQueries();
             this.refreshFacets();
             this.refreshIssues();
@@ -157,6 +168,8 @@ export default {
         },
 
         async updateSelectedTab(payload, rootState) {
+            const log = rootState.global.log;
+            log.info("Triggered updateSelectedTab() - " + payload);
             this.setSelectedTab(payload);
             if (payload === 'stats' && !_.isEqual(rootState.issuesView.query, rootState.issuesView.tabStatsQuery)) {
                 this.updateStats();
@@ -179,6 +192,12 @@ export default {
                 this.refreshPastDue();
                 this.setTabStatsQuery(rootState.issuesView.query);
             }
+        },
+
+        async updateGraphDistance(payload) {
+            this.setMaxDistanceGraph(payload);
+            await sleep(100);
+            this.updateGraph();
         },
 
         async updateWork(payload, rootState) {
@@ -205,11 +224,24 @@ export default {
                 let t0 = performance.now();
 
                 const sourceIssues = fetchGraphIssues(rootState.issuesView.issues.slice(0,rootState.issuesView.maxIssuesGraph), cfgIssues);
+                let highestDistance = 10;
+                if (sourceIssues.length > 0) {
+                    highestDistance = sourceIssues.map(i => i.data.distance).reduce((a, b) => Math.max(a, b));
+                }
+                this.setMaxDistanceGraphCeiling(highestDistance);
+
+                // Filter based on current max distance
+                let maxDistance = rootState.issuesView.maxDistanceGraph;
+                if (maxDistance > highestDistance) {
+                    maxDistance = highestDistance;
+                }
+
+                const filteredIssue = sourceIssues.filter(i => i.data.distance <= maxDistance);
 
                 var t1 = performance.now();
-                log.info("fetchGraphIssues - took " + (t1 - t0) + " milliseconds.");
+                log.info("updateGraph - took " + (t1 - t0) + " milliseconds.");
 
-                this.initGraphData(sourceIssues);
+                this.initGraphData(filteredIssue);
             }
         },
 
@@ -219,16 +251,20 @@ export default {
                 if (issue.data.linkedIssues !== undefined) {
                     if (issue.data.linkedIssues.target.length > 0) {
                         issue.data.linkedIssues.target.forEach((target) => {
-                            graphData.push({
-                                data: {group: 'edges', target: target.id, source: issue.id}
-                            });
+                            if (_.findIndex(graphIssues, {id: target.id}) !== -1) {
+                                graphData.push({
+                                    data: {group: 'edges', target: target.id, source: issue.id}
+                                });
+                            }
                         })
                     }
                     if (issue.data.linkedIssues.source.length > 0) {
                         issue.data.linkedIssues.source.forEach((source) => {
-                            graphData.push({
-                                data: {group: 'edges', target: issue.id, source: source.id}
-                            });
+                            if (_.findIndex(graphIssues, {id: source.id}) !== -1) {
+                                graphData.push({
+                                    data: {group: 'edges', target: issue.id, source: source.id}
+                                });
+                            }
                         })
                     }
                 }

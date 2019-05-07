@@ -28,9 +28,11 @@ class IssuesGraph extends Component {
         this.chartRef = React.createRef();
         this.tippyInstances = {};
         this.selectedTippies = {};
+        this.clickedLink = false;
     }
 
     componentDidUpdate() {
+        this.clickedLink = false;
         this.updateChart(this.chartRef);
     }
 
@@ -54,9 +56,12 @@ class IssuesGraph extends Component {
 
     clickIssue = (issue) => {
         const { setUpdateQueryPath, setUpdateQuery } = this.props;
-        const query = {'id': {'$in': [issue.id]}};
-        setUpdateQuery(query);
-        setUpdateQueryPath('/issues/graph');
+        if (this.clickedLink === false) {
+            this.clickedLink = true;
+            const query = {'id': {'$in': [issue.id]}};
+            setUpdateQuery(query);
+            setUpdateQueryPath('/issues/graph');
+        }
     };
 
     //https://github.com/cytoscape/cytoscape.js/blob/master/documentation/demos/tokyo-railways/tokyo-railways.js

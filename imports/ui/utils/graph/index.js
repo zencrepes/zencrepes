@@ -43,7 +43,7 @@ const exploreGraph = (issue, cfgIssues, individualIssues, distance) => {
                 group: 'nodes',
                 data: {
                     ...foundIssue,
-                    disance: distance + 1,
+                    distance: distance + 1,
                 }
             };
             individualIssues.push(node);
