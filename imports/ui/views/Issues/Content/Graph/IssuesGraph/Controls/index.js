@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import ResetGraph from "./ResetGraph.js";
+import FetchMissing from "./FetchMissing.js";
 
 class Controls extends Component {
     constructor(props) {
@@ -13,9 +14,12 @@ class Controls extends Component {
         const { resetView } = this.props;
 
         return (
-            <ResetGraph
-                resetView={resetView}
-            />
+            <React.Fragment>
+                <ResetGraph
+                    resetView={resetView}
+                />
+                <FetchMissing />
+            </React.Fragment>
         );
     }
 }

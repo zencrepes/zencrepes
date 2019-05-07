@@ -118,6 +118,8 @@ export default {
         setContributionsMilestones(state, payload) {return { ...state, contributionsMilestones: JSON.parse(JSON.stringify(payload)) };},
         setContributionsProjects(state, payload) {return { ...state, contributionsProjects: JSON.parse(JSON.stringify(payload)) };},
         setContributionsAreas(state, payload) {return { ...state, contributionsAreas: JSON.parse(JSON.stringify(payload)) };},
+
+
     },
     effects: {
         async updateQuery(query) {
@@ -198,7 +200,7 @@ export default {
         },
 
         async initGraphData(payload, rootState) {
-            const filteredIssues = rootState.issuesView.issues.filter(issue => (issue.linkedIssues.target.length > 0 || issue.linkedIssues.source.length > 0)).slice(0,this.maxIssues);
+            const filteredIssues = rootState.issuesView.issues.filter(issue => (issue.linkedIssues.target.length > 0 || issue.linkedIssues.source.length > 0)).slice(0,rootState.issuesView.maxIssuesGraph);
             const filteredIssuesIds = filteredIssues.map((issue) => {
                 return {
                     data: {
