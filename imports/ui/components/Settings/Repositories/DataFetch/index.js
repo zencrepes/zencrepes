@@ -70,7 +70,7 @@ class DataFetch extends Component {
                             <i>Only used during initial data load, to apply to existing data, please clear all issues first.</i><br /><br />
                             Fetch
                             <Input
-                                defaultValue={reactLocalStorage.get('dataFetchNodes', 100)}
+                                defaultValue={reactLocalStorage.get('dataFetchNodes', 30)}
                                 className={classes.input}
                                 inputProps={{
                                     'aria-label': 'Description',

@@ -169,7 +169,7 @@ class Data extends Component {
             //console.log(callDuration);
             //console.log(data.data.repository.issues.edges.length);
             //console.log(Math.round(data.data.repository.issues.edges.length / (callDuration / 1000) , 1));
-            setLoadingMsgAlt('Fetching issues from ' + repoObj.org.login + '/' + repoObj.name + ', oldest updated date: ' + format(parseISO(data.data.repository.issues.edges[0].node.updatedAt), 'LLL do yyyy') + ' (' + apiPerf + ' issues/s)');
+            setLoadingMsgAlt('Fetching issues from ' + repoObj.org.login + '/' + repoObj.name + ', oldest: ' + format(parseISO(data.data.repository.issues.edges[0].node.updatedAt), 'LLL do yyyy') + ' (' + apiPerf + ' issues/s)');
         }
 
         log.info(data);

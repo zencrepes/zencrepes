@@ -9,6 +9,8 @@ import GET_GITHUB_SINGLE_ISSUE from '../../../../../graphql/getSingleIssue.graph
 import { cfgIssues, cfgSources } from '../../../Minimongo.js';
 import ingestIssue from "../../../utils/ingestIssue.js";
 
+import {reactLocalStorage} from 'reactjs-localstorage';
+
 class Staging extends Component {
     constructor (props) {
         super(props);
@@ -27,6 +29,17 @@ class Staging extends Component {
     sleep = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     };
+
+    chunk = (array, size) => {
+        const chunked_arr = [];
+        let index = 0;
+        while (index < array.length) {
+            chunked_arr.push(array.slice(index, size + index));
+            index += size;
+        }
+        return chunked_arr;
+    };
+
 
     load = async () => {
         const {
@@ -54,6 +67,124 @@ class Staging extends Component {
         setLoadingMsg('About pull data from ' + issues.length + ' issues');
         setLoadingMsgAlt('');
         await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
+
+        // Slice the array of issues by load increment
+        const issuesBucketSize = parseInt(reactLocalStorage.get('dataFetchNodes', 30));
+        setLoadingMsg('Splitting issues in buckets of ' + issuesBucketSize + ' issues');
+        const chunkedArray = this.chunk(issues, issuesBucketSize);
+
+        // Loop through the array of arrays.
+        let batchNb = 1;
+        //await chunkedArray.forEach((arrayChunk) => {
+        for (const arrayChunk of chunkedArray) {
+            let failureCount = 0;
+            if (this.props.loading === true) {
+                if (action !== 'create') {
+                    let findDeletedIssues = [...arrayChunk];
+                    let baseMsg = (arrayChunk.length *  batchNb) + '/' + issues.length + ' - Fetching a new batch of issues';
+                    setLoadingMsg(baseMsg);
+                    log.info(baseMsg);
+                    let data = {};
+                    // Loop for retry in case of failure.
+                    for (let i = 0; i < 4; i++) {
+                        if (data.data === undefined) {
+                            if (i > 0) {
+                                failureCount++;
+                                log.info('Failed loading data - retry #' + failureCount);
+                            }
+                            try {
+                                data = await client.query({
+                                    query: GET_GITHUB_SINGLE_ISSUE,
+                                    variables: {
+                                        issue_array: arrayChunk.map(issue => issue.id)
+                                    },
+                                    fetchPolicy: 'no-cache',
+                                    errorPolicy: 'ignore',
+                                });
+                            }
+                            catch (error) {
+                                log.warn(error);
+                            }
+                        } else {
+                            failureCount = 0;
+                        }
+                    }
+                    log.info(data);
+
+                    if (data.data !== undefined) {
+                        this.props.updateChip(data.data.rateLimit);
+                    }
+                    if (data.data === undefined) {
+                        // The repository doesn't exist anymore on GitHub.
+                        arrayChunk.forEach((issue) => {
+                            insVerifiedIssues({
+                                id: issue.id,
+                                error: true,
+                                errorMsg: 'Unable to communicate with GitHub, please check your network connectivity',
+                            });
+                        });
+                        log.info('Unable to communicate with GitHub, please check your network connectivity');
+                        this.verifErrors++;
+                    } else if (data.data !== null ) {
+                        if (data.data.rateLimit !== undefined) {
+                            this.props.updateChip(data.data.rateLimit);
+                        }
+                        for (const issue of data.data.nodes) {
+                            if (issue !== null) {
+                                //As we are looping through the results, progressively removed nodes.
+                                //This is used to identify nodes that were deleted in GitHub
+                                findDeletedIssues = findDeletedIssues.filter(obj => obj.id !== issue.id);
+
+                                let repoObj = cfgSources.findOne({id: issue.repository.id});
+                                if (repoObj === undefined) {
+                                    // This issue is attached to a new repository, need to ingest the repository
+                                    repoObj = issue.repository;
+                                    repoObj.org = issue.repository.owner;
+                                }
+                                if (issue.repository.viewerPermission !== 'ADMIN' && issue.repository.viewerPermission !== 'WRITE') {
+                                    // User doesn't have the permissions to perform a change
+                                    insVerifiedIssues({
+                                        id: issue.id,
+                                        error: true,
+                                        errorMsg: 'Your missing write permission on this repository. Your permission: ' + issue.repository.viewerPermission,
+                                    });
+                                    log.info('Your missing write permission on this repository. Your permission: ' + issue.repository.viewerPermission);
+                                    this.verifErrors++;
+                                }
+                                else {
+                                    insVerifiedIssues({
+                                        ...issue,
+                                        error: false,
+                                    })
+                                }
+                                const updatedIssue = await ingestIssue(cfgIssues, issue, repoObj, repoObj.org);
+                                if (updatedIssue.points !== null) {
+                                    log.info('This issue has ' + updatedIssue.points + ' story points');
+                                }
+                                if (updatedIssue.boardState !== null) {
+                                    log.info('This issue is in Agile State ' + updatedIssue.boardState.name);
+                                }
+                            }
+                        }
+
+                        //Remove deleted nodes
+                        for (const issue of findDeletedIssues) {
+                            insVerifiedIssues({
+                                id: issue.id,
+                                error: true,
+                                errorMsg: 'This issue doesn\'t exist in GitHub currently. Was it deleted ?',
+                            });
+                            log.info('This issue doesn\'t exist in GitHub currently. Was it deleted ?');
+
+                            await cfgIssues.remove({'id': issue.id});
+                            this.verifErrors++;
+                        }
+                    }
+                }
+            }
+            batchNb++;
+        }
+/*
         for (const [idx, issue] of issues.entries()) {
             log.info(issue);
             if (this.props.loading === true) {
@@ -168,14 +299,14 @@ class Staging extends Component {
                 }
             }
         }
-
+*/
         setLoadingSuccess(true);
         setLoading(false);
         if (action === 'updateStateLabel') {
             setLoadFlag(true);
         } else {
             if (action === 'refresh') {
-                setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' update(s)');
+                setLoadingSuccessMsg('Completed');
             } else {
                 setLoadingSuccessMsg('Completed with ' + this.verifErrors + ' error(s)');
             }

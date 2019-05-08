@@ -88,6 +88,7 @@ class IssueTooltip extends Component {
         const { classes, issue } = this.props;
         const pointsExp = RegExp('SP:[.\\d]');
         const boardExp = RegExp('(?<type>AB):(?<priority>[.\\d]):(?<name>.+)');
+//        console.log(issue);
         if (issue.partial === true) {
             return (
                 <div className={classes.root}>
