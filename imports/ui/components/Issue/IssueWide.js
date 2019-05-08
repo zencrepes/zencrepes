@@ -82,6 +82,9 @@ const styles = theme => ({
         margin: '4px',
         height: '15px',
     },
+    link: {
+        textDecoration: 'none'
+    }
 });
 
 
@@ -105,11 +108,16 @@ class Issue extends Component {
                 >
                     <Grid item >
                         <Tooltip title={issue.state}>
-                            {issue.state === 'OPEN' ?
-                                <StateLabel status="issueOpened">Open</StateLabel>
-                                :
-                                <StateLabel status="issueClosed">Closed</StateLabel>
-                            }
+                            <a
+                                href={issue.url}
+                                className={classes.link}
+                                rel="noopener noreferrer" target="_blank">
+                                {issue.state === 'OPEN' ?
+                                    <StateLabel status="issueOpened">Open</StateLabel>
+                                    :
+                                    <StateLabel status="issueClosed">Closed</StateLabel>
+                                }
+                            </a>
                         </Tooltip>
                     </Grid>
                     <Grid item xs={12} sm container>
