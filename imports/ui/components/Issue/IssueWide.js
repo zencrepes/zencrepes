@@ -24,6 +24,9 @@ import {
 import fontColorContrast from "font-color-contrast";
 import PrIcon from './PrIcon.js';
 
+import BubbleChartIcon from '@material-ui/icons/BubbleChart';
+import {withRouter} from "react-router-dom";
+
 //https://forums.meteor.com/t/meteor-scss-react/41654/8
 //https://styleguide.github.com/primer/components/avatars/
 //import "primer-avatars";
@@ -51,6 +54,10 @@ const styles = theme => ({
         color: '#586069!important',
     },
     avatar: {
+        width: 35,
+        height: 35,
+    },
+    points: {
         width: 35,
         height: 35,
     },
@@ -82,6 +89,9 @@ const styles = theme => ({
         margin: '4px',
         height: '15px',
     },
+    link: {
+        textDecoration: 'none'
+    }
 });
 
 
@@ -89,6 +99,16 @@ class Issue extends Component {
     constructor (props) {
         super(props);
     }
+
+    linkGraph = () => {
+        const { issue } = this.props;
+        const query = {'id': {'$in': [issue.id]}};
+        this.props.history.push({
+            pathname: '/issues/graph',
+            search: '?q=' + JSON.stringify(query),
+            state: { detail: query }
+        });
+    };
 
     render() {
         const { classes, issue } = this.props;
@@ -104,91 +124,142 @@ class Issue extends Component {
                     spacing={8}
                 >
                     <Grid item >
-                        <Tooltip title={issue.state}>
-                            {issue.state === 'OPEN' ?
-                                <StateLabel status="issueOpened">Open</StateLabel>
-                                :
-                                <StateLabel status="issueClosed">Closed</StateLabel>
-                            }
-                        </Tooltip>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="space-evenly"
+                            alignItems="flex-start"
+                            spacing={0}
+                        >
+                            <Grid item >
+                                <Tooltip title={issue.state}>
+                                    <a
+                                        href={issue.url}
+                                        className={classes.link}
+                                        rel="noopener noreferrer" target="_blank">
+                                        {issue.state === 'OPEN' ?
+                                            <StateLabel status="issueOpened">Open</StateLabel>
+                                            :
+                                            <StateLabel status="issueClosed">Closed</StateLabel>
+                                        }
+                                    </a>
+                                </Tooltip>
+                            </Grid>
+                            <Grid item >
+                                <Tooltip title="Explore the graph">
+                                    <BubbleChartIcon color="disabled" onClick={this.linkGraph}/>
+                                </Tooltip>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item xs={12} sm container>
                         <Grid
                             container
-                            direction="row"
+                            direction="column"
                             justify="flex-start"
                             alignItems="flex-start"
-                            spacing={8}
+                            spacing={0}
                         >
                             <Grid item >
-                                <a href={issue.repo.url} className={classes.repoName} target="_blank" rel="noopener noreferrer">{issue.org.login}/{issue.repo.name}</a>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                    spacing={8}
+                                >
+                                    <Grid item >
+                                        <a href={issue.repo.url} className={classes.repoName} target="_blank" rel="noopener noreferrer">{issue.org.login}/{issue.repo.name}</a>
+                                    </Grid>
+                                    <Grid item xs={12} sm container >
+                                        <a href={issue.url} className={classes.issueTitle} target="_blank" rel="noopener noreferrer">{issue.title}</a>
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} sm container >
-                                <a href={issue.url} className={classes.issueTitle} target="_blank" rel="noopener noreferrer">{issue.title}</a>
+                            <Grid item >
+                                {issue.labels.totalCount > 0 &&
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-end"
+                                    alignItems="flex-end"
+                                    spacing={0}
+                                >
+                                    {
+                                        //Filters out labels which are point since points are listed in the last column anyway
+                                        issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
+                                            return (
+                                                <Grid item key={label.node.name} >
+                                                    <Label size="small" m={1} style={{background: "#" + label.node.color, color: fontColorContrast("#" + label.node.color)}}>{label.node.name}</Label>
+                                                </Grid>
+                                            )
+                                        })
+                                    }
+                                </Grid>
+                                }
                             </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            <Grid item xs={12} sm container className={classes.sprintName}>
-                                {issue.milestone !== null &&
-                                    <Tooltip title="Issue attached to sprint">
-                                        <Chip
-                                            icon={<Calendar className={classes.iconSprint} />}
-                                            label={issue.milestone.title}
-                                            className={classes.chipAgile}
-                                            color="primary"
-                                            variant="outlined"
-                                            target="_blank"
-                                            component="a"
-                                            href={issue.milestone.url}
-                                            clickable
-                                        />
-                                    </Tooltip>
-                                }
-                                {issue.boardState !== undefined && issue.boardState !== null &&
-                                    <Tooltip title="Current Agile State of the issue">
-                                        <Chip
-                                            icon={<ViewColumnIcon className={classes.iconSprint} />}
-                                            label={issue.boardState.name}
-                                            className={classes.chipAgile}
-                                            color="primary"
-                                            variant="outlined"
-                                        />
-                                    </Tooltip>
-                                }
-                                {issue.projectCards.totalCount > 0  &&
-                                    <React.Fragment>
+                            <Grid item >
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                    spacing={8}
+                                >
+                                        {issue.milestone !== null &&
+                                            <Grid item>
+                                                <Tooltip title="Issue attached to milestone">
+                                                    <Chip
+                                                        icon={<Calendar className={classes.iconSprint} />}
+                                                        label={issue.milestone.title}
+                                                        className={classes.chipAgile}
+                                                        color="primary"
+                                                        variant="outlined"
+                                                        target="_blank"
+                                                        component="a"
+                                                        href={issue.milestone.url}
+                                                        clickable
+                                                    />
+                                                </Tooltip>
+                                            </Grid>
+                                        }
+                                        {issue.boardState !== undefined && issue.boardState !== null &&
+                                            <Grid item>
+                                                <Tooltip title="Current Agile State of the issue">
+                                                    <Chip
+                                                        icon={<ViewColumnIcon className={classes.iconSprint} />}
+                                                        label={issue.boardState.name}
+                                                        className={classes.chipAgile}
+                                                        color="primary"
+                                                        variant="outlined"
+                                                    />
+                                                </Tooltip>
+                                            </Grid>
+                                        }
                                         {issue.projectCards.edges.map(card => (
-                                            <Tooltip title={"GitHub Project: " + card.node.project.name} key={card.node.id}>
-                                                <Chip
-                                                    icon={<ViewColumnIcon className={classes.iconSprint} />}
-                                                    label={card.node.column !== null ? card.node.column.name : 'NO COLUMN SET'}
-                                                    className={classes.chipAgile}
-                                                    color="primary"
-                                                    variant="outlined"
-                                                    target="_blank"
-                                                    component="a"
-                                                    href={card.node.project.url !== undefined ? card.node.project.url : '#'}
-                                                    clickable
-                                                />
-                                            </Tooltip>
+                                            <Grid item key={card.node.id}>
+                                                <Tooltip title={"GitHub Project: " + card.node.project.name} >
+                                                    <Chip
+                                                        icon={<ViewColumnIcon className={classes.iconSprint} />}
+                                                        label={card.node.column !== null ? card.node.column.name : 'NO COLUMN SET'}
+                                                        className={classes.chipAgile}
+                                                        color="primary"
+                                                        variant="outlined"
+                                                        target="_blank"
+                                                        component="a"
+                                                        href={card.node.project.url !== undefined ? card.node.project.url : '#'}
+                                                        clickable
+                                                    />
+                                                </Tooltip>
+                                            </Grid>
                                         ))}
-                                    </React.Fragment>
-                                }
+                                        {issue.pullRequests.edges.map(node => (
+                                            <Grid item key={node.node.id}>
+                                                <PrIcon pr={node.node} />
+                                            </Grid>
+                                        ))}
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
                             <Grid item className={classes.issueSubTitle}>
                                 <span><a href={issue.url} className={classes.issueSubTitle} target="_blank" rel="noopener noreferrer">#{issue.number}</a> </span>
                                 <span>opened on <Moment format="ddd MMM D, YYYY">{issue.createdAt}</Moment></span>
@@ -209,75 +280,36 @@ class Issue extends Component {
                             direction="column"
                             justify="flex-end"
                             alignItems="flex-end"
-                            spacing={8}
+                            spacing={0}
                         >
                             <Grid item >
-                                {issue.labels.totalCount > 0 &&
+                                {issue.assignees.totalCount > 0 &&
                                 <Grid
                                     container
                                     direction="row"
                                     justify="flex-end"
-                                    alignItems="flex-end"
+                                    alignItems="flex-start"
                                     spacing={8}
                                 >
                                     {
-                                        //Filters out labels which are point since points are listed in the last column anyway
-                                        issue.labels.edges.filter(label => pointsExp.test(label.node.name) !== true && boardExp.test(label.node.description) !== true).map((label) => {
+                                        issue.assignees.edges.map((assignee) => {
                                             return (
-                                                <Grid item key={label.node.name} >
-                                                    <Label size="medium" m={1} style={{background: "#" + label.node.color, color: fontColorContrast("#" + label.node.color)}}>{label.node.name}</Label>
+                                                <Grid item key={assignee.node.login} >
+                                                    <Tooltip title={(assignee.node.name === null || assignee.node.name === '') ? assignee.node.login : assignee.node.name}>
+                                                        <Avatar alt={assignee.node.login} src={assignee.node.avatarUrl} className={classes.avatar} />
+                                                    </Tooltip>
                                                 </Grid>
                                             )
+
                                         })
                                     }
                                 </Grid>
                                 }
                             </Grid>
-                            {issue.pullRequests.totalCount > 0 !== undefined &&
-                                <Grid item >
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justify="flex-end"
-                                        alignItems="flex-end"
-                                        spacing={8}
-                                    >
-                                        {issue.pullRequests.edges.map(node => (
-                                            <Grid item key={node.node.id}>
-                                                <PrIcon pr={node.node} />
-                                            </Grid>
-                                        ))}
-                                    </Grid>
-                                </Grid>
-                            }
+                            <Grid item >
+                                <Avatar className={classes.points}>{issue.points}</Avatar>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid item >
-                        {issue.assignees.totalCount > 0 &&
-                        <Grid
-                            container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={8}
-                        >
-                            {
-                                issue.assignees.edges.map((assignee) => {
-                                    return (
-                                        <Grid item key={assignee.node.login} >
-                                            <Tooltip title={(assignee.node.name === null || assignee.node.name === '') ? assignee.node.login : assignee.node.name}>
-                                                <Avatar alt={assignee.node.login} src={assignee.node.avatarUrl} className={classes.avatar} />
-                                            </Tooltip>
-                                        </Grid>
-                                    )
-
-                                })
-                            }
-                        </Grid>
-                        }
-                    </Grid>
-                    <Grid item >
-                        <Avatar className={classes.avatar}>{issue.points}</Avatar>
                     </Grid>
                 </Grid>
             </React.Fragment>
@@ -287,9 +319,10 @@ class Issue extends Component {
 
 Issue.propTypes = {
     classes: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
     issue: PropTypes.object,
 };
 
-export default withStyles(styles)(Issue);
+export default withRouter(withStyles(styles)(Issue));
 // <span><DirectionsRunIcon className={classes.iconSprint} />{issue.milestone.title}</span>
 // <span><ViewColumnIcon className={classes.iconSprint} />{issue.boardState.name}</span>

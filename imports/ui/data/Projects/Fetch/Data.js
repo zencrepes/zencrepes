@@ -51,6 +51,8 @@ class Data extends Component {
         setLoading(true);
         setLoadingIterateTotal(allRepos.filter(repo => repo.active === true).length);
         setLoadingIterateCurrent(0);
+        await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
+
         for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any projects attached to this repo (if any)
@@ -73,6 +75,10 @@ class Data extends Component {
         setLoading(false);          // Set to false to indicate labels are done loading.
         this.projectsCount = 0;
         onSuccess();
+    };
+
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
     };
 
     // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 projects, but local only has 99
