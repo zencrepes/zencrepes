@@ -101,7 +101,7 @@ class TimeModal extends Component {
                             <InputLabel htmlFor="age-native-simple">Direction</InputLabel>
                             <Select
                                 native
-                                value={this.state.selectedField}
+                                value={this.state.direction}
                                 onChange={this.handleChange('direction')}
                                 input={<Input id="age-native-simple" />}
                             >

@@ -85,6 +85,7 @@ class VelocityWeeks extends Component {
                 headerTitle="Week velocity over 16 weeks"
                 headerFactTitle="Completed this week"
                 headerFactValue={this.getThisWeekCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
+                headerLegend="Calculated from all closed issues in the associated query"
             >
                 <VelocityChart
                     dataset={dataset}
