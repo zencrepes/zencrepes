@@ -46,16 +46,25 @@ class FacetSelector extends React.Component {
     }
 
     handleToggle = clickedValue => () => {
-        const { clickItem } = this.props;
-        clickItem(clickedValue);
+        const { clickItem, nullValue, data } = this.props;
+        if (nullValue !== data.name) {
+            clickItem(clickedValue);
+        }
     };
 
     render() {
-        const { data, classes, selected, defaultPoints } = this.props;
+        const { data, classes, selected, defaultPoints, nullValue } = this.props;
 
         let facetItem = data.name;
         if (facetItem.length > 20) {
             facetItem = facetItem.slice(0, 25) + '...';
+        }
+        
+        let notSupportedText = "";
+        let disabledCheckbox = false;
+        if (nullValue === data.name) {
+            notSupportedText = " - Selection of empty values currently unsupported";
+            disabledCheckbox = true;
         }
 
         return (
@@ -72,8 +81,10 @@ class FacetSelector extends React.Component {
                     tabIndex={-1}
                     disableRipple
                     className={classes.checkbox}
+                    disabled={disabledCheckbox}
+
                 />
-                <Tooltip title={data.name}>
+                <Tooltip title={data.name + notSupportedText}>
                     <ListItemText primary={facetItem} className={classes.listItemText} />
                 </Tooltip>
                 <ListItemSecondaryAction>
@@ -89,6 +100,7 @@ FacetSelector.propTypes = {
     data: PropTypes.object.isRequired,
     selected: PropTypes.bool.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
+    nullValue: PropTypes.string,
     clickItem: PropTypes.func.isRequired,
 };
 

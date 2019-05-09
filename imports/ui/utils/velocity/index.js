@@ -12,6 +12,7 @@ export const refreshVelocity = (mongoSelector, cfgIssues) => {
     if (mongoSelector['state'] !== undefined) {
         delete mongoSelector['state'];
     }
+
     let closedIssuesFilter = {...mongoSelector, ...{'state':{$in:['CLOSED']}}};
     let openedIssuesFilter = {...mongoSelector, ...{'state':{$in:['OPEN']}}};
 
