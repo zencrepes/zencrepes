@@ -27,6 +27,10 @@ class Data extends Component {
         }
     };
 
+    sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
     load = async () => {
         const {
             setLoading,
@@ -51,6 +55,8 @@ class Data extends Component {
         setLoading(true);
         setLoadingIterateTotal(allRepos.filter(repo => repo.active === true).length);
         setLoadingIterateCurrent(0);
+        await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
+
         for (let repo of allRepos) {
             if (repo.active === false) {
                 //If repo is inactive, delete any milestones attached to this repo (if any)

@@ -175,6 +175,7 @@ const buildFacetValues = (query, cfgIssues, facet) => {
         //statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
         statesGroup = _.groupBy(cfgIssues.find(facetQuery).fetch(), facet.key);
     }
+
     // If the key is 'undefined', replace with default facet name
     if (statesGroup['undefined'] !== undefined) {
         statesGroup[facet.nullName] = statesGroup['undefined'];
@@ -185,7 +186,10 @@ const buildFacetValues = (query, cfgIssues, facet) => {
         .map(([name, content]) => {
             return {
                 name: name,
-                issues: Object.values(content).map(issue => issue.issue),
+                issues: Object.values(content).map((issue) => {
+                    if (issue.issue !== undefined) {return issue.issue;}
+                    else {return issue;}
+                }),
                 count: Object.values(content).length,
                 points: Object.values(content).map((node) => {
                     if (node.issue !== undefined) { return node.issue.points;}

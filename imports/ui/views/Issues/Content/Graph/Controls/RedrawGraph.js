@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import {connect} from "react-redux";
 
 const styles = theme => ({
@@ -44,7 +44,7 @@ class RedrawGraph extends Component {
 
         return (
             <Button variant="contained" color="primary" size="small" className={classes.button} onClick={this.redrawView}>
-                <FullscreenIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+                <RefreshIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
                 Redraw View
             </Button>
         )

@@ -111,6 +111,7 @@ class TermFacet extends Component {
                                     data={value}
                                     key={value.name}
                                     defaultPoints={defaultPoints}
+                                    nullValue={facet.nullValue}
                                     clickItem={this.clickItem}
                                     selected={selectedValues.indexOf(value.name) !== -1}
                                 />

@@ -67,7 +67,7 @@ class DataFetch extends Component {
                             />
                             Months.
                             <br />
-                            <i>Only used during initial data load, to apply to existing data, please clear all issues first.</i><br /><br />
+                            <i>Only used during initial data load.</i><br /><br />
                             Fetch
                             <Input
                                 defaultValue={reactLocalStorage.get('dataFetchNodes', 30)}
@@ -85,7 +85,7 @@ class DataFetch extends Component {
                             />
                             nodes at a time through GitHub GraphQL API (max: 100).
                             <br />
-                            <i>The number of nodes to load at a time is dependent upon your repository size. Best to go with a smaller number (~50) if fetching very large repositories.</i>
+                            <i>The number of nodes to load at a time is dependent upon your repository size. Best to go with a smaller number (~30) if fetching very large repositories.</i>
                         </div>
                     </CardContent>
                 </Card>
