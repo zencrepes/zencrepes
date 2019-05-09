@@ -59,7 +59,7 @@ class FacetSelector extends React.Component {
         if (facetItem.length > 20) {
             facetItem = facetItem.slice(0, 25) + '...';
         }
-        
+
         let notSupportedText = "";
         let disabledCheckbox = false;
         if (nullValue === data.name) {
