@@ -84,6 +84,7 @@ class VelocityDays extends Component {
                 headerTitle="Daily velocity over 30 days"
                 headerFactTitle="Completed today"
                 headerFactValue={this.getTodayCompleted(dataset) + " " + this.getDefaultRemainingTxtShrt()}
+                headerLegend="Calculated from all closed issues in the associated query"
             >
                 <VelocityChart
                     dataset={dataset}

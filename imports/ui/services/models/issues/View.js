@@ -36,6 +36,8 @@ export default {
         maxIssuesGraph: 200,
         maxDistanceGraph: 5,
         maxDistanceGraphCeiling: 10,
+        graphUpdateTimeoutId: {},
+        graphUpdating: false,
         graphNode: {},
 
         filteredIssues: [],
@@ -90,6 +92,8 @@ export default {
         setGraphNode(state, payload) {return { ...state, graphNode: payload };},
         setMaxDistanceGraph(state, payload) {return { ...state, maxDistanceGraph: payload };},
         setMaxDistanceGraphCeiling(state, payload) {return { ...state, maxDistanceGraphCeiling: payload };},
+        setGraphUpdateTimeoutId(state, payload) {return { ...state, graphUpdateTimeoutId: payload };},
+        setGraphUpdating(state, payload) {return { ...state, graphUpdating: payload };},
 
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
@@ -194,12 +198,6 @@ export default {
             }
         },
 
-        async updateGraphDistance(payload) {
-            this.setMaxDistanceGraph(payload);
-            await sleep(100);
-            this.updateGraph();
-        },
-
         async updateWork(payload, rootState) {
             if (rootState.issuesView.selectedTab === 'work' || rootState.issuesView.selectedTab === 'burndown' || rootState.issuesView.selectedTab === 'velocity') {
                 this.setShouldBurndownDataReload(true);
@@ -216,6 +214,23 @@ export default {
             }
         },
 
+        // Basic idea here is that moving the slider doesn't directly trigger change
+        async updateGraphDistance(payload, rootState) {
+            // Cancel any previous timeout
+            clearTimeout(rootState.issuesView.graphUpdateTimeoutId);
+
+            // Create new timeout
+            const timeoutId = setTimeout(async () => {
+                this.setGraphUpdating(true);
+                await sleep(100);
+                this.updateGraph();
+                }, 500);
+            this.setGraphUpdateTimeoutId(timeoutId);
+            this.setMaxDistanceGraph(payload);
+//            await sleep(100);
+//            this.updateGraph();
+        },
+
         async updateGraph(payload, rootState) {
             if (rootState.issuesView.selectedTab === 'graph') {
                 this.setTabGraphQuery(rootState.issuesView.query);
@@ -230,6 +245,10 @@ export default {
                 }
                 this.setMaxDistanceGraphCeiling(highestDistance);
 
+                if (rootState.issuesView.maxDistanceGraph > highestDistance) {
+                    this.setMaxDistanceGraph(highestDistance);
+                }
+
                 // Filter based on current max distance
                 let maxDistance = rootState.issuesView.maxDistanceGraph;
                 if (maxDistance > highestDistance) {
@@ -238,10 +257,11 @@ export default {
 
                 const filteredIssue = sourceIssues.filter(i => i.data.distance <= maxDistance);
 
-                var t1 = performance.now();
-                log.info("updateGraph - took " + (t1 - t0) + " milliseconds.");
-
                 this.initGraphData(filteredIssue);
+                var t1 = performance.now();
+
+                this.setGraphUpdating(false);
+                log.info("updateGraph - took " + (t1 - t0) + " milliseconds.");
             }
         },
 
