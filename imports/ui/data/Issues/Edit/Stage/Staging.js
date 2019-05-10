@@ -157,6 +157,9 @@ class Staging extends Component {
                                         error: false,
                                     })
                                 }
+                                //Adding a flag to indicate the issue has been manually fetched.
+                                issue.manualFetch = true;
+                                
                                 const updatedIssue = await ingestIssue(cfgIssues, issue, repoObj, repoObj.org);
                                 if (updatedIssue.points !== null) {
                                     log.info('This issue has ' + updatedIssue.points + ' story points');

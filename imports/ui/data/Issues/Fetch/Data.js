@@ -181,11 +181,20 @@ class Data extends Component {
 //            log.info(currentIssue.node.updatedAt);
 //            log.info(new Date(currentIssue.node.updatedAt).getTime());
             let exitsNodeUpdateAt = null;
+            let issueManualFetch = false;
             if (existNode !== undefined) {
                 exitsNodeUpdateAt = existNode.updatedAt;
+                if (existNode.manualFetch === true) {
+                    log.info('This issue was previously manually fetched');
+                    issueManualFetch = true;
+                }
 //                log.info(new Date(existNode.updatedAt).getTime());
             }
-            if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
+            // issueManualFetch is used to identify if the issue has been manually fetched previously (this flag is set in Staging.js).
+            // If yes, it does not get taken into account to identify if load should be stopped
+            // The idea is to prevent gap in issues updates, if an entire pool hasn't been refreshed for a long time
+            // but some issues were frequently manually updated.
+            if (new Date(currentIssue.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime() && issueManualFetch === false) {
                 log.info('Issue already loaded, stopping entire load');
 //                log.info(data.data.repository.issues.totalCount);
 //                log.info(cfgIssues.find({'repo.id': repoObj.id}).count());
