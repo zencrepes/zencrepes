@@ -4,6 +4,8 @@ import Grid from '@material-ui/core/Grid';
 
 import IssuesGraph from './IssuesGraph/index.js';
 import Controls from './Controls/index.js';
+import Path from './Path/index.js';
+import SelectedDialog from './SelectedDialog/index.js';
 
 class Graph extends Component {
     constructor (props) {
@@ -13,6 +15,7 @@ class Graph extends Component {
     render() {
         return (
             <React.Fragment>
+                <SelectedDialog />
                 <Grid
                     container
                     direction="row"
@@ -25,6 +28,7 @@ class Graph extends Component {
                     </Grid>
                     <Grid item xs={12} sm={3} md={3}>
                         <Controls />
+                        <Path />
                     </Grid>
                 </Grid>
             </React.Fragment>

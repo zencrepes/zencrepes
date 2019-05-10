@@ -54,13 +54,15 @@ class IssuesGraph extends Component {
         }
     }
 
-    clickIssue = (issue) => {
-        const { setUpdateQueryPath, setUpdateQuery } = this.props;
+    clickIssue = (node) => {
+        const { setGraphNodeSelected, setGraphNodeSelectedDialog } = this.props;
         if (this.clickedLink === false) {
             this.clickedLink = true;
-            const query = {'id': {'$in': [issue.id]}};
-            setUpdateQuery(query);
-            setUpdateQueryPath('/issues/graph');
+            setGraphNodeSelected(node);
+            setGraphNodeSelectedDialog(true);
+            setTimeout(async () => {
+                this.clickedLink = false
+            }, 500);
         }
     };
 
@@ -71,7 +73,10 @@ class IssuesGraph extends Component {
                 var div = document.createElement('div');
                 div.innerHTML = text;
                 //return div;
-                return ReactDOMServer.renderToString(<IssueCompact issue={nodeElement}/>);
+                return ReactDOMServer.renderToString(
+                    <IssueCompact
+                        issue={nodeElement}
+                    />);
             },
             trigger: 'manual',
             theme: 'light-border',
@@ -120,8 +125,7 @@ class IssuesGraph extends Component {
         });
 
         cy.on("click", "node", (event) => {
-            const nodeData = event.target.data();
-            this.clickIssue(nodeData);
+            this.clickIssue(event.target);
         });
 
         let layout = cy.layout({
@@ -183,7 +187,48 @@ class IssuesGraph extends Component {
                     height: 20,
                 }
             },
+            {
+                selector: 'edge.not-path',
+                style: {
+                    opacity: 0.1,
+                    'z-index': 0
+                }
+            },
+            {
+                selector: 'node.not-path',
+                style: {
+                    opacity: 0.333,
+                    'z-index': 0
+                }
+            },
+            {
+                selector: 'edge.path',
+                style: {
+                    opacity: 0.888,
+                    'z-index': 0,
+                    'width': 4,
+                    'line-color': '#2196f3',
+                    'target-arrow-color': '#2196f3'
+                }
+            },
         ];
+
+/*
+edge.not-path {
+  opacity: 0.1;
+  z-index: 0;
+}
+
+node.not-path {
+  opacity: 0.333;
+  z-index: 0;
+}
+
+edge.path {
+  opacity: 0.666;
+  z-index: 0;
+}
+ */
 
         return (
             <CustomCard
@@ -210,6 +255,8 @@ IssuesGraph.propTypes = {
     setUpdateQueryPath: PropTypes.func.isRequired,
     setUpdateQuery: PropTypes.func.isRequired,
     setGraphNode: PropTypes.func.isRequired,
+    setGraphNodeSelected: PropTypes.func.isRequired,
+    setGraphNodeSelectedDialog: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
@@ -220,6 +267,8 @@ const mapDispatch = dispatch => ({
     setUpdateQueryPath: dispatch.global.setUpdateQueryPath,
     setUpdateQuery: dispatch.global.setUpdateQuery,
     setGraphNode: dispatch.issuesView.setGraphNode,
+    setGraphNodeSelected: dispatch.issuesView.setGraphNodeSelected,
+    setGraphNodeSelectedDialog: dispatch.issuesView.setGraphNodeSelectedDialog,
 });
 
 export default connect(mapState, mapDispatch)(IssuesGraph);
