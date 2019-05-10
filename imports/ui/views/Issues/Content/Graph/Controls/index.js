@@ -30,11 +30,20 @@ class Controls extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item>
-                        <ResetGraph />
-                    </Grid>
-                    <Grid item>
-                        <RedrawGraph />
+                    <Grid container>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-evenly"
+                            alignItems="center"
+                        >
+                            <Grid item>
+                                <ResetGraph />
+                            </Grid>
+                            <Grid item>
+                                <RedrawGraph />
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
                         <DistanceSlider />

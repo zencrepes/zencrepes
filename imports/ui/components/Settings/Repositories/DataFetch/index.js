@@ -56,7 +56,7 @@ class DataFetch extends Component {
                         <div className={classes.details} color="textPrimary">
                             Fetch all issues updated in the past
                             <Input
-                                defaultValue={reactLocalStorage.get('issuesHistoryLoad', 12)}
+                                defaultValue={reactLocalStorage.get('issuesHistoryLoad', 3)}
                                 className={classes.input}
                                 inputProps={{
                                     'aria-label': 'Description',

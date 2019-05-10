@@ -38,7 +38,11 @@ export default {
         maxDistanceGraphCeiling: 10,
         graphUpdateTimeoutId: {},
         graphUpdating: false,
+        graphNodeSelected: {},
+        graphNodeSelectedDialog: false,
         graphNode: {},
+        graphPathStart: {},
+        graphPathEnd: {},
 
         filteredIssues: [],
         filteredIssuesSearch: '',
@@ -90,10 +94,14 @@ export default {
         setIssuesLastUpdate(state, payload) {return { ...state, issuesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
         setIssuesGraph(state, payload) {return { ...state, issuesGraph: payload };},
         setGraphNode(state, payload) {return { ...state, graphNode: payload };},
+        setGraphNodeSelected(state, payload) {return { ...state, graphNodeSelected: payload };},
+        setGraphNodeSelectedDialog(state, payload) {return { ...state, graphNodeSelectedDialog: payload };},
         setMaxDistanceGraph(state, payload) {return { ...state, maxDistanceGraph: payload };},
         setMaxDistanceGraphCeiling(state, payload) {return { ...state, maxDistanceGraphCeiling: payload };},
         setGraphUpdateTimeoutId(state, payload) {return { ...state, graphUpdateTimeoutId: payload };},
         setGraphUpdating(state, payload) {return { ...state, graphUpdating: payload };},
+        setGraphPathStart(state, payload) {return { ...state, graphPathStart: payload };},
+        setGraphPathEnd(state, payload) {return { ...state, graphPathEnd: payload };},
 
         setFilteredIssues(state, payload) {return { ...state, filteredIssues: payload };},
         setFilteredIssuesSearch(state, payload) {return { ...state, filteredIssuesSearch: payload };},
@@ -140,12 +148,17 @@ export default {
     },
     effects: {
         async updateQuery(query) {
-            if (query === null) {this.setQuery({});}
-            else {this.setQuery(query);}
+            if (query === null) {
+                this.setQuery({});
+            } else {
+                this.setQuery(query);
+            }
 
             // Check if the query doesn't return any issues with points, set default back to issues count.
             const pointsQuery = {...query, points: {$gt: 0}};
-            if (cfgIssues.find(pointsQuery).count() === 0) {this.setDefaultPoints(false);}
+            if (cfgIssues.find(pointsQuery).count() === 0) {
+                this.setDefaultPoints(false);
+            }
 
             this.updateView();
         },
@@ -224,7 +237,7 @@ export default {
                 this.setGraphUpdating(true);
                 await sleep(100);
                 this.updateGraph();
-                }, 500);
+            }, 500);
             this.setGraphUpdateTimeoutId(timeoutId);
             this.setMaxDistanceGraph(payload);
 //            await sleep(100);
@@ -238,7 +251,7 @@ export default {
                 const log = rootState.global.log;
                 let t0 = performance.now();
 
-                const sourceIssues = fetchGraphIssues(rootState.issuesView.issues.slice(0,rootState.issuesView.maxIssuesGraph), cfgIssues);
+                const sourceIssues = fetchGraphIssues(rootState.issuesView.issues.slice(0, rootState.issuesView.maxIssuesGraph), cfgIssues);
                 let highestDistance = 10;
                 if (sourceIssues.length > 0) {
                     highestDistance = sourceIssues.map(i => i.data.distance).reduce((a, b) => Math.max(a, b));
@@ -263,6 +276,39 @@ export default {
                 this.setGraphUpdating(false);
                 log.info("updateGraph - took " + (t1 - t0) + " milliseconds.");
             }
+        },
+
+        clearGraphPath(payload, rootState) {
+            this.setGraphPathStart({});
+            this.setGraphPathEnd({});
+            const cy = rootState.issuesView.graphNode;
+            cy.elements().removeClass('path not-path start end');
+        },
+
+        //https://github.com/cytoscape/cytoscape.js/blob/master/documentation/demos/tokyo-railways/tokyo-railways.js
+        buildGraphPath(payload, rootState) {
+            const cy = rootState.issuesView.graphNode;
+            setTimeout(() => {
+                var aStar = cy.elements().aStar({
+                    root: rootState.issuesView.graphPathStart,
+                    goal: rootState.issuesView.graphPathEnd,
+                    weight: function( e ){
+                        if( e.data('is_walking') ){
+                            return 0.25; // assume very little time to walk inside stn
+                        }
+                        return e.data('is_bullet') ? 1 : 3; // assume bullet is ~3x faster
+                    }
+                });
+
+                if( !aStar.found ){
+                    this.clearGraphPath();
+                    cy.endBatch();
+                    return;
+                }
+                cy.elements().not( aStar.path ).addClass('not-path');
+                aStar.path.addClass('path');
+                cy.endBatch();
+            }, 300);
         },
 
         async initGraphData(graphIssues) {
