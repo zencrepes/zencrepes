@@ -162,7 +162,7 @@ class Data extends Component {
 
         var moment = require('moment');
         //let loadHistoryDate = moment(new Date());
-        const loadHistoryDate = moment(new Date()).subtract(reactLocalStorage.get('issuesHistoryLoad', 12), 'months');
+        const loadHistoryDate = moment(new Date()).subtract(reactLocalStorage.get('issuesHistoryLoad', 3), 'months');
 
         if (data.data.repository.issues.edges.length > 0) {
             const apiPerf = Math.round(data.data.repository.issues.edges.length / (callDuration / 1000));
