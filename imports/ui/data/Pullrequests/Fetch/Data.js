@@ -155,7 +155,7 @@ class Data extends Component {
 
         var moment = require('moment');
         //let loadHistoryDate = moment(new Date());
-        const loadHistoryDate = moment(new Date()).subtract(reactLocalStorage.get('issuesHistoryLoad', 12), 'months');
+        const loadHistoryDate = moment(new Date()).subtract(reactLocalStorage.get('issuesHistoryLoad', 3), 'months');
 
         log.info(data);
         for (var currentPullrequest of data.data.repository.pullRequests.edges){
