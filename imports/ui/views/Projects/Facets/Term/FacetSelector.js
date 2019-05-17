@@ -72,7 +72,7 @@ class FacetSelector extends React.Component {
                     <ListItemText primary={facetItem} className={classes.listItemText} />
                 </Tooltip>
                 <ListItemSecondaryAction>
-                    <Chip label={data.count + ' milst'} className={classes.chip} />
+                    <Chip label={data.count} className={classes.chip} />
                 </ListItemSecondaryAction>
             </ListItem>
         );

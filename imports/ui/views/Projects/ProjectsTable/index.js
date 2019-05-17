@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -19,6 +18,8 @@ import {
 import {connect} from "react-redux";
 
 import ProjectLink from '../../../components/Links/ProjectLink/index.js'
+import RepoLink from '../../../components/Links/RepoLink/index.js'
+import OrgLink from '../../../components/Links/OrgLink/index.js'
 import ManageButton from './ManageButton.js';
 
 import {
@@ -26,30 +27,18 @@ import {
 } from '@primer/components';
 
 const StateFormatter = ({ value }) => {
-    if (value === undefined) {
-        return 'OPEN';
+    if (value === 'OPEN') {
+        return (
+            <StateLabel status="issueOpened">Open</StateLabel>
+        );
     } else {
-        if (value.length > 1) {
-            return (
-                <React.Fragment>
-                    MIXED
-                </React.Fragment>
-            );
-        } else {
-            if (value[0].name === 'OPEN') {
-                return (
-                    <StateLabel status="issueOpened">Open</StateLabel>
-                );
-            } else {
-                return (
-                    <StateLabel status="issueClosed">Closed</StateLabel>
-                );
-            }
-        }
+        return (
+            <StateLabel status="issueClosed">Closed</StateLabel>
+        );
     }
 };
 StateFormatter.propTypes = {
-    value: PropTypes.array,
+    value: PropTypes.string,
 };
 
 const StateTypeProvider = props => (
@@ -62,8 +51,6 @@ const StateTypeProvider = props => (
 
 const NameFormatter = ({ value }) => {
     return <ProjectLink project={value} />;
-//    console.log(value);
-//    return value;
 };
 NameFormatter.propTypes = {
     value: PropTypes.object,
@@ -78,8 +65,6 @@ const NameTypeProvider = props => (
 
 const ManageFormatter = ({ value }) => {
     return <ManageButton project={value} />;
-//    console.log(value);
-//    return value;
 };
 ManageFormatter.propTypes = {
     value: PropTypes.object,
@@ -92,28 +77,46 @@ const ManageTypeProvider = props => (
     />
 );
 
-const ReposFormatter = ({ value }) => {
-    if (value === undefined) {
+const RepoFormatter = ({ value }) => {
+    if (value.repo === undefined || value.repo === null) {
         return (
             <React.Fragment>
-                0
+                -
             </React.Fragment>
         );
     } else {
-        return (
-            <React.Fragment>
-                {value.length}
-            </React.Fragment>
-        );
+        return <RepoLink repo={value.repo} />;
     }
 };
-ReposFormatter.propTypes = {
-    value: PropTypes.array,
+RepoFormatter.propTypes = {
+    value: PropTypes.object,
 };
 
-const ReposTypeProvider = props => (
+const RepoTypeProvider = props => (
     <DataTypeProvider
-        formatterComponent={ReposFormatter}
+        formatterComponent={RepoFormatter}
+        {...props}
+    />
+);
+
+const OrgFormatter = ({ value }) => {
+    if (value.org === undefined || value.org === null) {
+        return (
+            <React.Fragment>
+                -
+            </React.Fragment>
+        );
+    } else {
+        return <OrgLink org={value.org} />;
+    }
+};
+OrgFormatter.propTypes = {
+    value: PropTypes.object,
+};
+
+const OrgTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={OrgFormatter}
         {...props}
     />
 );
@@ -122,13 +125,13 @@ const IssuesFormatter = ({ value }) => {
     if (value === undefined) {
         return 0
     } else {
-        return value.filter(project => project.issues !== undefined).map(project => project.issues.length).reduce((acc, count) => acc + count, 0);
+        return value.issues.length;
+//        return value.filter(project => project.issues !== undefined).map(project => project.issues.length).reduce((acc, count) => acc + count, 0);
     }
 };
 IssuesFormatter.propTypes = {
-    value: PropTypes.array,
+    value: PropTypes.object,
 };
-
 
 const IssuesTypeProvider = props => (
     <DataTypeProvider
@@ -141,11 +144,12 @@ const PendingCardsFormatter = ({ value }) => {
     if (value === undefined) {
         return 0
     } else {
-        return value.filter(project => project.pendingCards.totalCount !== undefined).map(project => project.pendingCards.totalCount).reduce((acc, count) => acc + count, 0);
+        return value.pendingCards.totalCount;
+        //return value.filter(project => project.pendingCards.totalCount !== undefined).map(project => project.pendingCards.totalCount).reduce((acc, count) => acc + count, 0);
     }
 };
 PendingCardsFormatter.propTypes = {
-    value: PropTypes.array,
+    value: PropTypes.object,
 };
 
 
@@ -189,18 +193,20 @@ class ProjectsTable extends Component {
         this.state = {
             columns: [
                 { name: 'state', title: 'State' },
-                { name: 'name', title: 'Name', getCellValue: row => row.projects[0] },
-                { name: 'id', title: 'Manage', getCellValue: row => row.projects[0] },
-                { name: 'createdAt', title: 'Created', getCellValue: row => row.projects[0].createdAt },
-                { name: 'updatedAt', title: 'Updated', getCellValue: row => row.projects[0].updatedAt },
-                { name: 'closedAt', title: 'Closed', getCellValue: row => row.projects[0].closedAt },
-                { name: 'issues', title: 'Issues', getCellValue: row => row.projects },
-                { name: 'pendingCards', title: 'Pending', getCellValue: row => row.projects },
-                { name: 'repos', title: 'Repos', getCellValue: row => row.projects },
+                { name: 'name', title: 'Name', getCellValue: row => row },
+                { name: 'org', title: 'Org', getCellValue: row => row },
+                { name: 'repo', title: 'Repo', getCellValue: row => row },
+                { name: 'id', title: 'Manage', getCellValue: row => row},
+                { name: 'createdAt', title: 'Created' },
+                { name: 'updatedAt', title: 'Updated'},
+                { name: 'closedAt', title: 'Closed' },
+                { name: 'issues', title: 'Issues', getCellValue: row => row },
+                { name: 'pendingCards', title: 'Pending', getCellValue: row => row },
             ],
             tableColumnExtensions: [
                 { columnName: 'id', width: 90 },
-                { columnName: 'repos', width: 100 },
+                { columnName: 'repo', width: 100 },
+                { columnName: 'org', width: 100 },
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pendingCards', width: 90 },
                 { columnName: 'createdAt', width: 100 },
@@ -212,7 +218,8 @@ class ProjectsTable extends Component {
             nameColumns: ['name'],
             stateColumns: ['state'],
             manageColumns: ['id'],
-            reposColumns: ['repos'],
+            repoColumns: ['repo'],
+            orgColumns: ['org'],
             issuesColumns: ['issues'],
             pendingCardsColumns: ['pendingCards'],
             datesColumns: ['createdAt', 'updatedAt', 'closedAt'],
@@ -254,6 +261,7 @@ class ProjectsTable extends Component {
         };
     }
 
+    /*
     formatData() {
         const { projects } = this.props;
 
@@ -283,6 +291,7 @@ class ProjectsTable extends Component {
         projectsdata = projectsdata.reverse();
         return projectsdata;
     }
+    */
 
     render() {
         const {
@@ -295,65 +304,75 @@ class ProjectsTable extends Component {
             stateColumns,
             manageColumns,
             nameColumns,
-            reposColumns,
+            repoColumns,
+            orgColumns,
             datesColumns,
             issuesColumns,
             pendingCardsColumns,
         } = this.state;
-
-        return (
-            <React.Fragment>
-                <Grid
-                    rows={this.formatData()}
-                    columns={columns}
-                    getRowId={getRowId}
-                >
-                    <SortingState
-                        sorting={sorting}
-                        onSortingChange={this.changeSorting}
-                    />
-                    <PagingState
-                        currentPage={currentPage}
-                        onCurrentPageChange={this.changeCurrentPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={this.changePageSize}
-                    />
-                    <StateTypeProvider
-                        for={stateColumns}
-                    />
-                    <NameTypeProvider
-                        for={nameColumns}
-                    />
-                    <ManageTypeProvider
-                        for={manageColumns}
-                    />
-                    <ReposTypeProvider
-                        for={reposColumns}
-                    />
-                    <IssuesTypeProvider
-                        for={issuesColumns}
-                    />
-                    <PendingCardsTypeProvider
-                        for={pendingCardsColumns}
-                    />
-                    <DatesTypeProvider
-                        for={datesColumns}
-                    />
-                    <IntegratedSorting />
-                    <IntegratedPaging />
-                    <Table
-                        columnExtensions={tableColumnExtensions}
-                        cellComponent={Cell}
-                    />
-                    <TableHeaderRow
-                        showSortingControls
-                    />
-                    <PagingPanel
-                        pageSizes={pageSizes}
-                    />
-                </Grid>
-            </React.Fragment>
-        );
+        const {
+            projects,
+        } = this.props;
+        if (projects === undefined) {
+            return null;
+        } else {
+            return (
+                <React.Fragment>
+                    <Grid
+                        rows={projects}
+                        columns={columns}
+                        getRowId={getRowId}
+                    >
+                        <SortingState
+                            sorting={sorting}
+                            onSortingChange={this.changeSorting}
+                        />
+                        <PagingState
+                            currentPage={currentPage}
+                            onCurrentPageChange={this.changeCurrentPage}
+                            pageSize={pageSize}
+                            onPageSizeChange={this.changePageSize}
+                        />
+                        <StateTypeProvider
+                            for={stateColumns}
+                        />
+                        <NameTypeProvider
+                            for={nameColumns}
+                        />
+                        <ManageTypeProvider
+                            for={manageColumns}
+                        />
+                        <RepoTypeProvider
+                            for={repoColumns}
+                        />
+                        <OrgTypeProvider
+                            for={orgColumns}
+                        />
+                        <IssuesTypeProvider
+                            for={issuesColumns}
+                        />
+                        <PendingCardsTypeProvider
+                            for={pendingCardsColumns}
+                        />
+                        <DatesTypeProvider
+                            for={datesColumns}
+                        />
+                        <IntegratedSorting />
+                        <IntegratedPaging />
+                        <Table
+                            columnExtensions={tableColumnExtensions}
+                            cellComponent={Cell}
+                        />
+                        <TableHeaderRow
+                            showSortingControls
+                        />
+                        <PagingPanel
+                            pageSizes={pageSizes}
+                        />
+                    </Grid>
+                </React.Fragment>
+            );
+        }
     }
 }
 
