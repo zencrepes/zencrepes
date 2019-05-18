@@ -18,10 +18,11 @@ Agile analytics and management across GitHub organizations & repositories made e
 * [Try-it](#try-it)
 * [What's Next ?](#whats-next-)
 * [Overview](#overview)
-    * [Wizard](https://github.com/Fgerthoffert/zencrepes/tree/develop#wizard)
-    * [Velocity](https://github.com/Fgerthoffert/zencrepes/tree/develop#velocity)
+    * [Wizard](#wizard)
+    * [Use of Labels](#use-of-labels)
+    * [Velocity](#velocity)
     * [Staging Changes](#staging-changes)
-    * [Issues Screen](#issues-scree)
+    * [Issues Screen](#issues-screen)
     * [Sprints Screen](#sprints-screen)
     * [Labels Screen](#labels-screen)
     * [Milestones Screen](#milestones-screen)
@@ -82,7 +83,6 @@ ZenCrepes can fetch repositories affiliated with the user, but it can also fetch
 
 ZenCrepes uses a set of specific labels (or specific label formats) for its reporting.
 
-|---|---|---|
 |Label Name | Label Description | Description|
 |---|---|---|
 |scope change| any | Use to track scope change|
