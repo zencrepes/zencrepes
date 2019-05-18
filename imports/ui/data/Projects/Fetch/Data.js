@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { withApollo } from 'react-apollo';
 
+import GET_GITHUB_ORGPROJECTS from '../../../../graphql/getOrgProjects.graphql';
 import GET_GITHUB_PROJECTS from '../../../../graphql/getProjects.graphql';
 
 import { cfgSources } from '../../Minimongo.js';
@@ -16,6 +17,7 @@ class Data extends Component {
         super(props);
         this.errorRetry = 0;
         this.projectsCount = 0;
+        this.orgsFetched = [];
     }
 
     componentDidUpdate = (prevProps) => {
@@ -59,6 +61,13 @@ class Data extends Component {
                 log.info('Repo ' + repo.name + ' (' + repo.id + ') is inactive, removing: ' + cfgProjects.find({'repo.id': repo.id}).count() + ' projects ');
                 await cfgProjects.remove({'repo.id': repo.id});
             } else if (repo.active === true) {
+                if (!this.orgsFetched.includes(repo.org.login)){
+                    //There needs to be a process for fetching projects attached at an Org level
+                    log.info('Fetching org-level projects for ' + repo.org.login);
+                    await this.getOrgProjectsPagination(null, 5, repo.org);
+                    this.orgsFetched.push(repo.org.login);
+                    setLoadingSuccessMsg('Fetched ' + this.projectsCount + ' projects');
+                }
                 log.info('Processing repo: ' + repo.name + ' - Is active, should have ' + repo.projects.totalCount + ' projects');
                 setLoadingMsgAlt('Fetching projects from ' + repo.org.login + '/' + repo.name);
                 await this.getProjectsPagination(null, 5, repo);
@@ -81,8 +90,49 @@ class Data extends Component {
         return new Promise(resolve => setTimeout(resolve, ms));
     };
 
-    // TODO- There is a big issue with the way the query increment is calculated, if remote has 100 projects, but local only has 99
-    // Query increment should not be just 1 since if the missing projects is far down, this will generate a large number of calls
+    getOrgProjectsPagination = async (cursor, increment, org) => {
+        const { client, setLoading, log } = this.props;
+        if (this.props.loading) {
+            if (this.errorRetry <= 3) {
+                let data = {};
+                try {
+                    data = await client.query({
+                        query: GET_GITHUB_ORGPROJECTS,
+                        variables: {repo_cursor: cursor, increment: increment, org_name: org.login},
+                        fetchPolicy: 'no-cache',
+                        errorPolicy: 'ignore',
+                    });
+                }
+                catch (error) {
+                    log.info(error);
+                }
+                log.info(org);
+                if (data.data !== undefined && data.data !== null) {
+                    this.errorRetry = 0;
+                    this.props.updateChip(data.data.rateLimit);
+                    // Check if the repository actually exist and projects were returned
+                    if (data.data.organization !== null && data.data.organization.projects.edges.length > 0) {
+                        let lastCursor = await this.ingestOrgProjects(data, org);
+                        let loadedProjectsCount = cfgProjects.find({'org.id': org.id, 'refreshed': true}).count();
+                        let queryIncrement = calculateQueryIncrement(loadedProjectsCount, data.data.organization.projects.totalCount);
+                        log.info('Loading projects for Org:  ' + org.login + ' - Query Increment: ' + queryIncrement + ' - Local Count: ' + loadedProjectsCount + ' - Remote Count: ' + data.data.organization.projects.totalCount);
+                        if (queryIncrement > 0 && lastCursor !== null) {
+                            //Start recurring call, to load all projects from a repository
+                            await this.getOrgProjectsPagination(lastCursor, queryIncrement, org);
+                        }
+                    }
+                } else {
+                    this.errorRetry = this.errorRetry + 1;
+                    log.info('Error loading content, current count: ' + this.errorRetry);
+                    await this.getOrgProjectsPagination(cursor, increment, org);
+                }
+            } else {
+                log.info('Got too many load errors, stopping');
+                setLoading(false);
+            }
+        }
+    };
+
     getProjectsPagination = async (cursor, increment, repoObj) => {
         const { client, setLoading, log } = this.props;
         if (this.props.loading) {
@@ -130,6 +180,58 @@ class Data extends Component {
         }
     };
 
+    ingestOrgProjects = async (data, org) => {
+        const {
+            setLoadingMsg,
+            log
+        } = this.props;
+        let lastCursor = null;
+        let stopLoad = false;
+        log.info(data);
+        for (var currentProject of data.data.organization.projects.edges) {
+            log.info('Loading project: ' + currentProject.node.name);
+            let existNode = cfgProjects.findOne({id: currentProject.node.id});
+            let exitsNodeUpdateAt = null;
+            if (existNode !== undefined) {
+                exitsNodeUpdateAt = existNode.updatedAt;
+            }
+            if (new Date(currentProject.node.updatedAt).getTime() === new Date(exitsNodeUpdateAt).getTime()) {
+                log.info('Project already loaded, skipping');
+                // Projects are loaded from newest to oldest, when it gets to a point where updated date of a loaded project
+                // is equal to updated date of a local project, it means there is no "new" content, but there might still be
+                // projects that were not loaded for any reason. So the system only stops loaded if totalCount remote is equal
+                //  to the total number of projects locally
+                if (data.data.organization.projects.totalCount === cfgProjects.find({'org.id': org.id}).count()) {
+                    stopLoad = true;
+                }
+            } else {
+                log.info('New or updated project');
+                let projectObj = JSON.parse(JSON.stringify(currentProject.node)); //TODO - Replace this with something better to copy object ?
+                projectObj['repo'] = null;
+                projectObj['org'] = org;
+                projectObj['refreshed'] = true;
+                projectObj['active'] = true;
+
+                await cfgProjects.remove({'id': projectObj.id});
+                await cfgProjects.upsert({
+                    id: projectObj.id
+                }, {
+                    $set: projectObj
+                });
+            }
+            this.projectsCount = this.projectsCount + 1;
+            setLoadingMsg(this.projectsCount + ' projects loaded');
+            lastCursor = currentProject.cursor;
+        }
+        if (lastCursor === null) {
+            log.info('=> No more updates to load, will not be making another GraphQL call for this repository');
+        }
+        if (stopLoad === true) {
+            lastCursor = null;
+        }
+        return lastCursor;
+    };
+
     ingestProjects = async (data, repoObj) => {
         const {
             setLoadingMsg,
@@ -139,7 +241,7 @@ class Data extends Component {
         let stopLoad = false;
         log.info(data);
         for (var currentProject of data.data.repository.projects.edges) {
-            log.info('Loading project: ' + currentProject.node.title);
+            log.info('Loading project: ' + currentProject.node.name);
             let existNode = cfgProjects.findOne({id: currentProject.node.id});
             let exitsNodeUpdateAt = null;
             if (existNode !== undefined) {
