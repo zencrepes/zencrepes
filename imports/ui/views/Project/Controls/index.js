@@ -3,6 +3,7 @@ import CustomCard from "../../../components/CustomCard/index.js";
 
 import SwitchForecast from './SwitchForecast.js';
 import GitHubActivity from './GitHubActivity.js';
+import GitHubProjectBoard from './GitHubProjectBoard.js';
 import LabelsFilters from './LabelsFilters/index.js';
 
 class Controls extends Component {
@@ -18,6 +19,7 @@ class Controls extends Component {
                 headerFactValue=""
             >
                 <GitHubActivity />
+                <GitHubProjectBoard />
                 <SwitchForecast />
                 <LabelsFilters />
             </CustomCard>
