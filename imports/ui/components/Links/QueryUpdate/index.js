@@ -13,7 +13,7 @@ class QueryUpdate extends Component {
         const { updateQueryPath, updateQuery } = this.props;
         this.props.history.push({
             pathname: updateQueryPath,
-            search: '?q=' + JSON.stringify(updateQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(updateQuery)),
             state: { detail: updateQuery }
         });
     }

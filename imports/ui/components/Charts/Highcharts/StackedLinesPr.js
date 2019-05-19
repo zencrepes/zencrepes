@@ -22,7 +22,7 @@ class StackedLinesPr extends Component {
             const query = {'id': {'$in': issuesArrayQuery}};
             this.props.history.push({
                 pathname: '/pullrequests',
-                search: '?q=' + JSON.stringify(query),
+                search: '?q=' + encodeURIComponent(JSON.stringify(query)),
                 state: { detail: query }
             });
         }

@@ -82,7 +82,7 @@ class IssuesPie extends Component {
                 const query = {'id': {'$in': issuesArrayQuery}};
                 this.props.history.push({
                     pathname: '/issues',
-                    search: '?q=' + JSON.stringify(query),
+                    search: '?q=' + encodeURIComponent(JSON.stringify(query)),
                     state: { detail: query }
                 });
             }

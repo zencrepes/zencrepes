@@ -40,11 +40,11 @@ class Issues extends Component {
     componentDidMount() {
         const { updateQuery, updateSelectedTab, match } = this.props;
         const params = new URLSearchParams(this.props.location.search);
-        const queryUrl = params.get('q');
-        if (queryUrl === null) {
-            updateQuery({});
-        } else {
+        if (params.get('q') !== null) {
+            const queryUrl = decodeURIComponent(params.get('q'));
             updateQuery(JSON.parse(queryUrl));
+        } else {
+            updateQuery({});
         }
         if (match.params.tab !== undefined) {
             updateSelectedTab(match.params.tab);
@@ -54,10 +54,10 @@ class Issues extends Component {
     componentDidUpdate(prevProps) {
         const { updateQuery, updateSelectedTab, match } = this.props;
         const params = new URLSearchParams(this.props.location.search);
-        const queryUrl = params.get('q');
+        const queryUrl = decodeURIComponent(params.get('q'));
 
         const oldParams = new URLSearchParams(prevProps.location.search);
-        const oldQueryUrl = oldParams.get('q');
+        const oldQueryUrl = decodeURIComponent(oldParams.get('q'));
 
         if (queryUrl !== oldQueryUrl) {
             updateQuery(JSON.parse(queryUrl));
@@ -71,12 +71,12 @@ class Issues extends Component {
     changeTab = (newTab) => {
         const params = new URLSearchParams(this.props.location.search);
         let queryUrl = "{}";
-        if (params.get('q') !== null) {
-            queryUrl = params.get('q');
+        if (decodeURIComponent(params.get('q')) !== null) {
+            queryUrl = decodeURIComponent(params.get('q'));
         }
         this.props.history.push({
             pathname: '/issues/' + newTab,
-            search: '?q=' + queryUrl,
+            search: '?q=' + encodeURIComponent(queryUrl),
             state: { detail: queryUrl }
         });
     };

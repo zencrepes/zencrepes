@@ -37,7 +37,7 @@ class SelectSprint extends Component {
         //{"labels.edges":{"$elemMatch":{"node.name":{"$in":["loe:xx-large"]}}}}
         this.props.history.push({
             pathname: '/project',
-            search: '?q=' + JSON.stringify(updatedQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(updatedQuery)),
             state: { detail: updatedQuery }
         });
     };

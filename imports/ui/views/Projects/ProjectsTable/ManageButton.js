@@ -27,7 +27,7 @@ class ManageButton extends Component {
         const projectQuery = {"projectCards.edges":{"$elemMatch":{"node.project.name":{"$in":[project.name]}}}};
         this.props.history.push({
             pathname: '/project',
-            search: '?q=' + JSON.stringify(projectQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(projectQuery)),
             state: { detail: projectQuery }
         });
     };

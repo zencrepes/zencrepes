@@ -63,7 +63,7 @@ class CompletionGauges extends Component {
                     max: 200,
                     title: {
                         y: -40,
-                        text: 'Chart Title'
+                        text: ''
                     },
                 },
                 series: [{

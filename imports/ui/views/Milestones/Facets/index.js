@@ -26,7 +26,7 @@ class MilestonesFacets extends Component {
         const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
         this.props.history.push({
             pathname: '/milestones',
-            search: '?q=' + JSON.stringify(modifiedQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(modifiedQuery)),
             state: { detail: modifiedQuery }
         });
     };
