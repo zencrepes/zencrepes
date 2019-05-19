@@ -18,10 +18,11 @@ Agile analytics and management across GitHub organizations & repositories made e
 * [Try-it](#try-it)
 * [What's Next ?](#whats-next-)
 * [Overview](#overview)
-    * [Wizard](https://github.com/Fgerthoffert/zencrepes/tree/develop#wizard)
-    * [Velocity](https://github.com/Fgerthoffert/zencrepes/tree/develop#velocity)
+    * [Wizard](#wizard)
+    * [Use of Labels](#use-of-labels)
+    * [Velocity](#velocity)
     * [Staging Changes](#staging-changes)
-    * [Issues Screen](#issues-scree)
+    * [Issues Screen](#issues-screen)
     * [Sprints Screen](#sprints-screen)
     * [Labels Screen](#labels-screen)
     * [Milestones Screen](#milestones-screen)
@@ -39,9 +40,13 @@ It focuses on three primary objectives:
 * __Scrum operation__: Identify the amount of work left in a sprint, estimate completion based on past velocity, review repartition of open issues (by repo, by labels, by assignees).
 * __Consistency__: Ensure labels and milestones are consistent across multiple organizations and repositories, clean-up when necessary.
 
+The general philosophy of the tool is to keep a lean logic and to remain as factual and data-centric as possible. ZenCrepes will report on current or past state but interpretation of the data is left to the end user. 
+
+For example, ZenCrepes can display metrics on open issues in closed milestones, but will not report on issues that missed a milestone. The first one is a factual element about the data, the second one is the human interpretation of a state.
+
 ## How it works
 
-ZenCrepes is entirely client-side by choice. The main concept around using ZenCrepes is not to introduce any dependencies to third-party services. Users have the option to operate directly with GitHub's UI or to use ZenCrepes. It also means that ZenCrepes cannot see any user data, once authenticated, all data exchanges are directly made between the user's browser and GitHub.
+ZenCrepes is client-side and stateless. The main concept around using ZenCrepes is not to introduce any dependencies to third-party services. Users have the option to operate directly with GitHub's UI or to use ZenCrepes. It also means that ZenCrepes cannot see any user data, once authenticated, all data exchanges are directly made between the user's browser and GitHub.
 
 But this approach has two major drawbacks:
 * ZenCrepes cannot register to GitHub hooks, therefore cannot be `informed` about updates. Instead, it needs to regularly pull for changes.
@@ -72,11 +77,25 @@ When opening-up ZenCrepes for the first time, a short configuration wizard is pr
   <img alt="Issues View" title="Issues view" src="./docs/zencrepes-wizard.png" width="640" />
 </p>
 
-ZenCrepes can automatically fetch repositories affiliated with the user, but it can also fetch data from public organizations and repositories, as long as they are configured to allow such action. Some that do are JetBrains, Microsoft (individual repositories, for example, cntk), elastic...
+ZenCrepes can fetch repositories affiliated with the user, but it can also fetch data from public organizations and repositories, as long as they are configured to allow such action. Some that do are JetBrains, Microsoft (individual repositories, for example, cntk), elastic...
+
+## Use of Labels
+
+ZenCrepes uses a set of specific labels (or specific label formats) for its reporting.
+
+|Label Name | Label Description | Description|
+|---|---|---|
+|scope change| any | Use to track scope change|
+|SP:x| _any_ | Used to attach story points to an issue, `x` must be a number|
+|_any_| SP:x | Used to attach story points to an issue, `x` must be a number. This is an alternative to the above, it allows the team to use t-shirt size for label names.|
+|sprint:x| _any_ | Used to identify issues part of a sprint, `x` can be a number or a string.|
+|phase:x| _any_ | Used to identify issues part of a phase, `x` can be a number or a string.|
+|area:x| _any_ | Used to identify issues part of different focus areas or different teams, `x` can be a number or a string.|
+|activity| _any_ | When attached to an issue, this issue becomes the authoritative source of content for a project. For example, issue assignees will be considered core participants to the project. When attached to a milestone, this milestone's dueOn date will become the delivery objective for the project. There can only be one activity issue per project|
 
 ## Velocity
 
-Velocity is an interesting metric, it gives a sense of a team's pace and potentiality to meet certain deadlines. But velocity metrics are not the single mean of estimating, it is one of the many elements to be used when planning and forecasting.
+Velocity is an interesting metric, it gives a sense of a team's pace and potentiality to meet certain deadlines. But velocity metrics are not the single mean of estimating, it is one of the many elements available when planning and forecasting.
 
 In most of its screens, ZenCrepes uses weekly velocity calculated on 4 weeks rolling average from the last data point. For example, the velocity of week 4 is the (W1+W2+W3+W4)/4 (yes it does include the current week).
 
@@ -111,7 +130,7 @@ Notice the switch `Issues Count` vs `Story Points` at the top of the screen. Sto
 
 ### Sprints Screen
 
-The objective of the `Sprints` view is to provide close-up insights into a particular sprint while supporting the team during scrum meetings.
+The objective of the `Sprints` view is to provide close-up insights into a particular sprint while supporting the team during scrum meetings. This view is only going to be relevant for teams using milestones to track sprints.
 
 <p align="center">
   <img alt="Issues View" title="Sprints view" src="./docs/zencrepes-sprints.png" width="640" />
@@ -130,6 +149,10 @@ This screen contains the following:
 * Breakdown of issues count and points by labels
 
 Since ZenCrepes cannot automatically be informed about changes in GitHub, an auto-refresh feature is available. Once enabled, it refreshes issues from all milestones (see the milestone table at the bottom of the screen) every 2 minutes, for 20 occurrences (so about 40mn total). Then the user has to re-activate auto-refresh.
+
+### Projects
+
+The objective of the `Projects` view is to provide agile metrics for teams operating using GitHub projects. The view displays a list of projects with facets, metrics for individual projects can be obtained by clicking on the `STATS` button.
 
 ### Labels Screen
 

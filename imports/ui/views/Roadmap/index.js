@@ -29,21 +29,21 @@ class Roadmap extends Component {
     componentDidMount() {
         const { updateQuery } = this.props;
         const params = new URLSearchParams(this.props.location.search);
-        const queryUrl = params.get('q');
-        if (queryUrl === null) {
-            updateQuery({'state':{'$in':['OPEN']}});
-        } else {
+        if (params.get('q') !== null) {
+            const queryUrl = decodeURIComponent(params.get('q'));
             updateQuery(JSON.parse(queryUrl));
+        } else {
+            updateQuery({'state':{'$in':['OPEN']}});
         }
     }
 
     componentDidUpdate(prevProps) {
         const { updateQuery } = this.props;
         const params = new URLSearchParams(this.props.location.search);
-        const queryUrl = params.get('q');
+        const queryUrl = decodeURIComponent(params.get('q'));
 
         const oldParams = new URLSearchParams(prevProps.location.search);
-        const oldQueryUrl = oldParams.get('q');
+        const oldQueryUrl = decodeURIComponent(oldParams.get('q'));
 
         if (queryUrl !== oldQueryUrl) {
             updateQuery(JSON.parse(queryUrl));

@@ -15,18 +15,18 @@ const styles = {
         paddingTop: '15px',
     },
 };
-class SwitchForecast extends Component {
+class SwitchPoints extends Component {
     constructor(props) {
         super(props);
     }
 
     handleChange = (event) => {
-        const { updateVelocityTeam } = this.props;
-        updateVelocityTeam(event.target.checked);
+        const { setDefaultPoints } = this.props;
+        setDefaultPoints(event.target.checked);
     };
 
     render() {
-        const { classes, velocityTeam, projectsIssues } = this.props;
+        const { classes, defaultPoints } = this.props;
 
         return (
             <Grid
@@ -37,18 +37,17 @@ class SwitchForecast extends Component {
                 spacing={8}
             >
                 <Grid item xs={12} sm>
-                    <div className={classes.itemTitle}>Identify project team by:</div>
+                    <div className={classes.itemTitle}>Calculate metrics using:</div>
                 </Grid>
                 <Grid item>
                     <div className={classes.root}>
-                        Issues Assignees
+                        Issues Count
                         <Switch
-                            checked={velocityTeam}
+                            checked={defaultPoints}
                             onChange={this.handleChange}
                             value="velocityTeam"
-                            disabled={projectsIssues.length > 0 ? false : true}
                         />
-                        GitHub Activity
+                        Points
                     </div>
                 </Grid>
             </Grid>
@@ -57,20 +56,18 @@ class SwitchForecast extends Component {
     }
 }
 
-SwitchForecast.propTypes = {
+SwitchPoints.propTypes = {
     classes: PropTypes.object.isRequired,
-    projectsIssues: PropTypes.array.isRequired,
-    velocityTeam: PropTypes.bool.isRequired,
-    updateVelocityTeam: PropTypes.func.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
+    setDefaultPoints: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-    velocityTeam: state.projectView.velocityTeam,
-    projectsIssues: state.projectView.projectsIssues,
+    defaultPoints: state.projectView.defaultPoints,
 });
 
 const mapDispatch = dispatch => ({
-    updateVelocityTeam: dispatch.projectView.updateVelocityTeam,
+    setDefaultPoints: dispatch.projectView.setDefaultPoints,
 });
 
-export default connect(mapState, mapDispatch)(withStyles(styles)(SwitchForecast));
+export default connect(mapState, mapDispatch)(withStyles(styles)(SwitchPoints));

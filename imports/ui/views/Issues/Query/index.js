@@ -48,7 +48,7 @@ class IssuesQuery extends Component {
     loadQuery = (query) => {
         this.props.history.push({
             pathname: '/issues',
-            search: '?q=' + query.filters,
+            search: '?q=' + encodeURIComponent(query.filters),
             state: { detail: query.filters }
         });
         this.setState({ openManageQueryDialog: false });
@@ -70,7 +70,7 @@ class IssuesQuery extends Component {
         const modifiedQuery = addRemoveFromQuery(valueName, facet, query);
         this.props.history.push({
             pathname: '/issues',
-            search: '?q=' + JSON.stringify(modifiedQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(modifiedQuery)),
             state: { detail: modifiedQuery }
         });
     };
@@ -80,7 +80,7 @@ class IssuesQuery extends Component {
         const modifiedQuery = addRemoveDateFromQuery(field, direction, date, query);
         this.props.history.push({
             pathname: '/issues',
-            search: '?q=' + JSON.stringify(modifiedQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(modifiedQuery)),
             state: { detail: modifiedQuery }
         });
     };

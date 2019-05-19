@@ -34,7 +34,7 @@ class SelectSprint extends Component {
         const updatedQuery = {...query, title: {'$in':[sprintTitle]}};
         this.props.history.push({
             pathname: '/sprints',
-            search: '?q=' + JSON.stringify(updatedQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(updatedQuery)),
             state: { detail: updatedQuery }
         });
     };

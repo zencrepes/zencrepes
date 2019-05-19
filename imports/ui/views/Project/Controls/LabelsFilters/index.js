@@ -22,7 +22,7 @@ class LabelsFilters extends Component {
 
         this.props.history.push({
             pathname: '/project',
-            search: '?q=' + JSON.stringify(modifiedQuery),
+            search: '?q=' + encodeURIComponent(JSON.stringify(modifiedQuery)),
             state: { detail: modifiedQuery }
         });
     };

@@ -79,7 +79,7 @@ const buildFacetValues = (query, miniMongo, facet) => {
     if (facet.nested === true) {
         queryElement = facet.key + '.edges';
     }
-    if (facetQuery[queryElement] !== undefined) {
+    if (facetQuery !== null && facetQuery[queryElement] !== undefined) {
         delete facetQuery[queryElement];
     }
 
