@@ -12,13 +12,29 @@ class RemainingPoints extends Component {
         super(props);
     }
 
-    render() {
-        const { assignees, issues } = this.props;
+    getDefaultRemainingTxtShrt() {
+        const { defaultPoints } = this.props;
+        if (defaultPoints) {
+            return 'Pts';
+        } else {
+            return 'Tkts';
+        }
+    }
 
-        const openPoints = issues
+    render() {
+        const { assignees, issues, defaultPoints } = this.props;
+
+        let metric = 'points';
+        if (!defaultPoints) {metric = 'issues';}
+
+        let openPoints = issues
             .filter(issue => issue.state === 'OPEN')
             .map(issue => issue.points)
             .reduce((acc, points) => acc + points, 0);
+
+        if (!defaultPoints) {
+            openPoints = issues.filter(issue => issue.state === 'OPEN').length;
+        }
 
         const repartitionAssignees = assignees.map((assignee) => {
             let name = assignee.login;
@@ -30,20 +46,22 @@ class RemainingPoints extends Component {
                 issues: assignee.issues.list,
             }
         });
+
+
         return (
             <CustomCard
                 headerTitle="Remaining by Assignee"
-                headerFactTitle="Remaining points"
-                headerFactValue={openPoints + " Pts"}
+                headerFactTitle={"Remaining " + metric}
+                headerFactValue={openPoints + " " + this.getDefaultRemainingTxtShrt()}
             >
                 {openPoints > 0 ? (
                     <IssuesTree
                         dataset={repartitionAssignees}
-                        defaultPoints={true}
+                        defaultPoints={defaultPoints}
                         emptyName="Assignees"
                     />
                 ) : (
-                    <span>Data not available.</span>
+                    <span>Data not available, try switching to issues count instead.</span>
                 )}
 
             </CustomCard>
@@ -54,11 +72,13 @@ class RemainingPoints extends Component {
 RemainingPoints.propTypes = {
     assignees: PropTypes.array.isRequired,
     issues: PropTypes.array.isRequired,
+    defaultPoints: PropTypes.bool.isRequired,
 };
 
 const mapState = state => ({
     issues: state.projectView.issues,
     assignees: state.projectView.assignees,
+    defaultPoints: state.projectView.defaultPoints,
 });
 
 export default connect(mapState, null)(RemainingPoints);

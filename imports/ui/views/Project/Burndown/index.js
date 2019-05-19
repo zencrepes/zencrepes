@@ -37,7 +37,7 @@ class CurrentCompletion extends Component {
         return (
             <CustomCard
                 headerTitle={"Burndown Chart" + this.getDefaultRemainingTxtShrt()}
-                headerFactTitle="Displaying points"
+                headerFactTitle={"Displaying " + metric}
                 headerFactValue={""}
                 headerLegend="This chart displays the burndown as well as closed issues per day. Start and End date of the chart are based on first closed and last closed issues."
             >

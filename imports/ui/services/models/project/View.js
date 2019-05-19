@@ -326,6 +326,14 @@ export default {
             const issues = cfgIssues.find(rootState.projectView.query).fetch();
             this.setIssues(issues);
 
+            // If no issues have points, move to default by count.
+            const issuesPoints = issues.filter(issue => issue.points !== null).length;
+            if (issuesPoints === 0 && issues.length > 0) {
+                this.setDefaultPoints(false);
+            } else {
+                this.setDefaultPoints(true);
+            }
+
             // Create an array of assignees involved in a particular sprint
             const primaryAssignees = rootState.projectView.projectsIssues.reduce((tally, issue) => {
                 if (issue.assignees.totalCount > 0) {

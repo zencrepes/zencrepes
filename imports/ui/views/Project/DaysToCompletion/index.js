@@ -81,7 +81,7 @@ class DaysToCompletion extends Component {
     }
 
     render() {
-        const { velocity } = this.props;
+        const { velocity, defaultPoints } = this.props;
         return (
             <CustomCard
                 headerTitle="Forecast"
@@ -90,7 +90,7 @@ class DaysToCompletion extends Component {
                 headerLegend="In business days, remaining points divided by current velocity. Using 4 weeks (4w) rolling average by default, this widget also provides metrics with an 8 weeks (8w), 12 weeks (12w), and all time (all) window."
             >
                 {!_.isEmpty(velocity) ? (
-                    <DaysToCompletionBars velocity={velocity.velocity} defaultPoints={true} />
+                    <DaysToCompletionBars velocity={velocity.velocity} defaultPoints={defaultPoints} />
                 ) : (
                     <span>No Data available</span>
                 )}
@@ -106,7 +106,7 @@ DaysToCompletion.propTypes = {
 
 const mapState = state => ({
     velocity: state.projectView.velocity,
-    defaultPoints: true,
+    defaultPoints: state.projectView.defaultPoints,
 });
 
 export default connect(mapState, null)(DaysToCompletion);
