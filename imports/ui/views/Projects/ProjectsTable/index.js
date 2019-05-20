@@ -186,6 +186,59 @@ const Cell = (props) => {
 
 const getRowId = row => row.id;
 
+const compareString = (a, b) => {
+    if (String(a).toLowerCase() < String(b).toLowerCase()) return -1;
+    if (String(a).toLowerCase() > String(b).toLowerCase()) return 1;
+    return 0;
+};
+
+const compareNumber = (a, b) => {
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+};
+
+const compareName = (a, b) => {
+    return compareString(a.name, b.name);
+};
+
+const compareOrg = (a, b) => {
+    return compareString(a.org.login, b.org.login);
+};
+
+const compareRepo = (a, b) => {
+    let compareA = '';
+    if (a.repo === undefined || a.repo === null) {compareA = '-';}
+    else {compareA = a.repo.name;}
+    let compareB = '';
+    if (b.repo === undefined || b.repo === null) {compareB = '-';}
+    else {compareB = b.repo.name;}
+
+    return compareString(compareA, compareB);
+};
+
+const compareIssues = (a, b) => {
+    let compareA = 0;
+    if (a === undefined) {compareA = 0;}
+    else {compareA = a.issues.length;}
+    let compareB = 0;
+    if (b === undefined) {compareB = 0;}
+    else {compareB = b.issues.length;}
+
+    return compareNumber(compareA, compareB);
+};
+
+const comparePendingCards = (a, b) => {
+    let compareA = 0;
+    if (a === undefined) {compareA = 0;}
+    else {compareA = a.pendingCards.totalCount;}
+    let compareB = 0;
+    if (b === undefined) {compareB = 0;}
+    else {compareB = b.pendingCards.totalCount;}
+
+    return compareNumber(compareA, compareB);
+};
+
 class ProjectsTable extends Component {
     constructor(props) {
         super(props);
@@ -223,6 +276,16 @@ class ProjectsTable extends Component {
             issuesColumns: ['issues'],
             pendingCardsColumns: ['pendingCards'],
             datesColumns: ['createdAt', 'updatedAt', 'closedAt'],
+            sortingStateColumnExtensions: [
+                { columnName: 'id', sortingEnabled: false },
+            ],
+            integratedSortingColumnExtensions: [
+                { columnName: 'name', compare: compareName },
+                { columnName: 'org', compare: compareOrg },
+                { columnName: 'repo', compare: compareRepo },
+                { columnName: 'issues', compare: compareIssues },
+                { columnName: 'pendingCards', compare: comparePendingCards },
+            ],
             sorting: [],
             currentPage: 0,
             pageSize: 50,
@@ -309,6 +372,8 @@ class ProjectsTable extends Component {
             datesColumns,
             issuesColumns,
             pendingCardsColumns,
+            integratedSortingColumnExtensions,
+            sortingStateColumnExtensions,
         } = this.state;
         const {
             projects,
@@ -323,15 +388,16 @@ class ProjectsTable extends Component {
                         columns={columns}
                         getRowId={getRowId}
                     >
-                        <SortingState
-                            sorting={sorting}
-                            onSortingChange={this.changeSorting}
-                        />
                         <PagingState
                             currentPage={currentPage}
                             onCurrentPageChange={this.changeCurrentPage}
                             pageSize={pageSize}
                             onPageSizeChange={this.changePageSize}
+                        />
+                        <SortingState
+                            sorting={sorting}
+                            onSortingChange={this.changeSorting}
+                            columnExtensions={sortingStateColumnExtensions}
                         />
                         <StateTypeProvider
                             for={stateColumns}
@@ -357,7 +423,9 @@ class ProjectsTable extends Component {
                         <DatesTypeProvider
                             for={datesColumns}
                         />
-                        <IntegratedSorting />
+                        <IntegratedSorting
+                            columnExtensions={integratedSortingColumnExtensions}
+                        />
                         <IntegratedPaging />
                         <Table
                             columnExtensions={tableColumnExtensions}
