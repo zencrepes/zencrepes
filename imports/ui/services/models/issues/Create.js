@@ -1,3 +1,5 @@
+import uuidv1 from "uuid/v1";
+
 export default {
     state: {
         loadFlag: false,        // Boolean to trigger issue load
@@ -11,6 +13,9 @@ export default {
 
         agileLabels: [],            // Agile labels available to the issue
         agileNewState: '',      //
+
+        showImportIssues: false,
+        createFlag: false,
     },
     reducers: {
         setLoadFlag(state, payload) {return { ...state, loadFlag: payload };},
@@ -33,5 +38,14 @@ export default {
     },
 
     effects: {
+        async loadTsv(results) {
+            if (results.data.length > 0) {
+                this.setIssues(results.data.map((issue) => {return {...issue, id: uuidv1()}}));
+                this.setAction('create');
+                this.setVerifFlag(true);
+                this.setStageFlag(true);
+                this.setShowImportIssues(false);
+            }
+        },
     }
 };

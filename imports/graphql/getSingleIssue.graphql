@@ -15,6 +15,7 @@ query ($issue_array: [ID!]!){
       number
       url
       title
+      body
       state
       author {
         login

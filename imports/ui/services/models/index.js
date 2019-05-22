@@ -35,6 +35,7 @@ export { default as labelsEdit } from './labels/Edit.js';
 export { default as issuesFetch } from './issues/Fetch.js';
 export { default as issuesView } from './issues/View.js';
 export { default as issuesEdit } from './issues/Edit.js';
+export { default as issuesCreate } from './issues/Create.js';
 
 // Pullrequests
 export { default as pullrequestsFetch } from './pullrequests/Fetch.js';

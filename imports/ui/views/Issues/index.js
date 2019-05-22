@@ -11,12 +11,15 @@ import General from '../../layouts/General/index.js';
 
 import IssuesFetch from '../../data/Issues/Fetch/index.js';
 import IssuesEdit from '../../data/Issues/Edit/index.js';
+import IssuesCreate from '../../data/Issues/Create/index.js';
 
 import Actions from './Actions/index.js';
 import IssuesFacets from './Facets/index.js';
 import IssuesQuery from './Query/index.js';
 import IssuesTabs from './Tabs/index.js';
 import IssuesContent from './Content/index.js';
+
+import IssuesImport from './Import/index.js';
 
 import NoData from './NoData/index.js';
 
@@ -86,8 +89,10 @@ class Issues extends Component {
         return (
             <General>
                 <QueryUpdate />
+                <IssuesImport />
                 <IssuesFetch />
                 <IssuesEdit />
+                <IssuesCreate />
                 {issues.length === 0 ? (
                     <NoData />
                 ) : (

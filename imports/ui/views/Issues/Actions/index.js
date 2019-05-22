@@ -9,6 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import PointsSwitch from './PointsSwitch.js';
 import Refresh from './Refresh.js';
 import Clear from './Clear.js';
+import Import from './Import.js';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -51,6 +52,9 @@ class Actions extends Component {
                                 </Grid>
                                 <Grid item>
                                     <Clear />
+                                </Grid>
+                                <Grid item>
+                                    <Import />
                                 </Grid>
                             </Grid>
                         </Grid>
