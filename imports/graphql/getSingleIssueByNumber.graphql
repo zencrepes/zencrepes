@@ -16,6 +16,7 @@ query ($org_name: String!, $repo_name: String!, $issue_number: Int!){
       number
       url
       title
+      body
       state
       author {
         login
