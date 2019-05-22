@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import IconButton from '@material-ui/core/IconButton';
-import DatabaseImportIcon from 'mdi-react/DatabaseImportIcon';
+import ToolboxIcon from 'mdi-react/ToolboxIcon';
 import Tooltip from '@material-ui/core/Tooltip';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import {connect} from "react-redux";
-
 
 const styles = theme => ({
     root: {
@@ -26,24 +27,45 @@ const styles = theme => ({
 class Import extends Component {
     constructor (props) {
         super(props);
+        this.state = {
+            anchorEl: null,
+        };
     }
 
     importIssues = () => {
         const { setShowImportIssues } = this.props;
         setShowImportIssues(true);
+        this.setState({ anchorEl: null });
+    };
+
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
     };
 
     render() {
         const { classes, issues } = this.props;
+        const { anchorEl } = this.state;
 
         if (issues.length > 0) {
             return (
                 <div className={classes.root}>
-                    <Tooltip title="Import issues from TSV">
-                        <IconButton aria-label="Import" onClick={this.importIssues} className={classes.button}>
-                            <DatabaseImportIcon />
+                    <Tooltip title="Tools">
+                        <IconButton aria-label="Open" onClick={this.handleClick} className={classes.button}>
+                            <ToolboxIcon />
                         </IconButton>
                     </Tooltip>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleClose}
+                    >
+                        <MenuItem onClick={this.importIssues}>Create issues from a TSV file</MenuItem>
+                    </Menu>
                 </div>
             )
 

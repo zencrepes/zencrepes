@@ -51,10 +51,10 @@ class Actions extends Component {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <Clear />
+                                    <Import />
                                 </Grid>
                                 <Grid item>
-                                    <Import />
+                                    <Clear />
                                 </Grid>
                             </Grid>
                         </Grid>
