@@ -13,7 +13,7 @@ class AutoRefresh extends Component {
         const { setLoadFlag, setLoadRepos, projects, setOnSuccess, updateView } = this.props;
 
         setOnSuccess(updateView);
-        setLoadRepos(projects.map(project => project.repo.id));
+        setLoadRepos(projects.filter(p => p.repo !== null).map(project => project.repo.id));
         setLoadFlag(true);
     };
 

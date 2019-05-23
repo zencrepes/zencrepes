@@ -145,13 +145,11 @@ class Project extends Component {
 }
 
 Project.propTypes = {
-    initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
-    initView: dispatch.projectView.initView,
     updateQuery: dispatch.projectView.updateQuery,
 });
 

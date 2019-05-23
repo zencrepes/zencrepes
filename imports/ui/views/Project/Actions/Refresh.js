@@ -42,7 +42,7 @@ class Refresh extends Component {
             updateView
         } = this.props;
         setOnSuccess(updateView);
-        reposSetLoadRepos(projects.map(project => project.repo.id));
+        reposSetLoadRepos(projects.filter(p => p.repo !== null).map(project => project.repo.id));
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
