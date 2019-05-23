@@ -56,6 +56,7 @@ export default {
         defaultPoints: true,                // Default display to points, otherwise issues count
 
         assignees: [],
+        assigneesRemaining: [],
         availableAssignees: [],
         filteredAvailableAssignees: [],
         availableAssigneesFilter: '',
@@ -108,6 +109,7 @@ export default {
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
 
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
+        setAssigneesRemaining(state, payload) {return { ...state, assigneesRemaining: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
         setAvailableAssignees(state, payload) {return { ...state, availableAssignees: JSON.parse(JSON.stringify(payload))};},
         setFilteredAvailableAssignees(state, payload) {return { ...state, filteredAvailableAssignees: JSON.parse(JSON.stringify(payload)) };},
@@ -355,6 +357,9 @@ export default {
             });
             this.setAssignees(assignees);
 
+            let openQuery = {...rootState.projectView.query, 'state': { $eq : 'OPEN' }};
+            let assigneesRemaining = getAssigneesRepartition(cfgIssues.find(openQuery).fetch());
+            this.setAssigneesRemaining(assigneesRemaining);
 
             if (rootState.projectView.velocityTeam === true) {
                 assignees = assignees.filter(assignee => assignee.core === true);

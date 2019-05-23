@@ -47,7 +47,6 @@ class RemainingPoints extends Component {
             }
         });
 
-
         return (
             <CustomCard
                 headerTitle="Remaining by Assignee"
@@ -76,9 +75,9 @@ RemainingPoints.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.projectView.issues,
-    assigneesRemaining: state.projectView.assigneesRemaining,
-    defaultPoints: state.projectView.defaultPoints,
+    issues: state.milestoneView.issues,
+    assigneesRemaining: state.milestoneView.assigneesRemaining,
+    defaultPoints: state.milestoneView.defaultPoints,
 });
 
 export default connect(mapState, null)(RemainingPoints);

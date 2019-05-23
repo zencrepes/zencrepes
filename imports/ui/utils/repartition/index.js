@@ -102,11 +102,20 @@ export const getRepositories = (issues) => {
     let repos = [];
     let statesGroup = _.groupBy(issues, (value) => value.repo.name);
     Object.keys(statesGroup).forEach(function(key) {
+        let issuesList = statesGroup[key];
         repos.push({
             id: statesGroup[key][0].repo.id,
             org: statesGroup[key][0].repo.org,
             name: statesGroup[key][0].repo.name,
             url: statesGroup[key][0].repo.url,
+            issues: {
+                totalCount: statesGroup[key][0].repo.issues.totalCount,
+                list: issuesList,
+                count: issuesList.length
+            },
+            points: {
+                count: issuesList.map(issue => issue.points). reduce((acc, count) => acc + count, 0)
+            }
         });
     });
     return repos;
