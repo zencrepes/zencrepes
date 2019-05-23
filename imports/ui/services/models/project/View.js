@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Meteor } from 'meteor/meteor';
 
-import { cfgMilestones, cfgIssues, cfgSources, cfgProjects } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues, cfgProjects } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
