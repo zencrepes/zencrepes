@@ -94,7 +94,26 @@ export const getMilestonesRepartition = (issues) => {
             },
         });
     });
+    return milestones.sort((a, b) => b.issues.count - a.issues.count);
+};
 
+export const getMilestonesRepartitionById = (issues) => {
+    let statesGroup = [];
+    statesGroup = _.groupBy(issues, (value) => value.milestone.id);
+
+    let milestones = []
+    Object.keys(statesGroup).forEach(function(key) {
+        milestones.push({
+            ...statesGroup[key][0].milestone,
+            issues: {
+                list: statesGroup[key],
+                count: statesGroup[key].length
+            },
+            points: {
+                count: statesGroup[key].map(issue => issue.points). reduce((acc, count) => acc + count, 0)
+            },
+        });
+    });
     return milestones.sort((a, b) => b.issues.count - a.issues.count);
 };
 

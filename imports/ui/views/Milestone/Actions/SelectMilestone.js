@@ -24,8 +24,10 @@ class SelectMilestone extends Component {
         const { query } = this.props;
         // Update Query to new sprint title
         let updatedQuery = {...query};
-        if (milestoneId === 'no-filter' && updatedQuery['milestone.id'] !== undefined) {
-            delete updatedQuery['milestone.id'];
+        if (milestoneId === 'no-filter') {
+            if (updatedQuery['milestone.id'] !== undefined) {
+                delete updatedQuery['milestone.id'];
+            }
         } else {
             updatedQuery['milestone.id'] = {'$eq': milestoneId};
         }
@@ -44,7 +46,7 @@ class SelectMilestone extends Component {
     };
 
     render() {
-        const { classes, milestones, selectedMilestoneId } = this.props;
+        const { classes, availableMilestones, selectedMilestoneId } = this.props;
         return (
             <Select
                 value={selectedMilestoneId}
@@ -55,9 +57,12 @@ class SelectMilestone extends Component {
                     id: 'milestone-simple',
                 }}
             >
-                {milestones.map(ms => (
-                    <MenuItem key={ms.name} value={ms.id}>
-                        {ms.name}
+                <MenuItem key={'no-filter'} value={'no-filter'}>
+                    No Filter (across all repositories)
+                </MenuItem>
+                {availableMilestones.map(ms => (
+                    <MenuItem key={ms.id} value={ms.id}>
+                        {ms.title} in {ms.org.login}/{ms.repo.name} ({ms.issues.totalCount} issues)
                     </MenuItem>
                 ))}
             </Select>
@@ -68,7 +73,7 @@ class SelectMilestone extends Component {
 SelectMilestone.propTypes = {
     classes: PropTypes.object.isRequired,
     selectedMilestoneId: PropTypes.string,
-    milestones: PropTypes.array.isRequired,
+    availableMilestones: PropTypes.array.isRequired,
     history: PropTypes.object.isRequired,
     setSelectedMilestoneId: PropTypes.func.isRequired,
     query: PropTypes.object,
@@ -76,7 +81,7 @@ SelectMilestone.propTypes = {
 
 const mapState = state => ({
     selectedMilestoneId: state.milestoneView.selectedMilestoneId,
-    milestones: state.milestoneView.milestones,
+    availableMilestones: state.milestoneView.availableMilestones,
     query: state.milestoneView.query,
 });
 

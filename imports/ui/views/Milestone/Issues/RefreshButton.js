@@ -52,7 +52,7 @@ RefreshButton.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.projectView.issues,
+    issues: state.milestoneView.issues,
 });
 
 const mapDispatch = dispatch => ({
@@ -62,7 +62,7 @@ const mapDispatch = dispatch => ({
     setAction: dispatch.issuesEdit.setAction,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
-    updateView: dispatch.projectView.updateView,
+    updateView: dispatch.milestoneView.updateView,
 });
 
 export default connect(mapState, mapDispatch)(RefreshButton);

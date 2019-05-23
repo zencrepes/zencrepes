@@ -4,7 +4,7 @@ import { cfgMilestones, cfgIssues, cfgSources } from "../../../data/Minimongo.js
 
 import {
     getAssigneesRepartition,
-//    getMilestonesRepartition,
+    getMilestonesRepartitionById,
 //    getAssignees,
     getRepositories,
 //    getRepositoriesRepartition,
@@ -29,15 +29,16 @@ import {
 
 export default {
     state: {
-        query: {},
+        query: {},                          // Query to filter down on issues
+        queryMilestones: {},                // Query to filter down on milestones
         projects: [],                       // Array of projects
         projectsIssues: [],                 // Array of projects issues, project issues are used to link the project to a milestone as well as to define team members
         sprints: [],
         showClosed: false,
         selectedMilestoneId: 'no-filter',
-        selectedSprintLabel: 'no-filter',
-        selectedSprintDescription: null,
-        selectedSprintDueDate: null,
+        selectedMilestoneTitle: null,
+        selectedMilestoneDescription: null,
+        selectedMilestoneDueDate: null,
 
         defaultPoints: true,                // Default display to points, otherwise issues count
 
@@ -61,6 +62,7 @@ export default {
 
         issues: [],
 
+        availableMilestones: [],
         milestones: [],
         columns: [],                      // Breakdown of issues by columns
 
@@ -83,15 +85,16 @@ export default {
 
     reducers: {
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
+        setQueryMilestones(state, payload) {return { ...state, queryMilestones: JSON.parse(JSON.stringify(payload)) };},
         setProjects(state, payload) {return { ...state, projects: JSON.parse(JSON.stringify(payload)) };},
         setProjectsIssues(state, payload) {return { ...state, projectsIssues: JSON.parse(JSON.stringify(payload)) };},
 
         setSprints(state, payload) {return { ...state, sprints: payload };},
         setShowClosed(state, payload) {return { ...state, showClosed: payload };},
         setSelectedMilestoneId(state, payload) {return { ...state, selectedMilestoneId: payload };},
-        setSelectedSprintLabel(state, payload) {return { ...state, selectedSprintLabel: payload };},
-        setSelectedSprintDescription(state, payload) {return { ...state, selectedSprintDescription: payload };},
-        setSelectedSprintDueDate(state, payload) {return { ...state, selectedSprintDueDate: payload };},
+        setSelectedMilestoneTitle(state, payload) {return { ...state, selectedMilestoneTitle: payload };},
+        setSelectedMilestoneDescription(state, payload) {return { ...state, selectedMilestoneDescription: payload };},
+        setSelectedMilestoneDueDate(state, payload) {return { ...state, selectedMilestoneDueDate: payload };},
 
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
 
@@ -115,6 +118,7 @@ export default {
         setIssues(state, payload) {return { ...state, issues: JSON.parse(JSON.stringify(payload)) };},
 
         setMilestones(state, payload) {return { ...state, milestones: JSON.parse(JSON.stringify(payload)) };},
+        setAvailableMilestones(state, payload) {return { ...state, availableMilestones: JSON.parse(JSON.stringify(payload)) };},
         setColumns(state, payload) {return { ...state, columns: JSON.parse(JSON.stringify(payload)) };},
 
         setVelocity(state, payload) {return { ...state, velocity: payload };},
@@ -138,8 +142,13 @@ export default {
     effects: {
         async updateQuery(query) {
             this.setQuery(query);
-            this.updateMilestones();
+            // From issues query, build milestones query
+            let queryMilestones = {};
+            if (query['milestone.id'] !== undefined) {queryMilestones['id'] = query['milestone.id'];}
+            if (query['milestone.title'] !== undefined) {queryMilestones['title'] = query['milestone.title'];}
+            this.setQueryMilestones(queryMilestones);
 
+            this.updateMilestones();
             this.updateView();
         },
 
@@ -153,7 +162,31 @@ export default {
                 delete milestonesQuery['milestone.id'];
             }
 
-            const milestoneTitle = cfgIssues.findOne(rootState.milestoneView.query).milestone.title;
+            const findMilestone = cfgMilestones.findOne(rootState.milestoneView.queryMilestones);
+            if (findMilestone !== undefined) {
+                this.setSelectedMilestoneTitle(findMilestone.title);
+                this.setSelectedMilestoneDescription(findMilestone.description);
+                this.setSelectedMilestoneDueDate(findMilestone.dueOn);
+            } else {
+                this.setSelectedMilestoneTitle(null);
+                this.setSelectedMilestoneDescription(null);
+                this.setSelectedMilestoneDueDate(null);
+            }
+
+            let allMilestonesQuery = {...rootState.milestoneView.queryMilestones};
+            if (allMilestonesQuery['id'] !== undefined) {
+                delete allMilestonesQuery['id'];
+            }
+            this.setAvailableMilestones(cfgMilestones.find(allMilestonesQuery).fetch());
+
+            this.setMilestones(cfgMilestones.find(rootState.milestoneView.queryMilestones).fetch());
+
+            /*
+            const firstMilestoneIssue = cfgIssues.findOne(rootState.milestoneView.query);
+            const milestoneTitle = firstMilestoneIssue.milestone.title;
+            this.setSelectedMilestoneTitle(firstMilestoneIssue.milestone.title);
+            this.setSelectedMilestoneDescription(firstMilestoneIssue.milestone.description);
+            this.setSelectedMilestoneDueDate(firstMilestoneIssue.milestone.dueOn);
 
             let repositoriesNoFilter = getRepositories(cfgIssues.find(milestonesQuery).fetch());
             let milestonesSelect = repositoriesNoFilter.map((repo) => {
@@ -163,7 +196,12 @@ export default {
                 }
             });
             milestonesSelect.unshift({id: 'no-filter', name: 'No Filter (all)'});
-            this.setMilestones(milestonesSelect);
+            this.setAvailableMilestones(milestonesSelect);
+            */
+            /*
+            let milestones = getMilestonesRepartitionById(cfgIssues.find(rootState.milestoneView.query).fetch());
+            this.setMilestones(milestones);
+            */
         },
 
         async updateShowClosed(showClosed) {
@@ -201,6 +239,7 @@ export default {
 
             let labels = getLabelsRepartition(cfgIssues.find(rootState.milestoneView.query).fetch());
             this.setLabels(labels);
+
 
             /*
             let milestones = getMilestonesRepartition(cfgIssues.find(rootState.milestoneView.query).fetch());

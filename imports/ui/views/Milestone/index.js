@@ -18,9 +18,15 @@ import Burndown from "./Burndown/index.js";
 import VelocityWeeks from "./VelocityWeeks/index.js";
 import Issues from "./Issues/index.js";
 
+import Summary from "./Summary/index.js";
+import Controls from "./Controls/index.js";
+
 import Assignees from "./Assignees/index.js";
 import Milestones from "./Repositories/index.js";
 import Labels from "./Labels/index.js";
+
+import MilestonesEdit from '../../data/Milestones/Edit/index.js';
+import MilestonesEditDialog from '../../components/Milestones/Edit/index.js';
 
 class Milestone extends Component {
     constructor(props) {
@@ -58,6 +64,22 @@ class Milestone extends Component {
                 <Actions />
                 <IssuesFetch />
                 <IssuesEdit />
+                <MilestonesEdit />
+                <MilestonesEditDialog />
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={8}
+                >
+                    <Grid item xs={12} sm={6} md={8}>
+                        <Summary />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Controls />
+                    </Grid>
+                </Grid>
                 <Grid
                     container
                     direction="row"
