@@ -42,16 +42,8 @@ class Milestones extends Component {
             const queryUrl = decodeURIComponent(params.get('q'));
             updateQuery(JSON.parse(queryUrl));
         } else {
-            updateQuery({});
+            updateQuery({'state':{'$in':['OPEN']}});
         }
-        /*
-        const queryUrl = decodeURIComponent(params.get('q'));
-        if (queryUrl === null) {
-            updateQuery({});
-        } else {
-            updateQuery(JSON.parse(queryUrl));
-        }
-        */
     }
 
     componentDidUpdate(prevProps) {

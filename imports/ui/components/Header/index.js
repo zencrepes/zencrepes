@@ -19,7 +19,6 @@ import {
     Calendar,
     ViewDashboard,
     Label,
-    RunFast,
     ChartGantt,
     DeveloperBoard,
     SourcePull,
@@ -61,12 +60,11 @@ class Header extends Component {
 
         const routes = [
             {path: '/issues', icon: (<ViewDashboard className={classes.leftIcon} />), text: 'Issues', key: 'issues'},
-            {path: '/sprints', icon: (<RunFast className={classes.leftIcon} />), text: 'Sprints', key: 'sprints'},
             {path: '/projects', icon: (<DeveloperBoard className={classes.leftIcon} />), text: 'Projects', key: 'projects'},
+            {path: '/milestones', icon: (<Calendar className={classes.leftIcon} />), text: 'Milestones', key: 'milestones'},
             {path: '/pullrequests', icon: (<SourcePull className={classes.leftIcon} />), text: 'PRs (dev)', key: 'pullrequests'},
             {path: '/roadmap', icon: (<ChartGantt className={classes.leftIcon} />), text: 'Roadmap (dev)', key: 'roadmap'},
             {path: '/labels', icon: (<Label className={classes.leftIcon} />), text: 'Labels', key: 'labels'},
-            {path: '/milestones', icon: (<Calendar className={classes.leftIcon} />), text: 'Milestones', key: 'milestones'},
             {path: '/settings', icon: (<Settings className={classes.leftIcon} />), text: 'Settings', key: 'settings'},
         ];
         return (

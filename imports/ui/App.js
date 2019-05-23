@@ -17,6 +17,7 @@ import Settings from './views/Settings/index.js';
 import Labels from './views/Labels/index.js';
 
 import Milestones from './views/Milestones/index.js';
+import Milestone from './views/Milestone/index.js';
 import Projects from './views/Projects/index.js';
 import Project from './views/Project/index.js';
 //import MilestoneEdit from './views/Milestones/Edit/index.js';
@@ -93,6 +94,7 @@ class App extends Component {
                                         <Authenticated exact path="/projects" component={Projects} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/project" component={Project} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/milestone" component={Milestone} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/issues/:tab" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/pullrequests" component={Pullrequests} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />

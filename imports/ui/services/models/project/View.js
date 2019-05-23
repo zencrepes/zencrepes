@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Meteor } from 'meteor/meteor';
 
-import { cfgMilestones, cfgIssues, cfgSources, cfgProjects } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues, cfgProjects } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
@@ -45,6 +45,7 @@ const labelsFromQuery = (query) => {
 export default {
     state: {
         query: {},
+        queryProjects: {},                  // Query updated to match projects
         projects: [],                       // Array of projects
         projectsIssues: [],                 // Array of projects issues, project issues are used to link the project to a milestone as well as to define team members
         sprints: [],
@@ -56,6 +57,7 @@ export default {
         defaultPoints: true,                // Default display to points, otherwise issues count
 
         assignees: [],
+        assigneesRemaining: [],
         availableAssignees: [],
         filteredAvailableAssignees: [],
         availableAssigneesFilter: '',
@@ -96,6 +98,7 @@ export default {
 
     reducers: {
         setQuery(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
+        setQueryProjects(state, payload) {return { ...state, query: JSON.parse(JSON.stringify(payload)) };},
         setProjects(state, payload) {return { ...state, projects: JSON.parse(JSON.stringify(payload)) };},
         setProjectsIssues(state, payload) {return { ...state, projectsIssues: JSON.parse(JSON.stringify(payload)) };},
 
@@ -108,6 +111,7 @@ export default {
         setDefaultPoints(state, payload) {return { ...state, defaultPoints: payload };},
 
         setAssignees(state, payload) {return { ...state, assignees: JSON.parse(JSON.stringify(payload)) };},
+        setAssigneesRemaining(state, payload) {return { ...state, assigneesRemaining: JSON.parse(JSON.stringify(payload)) };},
         setOpenAddAssignee(state, payload) {return { ...state, openAddAssignee: payload };},
         setAvailableAssignees(state, payload) {return { ...state, availableAssignees: JSON.parse(JSON.stringify(payload))};},
         setFilteredAvailableAssignees(state, payload) {return { ...state, filteredAvailableAssignees: JSON.parse(JSON.stringify(payload)) };},
@@ -355,6 +359,9 @@ export default {
             });
             this.setAssignees(assignees);
 
+            let openQuery = {...rootState.projectView.query, 'state': { $eq : 'OPEN' }};
+            let assigneesRemaining = getAssigneesRepartition(cfgIssues.find(openQuery).fetch());
+            this.setAssigneesRemaining(assigneesRemaining);
 
             if (rootState.projectView.velocityTeam === true) {
                 assignees = assignees.filter(assignee => assignee.core === true);
@@ -372,27 +379,6 @@ export default {
             let columns = getColumnsRepartition(cfgIssues.find(rootState.projectView.query).fetch(), rootState.projectView.projects[0].name);
             this.setColumns(columns);
 
-        },
-
-        async initView() {
-            this.refreshSprints();
-
-            const allRepos = cfgSources.find({active: true}).fetch();
-            this.setAllRepos(allRepos);
-
-            this.updateView();
-        },
-        async refreshSprints() {
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
-//            this.setSprints(sprints);
-//            this.updateSelectedSprint(sprints[0]);
-        },
-
-        async updateAvailableSprints() {
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
-//            this.setSprints(sprints);
         },
 
         async updateSelectedSprint(selectedSprintLabel) {

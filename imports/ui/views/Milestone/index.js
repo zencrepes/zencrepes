@@ -18,15 +18,17 @@ import Burndown from "./Burndown/index.js";
 import VelocityWeeks from "./VelocityWeeks/index.js";
 import Issues from "./Issues/index.js";
 
-import Assignees from "./Assignees/index.js";
-import Milestones from "./Milestones/index.js";
-import Labels from "./Labels/index.js";
-import Columns from "./Columns/index.js";
 import Summary from "./Summary/index.js";
 import Controls from "./Controls/index.js";
-import LabelsExclude from "./LabelsExclude/index.js";
 
-class Project extends Component {
+import Assignees from "./Assignees/index.js";
+import Milestones from "./Repositories/index.js";
+import Labels from "./Labels/index.js";
+
+import MilestonesEdit from '../../data/Milestones/Edit/index.js';
+import MilestonesEditDialog from '../../components/Milestones/Edit/index.js';
+
+class Milestone extends Component {
     constructor(props) {
         super(props);
     }
@@ -62,7 +64,8 @@ class Project extends Component {
                 <Actions />
                 <IssuesFetch />
                 <IssuesEdit />
-                <LabelsExclude />
+                <MilestonesEdit />
+                <MilestonesEditDialog />
                 <Grid
                     container
                     direction="row"
@@ -70,10 +73,10 @@ class Project extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={12} sm={8} md={8}>
+                    <Grid item xs={12} sm={6} md={8}>
                         <Summary />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <Controls />
                     </Grid>
                 </Grid>
@@ -126,16 +129,13 @@ class Project extends Component {
                     alignItems="flex-start"
                     spacing={8}
                 >
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <Assignees />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Columns />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <Milestones />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <Labels />
                     </Grid>
                 </Grid>
@@ -144,14 +144,14 @@ class Project extends Component {
     }
 }
 
-Project.propTypes = {
+Milestone.propTypes = {
     location: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
-    updateQuery: dispatch.projectView.updateQuery,
+    updateQuery: dispatch.milestoneView.updateQuery,
 });
 
-export default connect(null, mapDispatch)(withRouter(Project));
+export default connect(null, mapDispatch)(withRouter(Milestone));
 

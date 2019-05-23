@@ -40,6 +40,8 @@ import {
 import {connect} from "react-redux";
 import uuidv1 from "uuid/v1";
 
+import ManageButton from './ManageButton.js';
+
 const RowDetail = ({ row }) => {
     return (
         <ReposTable
@@ -123,6 +125,19 @@ Command.propTypes = {
     onExecute: PropTypes.func,
 };
 
+const ManageFormatter = ({ value }) => {
+    return <ManageButton milestone={value} />;
+};
+ManageFormatter.propTypes = {
+    value: PropTypes.object,
+};
+
+const ManageTypeProvider = props => (
+    <DataTypeProvider
+        formatterComponent={ManageFormatter}
+        {...props}
+    />
+);
 
 const DueOnFormatter = ({ value }) => {
 //    console.log(value[0].name);
@@ -295,6 +310,7 @@ class MilestonesTable extends Component {
         this.state = {
             columns: [
                 { name: 'title', title: 'Title' },
+                { name: 'id', title: 'Manage', getCellValue: row => row},
                 { name: 'dueOn', title: 'Due On' },
                 { name: 'state', title: 'State' },
                 { name: 'issues', title: 'Issues', getCellValue: row => row.milestones },
@@ -302,6 +318,7 @@ class MilestonesTable extends Component {
                 { name: 'repos', title: 'Repos', getCellValue: row => row.milestones },
             ],
             tableColumnExtensions: [
+                { columnName: 'id', width: 90 },
                 { columnName: 'repos', width: 110 },
                 { columnName: 'issues', width: 90 },
                 { columnName: 'pullRequests', width: 90 },
@@ -311,6 +328,7 @@ class MilestonesTable extends Component {
             columnOrder: ['title', 'dueOn', 'state', 'issues', 'pullRequests', 'repos'],
             dueOnColumns: ['dueOn'],
             stateColumns: ['state'],
+            manageColumns: ['id'],
             reposColumns: ['repos'],
             issuesColumns: ['issues'],
             prColumns: ['pullRequests'],
@@ -523,6 +541,7 @@ class MilestonesTable extends Component {
             prColumns,
             updateView,
             editingStateColumnExtensions,
+            manageColumns,
         } = this.state;
 
         return (
@@ -555,6 +574,9 @@ class MilestonesTable extends Component {
                     />
                     <RowDetailState
                         defaultExpandedRowIds={[]}
+                    />
+                    <ManageTypeProvider
+                        for={manageColumns}
                     />
                     <DueOnTypeProvider
                         for={dueOnColumns}

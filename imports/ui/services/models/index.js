@@ -53,6 +53,9 @@ export { default as sprintsView } from './sprints/View.js';
 // Project (specific view over a particular Project)
 export { default as projectView } from './project/View.js';
 
+// Milestone (specific view over a particular Milestone)
+export { default as milestoneView } from './milestone/View.js';
+
 // Burndown
 export { default as burndownView } from './burndown/View.js';
 

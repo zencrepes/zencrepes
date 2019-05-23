@@ -37,12 +37,12 @@ class Refresh extends Component {
         const {
             reposSetLoadFlag,
             reposSetLoadRepos,
-            projects,
+            milestones,
             setOnSuccess,
             updateView
         } = this.props;
         setOnSuccess(updateView);
-        reposSetLoadRepos(projects.filter(p => p.repo !== null).map(project => project.repo.id));
+        reposSetLoadRepos(milestones.map(ms => ms.repo.id));
         reposSetLoadFlag(true);
         this.setState({ anchorEl: null });
     };
@@ -125,7 +125,7 @@ Refresh.propTypes = {
     setOnSuccess: PropTypes.func.isRequired,
 
     issues: PropTypes.array.isRequired,
-    projects: PropTypes.array.isRequired,
+    milestones: PropTypes.array.isRequired,
     updateView: PropTypes.func.isRequired,
 
     setAutoRefreshEnable: PropTypes.func.isRequired,
@@ -134,12 +134,12 @@ Refresh.propTypes = {
 };
 
 const mapState = state => ({
-    issues: state.projectView.issues,
-    projects: state.projectView.projects,
+    issues: state.milestoneView.issues,
+    milestones: state.milestoneView.milestones,
 
-    autoRefreshEnable: state.projectView.autoRefreshEnable,
-    autoRefreshTimer: state.projectView.autoRefreshTimer,
-    autoRefreshDefaultTimer: state.projectView.autoRefreshDefaultTimer,
+    autoRefreshEnable: state.milestoneView.autoRefreshEnable,
+    autoRefreshTimer: state.milestoneView.autoRefreshTimer,
+    autoRefreshDefaultTimer: state.milestoneView.autoRefreshDefaultTimer,
 
     loading: state.loading.loading,
 });
@@ -148,11 +148,11 @@ const mapDispatch = dispatch => ({
     reposSetLoadFlag: dispatch.issuesFetch.setLoadFlag,
     reposSetLoadRepos: dispatch.issuesFetch.setLoadRepos,
 
-    updateView: dispatch.projectView.updateView,
+    updateView: dispatch.milestoneView.updateView,
 
-    setAutoRefreshEnable: dispatch.projectView.setAutoRefreshEnable,
-    setAutoRefreshTimer: dispatch.projectView.setAutoRefreshTimer,
-    setAutoRefreshCount: dispatch.projectView.setAutoRefreshCount,
+    setAutoRefreshEnable: dispatch.milestoneView.setAutoRefreshEnable,
+    setAutoRefreshTimer: dispatch.milestoneView.setAutoRefreshTimer,
+    setAutoRefreshCount: dispatch.milestoneView.setAutoRefreshCount,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });

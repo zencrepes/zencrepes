@@ -10,10 +10,10 @@ class AutoRefresh extends Component {
     }
 
     refreshSelectedRepos = () => {
-        const { setLoadFlag, setLoadRepos, projects, setOnSuccess, updateView } = this.props;
+        const { setLoadFlag, setLoadRepos, milestones, setOnSuccess, updateView } = this.props;
 
         setOnSuccess(updateView);
-        setLoadRepos(projects.filter(p => p.repo !== null).map(project => project.repo.id));
+        setLoadRepos(milestones.map(ms => ms.repo.id));
         setLoadFlag(true);
     };
 
@@ -73,7 +73,7 @@ class AutoRefresh extends Component {
 }
 
 AutoRefresh.propTypes = {
-    projects: PropTypes.array.isRequired,
+    milestones: PropTypes.array.isRequired,
     autoRefreshEnable: PropTypes.bool.isRequired,
     autoRefreshTimer: PropTypes.number.isRequired,
     autoRefreshCount: PropTypes.number.isRequired,
@@ -96,13 +96,13 @@ AutoRefresh.propTypes = {
 };
 
 const mapState = state => ({
-    autoRefreshEnable: state.projectView.autoRefreshEnable,
-    autoRefreshTimer: state.projectView.autoRefreshTimer,
-    autoRefreshCount: state.projectView.autoRefreshCount,
-    autoRefreshMaxCount: state.projectView.autoRefreshMaxCount,
-    autoRefreshDefaultTimer: state.projectView.autoRefreshDefaultTimer,
+    autoRefreshEnable: state.milestoneView.autoRefreshEnable,
+    autoRefreshTimer: state.milestoneView.autoRefreshTimer,
+    autoRefreshCount: state.milestoneView.autoRefreshCount,
+    autoRefreshMaxCount: state.milestoneView.autoRefreshMaxCount,
+    autoRefreshDefaultTimer: state.milestoneView.autoRefreshDefaultTimer,
 
-    projects: state.projectView.projects,
+    milestones: state.milestoneView.milestones,
 
     loading: state.loading.loading,
     log: state.global.log,
@@ -113,12 +113,12 @@ const mapDispatch = dispatch => ({
     setLoadFlag: dispatch.issuesFetch.setLoadFlag,
     setLoadRepos: dispatch.issuesFetch.setLoadRepos,
 
-    updateView: dispatch.projectView.updateView,
+    updateView: dispatch.milestoneView.updateView,
 
-    setAutoRefreshEnable: dispatch.projectView.setAutoRefreshEnable,
-    setAutoRefreshTimer: dispatch.projectView.setAutoRefreshTimer,
-    setAutoRefreshCount: dispatch.projectView.setAutoRefreshCount,
-    setAutoRefreshMaxCount: dispatch.projectView.setAutoRefreshMaxCount,
+    setAutoRefreshEnable: dispatch.milestoneView.setAutoRefreshEnable,
+    setAutoRefreshTimer: dispatch.milestoneView.setAutoRefreshTimer,
+    setAutoRefreshCount: dispatch.milestoneView.setAutoRefreshCount,
+    setAutoRefreshMaxCount: dispatch.milestoneView.setAutoRefreshMaxCount,
 
     setOnSuccess: dispatch.loading.setOnSuccess,
 });
