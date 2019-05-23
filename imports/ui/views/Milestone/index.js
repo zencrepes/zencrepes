@@ -145,13 +145,11 @@ class Milestone extends Component {
 }
 
 Milestone.propTypes = {
-    initView: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     updateQuery: PropTypes.func.isRequired,
 };
 
 const mapDispatch = dispatch => ({
-    initView: dispatch.milestoneView.initView,
     updateQuery: dispatch.milestoneView.updateQuery,
 });
 

@@ -1,10 +1,8 @@
-import _ from 'lodash';
-
-import { cfgMilestones, cfgIssues, cfgSources } from "../../../data/Minimongo.js";
+import { cfgMilestones, cfgIssues } from "../../../data/Minimongo.js";
 
 import {
     getAssigneesRepartition,
-    getMilestonesRepartitionById,
+//    getMilestonesRepartitionById,
 //    getAssignees,
     getRepositories,
 //    getRepositoriesRepartition,
@@ -180,38 +178,6 @@ export default {
             this.setAvailableMilestones(cfgMilestones.find(allMilestonesQuery).fetch());
 
             this.setMilestones(cfgMilestones.find(rootState.milestoneView.queryMilestones).fetch());
-
-            /*
-            const firstMilestoneIssue = cfgIssues.findOne(rootState.milestoneView.query);
-            const milestoneTitle = firstMilestoneIssue.milestone.title;
-            this.setSelectedMilestoneTitle(firstMilestoneIssue.milestone.title);
-            this.setSelectedMilestoneDescription(firstMilestoneIssue.milestone.description);
-            this.setSelectedMilestoneDueDate(firstMilestoneIssue.milestone.dueOn);
-
-            let repositoriesNoFilter = getRepositories(cfgIssues.find(milestonesQuery).fetch());
-            let milestonesSelect = repositoriesNoFilter.map((repo) => {
-                return {
-                    id: repo.issues.list[0].milestone.id,
-                    name: milestoneTitle + ' in ' + repo.org.login + '/' + repo.name + ' (' + repo.issues.count + ' issues)',
-                }
-            });
-            milestonesSelect.unshift({id: 'no-filter', name: 'No Filter (all)'});
-            this.setAvailableMilestones(milestonesSelect);
-            */
-            /*
-            let milestones = getMilestonesRepartitionById(cfgIssues.find(rootState.milestoneView.query).fetch());
-            this.setMilestones(milestones);
-            */
-        },
-
-        async updateShowClosed(showClosed) {
-            let milestonesQuery = {'state':{'$in':['OPEN']}};
-            if (showClosed) {
-                milestonesQuery = {};
-            }
-            const sprints = Object.keys(_.groupBy(cfgMilestones.find(milestonesQuery).fetch(), 'title')).sort();
-            this.setSprints(sprints);
-            this.setShowClosed(showClosed);
         },
 
         async updateView(payload, rootState) {
@@ -239,37 +205,6 @@ export default {
 
             let labels = getLabelsRepartition(cfgIssues.find(rootState.milestoneView.query).fetch());
             this.setLabels(labels);
-
-
-            /*
-            let milestones = getMilestonesRepartition(cfgIssues.find(rootState.milestoneView.query).fetch());
-            this.setMilestones(milestones);
-            */
-/*
-            let columns = getColumnsRepartition(cfgIssues.find(rootState.milestoneView.query).fetch(), rootState.milestoneView.projects[0].name);
-            this.setColumns(columns);
-*/
-        },
-
-        async initView() {
-            this.refreshSprints();
-
-            const allRepos = cfgSources.find({active: true}).fetch();
-            this.setAllRepos(allRepos);
-
-            this.updateView();
-        },
-        async refreshSprints() {
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
-//            this.setSprints(sprints);
-//            this.updateSelectedSprint(sprints[0]);
-        },
-
-        async updateAvailableSprints() {
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({'state':{'$in':['OPEN']}}).fetch(), 'title')).sort();
-//            let sprints = Object.keys(_.groupBy(cfgMilestones.find({}).fetch(), 'title')).sort();
-//            this.setSprints(sprints);
         },
 
         async updateSelectedSprint(selectedSprintLabel) {
