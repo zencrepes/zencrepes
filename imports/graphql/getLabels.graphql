@@ -20,7 +20,6 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!, $repo_name: St
            color
            name
            description
-           color
            isDefault
            createdAt
            updatedAt
