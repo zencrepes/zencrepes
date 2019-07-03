@@ -1,0 +1,53 @@
+query ($column_id: ID!, $cursor: String, $increment: Int){
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  node(id:$column_id) {
+    ... on ProjectColumn {
+      id
+      databaseId
+      cards(first: $increment, after: $cursor) {
+        totalCount
+        edges {
+          cursor
+          node {
+            id
+            content {
+              ... on Issue {
+                __typename
+                id
+                databaseId
+                number
+                title
+                state
+              }
+              ... on PullRequest {
+                __typename
+                id
+                databaseId
+                number
+                title
+                state
+              }              
+            }            
+            note
+            project {
+              id
+              databaseId
+              name
+              number
+            }
+            column {
+              id
+              databaseId
+              name
+            }
+          }
+        }        
+      }
+    }
+  }
+}

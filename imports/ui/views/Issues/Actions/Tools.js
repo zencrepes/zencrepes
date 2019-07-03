@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 import IconButton from "@material-ui/core/IconButton";
+import ToolboxIcon from "mdi-react/ToolboxIcon";
 import Tooltip from "@material-ui/core/Tooltip";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import BroomIcon from "mdi-react/BroomIcon";
 
 import { connect } from "react-redux";
 
@@ -23,7 +23,7 @@ const styles = theme => ({
     fontSize: 20
   }
 });
-class Clear extends Component {
+class Tools extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,9 +31,9 @@ class Clear extends Component {
     };
   }
 
-  purgeLocal = () => {
-    const { clearProjects } = this.props;
-    clearProjects();
+  importIssues = () => {
+    const { setShowImportIssues } = this.props;
+    setShowImportIssues(true);
     this.setState({ anchorEl: null });
   };
 
@@ -46,19 +46,19 @@ class Clear extends Component {
   };
 
   render() {
-    const { classes, projects } = this.props;
+    const { classes, issues } = this.props;
     const { anchorEl } = this.state;
 
-    if (projects.length > 0) {
+    if (issues.length > 0) {
       return (
         <div className={classes.root}>
-          <Tooltip title="Remove projects from local cache">
+          <Tooltip title="Tools">
             <IconButton
               aria-label="Open"
               onClick={this.handleClick}
               className={classes.button}
             >
-              <BroomIcon />
+              <ToolboxIcon />
             </IconButton>
           </Tooltip>
           <Menu
@@ -67,7 +67,9 @@ class Clear extends Component {
             open={Boolean(anchorEl)}
             onClose={this.handleClose}
           >
-            <MenuItem onClick={this.purgeLocal}>Clear local projects</MenuItem>
+            <MenuItem onClick={this.importIssues}>
+              Create issues from a TSV file
+            </MenuItem>
           </Menu>
         </div>
       );
@@ -77,21 +79,21 @@ class Clear extends Component {
   }
 }
 
-Clear.propTypes = {
+Tools.propTypes = {
   classes: PropTypes.object.isRequired,
-  clearProjects: PropTypes.func.isRequired,
-  projects: PropTypes.array.isRequired
+  setShowImportIssues: PropTypes.func.isRequired,
+  issues: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  projects: state.projectsView.projects
+  issues: state.issuesView.issues
 });
 
 const mapDispatch = dispatch => ({
-  clearProjects: dispatch.projectsView.clearProjects
+  setShowImportIssues: dispatch.issuesCreate.setShowImportIssues
 });
 
 export default connect(
   mapState,
   mapDispatch
-)(withStyles(styles)(Clear));
+)(withStyles(styles)(Tools));

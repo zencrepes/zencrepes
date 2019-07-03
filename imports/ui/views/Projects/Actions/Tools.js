@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 import IconButton from "@material-ui/core/IconButton";
+import ToolboxIcon from "mdi-react/ToolboxIcon";
 import Tooltip from "@material-ui/core/Tooltip";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import BroomIcon from "mdi-react/BroomIcon";
 
 import { connect } from "react-redux";
 
@@ -23,7 +23,7 @@ const styles = theme => ({
     fontSize: 20
   }
 });
-class Clear extends Component {
+class Tools extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,9 +31,9 @@ class Clear extends Component {
     };
   }
 
-  purgeLocal = () => {
-    const { clearProjects } = this.props;
-    clearProjects();
+  copyProjectCards = () => {
+    const { setShowCopyCards } = this.props;
+    setShowCopyCards(true);
     this.setState({ anchorEl: null });
   };
 
@@ -52,13 +52,13 @@ class Clear extends Component {
     if (projects.length > 0) {
       return (
         <div className={classes.root}>
-          <Tooltip title="Remove projects from local cache">
+          <Tooltip title="Tools">
             <IconButton
               aria-label="Open"
               onClick={this.handleClick}
               className={classes.button}
             >
-              <BroomIcon />
+              <ToolboxIcon />
             </IconButton>
           </Tooltip>
           <Menu
@@ -67,7 +67,9 @@ class Clear extends Component {
             open={Boolean(anchorEl)}
             onClose={this.handleClose}
           >
-            <MenuItem onClick={this.purgeLocal}>Clear local projects</MenuItem>
+            <MenuItem onClick={this.copyProjectCards}>
+              Copy cards between Projects
+            </MenuItem>
           </Menu>
         </div>
       );
@@ -77,9 +79,9 @@ class Clear extends Component {
   }
 }
 
-Clear.propTypes = {
+Tools.propTypes = {
   classes: PropTypes.object.isRequired,
-  clearProjects: PropTypes.func.isRequired,
+  setShowCopyCards: PropTypes.func.isRequired,
   projects: PropTypes.array.isRequired
 };
 
@@ -88,10 +90,10 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  clearProjects: dispatch.projectsView.clearProjects
+  setShowCopyCards: dispatch.cardsCreate.setShowCopyCards
 });
 
 export default connect(
   mapState,
   mapDispatch
-)(withStyles(styles)(Clear));
+)(withStyles(styles)(Tools));
