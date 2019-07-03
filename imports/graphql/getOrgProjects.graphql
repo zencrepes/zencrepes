@@ -27,7 +27,8 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             edges {
               node {
                 id
-				name
+                databaseId
+				        name
                 cards(first: 1) {
                   totalCount
                 }

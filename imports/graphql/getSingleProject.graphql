@@ -23,7 +23,8 @@ query ($org_name: String!, $repo_name: String!, $project_number: Int!){
         edges {
           node {
             id
-		    name
+            databaseId
+		        name
             cards(first: 1) {
               totalCount
             }
