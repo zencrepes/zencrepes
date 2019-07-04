@@ -107,6 +107,21 @@ class Data extends Component {
         await this.sleep(500);
       }
 
+      if (card.isArchived === true) {
+        // Automatically archive the card
+        const cardId = result.data.id;
+        try {
+          result = await this.octokit.projects.updateCard({
+            card_id: cardId,
+            archived: true
+          });
+        } catch (error) {
+          log.info(error);
+          setLoadingMsg("Error while archiving the card");
+          await this.sleep(500);
+        }
+      }
+
       if (result !== false) {
         setChipRemaining(parseInt(result.headers["x-ratelimit-remaining"]));
       }
