@@ -22,6 +22,10 @@ export { default as global } from "./global.js";
 // State management around loading data from GitHub
 export { default as loading } from "./loading.js";
 
+// Repositories
+export { default as repositoriesView } from "./repositories/View.js";
+export { default as repositoriesFetch } from "./repositories/Fetch.js";
+
 // Milestones
 export { default as milestonesView } from "./milestones/View.js";
 export { default as milestonesEdit } from "./milestones/Edit.js";

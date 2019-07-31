@@ -15,6 +15,7 @@ query ($column_id: ID!, $cursor: String, $increment: Int){
           cursor
           node {
             id
+            isArchived
             content {
               ... on Issue {
                 __typename

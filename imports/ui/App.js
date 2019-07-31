@@ -21,6 +21,7 @@ import Milestone from './views/Milestone/index.js';
 import Projects from './views/Projects/index.js';
 import Project from './views/Project/index.js';
 //import MilestoneEdit from './views/Milestones/Edit/index.js';
+import Repositories from './views/Repositories/index.js';
 import Issues from './views/Issues/index.js';
 import Pullrequests from './views/Pullrequests/index.js';
 import Roadmap from './views/Roadmap/index.js';
@@ -95,6 +96,8 @@ class App extends Component {
                                         <Authenticated exact path="/project" component={Project} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/milestones" component={Milestones} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/milestone" component={Milestone} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/repositories" component={Repositories} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                                        <Authenticated exact path="/repositories/:tab" component={Repositories} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/issues" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/issues/:tab" component={Issues} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                                         <Authenticated exact path="/pullrequests" component={Pullrequests} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
