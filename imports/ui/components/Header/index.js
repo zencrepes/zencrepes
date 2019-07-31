@@ -22,6 +22,7 @@ import {
     ChartGantt,
     DeveloperBoard,
     SourcePull,
+    SourceRepository,
 } from 'mdi-material-ui';
 
 import UserMenu from './UserMenu.js';
@@ -65,6 +66,7 @@ class Header extends Component {
             {path: '/pullrequests', icon: (<SourcePull className={classes.leftIcon} />), text: 'PRs (dev)', key: 'pullrequests'},
             {path: '/roadmap', icon: (<ChartGantt className={classes.leftIcon} />), text: 'Roadmap (dev)', key: 'roadmap'},
             {path: '/labels', icon: (<Label className={classes.leftIcon} />), text: 'Labels', key: 'labels'},
+            {path: '/repositories', icon: (<SourceRepository className={classes.leftIcon} />), text: 'Repos (dev)', key: 'repositories'},
             {path: '/settings', icon: (<Settings className={classes.leftIcon} />), text: 'Settings', key: 'settings'},
         ];
         return (

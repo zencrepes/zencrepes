@@ -17,11 +17,63 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             name
             url
             id
+            updatedAt
+            createdAt
+            pushedAt
+            repositoryTopics(first: 10) {
+              totalCount
+              edges{
+                node{
+                  id
+                  topic{
+                    id
+                    name                    
+                  }
+                  url
+                }
+              }
+            }
+            branchProtectionRules(first: 5) {
+              totalCount
+              edges{
+                node{
+                  id
+                  databaseId
+                  isAdminEnforced
+                  pattern
+                  requiredApprovingReviewCount
+                  requiredStatusCheckContexts                  
+                  requiresApprovingReviews
+                  requiresCodeOwnerReviews
+                  requiresCommitSignatures
+                  requiresStatusChecks
+                  requiresStrictStatusChecks
+                  restrictsPushes
+                  restrictsReviewDismissals                  
+                }
+              }
+            }
             databaseId
             diskUsage
             forkCount
             isPrivate
             isArchived
+            openGraphImageUrl
+            owner{
+              id
+              login
+              url              
+            }
+            languages(first: 10) {
+              totalCount
+              edges {
+                node {
+                  color
+                  id
+                  name
+                }
+              }              
+            }
             issues(first: 1, orderBy: {field: UPDATED_AT, direction: DESC}) {
               totalCount
               edges {
@@ -39,6 +91,12 @@ query ($repo_cursor: String, $increment: Int, $org_name: String!){
             }
             pullRequests(first: 1) {
               totalCount
+              edges {
+                node {
+                  id
+                  updatedAt
+                }
+              }              
             }
             releases(first: 1) {
               totalCount
