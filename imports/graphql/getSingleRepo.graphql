@@ -12,6 +12,28 @@ query ($org_name: String!, $repo_name: String!){
     createdAt
     pushedAt    
     id
+    refs(first: 1, refPrefix: "refs/heads/", orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {
+      totalCount
+      edges {
+        node {
+          target {
+            ... on Commit {
+              id
+              pushedDate
+              author {
+                date
+                email
+                user {
+                  name
+                  login
+                  id
+                }
+              }                    
+            }
+          }
+        }
+      }
+    }    
     repositoryTopics(first: 10) {
       totalCount
       edges{
@@ -50,6 +72,7 @@ query ($org_name: String!, $repo_name: String!){
     forkCount
     isPrivate
     isArchived
+    isFork
     openGraphImageUrl
     owner{
       id
