@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 
 import Refresh from "./Refresh.js";
 import Tools from "./Tools.js";
+import Clear from "./Clear.js";
 
 class Actions extends Component {
   constructor(props) {
@@ -39,6 +40,9 @@ class Actions extends Component {
               >
                 <Grid item>
                   <Tools />
+                </Grid>
+                <Grid item>
+                  <Clear />
                 </Grid>
               </Grid>
             </Grid>
