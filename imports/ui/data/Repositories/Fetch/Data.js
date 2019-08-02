@@ -98,6 +98,7 @@ class Data extends Component {
 
     // Loop through the array of arrays.
     let batchNb = 1;
+    let notistackErrors = 0;
     //await chunkedArray.forEach((arrayChunk) => {
     for (const arrayChunk of chunkedArray) {
       if (this.props.loading) {
@@ -145,22 +146,33 @@ class Data extends Component {
             data.data.errors.length > 0
           ) {
             data.data.errors.forEach(error => {
-              const nodeError = error.path[1];
-              let repoPrefix = "";
-              if (
-                data.data.nodes !== undefined &&
-                data.data.nodes[nodeError] !== undefined
-              ) {
-                repoPrefix =
-                  data.data.nodes[nodeError].owner.login +
-                  "/" +
-                  data.data.nodes[nodeError].name +
-                  ": ";
+              if (notistackErrors <= 5) {
+                const nodeError = error.path[1];
+                let repoPrefix = "";
+                if (
+                  data.data.nodes !== undefined &&
+                  data.data.nodes[nodeError] !== undefined
+                ) {
+                  repoPrefix =
+                    data.data.nodes[nodeError].owner.login +
+                    "/" +
+                    data.data.nodes[nodeError].name +
+                    ": ";
+                }
+                enqueueSnackbar(repoPrefix + error.message, {
+                  variant: "warning",
+                  persist: false
+                });
+              } else if (notistackErrors === 6) {
+                enqueueSnackbar(
+                  "Multiple errors (likely due to lack of permissions) have been detected, the system will stop displaying new notifications",
+                  {
+                    variant: "warning",
+                    persist: true
+                  }
+                );
               }
-              enqueueSnackbar(repoPrefix + error.message, {
-                variant: "warning",
-                persist: false
-              });
+              notistackErrors++;
             });
           }
 
