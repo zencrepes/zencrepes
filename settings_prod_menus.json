@@ -4,5 +4,6 @@
   "milestones": true,
   "labels": true,
   "settings": true,
-  "projects": true
+  "projects": true,
+  "repositories": true
 }

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { cfgIssues, cfgQueries, cfgSources } from '../../../data/Minimongo.js';
+import { cfgIssues, cfgQueries, cfgRepositories } from '../../../data/Minimongo.js';
 
 import { refreshBurndown } from '../../../utils/burndown/index.js';
 import { buildFacets } from '../../../utils/facets/repositories.js';
@@ -18,8 +18,6 @@ export default {
         repositoriesFirstUpdate: {},
         repositoriesLastUpdate: {},
 
-        filteredRepositories: [],
-        filteredRepositoriesSearch: '',
         facets: [],
         queries: [],
 
@@ -64,8 +62,6 @@ export default {
         setRepositoriesLastUpdate(state, payload) {return { ...state, repositoriesLastUpdate: JSON.parse(JSON.stringify(payload)) };},
         setRepositoriesGraph(state, payload) {return { ...state, repositoriesGraph: payload };},
 
-        setFilteredRepositories(state, payload) {return { ...state, filteredRepositories: payload };},
-        setFilteredRepositoriesSearch(state, payload) {return { ...state, filteredRepositoriesSearch: payload };},
         setFacets(state, payload) {return { ...state, facets: payload };},
         setQueries(state, payload) {return { ...state, queries: payload };},
         setSelectedTab(state, payload) {return { ...state, selectedTab: payload };},
@@ -110,8 +106,8 @@ export default {
             this.updateView();
         },
 
-        async clearIssues() {
-            cfgSources.remove({});
+        async clearRepositories() {
+            cfgRepositories.remove({});
             this.setRepositories([]);
             this.setQuery({});
             this.updateView();
@@ -179,33 +175,19 @@ export default {
             let t0 = performance.now();
 
             
-            let repositories = cfgSources.find(rootState.repositoriesView.query).fetch();
-            const firstUpdate = cfgSources.findOne(rootState.repositoriesView.query, {sort: {updatedAt: 1},reactive: false,transform: null});
-            const lastUpdate = cfgSources.findOne(rootState.repositoriesView.query, {sort: {updatedAt: -1},reactive: false,transform: null});
+            let repositories = cfgRepositories.find(rootState.repositoriesView.query).fetch();
+            const firstUpdate = cfgRepositories.findOne(rootState.repositoriesView.query, {sort: {updatedAt: 1},reactive: false,transform: null});
+            const lastUpdate = cfgRepositories.findOne(rootState.repositoriesView.query, {sort: {updatedAt: -1},reactive: false,transform: null});
 
             if (repositories.length > 0) {
                 this.setRepositoriesFirstUpdate(firstUpdate);
                 this.setRepositoriesLastUpdate(lastUpdate);
             }
-            this.setRepositoriesTotalCount(cfgSources.find({}).count());
+            this.setRepositoriesTotalCount(cfgRepositories.find({}).count());
 
             this.setRepositories(repositories);
-            this.setFilteredRepositories(repositories);
-            this.setFilteredRepositoriesSearch('');
             var t1 = performance.now();
             log.info("refreshRepositories - took " + (t1 - t0) + " milliseconds.");
-        },
-
-        async searchIssues(searchString, rootState) {
-            let repositories = rootState.repositoriesView.repositories;
-            this.setFilteredRepositories(repositories.filter((issue) => {
-                if (issue.repo.name === searchString) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }));
-            this.setFilteredRepositoriesSearch(searchString);
         },
 
         async refreshSummary(payload, rootState) {
@@ -248,7 +230,7 @@ export default {
             const log = rootState.global.log;
             let t0 = performance.now();
 
-            let updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.repositoriesView.query)), cfgSources);
+            let updatedFacets = buildFacets(JSON.parse(JSON.stringify(rootState.repositoriesView.query)), cfgRepositories);
             this.setFacets(updatedFacets);
 
             var t1 = performance.now();
@@ -290,109 +272,109 @@ export default {
 
             const createdSince = [{
                 label: '0 - 1 d',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt : subDays(new Date(), 1).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt : subDays(new Date(), 1).toISOString()}}).fetch()
             }, {
                 label: '1 - 7 d',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}).fetch()
             }, {
                 label: '1 - 2 wks',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}).fetch()
             }, {
                 label: '2 - 4 wks',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}).fetch()
             }, {
                 label: '1 - 3 mths',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}).fetch()
             }, {
                 label: '3 - 6 mths',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}).fetch()
             }, {
                 label: '6 - 12 mths',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}).fetch()
             }, {
                 label: '1 - 2 yrs',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 730).toISOString(), $lte : subDays(new Date(), 365).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 730).toISOString(), $lte : subDays(new Date(), 365).toISOString()}}).fetch()
             }, {     
                 label: '2 - 3 yrs',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 1095).toISOString(), $lte : subDays(new Date(), 730).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 1095).toISOString(), $lte : subDays(new Date(), 730).toISOString()}}).fetch()
             }, {                             
                 label: '3 - 4 yrs',
-                repositories: cfgSources.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 1460).toISOString(), $lte : subDays(new Date(), 1095).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $gt :  subDays(new Date(), 1460).toISOString(), $lte : subDays(new Date(), 1095).toISOString()}}).fetch()
             }, {
                 label: '4 yr+',
-                repositories: cfgSources.find({...query, 'createdAt':{ $lt :  subDays(new Date(), 1460).toISOString()}}).fetch()    
+                repositories: cfgRepositories.find({...query, 'createdAt':{ $lt :  subDays(new Date(), 1460).toISOString()}}).fetch()    
             }];
             this.setStatsCreatedSince(createdSince);
 
             const updatedSince = [{
                 label: '0 - 1 d',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt : subDays(new Date(), 1).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt : subDays(new Date(), 1).toISOString()}}).fetch()
             }, {
                 label: '1 - 7 d',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}).fetch()
             }, {
                 label: '1 - 2 wks',
                 repositories: cfgIssues.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}).fetch()
             }, {
                 label: '2 - 4 wks',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}).fetch()
             }, {
                 label: '1 - 3 mths',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}).fetch()
             }, {
                 label: '3 - 6 mths',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}).fetch()
             }, {
                 label: '6 - 12 mths',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}).fetch()
             }, {
                 label: '1 - 2 yrs',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 730).toISOString(), $lte : subDays(new Date(), 365).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 730).toISOString(), $lte : subDays(new Date(), 365).toISOString()}}).fetch()
             }, {     
                 label: '2 - 3 yrs',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 1095).toISOString(), $lte : subDays(new Date(), 730).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 1095).toISOString(), $lte : subDays(new Date(), 730).toISOString()}}).fetch()
             }, {                             
                 label: '3 - 4 yrs',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 1460).toISOString(), $lte : subDays(new Date(), 1095).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $gt :  subDays(new Date(), 1460).toISOString(), $lte : subDays(new Date(), 1095).toISOString()}}).fetch()
             }, {
                 label: '4 yr+',
-                repositories: cfgSources.find({...query, 'updatedAt':{ $lt :  subDays(new Date(), 1460).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'updatedAt':{ $lt :  subDays(new Date(), 1460).toISOString()}}).fetch()
             }];
             this.setStatsUpdatedSince(updatedSince);
 
             const pushedSince = [{
                 label: '0 - 1 d',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt : subDays(new Date(), 1).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt : subDays(new Date(), 1).toISOString()}}).fetch()
             }, {
                 label: '1 - 7 d',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 7).toISOString(), $lte : subDays(new Date(), 1).toISOString()}}).fetch()
             }, {
                 label: '1 - 2 wks',
                 repositories: cfgIssues.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 14).toISOString(), $lte : subDays(new Date(), 7).toISOString()}}).fetch()
             }, {
                 label: '2 - 4 wks',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 30).toISOString(), $lte : subDays(new Date(), 14).toISOString()}}).fetch()
             }, {
                 label: '1 - 3 mths',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 90).toISOString(), $lte : subDays(new Date(), 30).toISOString()}}).fetch()
             }, {
                 label: '3 - 6 mths',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 120).toISOString(), $lte : subDays(new Date(), 90).toISOString()}}).fetch()
             }, {
                 label: '6 - 12 mths',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 365).toISOString(), $lte : subDays(new Date(), 120).toISOString()}}).fetch()
             }, {
                 label: '1 - 2 yrs',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 730).toISOString(), $lte : subDays(new Date(), 365).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 730).toISOString(), $lte : subDays(new Date(), 365).toISOString()}}).fetch()
             }, {     
                 label: '2 - 3 yrs',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 1095).toISOString(), $lte : subDays(new Date(), 730).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 1095).toISOString(), $lte : subDays(new Date(), 730).toISOString()}}).fetch()
             }, {                             
                 label: '3 - 4 yrs',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 1460).toISOString(), $lte : subDays(new Date(), 1095).toISOString()}}).fetch()
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $gt :  subDays(new Date(), 1460).toISOString(), $lte : subDays(new Date(), 1095).toISOString()}}).fetch()
             }, {
                 label: '4 yr+',
-                repositories: cfgSources.find({...query, 'pushedAt':{ $lt :  subDays(new Date(), 1460).toISOString()}}).fetch()                
+                repositories: cfgRepositories.find({...query, 'pushedAt':{ $lt :  subDays(new Date(), 1460).toISOString()}}).fetch()                
             }];
             this.setStatsPushedSince(pushedSince);            
 
@@ -408,11 +390,11 @@ export default {
             const issuesPresent = [{
                 name: 'Populated',
                 color: '#2196f3',
-                repositories: cfgSources.find({...query, ...{'issues.totalCount':{ $gt : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'issues.totalCount':{ $gt : 0}}}).fetch()
             }, {
                 name: 'Empty',
                 color: '#e0e0e0',
-                repositories: cfgSources.find({...query, ...{'issues.totalCount':{ $eq : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'issues.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsIssuesPresent(issuesPresent);
 
@@ -428,11 +410,11 @@ export default {
             const isPresent = [{
                 name: 'Populated',
                 color: '#2196f3',
-                repositories: cfgSources.find({...query, ...{'pullRequests.totalCount':{ $gt : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'pullRequests.totalCount':{ $gt : 0}}}).fetch()
             }, {
                 name: 'Empty',
                 color: '#e0e0e0',
-                repositories: cfgSources.find({...query, ...{'pullRequests.totalCount':{ $eq : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'pullRequests.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsPullRequestsPresent(isPresent);
 
@@ -448,11 +430,11 @@ export default {
             const isPresent = [{
                 name: 'Populated',
                 color: '#2196f3',
-                repositories: cfgSources.find({...query, ...{'releases.totalCount':{ $gt : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'releases.totalCount':{ $gt : 0}}}).fetch()
             }, {
                 name: 'Empty',
                 color: '#e0e0e0',
-                repositories: cfgSources.find({...query, ...{'releases.totalCount':{ $eq : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'releases.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsReleasesPresent(isPresent);
 
@@ -468,11 +450,11 @@ export default {
             const isPresent = [{
                 name: 'Populated',
                 color: '#2196f3',
-                repositories: cfgSources.find({...query, ...{'projects.totalCount':{ $gt : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'projects.totalCount':{ $gt : 0}}}).fetch()
             }, {
                 name: 'Empty',
                 color: '#e0e0e0',
-                repositories: cfgSources.find({...query, ...{'projects.totalCount':{ $eq : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'projects.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsProjectsPresent(isPresent);
 
@@ -488,11 +470,11 @@ export default {
             const isPresent = [{
                 name: 'Populated',
                 color: '#2196f3',
-                repositories: cfgSources.find({...query, ...{'milestones.totalCount':{ $gt : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'milestones.totalCount':{ $gt : 0}}}).fetch()
             }, {
                 name: 'Empty',
                 color: '#e0e0e0',
-                repositories: cfgSources.find({...query, ...{'milestones.totalCount':{ $eq : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'milestones.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsMilestonesPresent(isPresent);
 
@@ -508,11 +490,11 @@ export default {
             const isPresent = [{
                 name: 'Populated',
                 color: '#2196f3',
-                repositories: cfgSources.find({...query, ...{'branchProtectionRules.totalCount':{ $gt : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'branchProtectionRules.totalCount':{ $gt : 0}}}).fetch()
             }, {
                 name: 'Empty',
                 color: '#e0e0e0',
-                repositories: cfgSources.find({...query, ...{'branchProtectionRules.totalCount':{ $eq : 0}}}).fetch()
+                repositories: cfgRepositories.find({...query, ...{'branchProtectionRules.totalCount':{ $eq : 0}}}).fetch()
             }];
             this.setStatsBranchProtectionPresent(isPresent);
 

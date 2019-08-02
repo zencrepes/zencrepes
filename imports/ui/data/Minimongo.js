@@ -44,3 +44,8 @@ window.projects = cfgProjects;
 
 export const cfgCards = new Mongo.Collection("cfgCards", { connection: null });
 window.cards = cfgCards;
+
+export const cfgRepositories = new Mongo.Collection("cfgRepositories", {
+  connection: null
+});
+window.repositories = cfgRepositories;
