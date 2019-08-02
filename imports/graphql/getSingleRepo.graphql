@@ -6,89 +6,23 @@ query ($org_name: String!, $repo_name: String!){
     resetAt
   }
   repository(owner:$org_name, name:$repo_name) {
+    id
     name
     url
     updatedAt
     createdAt
-    pushedAt    
-    id
-    refs(first: 1, refPrefix: "refs/heads/", orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {
-      totalCount
-      edges {
-        node {
-          target {
-            ... on Commit {
-              id
-              pushedDate
-              author {
-                date
-                email
-                user {
-                  name
-                  login
-                  id
-                }
-              }                    
-            }
-          }
-        }
-      }
-    }    
-    repositoryTopics(first: 10) {
-      totalCount
-      edges{
-        node{
-          id
-          topic{
-            id
-            name                    
-          }
-          url
-        }
-      }
-    }
-    branchProtectionRules(first: 5) {
-      totalCount
-      edges{
-        node{
-          id
-          databaseId
-          isAdminEnforced
-          pattern
-          requiredApprovingReviewCount
-          requiredStatusCheckContexts                  
-          requiresApprovingReviews
-          requiresCodeOwnerReviews
-          requiresCommitSignatures
-          requiresStatusChecks
-          requiresStrictStatusChecks
-          restrictsPushes
-          restrictsReviewDismissals                  
-        }
-      }
-    }
+    pushedAt                      
     databaseId
     diskUsage
     forkCount
     isPrivate
     isArchived
     isFork
-    openGraphImageUrl
     owner{
       id
       login
       url              
-    }
-    languages(first: 10) {
-      totalCount
-      edges {
-        node {
-          color
-          id
-          name
-        }
-      }              
-    }
+    }          
     issues(first: 1, orderBy: {field: UPDATED_AT, direction: DESC}) {
       totalCount
       edges {

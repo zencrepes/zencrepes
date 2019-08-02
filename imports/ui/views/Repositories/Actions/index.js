@@ -7,6 +7,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 
+import Refresh from "./Refresh.js";
 import Tools from "./Tools.js";
 
 class Actions extends Component {
@@ -26,6 +27,7 @@ class Actions extends Component {
             spacing={8}
           >
             <Grid item xs={12} sm container>
+              <Refresh />
             </Grid>
             <Grid item>
               <Grid

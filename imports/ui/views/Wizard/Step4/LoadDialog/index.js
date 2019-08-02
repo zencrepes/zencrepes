@@ -1,56 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import {connect} from "react-redux";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-
-import ApplyButton from './ApplyButton.js';
-import CancelButton from './CancelButton.js';
+import OkButton from "./OkButton.js";
 
 class LoadDialog extends Component {
-    constructor (props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        const { reposIssues } = this.props;
-
-        return (
-            <Dialog aria-labelledby="simple-dialog-title" open={true}>
-                <DialogTitle id="simple-dialog-title">Load issues</DialogTitle>
-                <DialogContent>
-                    {reposIssues === 0 ? (
-                        <React.Fragment>
-                            Please select a repository with issues !
-                        </React.Fragment>
-                    ) : (
-                        <React.Fragment>
-                            This might load up to {reposIssues} issues attached to the selected repositories ?<br /><br />
-                            <i>Issues are loaded, sorted by last update date in descending order (most recent first).</i>
-                        </React.Fragment>
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    {reposIssues !== 0 &&
-                        <CancelButton />
-                    }
-                    <ApplyButton />
-                </DialogActions>
-            </Dialog>
-        );
-    }
+  render() {
+    return (
+      <Dialog aria-labelledby="simple-dialog-title" open={true}>
+        <DialogTitle id="simple-dialog-title">
+          No Repository selected
+        </DialogTitle>
+        <DialogContent>Please select at least one repository!</DialogContent>
+        <DialogActions>
+          <OkButton />
+        </DialogActions>
+      </Dialog>
+    );
+  }
 }
 
-LoadDialog.propTypes = {
-    reposIssues: PropTypes.number.isRequired,
-};
-
-const mapState = state => ({
-    reposIssues: state.wizardView.reposIssues,
-});
-
-export default connect(mapState, null)(LoadDialog);
+export default LoadDialog;

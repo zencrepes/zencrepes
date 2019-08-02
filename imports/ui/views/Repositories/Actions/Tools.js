@@ -29,7 +29,7 @@ class Tools extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      clicked: false,
+      clicked: false
     };
   }
 
@@ -45,22 +45,37 @@ class Tools extends Component {
     this.setState({ anchorEl: null });
   };
 
-    //https://stackoverflow.com/questions/5435228/sort-an-array-with-arrays-in-it-by-string
-    comparator = (a, b) => {
-      if (String(a[0]).toLowerCase() < String(b[0]).toLowerCase()) return -1;
-      if (String(a[0]).toLowerCase() > String(b[0]).toLowerCase()) return 1;
-      return 0;
+  //https://stackoverflow.com/questions/5435228/sort-an-array-with-arrays-in-it-by-string
+  comparator = (a, b) => {
+    if (String(a[0]).toLowerCase() < String(b[0]).toLowerCase()) return -1;
+    if (String(a[0]).toLowerCase() > String(b[0]).toLowerCase()) return 1;
+    return 0;
   };
 
-  formatData = (filteredRepositories) => {
-    let header = ['repo', 'isPrivate', 'isArchived', 'isFork', 'url', 'commit_master_date', 'commit_master_author', 'createdAt', 'pushedAt', 'updatedAt'];
+  formatData = repositories => {
+    let header = [
+      "repo",
+      "isPrivate",
+      "isArchived",
+      "isFork",
+      "url",
+      "commit_master_date",
+      "commit_master_author",
+      "createdAt",
+      "pushedAt",
+      "updatedAt"
+    ];
     let dataset = [];
-    filteredRepositories.forEach((repo) => {
+    repositories.forEach(repo => {
       let latestCommitDate = null;
       let latestCommitAuthor = null;
-      if (repo.refs.edges.length > 0) {        
-        latestCommitAuthor = ((repo.refs.edges[0].node.target.author.user === null || repo.refs.edges[0].node.target.author.user.name === null) ? repo.refs.edges[0].node.target.author.email : repo.refs.edges[0].node.target.author.user.name )
-        latestCommitDate =  repo.refs.edges[0].node.target.pushedDate;
+      if (repo.refs.edges.length > 0) {
+        latestCommitAuthor =
+          repo.refs.edges[0].node.target.author.user === null ||
+          repo.refs.edges[0].node.target.author.user.name === null
+            ? repo.refs.edges[0].node.target.author.email
+            : repo.refs.edges[0].node.target.author.user.name;
+        latestCommitDate = repo.refs.edges[0].node.target.pushedDate;
       }
       dataset.push([
         repo.name,
@@ -69,22 +84,22 @@ class Tools extends Component {
         repo.isFork,
         repo.url,
         latestCommitDate,
-        latestCommitAuthor,        
+        latestCommitAuthor,
         repo.createdAt,
         repo.pushedAt,
-        repo.updatedAt,
+        repo.updatedAt
       ]);
     });
     dataset = dataset.sort(this.comparator);
     dataset.unshift(header);
-    return dataset;    
-  }
+    return dataset;
+  };
 
   render() {
-    const { classes, filteredRepositories } = this.props;
+    const { classes, repositories } = this.props;
     const { anchorEl, clicked } = this.state;
 
-    if (filteredRepositories.length > 0) {
+    if (repositories.length > 0) {
       return (
         <div className={classes.root}>
           <Tooltip title="Tools">
@@ -102,13 +117,11 @@ class Tools extends Component {
             open={Boolean(anchorEl)}
             onClose={this.handleClose}
           >
-            <MenuItem onClick={this.exportRepos}>
-              Export to TSV
-            </MenuItem>
+            <MenuItem onClick={this.exportRepos}>Export to TSV</MenuItem>
           </Menu>
-          {clicked &&
-            <CSVDownload data={this.formatData(filteredRepositories)} target="_blank" />
-          }          
+          {clicked && (
+            <CSVDownload data={this.formatData(repositories)} target="_blank" />
+          )}
         </div>
       );
     } else {
@@ -120,11 +133,11 @@ class Tools extends Component {
 Tools.propTypes = {
   classes: PropTypes.object.isRequired,
   setShowImportIssues: PropTypes.func.isRequired,
-  filteredRepositories: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  filteredRepositories: state.repositoriesView.filteredRepositories
+  repositories: state.repositoriesView.repositories
 });
 
 const mapDispatch = dispatch => ({
