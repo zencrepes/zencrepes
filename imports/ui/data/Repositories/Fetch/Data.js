@@ -80,6 +80,13 @@ class Data extends Component {
     setLoadingIterateCurrent(0);
     await this.sleep(100); // This 100ms sleep allow for change of state for this.props.loading
 
+    // Remove all repos that are not active
+    let disabledRepos = cfgSources
+      .find({ active: { $ne: true } })
+      .fetch()
+      .map(repo => repo.id);
+    await cfgRepositories.remove({ id: { $in: disabledRepos } });
+
     // Slice the array of repositories by load increment
     const issuesBucketSize = parseInt(
       reactLocalStorage.get("dataFetchNodes", 30)
