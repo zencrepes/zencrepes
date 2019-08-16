@@ -10,6 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import General from "../../layouts/General/index.js";
 
 import RepositoriesFetch from "../../data/Repositories/Fetch/index.js";
+import TeamsFetch from "../../data/Teams/Fetch/index.js";
 
 import Actions from "./Actions/index.js";
 import RepositoriesFacets from "./Facets/index.js";
@@ -86,6 +87,7 @@ class Repositories extends Component {
       <General>
         <QueryUpdate />
         <RepositoriesFetch />
+        <TeamsFetch />
         {repositories.length === 0 ? (
           <NoData />
         ) : (

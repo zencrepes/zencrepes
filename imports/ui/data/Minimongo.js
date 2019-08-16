@@ -4,7 +4,7 @@ export const cfgSources = new Mongo.Collection("cfgSources", {
   connection: null
 });
 //export const localCfgSources = new PersistentMinimongo2(cfgSources, 'GAV-Repos');
-window.repos = cfgSources;
+window.sources = cfgSources;
 
 export const cfgIssues = new Mongo.Collection("cfgIssues", {
   connection: null
@@ -48,4 +48,9 @@ window.cards = cfgCards;
 export const cfgRepositories = new Mongo.Collection("cfgRepositories", {
   connection: null
 });
-window.repositories = cfgRepositories;
+window.repos = cfgRepositories;
+
+export const cfgTeams = new Mongo.Collection("cfgTeams", {
+  connection: null
+});
+window.teams = cfgTeams;

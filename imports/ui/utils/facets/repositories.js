@@ -55,6 +55,24 @@ const aggregationsModel = {
     nested: true,
     nestedKey: "login",
     aggregations: {}
+  },
+  teams: {
+    key: "teams",
+    name: "With Teams",
+    nullValue: "EMPTY",
+    nullFilter: { "teams.totalCount": { $eq: 0 } },
+    nested: true,
+    nestedKey: "name",
+    aggregations: {}
+  },
+  teamsPermissions: {
+    key: "teams",
+    name: "With Teams Permissions",
+    nullValue: "EMPTY",
+    nullFilter: { "teams.totalCount": { $eq: 0 } },
+    nested: true,
+    nestedKey: "permission",
+    aggregations: {}
   }
 };
 
@@ -120,7 +138,11 @@ const buildFacetValues = (query, cfgSources, facet) => {
   if (facet.nested === true) {
     let allValues = [];
     cfgSources.find(facetQuery).forEach(repository => {
-      if (repository[facet.key] !== undefined) {
+      if (
+        repository[facet.key] !== undefined &&
+        repository[facet.key] !== null &&
+        repository[facet.key].totalCount > 0
+      ) {
         if (
           repository[facet.key] === null ||
           repository[facet.key].totalCount === 0
@@ -146,6 +168,10 @@ const buildFacetValues = (query, cfgSources, facet) => {
             }
           });
         }
+      } else {
+        let pushObj = {};
+        pushObj[facet.nestedKey] = facet.nullValue;
+        allValues.push({ ...pushObj, repository: repository });
       }
     });
     statesGroup = _.groupBy(allValues, facet.nestedKey);

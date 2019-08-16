@@ -26,6 +26,9 @@ export { default as loading } from "./loading.js";
 export { default as repositoriesView } from "./repositories/View.js";
 export { default as repositoriesFetch } from "./repositories/Fetch.js";
 
+// Teams
+export { default as teamsFetch } from "./teams/Fetch.js";
+
 // Milestones
 export { default as milestonesView } from "./milestones/View.js";
 export { default as milestonesEdit } from "./milestones/Edit.js";
