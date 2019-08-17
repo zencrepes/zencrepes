@@ -1,0 +1,26 @@
+query($cursor: String, $increment: Int, $team_id: ID!) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  node(id: $team_id) {
+    ... on Team {
+      id
+      members(first: $increment, after: $cursor) {
+        totalCount
+        edges {
+          cursor
+          role
+          node {
+            id
+            login
+            name
+            url
+          }
+        }
+      }
+    }
+  }
+}

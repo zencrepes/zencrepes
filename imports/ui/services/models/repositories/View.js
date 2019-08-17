@@ -49,6 +49,7 @@ export default {
         statsReleasesPresent: [],
         statsProjectsPresent: [],
         statsMilestonesPresent: [],
+        statsTeamsPresent: [],
         statsBranchProtectionPresent: [],
 
         showTimeModal: false,
@@ -92,6 +93,7 @@ export default {
         setStatsProjectsPresent(state, payload) {return { ...state, statsProjectsPresent: payload };},
         setStatsMilestonesPresent(state, payload) {return { ...state, statsMilestonesPresent: payload };},
         setStatsBranchProtectionPresent(state, payload) {return { ...state, statsBranchProtectionPresent: payload };},
+        setStatsTeamsPresent(state, payload) {return { ...state, statsTeamsPresent: payload };},
 
         setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
         setTimeFields(state, payload) {return { ...state, timeFields: payload };},
@@ -142,6 +144,7 @@ export default {
                 this.refreshReleasesPresent();
                 this.refreshProjectsPresent();
                 this.refreshMilestonesPresent();
+                this.refreshTeamsPresent();
                 this.refreshBranchProtectionPresent();
                 this.setTabStatsQuery(rootState.repositoriesView.query);
             }
@@ -481,6 +484,26 @@ export default {
             var t1 = performance.now();
             log.info("refreshMilestonesPresent - took " + (t1 - t0) + " milliseconds.");
         },   
+
+        async refreshTeamsPresent(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const isPresent = [{
+                name: 'Populated',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'teams.totalCount':{ $gt : 0}}}).fetch()
+            }, {
+                name: 'Empty',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query}).fetch().filter(r => r.teams === undefined || r.teams.totalCount === 0)
+            }];
+            this.setStatsTeamsPresent(isPresent);
+
+            var t1 = performance.now();
+            log.info("refreshTeamsPresent - took " + (t1 - t0) + " milliseconds.");
+        },           
 
         async refreshBranchProtectionPresent(payload, rootState) {
             const log = rootState.global.log;

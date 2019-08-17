@@ -20,6 +20,7 @@ import { cfgLabels } from "../imports/ui/data/Minimongo.js";
 import { cfgMilestones } from "../imports/ui/data/Minimongo.js";
 import { cfgProjects } from "../imports/ui/data/Minimongo.js";
 import { cfgRepositories } from "../imports/ui/data/Minimongo.js";
+import { cfgTeams } from "../imports/ui/data/Minimongo.js";
 
 // generate Redux store
 const store = init({
@@ -96,6 +97,14 @@ Tracker.autorun(function() {
     );
     localCfgRepositories.refresh(true, () => {
       store.dispatch.startup.setLoadedRepositories(true);
+    });
+
+    const localCfgTeams = new PersistentMinimongo2(
+      cfgTeams,
+      "GAV-Teams-" + username
+    );
+    localCfgTeams.refresh(true, () => {
+      store.dispatch.startup.setLoadedTeams(true);
     });
   }
 });

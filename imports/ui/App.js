@@ -68,7 +68,8 @@ class App extends Component {
       loadedQueries,
       loadedMilestones,
       loadedProjects,
-      loadedRepositories
+      loadedRepositories,
+      loadedTeams
     } = this.props;
     if (
       (loadedIssues === null ||
@@ -77,7 +78,8 @@ class App extends Component {
         loadedQueries === null ||
         loadedMilestones === null ||
         loadedProjects === null ||
-        loadedRepositories === null) &&
+        loadedRepositories === null ||
+        loadedTeams === null) &&
       Meteor.user() !== null
     ) {
       return (
@@ -265,7 +267,8 @@ App.propTypes = {
   loadedQueries: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   loadedMilestones: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   loadedProjects: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-  loadedRepositories: PropTypes.oneOfType([PropTypes.number, PropTypes.bool])
+  loadedRepositories: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  loadedTeams: PropTypes.oneOfType([PropTypes.number, PropTypes.bool])
 };
 
 const getUserName = name =>
@@ -281,7 +284,8 @@ const mapState = state => ({
   loadedQueries: state.startup.loadedQueries,
   loadedMilestones: state.startup.loadedMilestones,
   loadedProjects: state.startup.loadedProjects,
-  loadedRepositories: state.startup.loadedRepositories
+  loadedRepositories: state.startup.loadedRepositories,
+  loadedTeams: state.startup.loadedTeams
 });
 
 const mapDispatch = dispatch => ({

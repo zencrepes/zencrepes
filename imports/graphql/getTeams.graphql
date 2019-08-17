@@ -1,0 +1,40 @@
+query($team_cursor: String, $team_increment: Int, $org_name: String!) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  organization(login: $org_name) {
+    id
+    login
+    teams(first: $team_increment, after: $team_cursor) {
+      totalCount
+      edges {
+        cursor
+        node {
+          id
+          name
+          description
+          avatarUrl
+          createdAt
+          updatedAt
+          url
+          repositoriesUrl
+          childTeams(first: 1) {
+            totalCount
+          }
+          ancestors(first: 1) {
+            totalCount
+          }
+          invitations(first: 1) {
+            totalCount
+          }
+          repositories(first: 1) {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}

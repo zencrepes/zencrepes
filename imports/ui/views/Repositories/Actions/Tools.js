@@ -37,6 +37,14 @@ class Tools extends Component {
     this.setState({ anchorEl: null, clicked: !this.state.clicked });
   };
 
+  fetchTeams = () => {
+    const { setLoadFlag, setLoadRepos, setOnSuccess, updateView } = this.props;
+    this.setState({ anchorEl: null });
+    setOnSuccess(updateView);
+    setLoadRepos([]);
+    setLoadFlag(true);
+  };
+
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -118,6 +126,9 @@ class Tools extends Component {
             onClose={this.handleClose}
           >
             <MenuItem onClick={this.exportRepos}>Export to TSV</MenuItem>
+            <MenuItem onClick={this.fetchTeams}>
+              Fetch or Refresh Teams
+            </MenuItem>
           </Menu>
           {clicked && (
             <CSVDownload data={this.formatData(repositories)} target="_blank" />
@@ -133,7 +144,12 @@ class Tools extends Component {
 Tools.propTypes = {
   classes: PropTypes.object.isRequired,
   setShowImportIssues: PropTypes.func.isRequired,
-  repositories: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired,
+  setLoadFlag: PropTypes.func.isRequired,
+  setLoadRepos: PropTypes.func.isRequired,
+
+  setOnSuccess: PropTypes.func.isRequired,
+  updateView: PropTypes.func.isRequired
 };
 
 const mapState = state => ({
@@ -141,7 +157,13 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  setShowImportIssues: dispatch.issuesCreate.setShowImportIssues
+  setShowImportIssues: dispatch.issuesCreate.setShowImportIssues,
+  setLoadFlag: dispatch.teamsFetch.setLoadFlag,
+  setLoadRepos: dispatch.teamsFetch.setLoadRepos,
+
+  updateView: dispatch.repositoriesView.updateView,
+
+  setOnSuccess: dispatch.loading.setOnSuccess
 });
 
 export default connect(

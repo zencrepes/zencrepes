@@ -1,0 +1,25 @@
+query($cursor: String, $increment: Int, $team_id: ID!) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  node(id: $team_id) {
+    ... on Team {
+      id
+      repositories(first: $increment, after: $cursor) {
+        totalCount
+        edges {
+          cursor
+          permission
+          node {
+            id
+            name
+            url
+          }
+        }
+      }
+    }
+  }
+}

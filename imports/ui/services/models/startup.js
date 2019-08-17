@@ -7,7 +7,8 @@ export default {
     loadedQueries: null,
     loadedMilestones: null,
     loadedProjects: null,
-    loadedRepositories: null
+    loadedRepositories: null,
+    loadedTeams: null
   },
   reducers: {
     setLoadedIssues(state, payload) {
@@ -33,6 +34,9 @@ export default {
     },
     setLoadedRepositories(state, payload) {
       return { ...state, loadedRepositories: payload };
+    },
+    setLoadedTeams(state, payload) {
+      return { ...state, loadedTeams: payload };
     }
   },
 
