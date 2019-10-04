@@ -94,7 +94,8 @@
     "reactjs-localstorage": "0.0.7",
     "styled-components": "^4.2.0",
     "tippy.js": "^4.3.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "xregexp": "^4.2.4"
   },
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
