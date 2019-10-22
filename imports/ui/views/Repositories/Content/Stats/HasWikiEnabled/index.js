@@ -6,22 +6,22 @@ import RepositoriesPie from '../../../../../components/Charts/ChartJS/Repositori
 
 import { connect } from 'react-redux';
 
-class ProjectsPresent extends Component {
+class HasWikiEnabled extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { statsProjectsPresent } = this.props;
+    const { statsHasWikiEnabled } = this.props;
     return (
       <CustomCard
-        headerTitle='Has Projects'
+        headerTitle='Wiki Enabled'
         headerFactTitle=''
         headerFactValue=''
-        headerLegend='Display the number of repos which do have issues'
+        headerLegend='Display repositories with Wiki enabled'
       >
-        {statsProjectsPresent.length > 0 ? (
-          <RepositoriesPie dataset={statsProjectsPresent} />
+        {statsHasWikiEnabled.length > 0 ? (
+          <RepositoriesPie dataset={statsHasWikiEnabled} />
         ) : (
           <span>No data available</span>
         )}
@@ -30,15 +30,15 @@ class ProjectsPresent extends Component {
   }
 }
 
-ProjectsPresent.propTypes = {
-  statsProjectsPresent: PropTypes.array.isRequired
+HasWikiEnabled.propTypes = {
+  statsHasWikiEnabled: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  statsProjectsPresent: state.repositoriesView.statsProjectsPresent
+  statsHasWikiEnabled: state.repositoriesView.statsHasWikiEnabled
 });
 
 export default connect(
   mapState,
   null
-)(ProjectsPresent);
+)(HasWikiEnabled);

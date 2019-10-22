@@ -1,18 +1,39 @@
-query ($repository_array: [ID!]!){
+query($repository_array: [ID!]!) {
   rateLimit {
     limit
     cost
     remaining
     resetAt
   }
-  nodes(ids:$repository_array) {
+  nodes(ids: $repository_array) {
     ... on Repository {
-      id
-      name
-      url
-      updatedAt
-      createdAt
-      pushedAt
+      branchProtectionRules(first: 5) {
+        totalCount
+        edges {
+          node {
+            id
+            databaseId
+            isAdminEnforced
+            pattern
+            requiredApprovingReviewCount
+            requiredStatusCheckContexts
+            requiresApprovingReviews
+            requiresCodeOwnerReviews
+            requiresCommitSignatures
+            requiresStatusChecks
+            requiresStrictStatusChecks
+            restrictsPushes
+            restrictsReviewDismissals
+          }
+        }
+      }
+      codeOfConduct {
+        id
+        key
+        name
+        body
+        url
+      }
       collaborators(first: 10, affiliation: OUTSIDE) {
         totalCount
         edges {
@@ -24,7 +45,82 @@ query ($repository_array: [ID!]!){
           }
         }
       }
-      refs(first: 1, refPrefix: "refs/heads/", orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {
+      createdAt
+      databaseId
+      defaultBranchRef {
+        id
+        name
+        prefix
+      }
+      description
+      diskUsage
+      forkCount
+      hasIssuesEnabled
+      hasWikiEnabled
+      id
+      isArchived
+      isDisabled
+      isFork
+      isLocked
+      isMirror
+      isPrivate
+      isTemplate
+      issues(first: 1, orderBy: { field: UPDATED_AT, direction: DESC }) {
+        totalCount
+        edges {
+          node {
+            id
+            updatedAt
+          }
+        }
+      }
+      labels(first: 1) {
+        totalCount
+      }
+      languages(first: 10) {
+        totalCount
+        edges {
+          node {
+            color
+            id
+            name
+          }
+        }
+      }
+      milestones(first: 1) {
+        totalCount
+      }
+      name
+      nameWithOwner
+      owner {
+        id
+        login
+        url
+      }
+      projects(first: 1) {
+        totalCount
+      }
+      primaryLanguage {
+        id
+        color
+        name
+      }
+      pullRequests(first: 1, orderBy: { field: UPDATED_AT, direction: DESC }) {
+        totalCount
+        edges {
+          node {
+            id
+            updatedAt
+          }
+        }
+      }
+      pushedAt
+      rebaseMergeAllowed
+      refs(
+        first: 1
+        refPrefix: "refs/heads/"
+        orderBy: { field: TAG_COMMIT_DATE, direction: DESC }
+      ) {
         totalCount
         edges {
           node {
@@ -40,95 +136,43 @@ query ($repository_array: [ID!]!){
                     login
                     id
                   }
-                }                    
+                }
               }
             }
           }
         }
-      }            
+      }
+      releases(first: 1) {
+        totalCount
+      }
       repositoryTopics(first: 10) {
         totalCount
-        edges{
-          node{
+        edges {
+          node {
             id
-            topic{
+            topic {
               id
-              name                    
+              name
             }
             url
           }
         }
       }
-      branchProtectionRules(first: 5) {
+      shortDescriptionHTML
+      squashMergeAllowed
+      stargazers(first: 1) {
         totalCount
-        edges{
-          node{
-            id
-            databaseId
-            isAdminEnforced
-            pattern
-            requiredApprovingReviewCount
-            requiredStatusCheckContexts                  
-            requiresApprovingReviews
-            requiresCodeOwnerReviews
-            requiresCommitSignatures
-            requiresStatusChecks
-            requiresStrictStatusChecks
-            restrictsPushes
-            restrictsReviewDismissals                  
-          }
-        }
       }
-      databaseId
-      diskUsage
-      forkCount
-      isPrivate
-      isArchived
-      isFork
-      openGraphImageUrl
-      owner{
+      templateRepository {
         id
-        login
-        url              
+        nameWithOwner
       }
-      languages(first: 10) {
-        totalCount
-        edges {
-          node {
-            color
-            id
-            name
-          }
-        }              
-      }
-      issues(first: 1, orderBy: {field: UPDATED_AT, direction: DESC}) {
-        totalCount
-        edges {
-          node {
-            id
-            updatedAt
-          }
-        }
-      }
-      labels(first: 1) {
+      url
+      updatedAt
+      vulnerabilityAlerts(first: 1) {
         totalCount
       }
-      milestones(first: 1) {
-        totalCount
-      }
-      pullRequests(first: 1) {
-        totalCount
-        edges {
-          node {
-            id
-            updatedAt
-          }
-        }              
-      }
-      releases(first: 1) {
-        totalCount
-      }
-      projects(first: 1) {
+      watchers(first: 1) {
         totalCount
       }
     }

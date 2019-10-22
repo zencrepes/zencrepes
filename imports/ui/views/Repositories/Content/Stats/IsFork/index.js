@@ -6,22 +6,22 @@ import RepositoriesPie from '../../../../../components/Charts/ChartJS/Repositori
 
 import { connect } from 'react-redux';
 
-class ProjectsPresent extends Component {
+class IsFork extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { statsProjectsPresent } = this.props;
+    const { statsIsFork } = this.props;
     return (
       <CustomCard
-        headerTitle='Has Projects'
+        headerTitle='Repo is a Fork'
         headerFactTitle=''
         headerFactValue=''
-        headerLegend='Display the number of repos which do have issues'
+        headerLegend='Display repositories based on a Fork'
       >
-        {statsProjectsPresent.length > 0 ? (
-          <RepositoriesPie dataset={statsProjectsPresent} />
+        {statsIsFork.length > 0 ? (
+          <RepositoriesPie dataset={statsIsFork} />
         ) : (
           <span>No data available</span>
         )}
@@ -30,15 +30,15 @@ class ProjectsPresent extends Component {
   }
 }
 
-ProjectsPresent.propTypes = {
-  statsProjectsPresent: PropTypes.array.isRequired
+IsFork.propTypes = {
+  statsIsFork: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  statsProjectsPresent: state.repositoriesView.statsProjectsPresent
+  statsIsFork: state.repositoriesView.statsIsFork
 });
 
 export default connect(
   mapState,
   null
-)(ProjectsPresent);
+)(IsFork);

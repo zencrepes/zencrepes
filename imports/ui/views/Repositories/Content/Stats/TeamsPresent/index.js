@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import CustomCard from "../../../../../components/CustomCard/index.js";
-import RepositoriesPie from "../../../../../components/Charts/ChartJS/RepositoriesPie.js";
+import CustomCard from '../../../../../components/CustomCard/index.js';
+import RepositoriesPie from '../../../../../components/Charts/ChartJS/RepositoriesPie.js';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
 class TeamsPresent extends Component {
   constructor(props) {
@@ -15,10 +15,10 @@ class TeamsPresent extends Component {
     const { statsTeamsPresent } = this.props;
     return (
       <CustomCard
-        headerTitle="With Teams"
-        headerFactTitle=""
-        headerFactValue=""
-        headerLegend="Display the number of repos which do have Teams. Please fetch teams using the tools menu."
+        headerTitle='Has Teams'
+        headerFactTitle=''
+        headerFactValue=''
+        headerLegend='Display the number of repos which do have Teams. Please fetch teams using the tools menu.'
       >
         {statsTeamsPresent.length > 0 ? (
           <RepositoriesPie dataset={statsTeamsPresent} />

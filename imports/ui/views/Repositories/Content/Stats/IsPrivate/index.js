@@ -6,22 +6,22 @@ import RepositoriesPie from '../../../../../components/Charts/ChartJS/Repositori
 
 import { connect } from 'react-redux';
 
-class ProjectsPresent extends Component {
+class IsPrivate extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { statsProjectsPresent } = this.props;
+    const { statsIsPrivate } = this.props;
     return (
       <CustomCard
-        headerTitle='Has Projects'
+        headerTitle='Is Private'
         headerFactTitle=''
         headerFactValue=''
-        headerLegend='Display the number of repos which do have issues'
+        headerLegend='Display repositories based on a Private'
       >
-        {statsProjectsPresent.length > 0 ? (
-          <RepositoriesPie dataset={statsProjectsPresent} />
+        {statsIsPrivate.length > 0 ? (
+          <RepositoriesPie dataset={statsIsPrivate} />
         ) : (
           <span>No data available</span>
         )}
@@ -30,15 +30,15 @@ class ProjectsPresent extends Component {
   }
 }
 
-ProjectsPresent.propTypes = {
-  statsProjectsPresent: PropTypes.array.isRequired
+IsPrivate.propTypes = {
+  statsIsPrivate: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  statsProjectsPresent: state.repositoriesView.statsProjectsPresent
+  statsIsPrivate: state.repositoriesView.statsIsPrivate
 });
 
 export default connect(
   mapState,
   null
-)(ProjectsPresent);
+)(IsPrivate);

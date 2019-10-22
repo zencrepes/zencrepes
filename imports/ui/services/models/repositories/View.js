@@ -43,6 +43,10 @@ export default {
         statsCreatedSince: [],
         statsUpdatedSince: [],
         statsPushedSince: [],
+        statsForkCount: [],
+        statsStargazersCount: [],
+        statsVulnerabilityAlertsCount: [],
+        statsWatchersCount: [],
 
         statsIssuesPresent: [],
         statsPullRequestsPresent: [],
@@ -51,6 +55,12 @@ export default {
         statsMilestonesPresent: [],
         statsTeamsPresent: [],
         statsBranchProtectionPresent: [],
+        statsIsFork: [],
+        statsIsPrivate: [],
+        statsHasCodeOfConduct: [],
+        statsHasDescription: [],
+        statsHasIssuesEnabled: [],
+        statsHasWikiEnabled: [],
 
         showTimeModal: false,
         timeFields: [{idx: 'createdAt', name: 'Created'}, {idx: 'updatedAt', name: 'Updated'}, {idx: 'pushedAt', name: 'Pushed'}],
@@ -87,6 +97,11 @@ export default {
         setStatsCreatedSince(state, payload) {return { ...state, statsCreatedSince: payload };},
         setStatsUpdatedSince(state, payload) {return { ...state, statsUpdatedSince: payload };},
         setStatsPushedSince(state, payload) {return { ...state, statsPushedSince: payload };},
+        setStatsForkCount(state, payload) {return { ...state, statsForkCount: payload };},
+        setStatsStargazersCount(state, payload) {return { ...state, statsStargazersCount: payload };},
+        setStatsVulnerabilityAlertsCount(state, payload) {return { ...state, statsVulnerabilityAlertsCount: payload };},
+        setStatsWatchersCount(state, payload) {return { ...state, statsWatchersCount: payload };},
+
         setStatsIssuesPresent(state, payload) {return { ...state, statsIssuesPresent: payload };},
         setStatsPullRequestsPresent(state, payload) {return { ...state, statsPullRequestsPresent: payload };},
         setStatsReleasesPresent(state, payload) {return { ...state, statsReleasesPresent: payload };},
@@ -94,6 +109,12 @@ export default {
         setStatsMilestonesPresent(state, payload) {return { ...state, statsMilestonesPresent: payload };},
         setStatsBranchProtectionPresent(state, payload) {return { ...state, statsBranchProtectionPresent: payload };},
         setStatsTeamsPresent(state, payload) {return { ...state, statsTeamsPresent: payload };},
+        setStatsIsFork(state, payload) {return { ...state, statsIsFork: payload };},
+        setStatsIsPrivate(state, payload) {return { ...state, statsIsPrivate: payload };},
+        setStatsHasCodeOfConduct(state, payload) {return { ...state, statsHasCodeOfConduct: payload };},
+        setStatsHasDescription(state, payload) {return { ...state, statsHasDescription: payload };},
+        setStatsHasIssuesEnabled(state, payload) {return { ...state, statsHasIssuesEnabled: payload };},
+        setStatsHasWikiEnabled(state, payload) {return { ...state, statsHasWikiEnabled: payload };},
 
         setShowTimeModal(state, payload) {return { ...state, showTimeModal: payload };},
         setTimeFields(state, payload) {return { ...state, timeFields: payload };},
@@ -139,6 +160,10 @@ export default {
         async updateStats(payload, rootState) {
             if (rootState.repositoriesView.selectedTab === 'stats') {
                 this.refreshBins();
+                this.refreshForkBins();
+                this.refreshStargazersBins();
+                this.refreshVulnerabilityAlertsBins();
+                this.refreshWatchersBins();
                 this.refreshIssuesPresent();
                 this.refreshPullRequestsPresent();
                 this.refreshReleasesPresent();
@@ -146,6 +171,12 @@ export default {
                 this.refreshMilestonesPresent();
                 this.refreshTeamsPresent();
                 this.refreshBranchProtectionPresent();
+                this.refreshIsFork();
+                this.refreshIsPrivate();
+                this.refreshHasCodeOfConduct();
+                this.refreshHasDescription();
+                this.refreshHasIssuesEnabled();
+                this.refreshHasWikiEnabled();
                 this.setTabStatsQuery(rootState.repositoriesView.query);
             }
         },
@@ -266,6 +297,168 @@ export default {
 
             var t1 = performance.now();
             log.info("refreshVelocity - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshForkBins(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            //const repoWithMostForkCount = cfgRepositories.findOne({...query}, {sort: {forkCount: -1},reactive: false,transform: null});
+            //console.log(repoWithMostForkCount)
+            
+            const forkCount = [{
+                label: '1 - 5',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  1, $lt : 5}}).fetch()
+            }, {
+                label: '5 - 10',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  5, $lt : 10}}).fetch()
+            }, {
+                label: '10 - 20',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  10, $lt : 20}}).fetch()
+            }, {
+                label: '20 - 50',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  20, $lt : 50}}).fetch()
+            }, {
+                label: '50 - 100',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  50, $lt : 100}}).fetch()
+            }, {
+                label: '100 - 200',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  100, $lt : 200}}).fetch()
+            }, {
+                label: '200 - 500',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  200, $lt : 500}}).fetch()
+            }, {     
+                label: '500 - 1000',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  500, $lt : 1000}}).fetch()
+            }, {                             
+                label: '1000+',
+                repositories: cfgRepositories.find({...query, 'forkCount':{ $gte :  1001}}).fetch()
+            }];
+            this.setStatsForkCount(forkCount);
+            
+           var t1 = performance.now();
+           log.info("refreshForkBins - took " + (t1 - t0) + " milliseconds.");           
+        },
+
+        async refreshStargazersBins(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+            
+            const dataset = [{
+                label: '1 - 5',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  1, $lt : 5}}).fetch()
+            }, {
+                label: '5 - 10',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  5, $lt : 10}}).fetch()
+            }, {
+                label: '10 - 20',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  10, $lt : 20}}).fetch()
+            }, {
+                label: '20 - 50',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  20, $lt : 50}}).fetch()
+            }, {
+                label: '50 - 100',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  50, $lt : 100}}).fetch()
+            }, {
+                label: '100 - 200',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  100, $lt : 200}}).fetch()
+            }, {
+                label: '200 - 500',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  200, $lt : 500}}).fetch()
+            }, {     
+                label: '500 - 1000',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  500, $lt : 1000}}).fetch()
+            }, {                             
+                label: '1000+',
+                repositories: cfgRepositories.find({...query, 'stargazers.totalCount':{ $gte :  1001}}).fetch()
+            }];
+            this.setStatsStargazersCount(dataset);
+            
+           var t1 = performance.now();
+           log.info("refreshStargazersBins - took " + (t1 - t0) + " milliseconds.");           
+        },
+
+        async refreshVulnerabilityAlertsBins(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            //const repoWithMostForkCount = cfgRepositories.findOne({...query}, {sort: {forkCount: -1},reactive: false,transform: null});
+            //console.log(repoWithMostForkCount)
+            
+            const dataset = [{
+                label: '1',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $eq : 1}}).fetch()
+            }, {
+                label: '2',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $eq : 2}}).fetch()
+            }, {
+                label: '3',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $eq : 3}}).fetch()
+            }, {
+                label: '4',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $eq : 4}}).fetch()     
+            }, {
+                label: '5 - 10',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $gte : 5, $lt : 10}}).fetch()
+            }, {
+                label: '10 - 15',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $gte :  10, $lt : 15}}).fetch()
+            }, {
+                label: '15 - 20',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $gte :  15, $lt : 20}}).fetch()
+            }, {                          
+                label: '20+',
+                repositories: cfgRepositories.find({...query, 'vulnerabilityAlerts.totalCount':{ $gte :  20}}).fetch()
+            }];
+            this.setStatsVulnerabilityAlertsCount(dataset);
+            
+           var t1 = performance.now();
+           log.info("refreshVulnerabilityAlertsBins - took " + (t1 - t0) + " milliseconds.");           
+        },
+
+        async refreshWatchersBins(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            //const repoWithMostForkCount = cfgRepositories.findOne({...query}, {sort: {forkCount: -1},reactive: false,transform: null});
+            //console.log(repoWithMostForkCount)
+            
+            const dataset = [{
+                label: '1 - 5',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  1, $lt : 5}}).fetch()
+            }, {
+                label: '5 - 10',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  5, $lt : 10}}).fetch()
+            }, {
+                label: '10 - 20',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  10, $lt : 20}}).fetch()
+            }, {
+                label: '20 - 50',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  20, $lt : 50}}).fetch()
+            }, {
+                label: '50 - 100',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  50, $lt : 100}}).fetch()
+            }, {
+                label: '100 - 200',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  100, $lt : 200}}).fetch()
+            }, {
+                label: '200 - 500',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  200, $lt : 500}}).fetch()
+            }, {     
+                label: '500 - 1000',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  500, $lt : 1000}}).fetch()
+            }, {                             
+                label: '1000+',
+                repositories: cfgRepositories.find({...query, 'watchers.totalCount':{ $gte :  1001}}).fetch()
+            }];
+            this.setStatsWatchersCount(dataset);
+            
+           var t1 = performance.now();
+           log.info("refreshWatchersBins - took " + (t1 - t0) + " milliseconds.");           
         },
 
         async refreshBins(payload, rootState) {
@@ -391,11 +584,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const issuesPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'issues.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query, ...{'issues.totalCount':{ $eq : 0}}}).fetch()
             }];
@@ -411,11 +604,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const isPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'pullRequests.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query, ...{'pullRequests.totalCount':{ $eq : 0}}}).fetch()
             }];
@@ -431,11 +624,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const isPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'releases.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query, ...{'releases.totalCount':{ $eq : 0}}}).fetch()
             }];
@@ -451,11 +644,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const isPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'projects.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query, ...{'projects.totalCount':{ $eq : 0}}}).fetch()
             }];
@@ -471,11 +664,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const isPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'milestones.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query, ...{'milestones.totalCount':{ $eq : 0}}}).fetch()
             }];
@@ -491,11 +684,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const isPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'teams.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query}).fetch().filter(r => r.teams === undefined || r.teams.totalCount === 0)
             }];
@@ -511,11 +704,11 @@ export default {
             const query = rootState.repositoriesView.query;
 
             const isPresent = [{
-                name: 'Populated',
+                name: 'Yes',
                 color: '#2196f3',
                 repositories: cfgRepositories.find({...query, ...{'branchProtectionRules.totalCount':{ $gt : 0}}}).fetch()
             }, {
-                name: 'Empty',
+                name: 'No',
                 color: '#e0e0e0',
                 repositories: cfgRepositories.find({...query, ...{'branchProtectionRules.totalCount':{ $eq : 0}}}).fetch()
             }];
@@ -523,6 +716,123 @@ export default {
 
             var t1 = performance.now();
             log.info("refreshMilestonesPresent - took " + (t1 - t0) + " milliseconds.");
-        },       
+        },
+
+        async refreshIsFork(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const isFork = [{
+                name: 'Yes',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'isFork': true}}).fetch()
+            }, {
+                name: 'No',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query, ...{'isFork': false}}).fetch()
+            }];
+            this.setStatsIsFork(isFork);
+
+            var t1 = performance.now();
+            log.info("refreshIsFork - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshIsPrivate(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const dataset = [{
+                name: 'Yes',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'isPrivate': true}}).fetch()
+            }, {
+                name: 'No',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query, ...{'isPrivate': false}}).fetch()
+            }];
+            this.setStatsIsPrivate(dataset);
+
+            var t1 = performance.now();
+            log.info("refreshIsPrivate - took " + (t1 - t0) + " milliseconds.");
+        },
+
+        async refreshHasCodeOfConduct(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const hasCodeOfConduct = [{
+                name: 'No',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query, ...{'codeOfConduct': null}}).fetch()
+            }, {
+                name: 'Yes',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'codeOfConduct': {$ne:null}}}).fetch()
+            }];
+            this.setStatsHasCodeOfConduct(hasCodeOfConduct);
+
+            var t1 = performance.now();
+            log.info("refreshHasCodeOfConduct - took " + (t1 - t0) + " milliseconds.");
+        },
+        async refreshHasDescription(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const hasDescription = [{
+                name: 'No',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query, ...{'description': null}}).fetch()
+            }, {
+                name: 'Yes',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'description': {$ne:null}}}).fetch()
+            }];
+            this.setStatsHasDescription(hasDescription);
+
+            var t1 = performance.now();
+            log.info("refreshHasDescription - took " + (t1 - t0) + " milliseconds.");
+        },
+        async refreshHasIssuesEnabled(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const dataset = [{
+                name: 'Yes',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'hasIssuesEnabled': true}}).fetch()
+            }, {
+                name: 'No',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query, ...{'hasIssuesEnabled': false}}).fetch()
+            }];
+            this.setStatsHasIssuesEnabled(dataset);
+
+            var t1 = performance.now();
+            log.info("refreshHasIssuesEnabled - took " + (t1 - t0) + " milliseconds.");
+        },   
+        async refreshHasWikiEnabled(payload, rootState) {
+            const log = rootState.global.log;
+            let t0 = performance.now();
+            const query = rootState.repositoriesView.query;
+
+            const dataset = [{
+                name: 'Yes',
+                color: '#2196f3',
+                repositories: cfgRepositories.find({...query, ...{'hasWikiEnabled': true}}).fetch()
+            }, {
+                name: 'No',
+                color: '#e0e0e0',
+                repositories: cfgRepositories.find({...query, ...{'hasWikiEnabled': false}}).fetch()
+            }];
+            this.setStatsHasWikiEnabled(dataset);
+
+            var t1 = performance.now();
+            log.info("refreshHasWikiEnabled - took " + (t1 - t0) + " milliseconds.");
+        },               
     }
 };
