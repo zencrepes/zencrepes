@@ -99,6 +99,9 @@ class Stats extends Component {
           alignItems='flex-start'
           spacing={8}
         >
+          <Grid item xs={6} sm={4} md={2}>
+            <IsFork />
+          </Grid>
           <Grid item xs={6} sm={4} md={3}>
             <ProtectedBranchesPresent />
           </Grid>
@@ -107,9 +110,6 @@ class Stats extends Component {
           </Grid>
           <Grid item xs={6} sm={4} md={2}>
             <TeamsPresent />
-          </Grid>
-          <Grid item xs={6} sm={4} md={2}>
-            <IsFork />
           </Grid>
           <Grid item xs={6} sm={4} md={3}>
             <HasCodeOfConduct />
