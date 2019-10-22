@@ -6,22 +6,22 @@ import RepositoriesPie from '../../../../../components/Charts/ChartJS/Repositori
 
 import { connect } from 'react-redux';
 
-class ProjectsPresent extends Component {
+class HasIssuesEnabled extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { statsProjectsPresent } = this.props;
+    const { statsHasIssuesEnabled } = this.props;
     return (
       <CustomCard
-        headerTitle='Has Projects'
+        headerTitle='Issues Enabled'
         headerFactTitle=''
         headerFactValue=''
-        headerLegend='Display the number of repos which do have issues'
+        headerLegend='Display repositories with issues enabled'
       >
-        {statsProjectsPresent.length > 0 ? (
-          <RepositoriesPie dataset={statsProjectsPresent} />
+        {statsHasIssuesEnabled.length > 0 ? (
+          <RepositoriesPie dataset={statsHasIssuesEnabled} />
         ) : (
           <span>No data available</span>
         )}
@@ -30,15 +30,15 @@ class ProjectsPresent extends Component {
   }
 }
 
-ProjectsPresent.propTypes = {
-  statsProjectsPresent: PropTypes.array.isRequired
+HasIssuesEnabled.propTypes = {
+  statsHasIssuesEnabled: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  statsProjectsPresent: state.repositoriesView.statsProjectsPresent
+  statsHasIssuesEnabled: state.repositoriesView.statsHasIssuesEnabled
 });
 
 export default connect(
   mapState,
   null
-)(ProjectsPresent);
+)(HasIssuesEnabled);

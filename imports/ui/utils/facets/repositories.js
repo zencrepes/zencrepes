@@ -1,77 +1,74 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 const aggregationsModel = {
   ids: {
-    key: "id",
-    name: "Repository Id",
+    key: 'id',
+    name: 'Repository Id',
     nested: false,
     aggregations: {},
     hiddenFacet: true
   },
   orgs: {
-    key: "org.name",
-    name: "Organizations",
+    key: 'org.name',
+    name: 'Organizations',
     nested: false,
     aggregations: {}
   },
-  languages: {
-    key: "languages",
-    name: "Languages",
-    nullValue: "EMPTY",
-    nullFilter: { "languages.totalCount": { $eq: 0 } },
-    nested: true,
-    nestedKey: "name",
+  primarylanguage: {
+    key: 'primaryLanguage.name',
+    name: 'Primary Languages',
+    nested: false,
     aggregations: {}
   },
   topics: {
-    key: "repositoryTopics",
-    name: "Topics",
-    nullValue: "EMPTY",
-    nullFilter: { "repositoryTopics.totalCount": { $eq: 0 } },
+    key: 'repositoryTopics',
+    name: 'Topics',
+    nullValue: 'EMPTY',
+    nullFilter: { 'repositoryTopics.totalCount': { $eq: 0 } },
     nested: true,
-    nestedKey: "topic.name",
+    nestedKey: 'topic.name',
     aggregations: {}
   },
   protection: {
-    key: "branchProtectionRules",
-    name: "Branch Protection",
-    nullValue: "EMPTY",
-    nullFilter: { "branchProtectionRules.totalCount": { $eq: 0 } },
+    key: 'branchProtectionRules',
+    name: 'Branch Protection',
+    nullValue: 'EMPTY',
+    nullFilter: { 'branchProtectionRules.totalCount': { $eq: 0 } },
     nested: true,
-    nestedKey: "pattern",
+    nestedKey: 'pattern',
     aggregations: {}
   },
-  isArchived: {
-    key: "isArchived",
-    name: "Archived",
+  defaultBranch: {
+    key: 'defaultBranchRef.name',
+    name: 'Default branch',
     nested: false,
     aggregations: {}
   },
   collaborators: {
-    key: "collaborators",
-    name: "External Contributors",
-    nullValue: "EMPTY",
-    nullFilter: { "collaborators.totalCount": { $eq: 0 } },
+    key: 'collaborators',
+    name: 'External Contributors',
+    nullValue: 'EMPTY',
+    nullFilter: { 'collaborators.totalCount': { $eq: 0 } },
     nested: true,
-    nestedKey: "login",
+    nestedKey: 'login',
     aggregations: {}
   },
   teams: {
-    key: "teams",
-    name: "With Teams",
-    nullValue: "EMPTY",
-    nullFilter: { "teams.totalCount": { $eq: 0 } },
+    key: 'teams',
+    name: 'With Teams',
+    nullValue: 'EMPTY',
+    nullFilter: { 'teams.totalCount': { $eq: 0 } },
     nested: true,
-    nestedKey: "name",
+    nestedKey: 'name',
     aggregations: {}
   },
   teamsPermissions: {
-    key: "teams",
-    name: "With Teams Permissions",
-    nullValue: "EMPTY",
-    nullFilter: { "teams.totalCount": { $eq: 0 } },
+    key: 'teams',
+    name: 'With Teams Permissions',
+    nullValue: 'EMPTY',
+    nullFilter: { 'teams.totalCount': { $eq: 0 } },
     nested: true,
-    nestedKey: "permission",
+    nestedKey: 'permission',
     aggregations: {}
   }
 };
@@ -121,7 +118,7 @@ const buildFacetValues = (query, cfgSources, facet) => {
   let facetQuery = JSON.parse(JSON.stringify(query));
   let queryElement = facet.key;
   if (facet.nested === true) {
-    queryElement = facet.key + ".edges";
+    queryElement = facet.key + '.edges';
   }
   if (facetQuery[queryElement] !== undefined) {
     delete facetQuery[queryElement];
@@ -155,7 +152,7 @@ const buildFacetValues = (query, cfgSources, facet) => {
             // Using lodash get was needed due to the nested nature of some of the facets.
             if (
               _.get(nestedValue.node, facet.nestedKey) === null ||
-              _.get(nestedValue.node, facet.nestedKey) === "" ||
+              _.get(nestedValue.node, facet.nestedKey) === '' ||
               _.get(nestedValue.node, facet.nestedKey) === undefined
             ) {
               //console.log({...nestedValue.node, name: nestedValue.node.login});
@@ -181,9 +178,9 @@ const buildFacetValues = (query, cfgSources, facet) => {
   }
 
   // If the key is 'undefined', replace with default facet name
-  if (statesGroup["undefined"] !== undefined) {
-    statesGroup[facet.nullName] = statesGroup["undefined"];
-    delete statesGroup["undefined"];
+  if (statesGroup['undefined'] !== undefined) {
+    statesGroup[facet.nullName] = statesGroup['undefined'];
+    delete statesGroup['undefined'];
   }
 
   return Object.entries(statesGroup).map(([name, content]) => {

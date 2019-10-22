@@ -6,22 +6,22 @@ import RepositoriesPie from '../../../../../components/Charts/ChartJS/Repositori
 
 import { connect } from 'react-redux';
 
-class ProjectsPresent extends Component {
+class HasCodeOfConduct extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { statsProjectsPresent } = this.props;
+    const { statsHasCodeOfConduct } = this.props;
     return (
       <CustomCard
-        headerTitle='Has Projects'
+        headerTitle='Has Code of Conduct'
         headerFactTitle=''
         headerFactValue=''
-        headerLegend='Display the number of repos which do have issues'
+        headerLegend='Display repositories with a Code of Conduct defined'
       >
-        {statsProjectsPresent.length > 0 ? (
-          <RepositoriesPie dataset={statsProjectsPresent} />
+        {statsHasCodeOfConduct.length > 0 ? (
+          <RepositoriesPie dataset={statsHasCodeOfConduct} />
         ) : (
           <span>No data available</span>
         )}
@@ -30,15 +30,15 @@ class ProjectsPresent extends Component {
   }
 }
 
-ProjectsPresent.propTypes = {
-  statsProjectsPresent: PropTypes.array.isRequired
+HasCodeOfConduct.propTypes = {
+  statsHasCodeOfConduct: PropTypes.array.isRequired
 };
 
 const mapState = state => ({
-  statsProjectsPresent: state.repositoriesView.statsProjectsPresent
+  statsHasCodeOfConduct: state.repositoriesView.statsHasCodeOfConduct
 });
 
 export default connect(
   mapState,
   null
-)(ProjectsPresent);
+)(HasCodeOfConduct);
