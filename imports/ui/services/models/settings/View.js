@@ -83,12 +83,12 @@ export default {
             const uniqueOrgs = _.toArray(_.groupBy(allRepos, 'org.login'));
             const treeNodes = _.orderBy(uniqueOrgs.map((org) => {
                 return {
-                    label: org[0].org.name,
-                    value: org[0].org.login,
+                    label: org[0].org === undefined ? 'unknown org name' : org[0].org.name,
+                    value: org[0].org === undefined ? 'unknown org login' : org[0].org.login,
                     children: _.orderBy(org.map((repo) => {
                         return {
-                            label: repo.name,
-                            value: repo.id
+                            label: repo.name === undefined ? 'unknown repo name' : repo.name,
+                            value: repo.id === undefined ? 'unknown repo id' : repo.id
                         };
                     }), [repo => repo.label.toLowerCase()])
                 };
@@ -125,20 +125,20 @@ export default {
             this.setOrgCountTotal(Object.keys(_.groupBy(availableRepos, 'org.login')).length);
             this.setOrgCountSelected(Object.keys(_.groupBy(selectedRepos, 'org.login')).length);
 
-            this.setIssuesCountTotal(availableRepos.map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
-            this.setIssuesCountSelected(selectedRepos.map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setIssuesCountTotal(availableRepos.filter(r => r.issues !== undefined).map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setIssuesCountSelected(selectedRepos.filter(r => r.issues !== undefined).map(repo => repo.issues.totalCount).reduce((acc, count) => acc + count, 0));
             this.setIssuesCountLoaded(cfgIssues.find().count());
-            this.setPullrequestsCountTotal(availableRepos.map(repo => repo.pullRequests.totalCount).reduce((acc, count) => acc + count, 0));
-            this.setPullrequestsCountSelected(selectedRepos.map(repo => repo.pullRequests.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setPullrequestsCountTotal(availableRepos.filter(r => r.pullRequests !== undefined).map(repo => repo.pullRequests.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setPullrequestsCountSelected(selectedRepos.filter(r => r.pullRequests !== undefined).map(repo => repo.pullRequests.totalCount).reduce((acc, count) => acc + count, 0));
             this.setPullrequestsCountLoaded(cfgIssues.find().count());
-            this.setLabelsCountTotal(availableRepos.map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
-            this.setLabelsCountSelected(selectedRepos.map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setLabelsCountTotal(availableRepos.filter(r => r.labels !== undefined).map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setLabelsCountSelected(selectedRepos.filter(r => r.labels !== undefined).map(repo => repo.labels.totalCount).reduce((acc, count) => acc + count, 0));
             this.setLabelsCountLoaded(cfgLabels.find().count());
-            this.setProjectsCountTotal(availableRepos.map(repo => repo.projects.totalCount).reduce((acc, count) => acc + count, 0));
-            this.setProjectsCountSelected(selectedRepos.map(repo => repo.projects.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setProjectsCountTotal(availableRepos.filter(r => r.projects !== undefined).map(repo => repo.projects.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setProjectsCountSelected(selectedRepos.filter(r => r.projects !== undefined).map(repo => repo.projects.totalCount).reduce((acc, count) => acc + count, 0));
             this.setProjectsCountLoaded(0);
-            this.setMilestonesCountTotal(availableRepos.map(repo => repo.milestones.totalCount).reduce((acc, count) => acc + count, 0));
-            this.setMilestonesCountSelected(selectedRepos.map(repo => repo.milestones.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setMilestonesCountTotal(availableRepos.filter(r => r.milestones !== undefined).map(repo => repo.milestones.totalCount).reduce((acc, count) => acc + count, 0));
+            this.setMilestonesCountSelected(selectedRepos.filter(r => r.milestones !== undefined).map(repo => repo.milestones.totalCount).reduce((acc, count) => acc + count, 0));
             this.setMilestonesCountLoaded(cfgMilestones.find().count());
 
             const t1 = performance.now();
