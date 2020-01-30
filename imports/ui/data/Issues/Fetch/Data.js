@@ -221,9 +221,9 @@ class Data extends Component {
                 if (updatedIssue.points !== null) {
                     log.info('This issue has ' + updatedIssue.points + ' story points');
                 }
-                if (updatedIssue.boardState !== null) {
+                /* if (updatedIssue.boardState !== null) {
                     log.info('This issue is in Agile State ' + updatedIssue.boardState.name);
-                }
+                }*/
                 /*
                 let issueObj = JSON.parse(JSON.stringify(currentIssue.node)); //TODO - Replace this with something better to copy object ?
                 issueObj['repo'] = repoObj;
