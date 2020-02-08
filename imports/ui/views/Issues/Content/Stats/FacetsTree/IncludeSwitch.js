@@ -39,7 +39,7 @@ class PointsSwitch extends Component {
 
 PointsSwitch.propTypes = {
     classes: PropTypes.object.isRequired,
-    include: PropTypes.bool.isRequired,
+    exclude: PropTypes.bool.isRequired,
     setInclude: PropTypes.func.isRequired,
 };
 
