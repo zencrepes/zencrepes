@@ -2,7 +2,7 @@
 # - https://github.com/jshimko/meteor-launchpad/
 # - https://github.com/cloud66-samples/blog/blob/webinar_codeship_meteor/Dockerfile.production
 #FROM node:8.9.0
-FROM node:8.9.4-stretch
+FROM node:12-stretch
 MAINTAINER Francois Gerthoffert <fg@mail.gerthoffert.net>
 
 ENV GOSU_VERSION 1.11
@@ -32,7 +32,7 @@ RUN cd $APP_SOURCE_DIR && \
     cd $APP_BUNDLE_DIR/bundle/programs/server/ && \
     meteor npm install --production --verbose && \
     chown -R node:node $APP_BUNDLE_DIR
-    
+
 #COPY $APP_SOURCE_DIR/entrypoint.sh $APP_BUNDLE_DIR/bundle/entrypoint.sh
 RUN mv $APP_SOURCE_DIR/entrypoint.sh $APP_BUNDLE_DIR/bundle/entrypoint.sh
 RUN chmod +x $APP_BUNDLE_DIR/bundle/entrypoint.sh
