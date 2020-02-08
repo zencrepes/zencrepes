@@ -116,6 +116,7 @@ IssuesTree.propTypes = {
     classes: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     dataset: PropTypes.array,
+    exclude: PropTypes.boolean,
     emptyName: PropTypes.string.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
 };
