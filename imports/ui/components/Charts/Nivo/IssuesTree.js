@@ -32,14 +32,32 @@ class IssuesTree extends Component {
         return chartData;
     }
 
-    clickIssues = ({data}) => {
-        const issuesArrayQuery = data.issues.map(issue => issue.id);
-        const query = {'id': {'$in': issuesArrayQuery}};
-        this.props.history.push({
-            pathname: '/issues/list',
-            search: '?q=' + encodeURIComponent(JSON.stringify(query)),
-            state: { detail: query }
-        });
+    clickIssues = ({ data }) => {
+        const { dataset, exclude } = this.props;
+        if (exclude) {
+            // Build an array containing all issues
+            const allIssues = dataset.reduce((acc, category) => {
+                const pushIssues = category.issues.filter(issue => acc.find(i => i.id === issue.id) === undefined);
+                return [...acc, ...pushIssues];
+            }, []);
+            // Filter out all issues that are in the selected element
+            const filteredIssues = allIssues.filter(issue => data.issues.find(i => i.id === issue.id) === undefined);
+            const issuesArrayQuery = filteredIssues.map(issue => issue.id);
+            const query = {'id': {'$in': issuesArrayQuery}};
+            this.props.history.push({
+                pathname: '/issues/list',
+                search: '?q=' + encodeURIComponent(JSON.stringify(query)),
+                state: { detail: query }
+            });
+        } else {
+            const issuesArrayQuery = data.issues.map(issue => issue.id);
+            const query = {'id': {'$in': issuesArrayQuery}};
+            this.props.history.push({
+                pathname: '/issues/list',
+                search: '?q=' + encodeURIComponent(JSON.stringify(query)),
+                state: { detail: query }
+            });            
+        }
     };
 
     render() {
@@ -98,6 +116,7 @@ IssuesTree.propTypes = {
     classes: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     dataset: PropTypes.array,
+    exclude: PropTypes.boolean,
     emptyName: PropTypes.string.isRequired,
     defaultPoints: PropTypes.bool.isRequired,
 };

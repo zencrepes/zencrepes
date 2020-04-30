@@ -5,11 +5,16 @@ import PropTypes from "prop-types";
 import CustomCard from "../../../../../components/CustomCard/index.js";
 import IssuesTree from '../../../../../components/Charts/Nivo/IssuesTree.js';
 
+import IncludeSwitch from './IncludeSwitch.js';
+
 import {connect} from "react-redux";
 
 class FacetsTree extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            exclude: false,
+        }
     }
 
     getDefaultRemainingTxtShrt() {
@@ -20,6 +25,10 @@ class FacetsTree extends Component {
             return 'Tkts';
         }
     }
+
+    setInclude = (value) => {
+        this.setState({ exclude: value });
+    };    
 
     render() {
         const { facets, setUpdateQueryPath, setUpdateQuery, facetKey, query, defaultPoints } = this.props;
@@ -47,9 +56,8 @@ class FacetsTree extends Component {
             return (
                 <CustomCard
                     headerTitle={facet.name}
-                    headerFactTitle={this.getDefaultRemainingTxtShrt()}
+                    headerFactTitle={<IncludeSwitch exclude={this.state.exclude} setInclude={this.setInclude}/>}
                     headerFactValue=""
-                    headerLegend="This chart is automatically built from facets data on the left panel"
                 >
                     {facet.values.length > 0 ? (
                         <IssuesTree
@@ -58,6 +66,7 @@ class FacetsTree extends Component {
                             setUpdateQueryPath={setUpdateQueryPath}
                             setUpdateQuery={setUpdateQuery}
                             defaultPoints={defaultPoints}
+                            exclude={this.state.exclude}
                         />
                     ): (
                         <span>No data available</span>
