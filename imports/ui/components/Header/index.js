@@ -1,18 +1,20 @@
-import { Meteor } from "meteor/meteor";
-import { withTracker } from "meteor/react-meteor-data";
-import _ from "lodash";
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+import _ from 'lodash';
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Link, withRouter } from "react-router-dom";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link, withRouter } from 'react-router-dom';
 
-import { withStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import { withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 import {
   Settings,
@@ -22,32 +24,40 @@ import {
   ChartGantt,
   DeveloperBoard,
   SourcePull,
-  SourceRepository
-} from "mdi-material-ui";
+  SourceRepository,
+  GithubCircle,
+} from 'mdi-material-ui';
 
-import UserMenu from "./UserMenu.js";
-import { connect } from "react-redux";
-import red from "@material-ui/core/colors/red";
+import UserMenu from './UserMenu.js';
+import { connect } from 'react-redux';
+import red from '@material-ui/core/colors/red';
+import Notif from './Notif';
 
-import { reactLocalStorage } from "reactjs-localstorage";
+import { reactLocalStorage } from 'reactjs-localstorage';
 
-const style = theme => ({
+const style = (theme) => ({
   root: {},
+  notifBar: {
+    height: 30,
+    textDecoration: 'none',
+    padding: 5,
+  },
+
   appBar: {
-    position: "relative"
+    position: 'relative',
   },
   leftIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   buttonBase: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   currentPath: {
-    borderBottom: "2px solid " + red[900]
+    borderBottom: '2px solid ' + red[900],
   },
   menuLink: {
-    textDecoration: "none"
-  }
+    textDecoration: 'none',
+  },
 });
 
 class Header extends Component {
@@ -60,74 +70,75 @@ class Header extends Component {
 
     const routes = [
       {
-        path: "/issues",
+        path: '/issues',
         icon: <ViewDashboard className={classes.leftIcon} />,
-        text: "Issues",
-        key: "issues"
+        text: 'Issues',
+        key: 'issues',
       },
       {
-        path: "/projects",
+        path: '/projects',
         icon: <DeveloperBoard className={classes.leftIcon} />,
-        text: "Projects",
-        key: "projects"
+        text: 'Projects',
+        key: 'projects',
       },
       {
-        path: "/milestones",
+        path: '/milestones',
         icon: <Calendar className={classes.leftIcon} />,
-        text: "Milestones",
-        key: "milestones"
+        text: 'Milestones',
+        key: 'milestones',
       },
       {
-        path: "/pullrequests",
+        path: '/pullrequests',
         icon: <SourcePull className={classes.leftIcon} />,
-        text: "PRs (dev)",
-        key: "pullrequests"
+        text: 'PRs (dev)',
+        key: 'pullrequests',
       },
       {
-        path: "/roadmap",
+        path: '/roadmap',
         icon: <ChartGantt className={classes.leftIcon} />,
-        text: "Roadmap (dev)",
-        key: "roadmap"
+        text: 'Roadmap (dev)',
+        key: 'roadmap',
       },
       {
-        path: "/labels",
+        path: '/labels',
         icon: <Label className={classes.leftIcon} />,
-        text: "Labels",
-        key: "labels"
+        text: 'Labels',
+        key: 'labels',
       },
       {
-        path: "/repositories",
+        path: '/repositories',
         icon: <SourceRepository className={classes.leftIcon} />,
-        text: "Repos",
-        key: "repositories"
+        text: 'Repos',
+        key: 'repositories',
       },
       {
-        path: "/settings",
+        path: '/settings',
         icon: <Settings className={classes.leftIcon} />,
-        text: "Settings",
-        key: "settings"
-      }
+        text: 'Settings',
+        key: 'settings',
+      },
     ];
     return (
       <React.Fragment>
         <CssBaseline />
-        <AppBar position="static" color="default" className={classes.appBar}>
+        <Notif />
+        <AppBar position='static' color='default' className={classes.appBar}>
           <Toolbar>
             <Grid
               container
-              direction="row"
-              justify="flex-start"
-              alignItems="center"
+              direction='row'
+              justify='flex-start'
+              alignItems='center'
               spacing={8}
             >
               <Grid item>
                 <Typography
-                  variant="h5"
-                  color="inherit"
+                  variant='h5'
+                  color='inherit'
                   noWrap
                   className={classes.toolbarTitle}
                 >
-                  <Link to={"/issues"} className={classes.menuLink}>
+                  <Link to={'/issues'} className={classes.menuLink}>
                     ZenCrepes
                   </Link>
                 </Typography>
@@ -137,22 +148,22 @@ class Header extends Component {
                   <Grid item xs={12} sm container>
                     <Grid
                       container
-                      direction="row"
-                      justify="flex-start"
-                      alignItems="flex-start"
+                      direction='row'
+                      justify='flex-start'
+                      alignItems='flex-start'
                       spacing={8}
                     >
                       {routes
-                        .filter(route => {
+                        .filter((route) => {
                           // First one is to hide something behind a feature flag
                           if (
                             JSON.parse(
-                              reactLocalStorage.get("enableExperimental", false)
+                              reactLocalStorage.get('enableExperimental', false)
                             )
                           ) {
                             return true;
                           } else if (
-                            reactLocalStorage.get("feat-" + route.key, false)
+                            reactLocalStorage.get('feat-' + route.key, false)
                           ) {
                             return true;
                           } else if (_.isEmpty(menus)) {
@@ -166,7 +177,7 @@ class Header extends Component {
                             return false;
                           }
                         })
-                        .map(route => {
+                        .map((route) => {
                           if (
                             this.props.location.pathname === route.path ||
                             this.props.location.pathname ===
@@ -180,7 +191,7 @@ class Header extends Component {
                                 className={classes.currentPath}
                               >
                                 <Button
-                                  color="secondary"
+                                  color='secondary'
                                   className={classes.buttonBase}
                                   component={Link}
                                   to={route.path}
@@ -194,7 +205,7 @@ class Header extends Component {
                             return (
                               <Grid item key={route.key}>
                                 <Button
-                                  color="default"
+                                  color='default'
                                   className={classes.buttonBase}
                                   component={Link}
                                   to={route.path}
@@ -208,7 +219,31 @@ class Header extends Component {
                         })}
                     </Grid>
                   </Grid>
-
+                  <Grid item>
+                    <IconButton
+                      aria-label='Redirect to GitHub issues'
+                      onClick={() =>
+                        window.open(
+                          'https://github.com/zencrepes/zencrepes/issues',
+                          '_blank'
+                        )
+                      }
+                      color='inherit'
+                    >
+                      <GithubCircle />
+                    </IconButton>
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      aria-label='Redirect to ZenCrepes documentation'
+                      onClick={() =>
+                        window.open('https://docs.zencrepes.io/', '_blank')
+                      }
+                      color='inherit'
+                    >
+                      <DescriptionIcon />
+                    </IconButton>
+                  </Grid>
                   <Grid item>
                     <UserMenu />
                   </Grid>
@@ -226,11 +261,11 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
   authenticated: PropTypes.bool,
   location: PropTypes.object.isRequired,
-  menus: PropTypes.object
+  menus: PropTypes.object,
 };
 
-const mapState = state => ({
-  menus: state.global.menus
+const mapState = (state) => ({
+  menus: state.global.menus,
 });
 
 export default connect(
@@ -242,7 +277,7 @@ export default connect(
     const userId = Meteor.userId();
 
     return {
-      authenticated: !loggingIn && !!userId
+      authenticated: !loggingIn && !!userId,
     };
   })(withRouter(withStyles(style)(Header)))
 );
