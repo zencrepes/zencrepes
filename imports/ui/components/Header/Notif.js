@@ -9,7 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { reactLocalStorage } from 'reactjs-localstorage';
 
-const style = (theme) => ({
+const style = () => ({
   root: {},
   notifBar: {
     height: 60,
@@ -62,7 +62,11 @@ class Notif extends Component {
                 An improved version of ZenCrepes is available addressing
                 usability issues around performance and automated data fetching.
                 You can find more details at{' '}
-                <a href='https://docs.zencrepes.io/docs/try' target='_blank'>
+                <a
+                  href='https://docs.zencrepes.io/docs/try'
+                  rel='noopener noreferrer'
+                  target='_blank'
+                >
                   https://docs.zencrepes.io/docs/try
                 </a>
                 .
@@ -71,13 +75,15 @@ class Notif extends Component {
                 ZenCrepes is still entirely{' '}
                 <a
                   href='https://github.com/zencrepes/zui/blob/master/LICENSE'
+                  rel='noopener noreferrer'
                   target='_blank'
                 >
                   Open-Source
                 </a>{' '}
-                and needs your help, so don't hesitate to reach out on{' '}
+                and needs your help, so do not hesitate to reach out on{' '}
                 <a
                   href='https://github.com/zencrepes/zencrepes/issues'
+                  rel='noopener noreferrer'
                   target='_blank'
                 >
                   {' '}
