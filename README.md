@@ -16,7 +16,7 @@ This repository contains the codebase for the serverless version of ZenCrepes av
 
 You can find ZenCrepes documentation on [docs.zencrepes.io](https://docs.zencrepes.io/), issues should be created [here](https://github.com/zencrepes/zencrepes/issues).
 
-This readme only contains developer-focused details.
+This readme only contains developer-focused details. 
 
 # Reach-out
 
